@@ -3,7 +3,7 @@ version: "3"
 services:
   nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: nginx_storyconnect
     ports:
       # - "80:80"
       # - "443:443"
@@ -11,24 +11,27 @@ services:
       - "8082:8081"
 
     volumes:
-      - ./src:/src
+      - ./backend/:/src
       - ./config/nginx:/etc/nginx/conf.d
-      - ./src/static:/static
-      - ./src/static/MEDIA:/MEDIA
+      - ./backend/static:/static
+      - ./backend/static/MEDIA:/MEDIA
+      - ./frontend/storyconnect/build/web:/usr/share/nginx/flutter
 
     depends_on:
       - storyconnect
+      - jenkins
 
   storyconnect:
     build: .
     container_name: storyconnect
     command: |-
-      bash -c "python manage.py migrate && 
+      bash -c " ls &&
+      python manage.py migrate && 
       python manage.py collectstatic --noinput && 
       gunicorn storyconnect.wsgi:application --bind 0.0.0.0:8000 --reload --timeout 30"
     volumes:
-      - ./src/storyconnect:/src
-      - ./src/storyconnect/static:/static
+      - ./backend/storyconnect:/src
+      - ./backend/storyconnect/static:/static
     expose:
       - "8000"
 
