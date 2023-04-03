@@ -87,3 +87,8 @@ local_settings.py
 
 .env
 db.sqlite3
+
+data/
+
+docker-compose.yml
+config/nginx/storyconnect.conf
