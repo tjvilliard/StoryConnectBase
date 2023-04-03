@@ -8,8 +8,7 @@ services:
       # - "80:80"
       # - "443:443"
       - "8000:8000"
-      - "8082:8081"
-
+      
     volumes:
       - ./backend/:/src
       - ./config/nginx:/etc/nginx/conf.d
@@ -19,7 +18,6 @@ services:
 
     depends_on:
       - storyconnect
-      - jenkins
 
   storyconnect:
     build: .
@@ -34,19 +32,3 @@ services:
       - ./backend/storyconnect/static:/static
     expose:
       - "8000"
-
-  jenkins:
-    image: dall18/flutter_jenkins:buildx-latest
-    privileged: true
-    user: root
-    environment:
-      # Uncomment JENKINS_OPTS to add prefix: e.g. https://127.0.0.1:8443/jenkins
-      - JENKINS_OPTS="--prefix=/jenkins"
-    expose:
-      - "8080"
-      - "50000"
-    container_name: jenkins
-    volumes:
-      - ~/jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker:/usr/local/bin/docker
