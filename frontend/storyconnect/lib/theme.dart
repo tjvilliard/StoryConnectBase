@@ -23,7 +23,6 @@ const ColorScheme myColorScheme = ColorScheme(
 final TextTheme myTextTheme = TextTheme(
   displayLarge: GoogleFonts.ramabhadra(
     fontSize: 24,
-    fontWeight: FontWeight.bold,
     color: Colors.black,
   ),
   bodyLarge: GoogleFonts.ramabhadra(
