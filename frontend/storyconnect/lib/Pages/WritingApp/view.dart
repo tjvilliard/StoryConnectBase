@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/WritingApp/custom_sliver.dart';
+import 'package:storyconnect/Pages/WritingApp/page_layout.dart';
 
-class WritingAppView extends StatelessWidget {
+class WritingAppView extends StatefulWidget {
   const WritingAppView({super.key});
+
+  @override
+  _WritingAppViewState createState() => _WritingAppViewState();
+}
+
+class _WritingAppViewState extends State<WritingAppView> {
+  final Map<int, String> pages = {};
+  final PageStructure pageStructure =
+      PageStructure(style: TextStyle(fontSize: 20));
+
+  final Map<int, TextEditingController> controllers = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.white,
         title: Text(
           "Book",
@@ -18,24 +31,29 @@ class WritingAppView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          MenuBar(
-              style: MenuStyle(
-                  alignment: Alignment.centerLeft,
-                  maximumSize: MaterialStatePropertyAll(Size(500, 200))),
-              children: [
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.arrowRotateLeft),
-                    child: Container()),
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.arrowRotateRight),
-                    child: Container()),
-                SizedBox(
-                  width: 20,
-                ),
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.comment),
-                    child: Text("Comments")),
-              ]),
+          Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(20),
+              child: Row(children: [
+                MenuBar(
+                    style: MenuStyle(
+                        alignment: Alignment.centerLeft,
+                        maximumSize: MaterialStatePropertyAll(Size(500, 200))),
+                    children: [
+                      MenuItemButton(
+                          leadingIcon: Icon(FontAwesomeIcons.arrowRotateLeft),
+                          child: Container()),
+                      MenuItemButton(
+                          leadingIcon: Icon(FontAwesomeIcons.arrowRotateRight),
+                          child: Container()),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      MenuItemButton(
+                          leadingIcon: Icon(FontAwesomeIcons.comment),
+                          child: Text("Comments")),
+                    ]),
+              ])),
           Flexible(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -52,9 +70,20 @@ class WritingAppView extends StatelessWidget {
                             itemExtent: 1100,
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                if (index == 20) {
+                                if (pages[index] == null && index != 0) {
                                   return null;
                                 }
+
+                                TextEditingController controller;
+
+                                if (controllers[index] == null) {
+                                  controller = TextEditingController();
+                                  controllers[index] = controller;
+                                } else {
+                                  controller = controllers[index]!;
+                                }
+                                controller.text = pages[index] ?? "";
+
                                 return Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(width: .5),
@@ -71,6 +100,22 @@ class WritingAppView extends StatelessWidget {
                                     padding: EdgeInsets.all(20),
                                     margin: EdgeInsets.all(20),
                                     child: TextField(
+                                      onChanged: (value) {
+                                        pages[index] = value;
+                                        setState(() {
+                                          pages.addAll(pageStructure.layout(
+                                              pages: pages));
+                                        });
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((timeStamp) {
+                                          controllers[index]!.selection =
+                                              TextSelection.fromPosition(
+                                                  TextPosition(
+                                                      offset: pages[index]!
+                                                          .length));
+                                        });
+                                      },
+                                      controller: controller,
                                       maxLines: null,
                                       decoration: InputDecoration(
                                           fillColor: Colors.white,
