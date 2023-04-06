@@ -22,4 +22,23 @@ class Chapter(models.Model):
     def __str__(self):
         return self.title
     
+class Character(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    image = models.ImageField(upload_to='characters/')
 
+    # add more fields here
+
+    def __str__(self):
+        return self.name
+
+class Location(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    # add more fields here
+
+    def __str__(self):
+        return self.name
