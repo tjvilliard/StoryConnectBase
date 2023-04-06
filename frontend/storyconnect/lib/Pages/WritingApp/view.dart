@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/WritingApp/custom_sliver.dart';
-import 'package:storyconnect/Pages/WritingApp/page_layout.dart';
+import 'package:storyconnect/Pages/WritingApp/page_sliver.dart';
+import 'package:storyconnect/Pages/WritingApp/writing_app_bloc.dart';
+import 'package:storyconnect/Pages/WritingApp/writing_page.dart';
 
-class WritingAppView extends StatefulWidget {
+class WritingAppView extends StatelessWidget {
   const WritingAppView({super.key});
-
-  @override
-  _WritingAppViewState createState() => _WritingAppViewState();
-}
-
-class _WritingAppViewState extends State<WritingAppView> {
-  final Map<int, String> pages = {};
-  final PageStructure pageStructure =
-      PageStructure(style: TextStyle(fontSize: 20));
-
-  final Map<int, TextEditingController> controllers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -64,69 +55,29 @@ class _WritingAppViewState extends State<WritingAppView> {
               Flexible(
                   child: Container(
                       constraints: BoxConstraints(maxWidth: 800),
-                      child: CustomScrollView(
-                        slivers: [
-                          PageSliver(
-                            itemExtent: 1100,
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                if (pages[index] == null && index != 0) {
-                                  return null;
-                                }
-
-                                TextEditingController controller;
-
-                                if (controllers[index] == null) {
-                                  controller = TextEditingController();
-                                  controllers[index] = controller;
-                                } else {
-                                  controller = controllers[index]!;
-                                }
-                                controller.text = pages[index] ?? "";
-
-                                return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(width: .5),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.all(20),
-                                    margin: EdgeInsets.all(20),
-                                    child: TextField(
-                                      onChanged: (value) {
-                                        pages[index] = value;
-                                        setState(() {
-                                          pages.addAll(pageStructure.layout(
-                                              pages: pages));
-                                        });
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((timeStamp) {
-                                          controllers[index]!.selection =
-                                              TextSelection.fromPosition(
-                                                  TextPosition(
-                                                      offset: pages[index]!
-                                                          .length));
-                                        });
-                                      },
-                                      controller: controller,
-                                      maxLines: null,
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          border: InputBorder.none,
-                                          hintText: 'Begin Writing...'),
-                                    ));
-                              },
-                            ),
-                          )
-                        ],
-                      ))),
+                      child: BlocBuilder<PageBloc, Map<int, String>>(
+                          buildWhen: (previous, current) {
+                        print(
+                            "previous: ${previous.length}, current: ${current.length}");
+                        return previous.length != current.length;
+                      }, builder: (context, state) {
+                        return CustomScrollView(
+                          slivers: [
+                            PageSliver(
+                              itemExtent: 1100,
+                              delegate: SliverChildBuilderDelegate(
+                                childCount:
+                                    context.watch<PageBloc>().state.length,
+                                (BuildContext context, int index) {
+                                  return WritingPageView(
+                                    index: index,
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        );
+                      })))
             ],
           ))
         ],
