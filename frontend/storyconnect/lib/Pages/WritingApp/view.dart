@@ -57,8 +57,6 @@ class WritingAppView extends StatelessWidget {
                       constraints: BoxConstraints(maxWidth: 800),
                       child: BlocBuilder<PageBloc, Map<int, String>>(
                           buildWhen: (previous, current) {
-                        print(
-                            "previous: ${previous.length}, current: ${current.length}");
                         return previous.length != current.length;
                       }, builder: (context, state) {
                         return CustomScrollView(

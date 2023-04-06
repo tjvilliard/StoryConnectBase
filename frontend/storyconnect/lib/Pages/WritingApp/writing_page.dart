@@ -19,7 +19,6 @@ class WritingPageViewState extends State<WritingPageView> {
     controller = TextEditingController();
     index = widget.index;
     node = FocusNode();
-    print("index: $index");
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.text = context.read<PageBloc>().state[index] ?? "";
@@ -66,6 +65,9 @@ class WritingPageViewState extends State<WritingPageView> {
               } else {
                 context.read<PageBloc>().add(
                     UpdatePage(text: results.overflowText, callerIndex: index));
+              }
+              if (controller.text.isEmpty && index != 0) {
+                context.read<PageBloc>().add(RemovePage(callerIndex: index));
               }
             },
             controller: controller,
