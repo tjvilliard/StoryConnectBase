@@ -32,7 +32,7 @@ build_flutter:
   script:
     - cd frontend/storyconnect
     - flutter clean
-    - flutter build web --release
+    - flutter build web 
   # artifacts:
   #   paths:
   #     - frontend/storyconnect/build/**
