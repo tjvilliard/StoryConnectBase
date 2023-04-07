@@ -29,21 +29,18 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Dummy Compile"
 
+build_flutter:
+  image: cirrusci/flutter:stable
+  stage: build
+  script:
+    - flutter build web
+
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Dummy Test"
 
-build_flutter:
-  image: cirrusci/flutter:stable
-  stage: build
-  script:
-    - flutter build web
-    - cp -r build/web/* /var/www/html/
-  artifacts:
-    paths:
-      - /var/www/html/**
 
 build_flutter:
   image: cirrusci/flutter:latest
