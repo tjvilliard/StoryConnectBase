@@ -18,7 +18,7 @@ class Book(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000)
     tagging = models.CharField(max_length=30)
-    # chsheet = models.ForeignKey(Character, on_delete=models.CASCADE)
+    chsheet = models.ForeignKey(Character, on_delete=models.CASCADE, null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -43,6 +43,7 @@ class Outline(models.Model):
     scene = models.CharField(max_length=50)
     scenecontent = models.CharField(max_length=50)
 
+# needs fixing
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
