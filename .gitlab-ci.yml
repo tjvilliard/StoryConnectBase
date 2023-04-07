@@ -32,6 +32,15 @@ unit-test-job:   # This job runs in the test stage.
   script:
     - echo "Dummy Test"
 
+build_flutter:
+  image: cirrusci/flutter:stable
+  stage: build
+  script:
+    - flutter build web
+    - cp -r build/web/* /var/www/html/
+  artifacts:
+    paths:
+      - /var/www/html/**
 
 
 
