@@ -32,7 +32,7 @@ class Chapter(models.Model):
     def __str__(self):
         return self.title
 
-class Title(models.Model):
+class Manuscript_Title(models.Model):
     titlepage = models.TextField()
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     bookcover = models.ImageField(upload_to='covers/') #?
