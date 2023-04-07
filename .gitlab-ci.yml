@@ -33,7 +33,7 @@ build_flutter:
   image: cirrusci/flutter:stable
   stage: build
   script:
-    - cd ./frontend/storyconnect/build/web
+    - cd frontend/storyconnect/build/web
     - flutter build web
 
 
