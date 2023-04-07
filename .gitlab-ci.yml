@@ -30,8 +30,12 @@ build_flutter:
   image: cirrusci/flutter:stable
   stage: build
   script:
-    - cd frontend/storyconnect/build/web
-    - flutter build web
+    - cd frontend/storyconnect
+    - flutter clean
+    - flutter build web --release
+  # artifacts:
+  #   paths:
+  #     - frontend/storyconnect/build/**
 
 
 unit-test-job:   # This job runs in the test stage.
