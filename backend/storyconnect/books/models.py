@@ -7,8 +7,8 @@ class Account(models.Model):
     email = models.EmailField(max_length=254)
     DOB = models.DateField()
 
-# class Library(models.Model):
-#     reading = 
+# # class Library(models.Model):
+# #     reading = 
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
@@ -33,7 +33,7 @@ class Chapter(models.Model):
         return self.title
 
 class Title(models.Model):
-    title = models.TextField()
+    titlepage = models.TextField()
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     bookcover = models.ImageField(upload_to='covers/') #?
 
