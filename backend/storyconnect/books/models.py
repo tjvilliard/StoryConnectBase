@@ -30,7 +30,7 @@ class Library(models.Model):
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_title = models.CharField(max_length=100)
-    # title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     content = models.TextField()
 
     def __str__(self):
