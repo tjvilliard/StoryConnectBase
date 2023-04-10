@@ -2,13 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-# class Account(models.Model):
-#     username = models.CharField(max_length=100)
-#     email = models.EmailField(max_length=254)
-#     DOB = models.DateField()
-    
-#     def __str__(self):
-#         return self.username
 
 class Book(models.Model):
     LANGUAGES = [
@@ -91,8 +84,3 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
-
-# class General(models.Model):
-#     accID = models.ForeignKey(Account, on_delete=models.CASCADE)
-#     bookID = models.ForeignKey(Book, on_delete=models.CASCADE) # user's work(s)
-#     libID = models.ForeignKey(Library, on_delete=models.CASCADE)
