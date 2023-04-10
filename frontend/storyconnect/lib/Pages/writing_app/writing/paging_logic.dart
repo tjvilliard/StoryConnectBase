@@ -22,7 +22,7 @@ class PagingLogic {
     _textPainter.layout(maxWidth: 800);
 
     Size size = _textPainter.size;
-    while (size.height > 800) {
+    while (size.height > 850) {
       didOverflow = true;
       // move the last line to the next page
       int start = text.lastIndexOf(' ');
@@ -46,5 +46,20 @@ class PagingLogic {
         didOverflow: didOverflow,
         textToKeep: text,
         overflowText: moveToNextPage.toString());
+  }
+
+  bool shouldTriggerUnderFlow(String text, TextStyle style) {
+    final TextPainter _textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+
+    _textPainter.text = TextSpan(text: text, style: style);
+    _textPainter.layout(maxWidth: 800);
+
+    Size size = _textPainter.size;
+    if (size.height < 700) {
+      return true;
+    }
+    return false;
   }
 }

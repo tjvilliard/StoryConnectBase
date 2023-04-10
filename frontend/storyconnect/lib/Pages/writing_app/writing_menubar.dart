@@ -11,7 +11,15 @@ class WritingMenuBar extends StatelessWidget {
     return Container(
         color: Colors.white,
         padding: EdgeInsets.all(20),
-        child: Row(children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          MenuBar(children: [
+            MenuItemButton(
+              leadingIcon: Icon(FontAwesomeIcons.list),
+              child: Text("Chapters"),
+              onPressed: () =>
+                  context.read<WritingUIBloc>().toggleChapterOutline(),
+            ),
+          ]),
           MenuBar(
               style: MenuStyle(
                   alignment: Alignment.centerLeft,
@@ -23,19 +31,12 @@ class WritingMenuBar extends StatelessWidget {
                 MenuItemButton(
                     leadingIcon: Icon(FontAwesomeIcons.arrowRotateRight),
                     child: Container()),
-                SizedBox(
-                  width: 20,
-                ),
-                MenuItemButton(
-                  leadingIcon: Icon(FontAwesomeIcons.list),
-                  child: Text("Chapters"),
-                  onPressed: () =>
-                      context.read<WritingUIBloc>().toggleChapterOutline(),
-                ),
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.comment),
-                    child: Text("Comments")),
-              ])
+              ]),
+          MenuBar(children: [
+            MenuItemButton(
+                leadingIcon: Icon(FontAwesomeIcons.comment),
+                child: Text("Comments"))
+          ])
         ]));
   }
 }
