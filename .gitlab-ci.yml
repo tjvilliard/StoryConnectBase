@@ -17,9 +17,32 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
+  - pre
   - build
   - test
   - deploy
+
+gitlab_runner:
+    stage: pre
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab_runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/gitlab_runner/config:/etc/gitlab-runner
+      - ./data/gitlab_runner/data:/home/gitlab-runner
+    restart: always
+    privileged: true
+    environment:
+      - GITLAB_URL=https://capstone-cs.eng.utah.edu/
+      - REGISTRATION_TOKEN=$RUNNER_REGISTER
+      - RUNNER_NAME=runner
+      - RUNNER_EXECUTOR=docker
+      - RUNNER_TAG_LIST=build,test,deploy
+      - DOCKER_IMAGE=alpine:latest
+      - DOCKER_VOLUMES=/var/run/docker.sock:/var/run/docker.sock
+      - DOCKER_PRIVILEGED=true
+      - DOCKER_NETWORK_MODE=gitlab_network
+      - DOCKER_EXTRA_HOSTS=gitlab.com:
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
@@ -33,7 +56,17 @@ unit-test-job:   # This job runs in the test stage.
     - echo "Dummy Test"
 
 
-
+build_flutter:
+  image: cirrusci/flutter:latest
+  stage: build
+  before_script:
+  script:
+    - cd frontend/storyconnect
+    - flutter clean
+    - flutter build web 
+  # artifacts:
+  #   paths:
+  #     - frontend/storyconnect/build/**
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
