@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/writing_app/page_views/paging_view.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
+import 'package:storyconnect/Pages/writing_app/writing/paging_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
 
 class WritingAppView extends StatelessWidget {
@@ -22,14 +23,14 @@ class WritingAppView extends StatelessWidget {
           WritingMenuBar(),
           Flexible(
               child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // where chapter navigation is displayed
-              Container(
-                constraints: BoxConstraints(minWidth: 80),
-              ),
+              ChapterNavigation(),
               // Where pages are displayed
-              Flexible(child: PagingView())
+              Flexible(child: PagingView()),
+
+              Container()
             ],
           ))
         ],

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/page_views/page_sliver.dart';
-import 'package:storyconnect/Pages/writing_app/page_views/writing_page.dart';
-import 'package:storyconnect/Pages/writing_app/writing_app_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_sliver.dart';
+import 'package:storyconnect/Pages/writing_app/writing/writing_page.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 
 class PagingView extends StatelessWidget {
   const PagingView({super.key});

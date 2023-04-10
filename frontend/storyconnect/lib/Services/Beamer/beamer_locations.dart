@@ -2,8 +2,9 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
-import 'package:storyconnect/Pages/writing_app/writing_app_bloc.dart';
-import 'package:storyconnect/Pages/WritingHome/view.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_home/view.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
   @override
@@ -22,10 +23,10 @@ class WriterLocations extends BeamLocation<BeamState> {
         pages.add(
           BeamPage(
               key: ValueKey('book-$bookId'),
-              child: BlocProvider(
-                  lazy: false,
-                  create: (_) => PageBloc(),
-                  child: WritingAppView())),
+              child: MultiBlocProvider(providers: [
+                BlocProvider(lazy: false, create: (_) => PageBloc()),
+                BlocProvider(lazy: false, create: (_) => WritingUIBloc()),
+              ], child: WritingAppView())),
         );
       } else {
         pages.add(

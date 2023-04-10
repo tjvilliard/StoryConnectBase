@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/writing_app_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
 class WritingPageView extends StatefulWidget {
   final int index;
@@ -14,11 +15,13 @@ class WritingPageViewState extends State<WritingPageView> {
   late final TextEditingController controller;
   late final int index;
   late final FocusNode node;
+  late final PagingLogic pagingLogic;
   @override
   void initState() {
     controller = TextEditingController();
     index = widget.index;
     node = FocusNode();
+    pagingLogic = PagingLogic();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.text = context.read<PageBloc>().state[index] ?? "";
@@ -51,7 +54,7 @@ class WritingPageViewState extends State<WritingPageView> {
           child: TextField(
             focusNode: node,
             onChanged: (value) {
-              final results = PageBloc.shouldTriggerOverflow(
+              final results = pagingLogic.shouldTriggerOverflow(
                   value, TextStyle(fontSize: 20));
 
               if (results.didOverflow) {

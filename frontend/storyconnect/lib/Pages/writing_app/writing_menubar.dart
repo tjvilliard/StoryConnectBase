@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 
 class WritingMenuBar extends StatelessWidget {
   const WritingMenuBar({super.key});
@@ -23,6 +25,12 @@ class WritingMenuBar extends StatelessWidget {
                     child: Container()),
                 SizedBox(
                   width: 20,
+                ),
+                MenuItemButton(
+                  leadingIcon: Icon(FontAwesomeIcons.list),
+                  child: Text("Chapters"),
+                  onPressed: () =>
+                      context.read<WritingUIBloc>().toggleChapterOutline(),
                 ),
                 MenuItemButton(
                     leadingIcon: Icon(FontAwesomeIcons.comment),

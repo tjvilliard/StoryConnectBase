@@ -1,15 +1,6 @@
 import 'package:flutter/painting.dart';
 import 'package:bloc/bloc.dart';
-
-class OverFlowStruct {
-  final bool didOverflow;
-  final String textToKeep;
-  final String overflowText;
-  OverFlowStruct(
-      {required this.didOverflow,
-      required this.textToKeep,
-      required this.overflowText});
-}
+import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
 abstract class PageEvent {
   int callerIndex;
@@ -35,48 +26,12 @@ class UpdatePage extends PageEvent {
 typedef PageEmitter = Emitter<Map<int, String>>;
 
 class PageBloc extends Bloc<PageEvent, Map<int, String>> {
+  final PagingLogic pagingLogic = PagingLogic();
   final TextStyle style = TextStyle(fontSize: 20);
   PageBloc() : super({0: ""}) {
     on<AddPage>((event, emit) => _addPage(event, emit));
     on<RemovePage>((event, emit) => _removePage(event, emit));
     on<UpdatePage>((event, emit) => _updatePage(event, emit));
-  }
-
-  static OverFlowStruct shouldTriggerOverflow(String text, TextStyle style) {
-    final TextPainter _textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
-    StringBuffer moveToNextPage = StringBuffer();
-    bool didOverflow = false;
-
-    _textPainter.text = TextSpan(text: text, style: style);
-    _textPainter.layout(maxWidth: 800);
-
-    Size size = _textPainter.size;
-    while (size.height > 800) {
-      didOverflow = true;
-      // move the last line to the next page
-      int start = text.lastIndexOf(' ');
-      final int end = text.length;
-
-      if (start == -1) {
-        start = end - 100;
-      }
-
-      moveToNextPage.write(text.substring(start, end));
-      text = text.replaceRange(start, end, "");
-      _textPainter.text = TextSpan(
-        text: text,
-        style: style,
-      );
-      _textPainter.layout(maxWidth: 800);
-      size = _textPainter.size;
-    }
-
-    return OverFlowStruct(
-        didOverflow: didOverflow,
-        textToKeep: text,
-        overflowText: moveToNextPage.toString());
   }
 
   void _addPage(
@@ -86,7 +41,7 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
     Map<int, String> pages = Map.from(state);
     String textToUse = event.text;
 
-    final results = shouldTriggerOverflow(textToUse, style);
+    final results = pagingLogic.shouldTriggerOverflow(textToUse, style);
     if (results.didOverflow) {
       textToUse = results.textToKeep;
       _addPage(
@@ -99,8 +54,10 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
   }
 
   void _removePage(RemovePage event, PageEmitter emit) {
-    state.remove(event.callerIndex);
-    emit(state);
+    if (event.callerIndex != 0) {
+      state.remove(event.callerIndex);
+      emit(state);
+    }
   }
 
   void _updatePage(UpdatePage event, PageEmitter emit) {
