@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Account(models.Model):
-    username = models.CharField(max_length=100)
-    email = models.EmailField(max_length=254)
-    DOB = models.DateField()
+# class Account(models.Model):
+#     username = models.CharField(max_length=100)
+#     email = models.EmailField(max_length=254)
+#     DOB = models.DateField()
     
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
 
 class Book(models.Model):
     LANGUAGES = [
@@ -42,6 +42,7 @@ class Book(models.Model):
         # "Public Domain: This story is open source for the public to use for any purposes.", 
         # "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
     copyright = models.IntegerField(max_length=1, choices=COPYRIGHTS)
+    titlepage = models.TextField()
 
     def __str__(self):
         return self.title
@@ -54,32 +55,18 @@ class Library(models.Model):
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.IntegerField(max_length=1, choices=BOOK_STATUS)
+    reader = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_title = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    chapter_content = models.TextField()
+    scene = models.CharField(max_length=50)
+    scene_content = models.CharField(max_length=50)
 
     def __str__(self):
         return self.chapter_title
-
-class Manuscript_Title(models.Model):
-    titlepage = models.TextField()
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    bookcover = models.ImageField(upload_to='covers/') 
-    
-    def __str__(self):
-        return self.book.title
-
-class Outline(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    scene = models.CharField(max_length=50)
-    scenecontent = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.chapter.chapter_title
 
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -105,7 +92,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
-class General(models.Model):
-    accID = models.ForeignKey(Account, on_delete=models.CASCADE)
-    bookID = models.ForeignKey(Book, on_delete=models.CASCADE) # user's work(s)
-    libID = models.ForeignKey(Library, on_delete=models.CASCADE)
+# class General(models.Model):
+#     accID = models.ForeignKey(Account, on_delete=models.CASCADE)
+#     bookID = models.ForeignKey(Book, on_delete=models.CASCADE) # user's work(s)
+#     libID = models.ForeignKey(Library, on_delete=models.CASCADE)
