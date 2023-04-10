@@ -1,8 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/WritingApp/view.dart';
-import 'package:storyconnect/Pages/WritingApp/writing_app_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/view.dart';
+import 'package:storyconnect/Pages/writing_app/writing_app_bloc.dart';
 import 'package:storyconnect/Pages/WritingHome/view.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
