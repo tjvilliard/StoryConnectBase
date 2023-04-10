@@ -31,22 +31,29 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     language = models.TextChoices("English", "Indonesian")
-    target_audience = models.CharField("Young Adult (13-18 years old)", "New Adult (18-25 years old)", "Adult (25+ years old)")
+    target_audience = models.IntegerField(max_length=2, choices=TARGET_AUDIENCES)
+    # target_audience = models.TextChoices("Young Adult (13-18 years old)", "New Adult (18-25 years old)", "Adult (25+ years old)")
     cover = models.ImageField(upload_to='covers/')
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000)
     tagging = models.CharField(max_length=30)
-    copyright = models.CharField("All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission.", 
-        "Public Domain: This story is open source for the public to use for any purposes.", 
-        "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
+    # copyright = models.TextChoices("All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission.", 
+        # "Public Domain: This story is open source for the public to use for any purposes.", 
+        # "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
+    copyright = models.IntegerField(max_length=1, choices=COPYRIGHTS)
 
     def __str__(self):
         return self.title
     
 class Library(models.Model):
+    BOOK_STATUS = [
+        (1, "Reading"),
+        (2, "In the Works"), 
+        (3, "Archived")
+    ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    status = models.IntegerChoices("Reading", "In the Works", "Archived")
+    status = models.IntegerField(max_length=1, choices=BOOK_STATUS)
 
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
