@@ -42,8 +42,8 @@ flutter_test:
   stage: test
   image: cirrusci/flutter:latest
   script:
-    -cd frontend/storyconnect
-    -flutter test
+    - cd frontend/storyconnect
+    - flutter test
 
 
 unit-test-job:   # This job runs in the test stage.
