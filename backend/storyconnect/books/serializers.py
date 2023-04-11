@@ -1,22 +1,29 @@
 from rest_framework import serializers
-from .models import Book, Chapter, Character, Location
+from rest_framework_json_api import serializers as json_api_serializers
+from rest_framework import status
+from rest_framework.exceptions import APIException
+from .models import *
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'cover', 'synopsis', 'date_created', 'date_modified', 'owner']
-
+        fields = '__all__'
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
-        fields = ['id', 'book', 'title', 'content']
+        fields = '__all__'
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = ['id', 'book', 'name', 'description', 'image']
+        fields = '__all__'
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'book', 'name', 'description']
+        fields = '__all__'
+
+class LibrarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Library
+        fields = '__all__'
