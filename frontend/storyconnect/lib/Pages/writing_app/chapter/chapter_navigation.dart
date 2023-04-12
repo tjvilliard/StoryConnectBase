@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_nav_button.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 
 class ChapterNavigation extends StatelessWidget {
@@ -10,33 +13,38 @@ class ChapterNavigation extends StatelessWidget {
     return BlocBuilder<WritingUIBloc, WritingUIStatus>(
         buildWhen: (previous, current) {
       return previous.chapterOutlineShown != current.chapterOutlineShown;
-    }, builder: (context, state) {
-      return AnimatedCrossFade(
-          firstChild: Container(),
-          secondChild: Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(25),
-              constraints: BoxConstraints(minWidth: 150, maxWidth: 300),
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: OutlinedButton(
-                            onPressed: () {},
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text("Chapter ${index + 1}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayLarge
-                                      ?.copyWith()),
-                            )));
-                  })),
-          crossFadeState: state.chapterOutlineShown
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          duration: Duration(milliseconds: 200));
+    }, builder: (context, uiState) {
+      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
+          builder: (chapterBlocContext, chapterState) {
+        return AnimatedCrossFade(
+            firstChild: Container(),
+            secondChild: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(25),
+                constraints: BoxConstraints(minWidth: 150, maxWidth: 300),
+                child: uiState.chapterOutlineShown
+                    ? ListView.builder(
+                        itemCount: chapterState.chapters.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == chapterState.chapters.length) {
+                            return OutlinedButton(
+                                onPressed: () => context
+                                    .read<ChapterBloc>()
+                                    .add(AddChapter(
+                                      pageBloc: context.read<PageBloc>(),
+                                      callerIndex: chapterState.currentIndex,
+                                      pages: context.read<PageBloc>().state,
+                                    )),
+                                child: Text("Add Chapter"));
+                          }
+                          return ChapterNavigationButton(index: index);
+                        })
+                    : Container()),
+            crossFadeState: uiState.chapterOutlineShown
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 200));
+      });
     });
   }
 }

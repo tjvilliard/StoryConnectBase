@@ -34,7 +34,11 @@ class WritingPageViewState extends State<WritingPageView> {
   Widget build(BuildContext context) {
     return BlocBuilder<PageBloc, Map<int, String>>(
         buildWhen: (previous, current) {
-      return controller.text != current[index];
+      final bool rebuild = controller.text != current[index];
+      if (rebuild) {
+        controller.text = current[index] ?? "";
+      }
+      return rebuild;
     }, builder: (context, state) {
       return Container(
           decoration: BoxDecoration(
@@ -66,8 +70,9 @@ class WritingPageViewState extends State<WritingPageView> {
                 context.read<PageBloc>().add(
                     UpdatePage(text: results.textToKeep, callerIndex: index));
               } else {
-                context.read<PageBloc>().add(
-                    UpdatePage(text: results.overflowText, callerIndex: index));
+                context
+                    .read<PageBloc>()
+                    .add(UpdatePage(text: controller.text, callerIndex: index));
               }
               if (controller.text.isEmpty && index != 0) {
                 context.read<PageBloc>().add(RemovePage(callerIndex: index));

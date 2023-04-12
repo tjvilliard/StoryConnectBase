@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
@@ -25,6 +26,7 @@ class WriterLocations extends BeamLocation<BeamState> {
               key: ValueKey('book-$bookId'),
               child: MultiBlocProvider(providers: [
                 BlocProvider(lazy: false, create: (_) => PageBloc()),
+                BlocProvider(lazy: false, create: (_) => ChapterBloc()),
                 BlocProvider(lazy: false, create: (_) => WritingUIBloc()),
               ], child: WritingAppView())),
         );

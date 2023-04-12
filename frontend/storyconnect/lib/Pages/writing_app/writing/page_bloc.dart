@@ -23,6 +23,11 @@ class UpdatePage extends PageEvent {
       : super(callerIndex: callerIndex);
 }
 
+class RebuildPages extends PageEvent {
+  String text;
+  RebuildPages({required this.text}) : super(callerIndex: 0);
+}
+
 typedef PageEmitter = Emitter<Map<int, String>>;
 
 class PageBloc extends Bloc<PageEvent, Map<int, String>> {
@@ -32,6 +37,7 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
     on<AddPage>((event, emit) => _addPage(event, emit));
     on<RemovePage>((event, emit) => _removePage(event, emit));
     on<UpdatePage>((event, emit) => _updatePage(event, emit));
+    on<RebuildPages>((event, emit) => _rebuildPages(event, emit));
   }
 
   void _addPage(
@@ -64,5 +70,12 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
     Map<int, String> pages = Map.from(state);
     pages[event.callerIndex] = event.text;
     emit(pages);
+  }
+
+  void _rebuildPages(RebuildPages event, PageEmitter emit) {
+    Map<int, String> pages = Map.from(state);
+    pages.clear();
+    emit(pages);
+    add(AddPage(text: event.text, callerIndex: -1));
   }
 }
