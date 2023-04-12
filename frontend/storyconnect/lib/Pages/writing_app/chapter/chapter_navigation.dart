@@ -15,13 +15,15 @@ class ChapterNavigation extends StatelessWidget {
       return previous.chapterOutlineShown != current.chapterOutlineShown;
     }, builder: (context, uiState) {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-          builder: (chapterBlocContext, chapterState) {
+          buildWhen: (previous, current) {
+        return previous.chapters.length != current.chapters.length;
+      }, builder: (chapterBlocContext, chapterState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
                 color: Colors.white,
                 padding: EdgeInsets.all(25),
-                constraints: BoxConstraints(minWidth: 150, maxWidth: 300),
+                constraints: BoxConstraints(minWidth: 300, maxWidth: 300),
                 child: uiState.chapterOutlineShown
                     ? ListView.builder(
                         itemCount: chapterState.chapters.length + 1,
