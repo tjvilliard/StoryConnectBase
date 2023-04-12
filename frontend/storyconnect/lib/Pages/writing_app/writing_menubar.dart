@@ -9,8 +9,19 @@ class WritingMenuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
         padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Theme.of(context).dividerColor.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 10,
+                  offset: Offset(0, 1))
+            ],
+            border: Border(
+                bottom: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 1.5))),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           MenuBar(children: [
             MenuItemButton(

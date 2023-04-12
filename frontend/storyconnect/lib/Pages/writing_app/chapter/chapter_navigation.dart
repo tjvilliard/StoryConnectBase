@@ -21,8 +21,19 @@ class ChapterNavigation extends StatelessWidget {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Theme.of(context).dividerColor,
+                          blurRadius: 10,
+                          offset: Offset(3, 3),
+                          spreadRadius: 5)
+                    ],
+                    // border: Border.all(color: Colors.black, width: .5),
+                    borderRadius: BorderRadius.circular(16)),
                 padding: EdgeInsets.all(25),
+                margin: EdgeInsets.all(15),
                 constraints: BoxConstraints(minWidth: 300, maxWidth: 300),
                 child: uiState.chapterOutlineShown
                     ? ListView.builder(

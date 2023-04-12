@@ -32,4 +32,5 @@ final TextTheme myTextTheme = TextTheme(
 );
 
 ThemeData myTheme = ThemeData.from(
-    colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true);
+        colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true)
+    .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
