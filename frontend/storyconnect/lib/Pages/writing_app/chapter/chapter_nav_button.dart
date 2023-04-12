@@ -13,9 +13,7 @@ class ChapterNavigationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-        buildWhen: (previous, current) {
-      return previous.currentIndex == index || current.currentIndex == index;
-    }, builder: (chapterContext, ChapterBlocStruct chapterState) {
+        builder: (chapterContext, ChapterBlocStruct chapterState) {
       final selectedColor = Theme.of(context).primaryColor;
       final selectedTextColor = Colors.white;
       return Padding(

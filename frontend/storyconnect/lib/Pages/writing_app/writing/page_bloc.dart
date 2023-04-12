@@ -73,9 +73,7 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
   }
 
   void _rebuildPages(RebuildPages event, PageEmitter emit) {
-    Map<int, String> pages = Map.from(state);
-    pages.clear();
-    emit(pages);
+    emit({});
     add(AddPage(text: event.text, callerIndex: -1));
   }
 }

@@ -22,11 +22,6 @@ class WritingPageViewState extends State<WritingPageView> {
     index = widget.index;
     node = FocusNode();
     pagingLogic = PagingLogic();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      controller.text = context.read<PageBloc>().state[index] ?? "";
-    });
-
     super.initState();
   }
 

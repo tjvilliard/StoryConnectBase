@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 
 abstract class ChapterEvent {
@@ -40,6 +41,9 @@ class ChapterBlocStruct {
   final int currentIndex;
   final Map<int, String> chapters;
   ChapterBlocStruct({required this.currentIndex, required this.chapters});
+
+  @override
+  int get hashCode => identityHashCode(chapters);
 }
 
 typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
@@ -47,8 +51,14 @@ typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
 class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
   ChapterBloc() : super(ChapterBlocStruct(currentIndex: 0, chapters: {0: ""})) {
     on<AddChapter>((event, emit) => addChapter(event, emit));
-    on<RemoveChapter>((event, emit) => removeChapter(event, emit));
-    on<SwitchChapter>((event, emit) => switchChapter(event, emit));
+    on<RemoveChapter>(
+      (event, emit) => removeChapter(event, emit),
+      transformer: sequential(),
+    );
+    on<SwitchChapter>(
+      (event, emit) => switchChapter(event, emit),
+      transformer: sequential(),
+    );
     on<UpdateChapter>((event, emit) => updateChapter(event, emit));
   }
 
@@ -87,14 +97,14 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     // combine the pages into a single string
     final String pageString = event.pages.values.join();
     chapters[event.chapterToSwitchFrom] = pageString;
-
+    event.pageBloc
+        .add(RebuildPages(text: state.chapters[event.callerIndex] ?? ""));
     emit(
       ChapterBlocStruct(
         currentIndex: event.callerIndex,
         chapters: chapters,
       ),
     );
-    event.pageBloc.add(RebuildPages(text: chapters[event.callerIndex] ?? ""));
   }
 
   void updateChapter(UpdateChapter event, Emitter<ChapterBlocStruct> emit) {
