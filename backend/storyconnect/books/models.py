@@ -42,9 +42,14 @@ class Book(models.Model):
     
 class Library(models.Model):
     BOOK_STATUS = [
+<<<<<<< HEAD
         (1, "Reading"),
         (2, "In the Works"), 
         (3, "Archived")
+=======
+        (1, "Reading"), 
+        (2, "Archived")
+>>>>>>> feature/backend-construction
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.IntegerField(max_length=1, choices=BOOK_STATUS)
@@ -67,7 +72,11 @@ class Character(models.Model):
     nickname = models.CharField(max_length=100)
     bio = models.CharField(max_length=50)
     description = models.TextField()
+<<<<<<< HEAD
     image = models.ImageField(upload_to='characters/')
+=======
+    image = models.ImageField(upload_to='characters/', null=True)
+>>>>>>> feature/backend-construction
     attributes = models.CharField(max_length=200)
 
     # add more fields here

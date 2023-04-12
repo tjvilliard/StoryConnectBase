@@ -17,14 +17,36 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
+  - pre
   - build
   - test
   - deploy
+
+
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Dummy Compile"
+
+# build_flutter:
+#   image: cirrusci/flutter:latest
+#   stage: build
+#   script:
+#     - cd frontend/storyconnect
+#     - flutter upgrade
+#     - flutter clean
+#     - flutter build web 
+#   # artifacts:
+#   #   paths:
+#   #     - frontend/storyconnect/build/**
+
+flutter_test:
+  stage: test
+  image: cirrusci/flutter:latest
+  script:
+    - cd frontend/storyconnect
+    - flutter test
 
 
 unit-test-job:   # This job runs in the test stage.
@@ -33,7 +55,19 @@ unit-test-job:   # This job runs in the test stage.
     - echo "Dummy Test"
 
 
-
+build_flutter:
+  image: cirrusci/flutter:latest
+  stage: build
+  only: 
+    - develop
+  before_script:
+  script:
+    - cd frontend/storyconnect
+    - flutter clean
+    - flutter build web 
+  # artifacts:
+  #   paths:
+  #     - frontend/storyconnect/build/**
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
