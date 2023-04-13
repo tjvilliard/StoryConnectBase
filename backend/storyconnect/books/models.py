@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Book(models.Model):
-    LANGUAGES = [
-        (1, "English"),
-        (2, "Indonesian")
-    ]
+    # LANGUAGES = [
+    #     (1, "English"),
+    #     (2, "Indonesian")
+    # ]
     TARGET_AUDIENCES = [
         (1, "Young Adult (13-18 years old)"), 
         (2, "New Adult (18-25 years old)"),
@@ -23,10 +23,10 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    language = models.TextChoices("English", "Indonesian")
-    target_audience = models.IntegerField(max_length=2, choices=TARGET_AUDIENCES)
+    language = models.CharField(max_length=20)
+    target_audience = models.IntegerField(choices=TARGET_AUDIENCES)
     # target_audience = models.TextChoices("Young Adult (13-18 years old)", "New Adult (18-25 years old)", "Adult (25+ years old)")
-    cover = models.ImageField(upload_to='covers/')
+    cover = models.ImageField(upload_to='covers/', null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000)
@@ -34,7 +34,7 @@ class Book(models.Model):
     # copyright = models.TextChoices("All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission.", 
         # "Public Domain: This story is open source for the public to use for any purposes.", 
         # "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
-    copyright = models.IntegerField(max_length=1, choices=COPYRIGHTS)
+    copyright = models.IntegerField(choices=COPYRIGHTS)
     titlepage = models.TextField()
 
     def __str__(self):
@@ -46,7 +46,7 @@ class Library(models.Model):
         (2, "Archived")
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    status = models.IntegerField(max_length=1, choices=BOOK_STATUS)
+    status = models.IntegerField(choices=BOOK_STATUS)
     reader = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Chapter(models.Model):
