@@ -11,11 +11,6 @@ from .serializers import *
 
 
 # Create your views here.
-<<<<<<< HEAD
-# need the home html
-# def home(request):
-#     return render(request, 'home.html', {})
-=======
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -73,4 +68,3 @@ class BookViewSet(viewsets.ModelViewSet):
 #         location.save()
 #     return render(request, 'books/create_location.html')
 
->>>>>>> feature/backend-construction

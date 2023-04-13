@@ -24,8 +24,6 @@ router = routers.DefaultRouter()
 router.register(r'books', books_views.BookViewSet, basename='books')
 
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
