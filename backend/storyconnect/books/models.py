@@ -26,7 +26,7 @@ class Book(models.Model):
     language = models.CharField(max_length=20)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES)
     # target_audience = models.TextChoices("Young Adult (13-18 years old)", "New Adult (18-25 years old)", "Adult (25+ years old)")
-    cover = models.ImageField(upload_to='covers/', null=True)
+    cover = models.ImageField(upload_to='covers/', blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000)
@@ -51,23 +51,31 @@ class Library(models.Model):
 
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    chapter_title = models.CharField(max_length=100)
+
+    # redundant?
+    chapter_title = models.CharField(max_length=100) 
     title = models.CharField(max_length=100)
+
     chapter_content = models.TextField()
-    scene = models.CharField(max_length=50)
-    scene_content = models.CharField(max_length=50)
+
+    # What are these for?
+    scene = models.CharField(max_length=50, blank=True)
+    scene_content = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return self.chapter_title
 
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    nickname = models.CharField(max_length=100)
-    bio = models.CharField(max_length=50)
-    description = models.TextField()
-    image = models.ImageField(upload_to='characters/', null=True)
-    attributes = models.CharField(max_length=200)
+    name = models.CharField(max_length=100, blank=True)
+    nickname = models.CharField(max_length=100, blank=True)
+
+    # Whats the difference between bio and description?
+    bio = models.CharField(max_length=50, blank=True)
+    description = models.TextField(blank=True)
+
+    image = models.ImageField(upload_to='characters/', blank=True)
+    attributes = models.CharField(max_length=200, blank=True)
 
     # add more fields here
 
@@ -76,8 +84,8 @@ class Character(models.Model):
 
 class Location(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
 
     # add more fields here
 
