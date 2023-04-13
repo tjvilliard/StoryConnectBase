@@ -7,23 +7,31 @@ from .models import *
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ('id', 'title', 'author', 'cover', 'synopsis', 'date_created', 'date_modified', 'owner')
-        read_only_fields = ('id',)
+        fields = "__all__"
+
 
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
-        fields = ('id', 'book', 'title', 'content')
-        read_only_fields = ('id',)
+        fields = "__all__"
+
 
 class CharacterSerializer(serializers.ModelSerializer):
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
     class Meta:
         model = Character
-        fields = ('id', 'book', 'name', 'description', 'image')
-        read_only_fields = ('id',)
+        fields = "__all__"
+
 
 class LocationSerializer(serializers.ModelSerializer):
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
     class Meta:
         model = Location
-        fields = ('id', 'book', 'name', 'description')
-        read_only_fields = ('id',)
+        fields = "__all__"
+
+class LibrarySerializer(serializers.ModelSerializer):
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+    reader = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
+    class Meta:
+        model = Library
+        fields = "__all__"
