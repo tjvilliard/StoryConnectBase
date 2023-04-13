@@ -7,23 +7,23 @@ from .models import *
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ('id', 'title', 'author', 'cover', 'synopsis', 'date_created', 'date_modified', 'owner')
+        read_only_fields = ('id',)
+
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
-        fields = '__all__'
+        fields = ('id', 'book', 'title', 'content')
+        read_only_fields = ('id',)
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
-        fields = '__all__'
+        fields = ('id', 'book', 'name', 'description', 'image')
+        read_only_fields = ('id',)
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = '__all__'
-
-class LibrarySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Library
-        fields = '__all__'
+        fields = ('id', 'book', 'name', 'description')
+        read_only_fields = ('id',)
