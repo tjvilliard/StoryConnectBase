@@ -8,7 +8,7 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):   
-    list_display = ('book', 'title')
+    list_display = ('book', 'chapter_title')
 
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):

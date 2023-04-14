@@ -54,13 +54,12 @@ class Chapter(models.Model):
 
     # redundant?
     chapter_title = models.CharField(max_length=100) 
-    title = models.CharField(max_length=100)
 
     chapter_content = models.TextField()
 
     # What are these for?
-    scene = models.CharField(max_length=50, blank=True)
-    scene_content = models.CharField(max_length=50, blank=True)
+    # scene = models.CharField(max_length=50, blank=True)
+    # scene_content = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return self.chapter_title
@@ -90,4 +89,16 @@ class Location(models.Model):
     # add more fields here
 
     def __str__(self):
+<<<<<<< HEAD
         return self.name
+=======
+        return self.name
+
+class Scene(models.Model):
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    scene_title = models.CharField(max_length=100, blank=True)
+    scene_content = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.scene_title
+>>>>>>> feature/backend-construction

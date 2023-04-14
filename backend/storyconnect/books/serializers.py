@@ -35,3 +35,9 @@ class LibrarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Library
         fields = "__all__"
+
+class SceneSerializer(serializers.ModelSerializer):
+    chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all(), many=False)
+    class Meta:
+        model = Scene
+        fields = "__all__"
