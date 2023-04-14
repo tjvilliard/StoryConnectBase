@@ -21,7 +21,7 @@ services:
 
   storyconnect:
     build: .
-    container_name: storyconnect
+    container_name: storyconnect 
     command: |-
       bash -c " ls &&
       python manage.py migrate && 
