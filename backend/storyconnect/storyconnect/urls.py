@@ -27,5 +27,5 @@ router.register(r'books', books_views.BookViewSet, basename='books')
 urlpatterns = router.urls
 
 urlpatterns += [
-    path('admin/', admin.site.urls),
+    path('api/admin/', admin.site.urls),
 ]
