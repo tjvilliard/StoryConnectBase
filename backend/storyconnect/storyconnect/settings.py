@@ -85,6 +85,10 @@ WSGI_APPLICATION = 'storyconnect.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# def getHost():
+#     print(os.getenv('HOST'))
+#     return os.getenv('HOST')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
