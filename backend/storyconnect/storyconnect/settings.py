@@ -28,6 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["storyconnect", "localhost", "127.0.0.1", "storyconnect.app"]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://storyconnect.app',
+]
+
+CSRF_COOKIE_DOMAIN = 'storyconnect.app'
 
 # Application definition
 
@@ -82,8 +87,13 @@ WSGI_APPLICATION = 'storyconnect.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.getenv('HOST'),
+        'NAME': os.getenv('NAME'),
+        'PORT': os.getenv('PORT'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD':  os.getenv('PASSWORD').strip(),
+        'OPTIONS': {'sslmode': os.getenv('SSLMODE')},
     }
 }
 
