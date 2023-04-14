@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   beamer: ^1.5.3
+  bloc_concurrency: ^0.2.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
@@ -15,6 +16,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   google_fonts: ^4.0.3
   json_annotation: ^4.8.0
+  tuple: ^2.0.1
     
 
 dev_dependencies:
