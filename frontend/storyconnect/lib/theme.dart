@@ -23,7 +23,6 @@ const ColorScheme myColorScheme = ColorScheme(
 final TextTheme myTextTheme = TextTheme(
   displayLarge: GoogleFonts.ramabhadra(
     fontSize: 24,
-    fontWeight: FontWeight.bold,
     color: Colors.black,
   ),
   bodyLarge: GoogleFonts.ramabhadra(
@@ -33,4 +32,5 @@ final TextTheme myTextTheme = TextTheme(
 );
 
 ThemeData myTheme = ThemeData.from(
-    colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true);
+        colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true)
+    .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
