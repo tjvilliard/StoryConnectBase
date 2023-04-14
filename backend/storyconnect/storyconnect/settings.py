@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-h0*oug9uh#y053hd0ij67=)fr@sytr5=fs_h5)dr_ft562%_8b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["storyconnect"]
+ALLOWED_HOSTS = ["storyconnect", "localhost"]
 
 
 # Application definition
