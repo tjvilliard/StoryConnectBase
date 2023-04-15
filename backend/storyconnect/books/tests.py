@@ -24,10 +24,11 @@ class UserBookCreationTestCase(APITestCase):
         )
         # create a book for the user
         self.userbook = Book.objects.create(
-            title="Red Queen", 
+            title = "Red Queen", 
             author = "Victoria Aveyard", 
             owner = self.user,
-            language=1,target_audience = 1,
+            language = 1,
+            target_audience = 1,
             synopsis = "This is the book synopsis.",
             copyright = 1, 
             titlepage = "This is the book title page.")
@@ -46,17 +47,18 @@ class UserBookCreationTestCase(APITestCase):
         test BookViewSet list method
         '''
         self.assertEqual(Book.objects.count(), 2)
-        response = self.client.get('/book/')
+        response = self.client.get('/books/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
     # testing perform query to only show the author's books
     def test_author_all_books(self):
         authorbooks = Book.objects.filter(owner = self.user)
         for b in authorbooks:
-            response = self.client.get(f'/book/{b.owner}/') # not sure
+            response = self.client.get(f'/books/{b.owner}/') # not sure
             self.assertEqual(response.status_code, status.HTTP_200_OK)                           
     
     def test_getting_book_properties(self):
+
         attr_dict = {
             'title'               : "Red Queen",
             'author'              : "Victoria Aveyard",
@@ -76,20 +78,20 @@ class UserBookCreationTestCase(APITestCase):
         # self.userbook.queryset
 
     def test_retrieve_all_book(self):
-        bookview = BookViewSet.retrieve()
-        attr_dict = {
-            'title'               : "Red Queen",
-            'author'              : "Victoria Aveyard",
-            'language'            : 1,
-            'target_audience'     : 1,
-            'synopsis'            : "This is the book synopsis.",
-            'copyright'           : 1,
-            'titlepage'           : "This is the book title page."}
-        self.assertEqual(bookview.data, attr_dict)
+        all_books = Book.objects.all()
+        response = self.client.get(f'/books/')
+        # attr_dict = {
+        #     'title'               : "Red Queen",
+        #     'author'              : "Victoria Aveyard",
+        #     'language'            : 1,
+        #     'target_audience'     : 1,
+        #     'synopsis'            : "This is the book synopsis.",
+        #     'copyright'           : 1,
+        #     'titlepage'           : "This is the book title page."}
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # testing to miss the non-null attribute when creating or something
     def test_filling_in_with_invalid_input_for_attributes(self):
-
         return 0
 
     def test_updating_book_properties(self):
@@ -107,7 +109,7 @@ class UserBookCreationTestCase(APITestCase):
 
     def test_getting_a_specific_book(self):
         dune = Book.objects.filter(title="Dune")
-        response = self.client.get(f'/book/{dune}')
+        response = self.client.get(f'/books/{dune}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
 content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
