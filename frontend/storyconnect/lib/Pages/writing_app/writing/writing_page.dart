@@ -26,6 +26,14 @@ class WritingPageViewState extends State<WritingPageView> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (mounted) {
+      controller.text = BlocProvider.of<PageBloc>(context).state[index] ?? "";
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<PageBloc, Map<int, String>>(
         buildWhen: (previous, current) {
