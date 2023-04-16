@@ -28,6 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["storyconnect", "localhost", "127.0.0.1", "storyconnect.app"]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://storyconnect.app',
+]
+
+CSRF_COOKIE_DOMAIN = 'storyconnect.app'
 
 # Application definition
 
