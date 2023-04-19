@@ -46,7 +46,8 @@ class ChapterNavigation extends StatelessWidget {
                                     .add(AddChapter(
                                       pageBloc: context.read<PageBloc>(),
                                       callerIndex: chapterState.currentIndex,
-                                      pages: context.read<PageBloc>().state,
+                                      pages:
+                                          context.read<PageBloc>().state.pages,
                                     )),
                                 child: Text("Add Chapter"));
                           }

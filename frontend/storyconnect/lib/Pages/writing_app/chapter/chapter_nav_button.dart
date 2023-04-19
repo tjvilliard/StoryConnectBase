@@ -18,8 +18,8 @@ class ChapterNavigationButton extends StatelessWidget {
       final selectedTextColor = Colors.white;
       return Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
-          child: BlocBuilder<PageBloc, Map<int, String>>(
-            builder: (BuildContext context, pages) {
+          child: BlocBuilder<PageBloc, PageBlocStruct>(
+            builder: (BuildContext context, PageBlocStruct pageBlocStruct) {
               return OutlinedButton(
                   style: OutlinedButton.styleFrom(
                       backgroundColor: chapterState.currentIndex == index
@@ -29,7 +29,7 @@ class ChapterNavigationButton extends StatelessWidget {
                     context.read<ChapterBloc>().add(SwitchChapter(
                         pageBloc: context.read<PageBloc>(),
                         callerIndex: index,
-                        pages: pages,
+                        pages: pageBlocStruct.pages,
                         chapterToSwitchFrom: chapterState.currentIndex));
                   },
                   child: Padding(

@@ -16,6 +16,10 @@ class WritingPageViewState extends State<WritingPageView> {
   late final int index;
   late final FocusNode node;
   late final PagingLogic pagingLogic;
+  late final bool focusWhenBuilt;
+  bool shouldNav = false;
+  bool firstNav = true;
+
   @override
   void initState() {
     controller = TextEditingController();
@@ -28,21 +32,45 @@ class WritingPageViewState extends State<WritingPageView> {
   @override
   void didChangeDependencies() {
     if (mounted) {
-      controller.text = BlocProvider.of<PageBloc>(context).state[index] ?? "";
+      controller.text =
+          BlocProvider.of<PageBloc>(context).state.pages[index] ?? "";
     }
     super.didChangeDependencies();
   }
 
+  void scrollToSelf(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      node.requestFocus();
+      await Scrollable.ensureVisible(node.context!,
+          duration: Duration(milliseconds: 250),
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd);
+      controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: controller.text.length));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PageBloc, Map<int, String>>(
-        buildWhen: (previous, current) {
-      final bool rebuild = controller.text != current[index];
+    return BlocConsumer<PageBloc, PageBlocStruct>(
+        listenWhen: (previous, current) {
+      return current.navigateToIndex == index && node.context != null;
+    }, listener: (context, state) async {
+      shouldNav = true;
+    }, buildWhen: (previousStruct, currentStruct) {
+      final bool rebuild = controller.text != currentStruct.pages[index];
       if (rebuild) {
-        controller.text = current[index] ?? "";
+        controller.text = currentStruct.pages[index] ?? "";
       }
       return rebuild;
     }, builder: (context, state) {
+      if (shouldNav) {
+        scrollToSelf(context);
+        shouldNav = false;
+      } else if (firstNav) {
+        scrollToSelf(context);
+        firstNav = false;
+      }
+
       return Container(
           decoration: BoxDecoration(
             border: Border.all(width: .5),
