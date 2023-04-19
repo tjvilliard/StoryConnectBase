@@ -36,7 +36,7 @@ class UserBookCreationTestCase(APITestCase):
 
         #The app uses token authentication
         # self.token = Token.objects.get(user = self.user)
-        # self.client = APIClient()
+        self.client = APIClient()
         
         # #We pass the token in all calls to the API
         # self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
@@ -57,6 +57,11 @@ class UserBookCreationTestCase(APITestCase):
             response = self.client.get(f'/books/{b.owner}/') # not sure
             self.assertEqual(response.status_code, status.HTTP_200_OK)                           
     
+    def test_a_book_property(self):
+        response = self.client.get(f'/books/{self.userbook}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)                           
+        self.assertEqual(Book.objects.get().__getattribute__(), 'to be made')
+
     def test_getting_book_properties(self):
 
         attr_dict = {
@@ -90,13 +95,10 @@ class UserBookCreationTestCase(APITestCase):
         #     'titlepage'           : "This is the book title page."}
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    # testing to miss the non-null attribute when creating or something
-    def test_filling_in_with_invalid_input_for_attributes(self):
-        return 0
 
     def test_updating_book_properties(self):
         self.userbook.title = "Dune"
-        bookview = BookViewSet.update()
+        bookview = BookViewSet.update() # needs fixing
         attr_dict = {
             'title'               : "Dune",
             'author'              : "Victoria Aveyard",

@@ -89,9 +89,6 @@ class Location(models.Model):
     # add more fields here
 
     def __str__(self):
-<<<<<<< HEAD
-        return self.name
-=======
         return self.name
 
 class Scene(models.Model):
@@ -101,4 +98,3 @@ class Scene(models.Model):
 
     def __str__(self):
         return self.scene_title
->>>>>>> feature/backend-construction
