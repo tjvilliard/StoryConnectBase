@@ -72,19 +72,11 @@ class BookViewSetTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)
 
-
-
-
-
 class UserBookCreationTestCase(APITestCase):
     """
     Test suite for User and Book Properties
     """
     def setUp(self):
-
-        # Book.objects.create(title= "Demo item 2",description= "This is a description for demo 2",price= 700,stock= 15)
-
-        # self.items = Book.objects.all()
 
         # create user
         self.user = User.objects.create_user(
@@ -198,5 +190,6 @@ class UserBookCreationTestCase(APITestCase):
         deletedbook = Book.objects.filter(title="Glass Sword")
         response = self.client.get(f'/books/{delete_a_book}')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(len(deletedbook), 0)
 
 content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
