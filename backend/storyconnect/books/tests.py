@@ -7,53 +7,6 @@ from django.urls import reverse
 
 from .models import Book, Chapter, Character, Location, Scene
 
-        # Book.objects.create(title= "Demo item 2",description= "This is a description for demo 2",price= 700,stock= 15)
-
-# class BookTestCase(APITestCase):
-#     def setUp(self):
-#         self.user = User.objects.create_user(username='testuser', password='testpassword', email='testmail')
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.user)
-#         self.book = Book.objects.create(
-#             title="Test Book",
-#             author="Test Author",
-#             owner=self.user,
-#             language="English",
-#             target_audience=1,
-#             copyright=1,
-#             titlepage="Test Title Page",
-#             synopsis="Test synopsis"
-#         )
-
-#     def test_create_book(self):
-#         response = self.client.post('/api/books/', {
-#             'title': 'New Book',
-#             'author': 'New Author',
-#             'language': 'English',
-#             'target_audience': 1,
-#             'copyright': 1,
-#             'titlepage': 'New Title Page',
-#             'synopsis': 'New synopsis'
-#         })
-#         self.assertEqual(response.status_code, 201)
-
-#     def test_update_book(self):
-#         response = self.client.put(f'/api/books/{self.book.id}/', {
-#             'title': 'Updated Book',
-#             'author': 'Updated Author',
-#             'language': 'English',
-#             'target_audience': 2,
-#             'copyright': 2,
-#             'titlepage': 'Updated Title Page',
-#             'synopsis': 'Updated synopsis'
-#         })
-#         print(response.data)
-#         self.assertEqual(response.status_code, 200)
-
-#     def test_delete_book(self):
-#         response = self.client.delete(f'/api/books/{self.book.id}/')
-#         self.assertEqual(response.status_code, 204)
-
 # Add test cases for Chapter, Character, Location, and Scene models similarly
 class BookViewSetTestCase(APITestCase):
 
