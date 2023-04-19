@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-from django.contrib.auth.models import User
-from .models import *
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APIClient
-from rest_framework.test import APITestCase
-from rest_framework import status
-from views import *
-
-class UserBookCreationTestCase(APITestCase):
-    """
-    Test suite for User and Book Properties
-    """
-    def setUp(self):
-=======
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
@@ -21,12 +6,9 @@ from rest_framework import status
 from django.urls import reverse
 
 from .models import Book, Chapter, Character, Location, Scene
->>>>>>> feature/backend-construction
 
         # Book.objects.create(title= "Demo item 2",description= "This is a description for demo 2",price= 700,stock= 15)
 
-<<<<<<< HEAD
-=======
 # class BookTestCase(APITestCase):
 #     def setUp(self):
 #         self.user = User.objects.create_user(username='testuser', password='testpassword', email='testmail')
@@ -146,7 +128,6 @@ class UserBookCreationTestCase(APITestCase):
 
         # Book.objects.create(title= "Demo item 2",description= "This is a description for demo 2",price= 700,stock= 15)
 
->>>>>>> feature/backend-construction
         # self.items = Book.objects.all()
 
         # create user
@@ -157,18 +138,10 @@ class UserBookCreationTestCase(APITestCase):
         )
         # create a book for the user
         self.userbook = Book.objects.create(
-<<<<<<< HEAD
-            title = "Red Queen", 
-            author = "Victoria Aveyard", 
-            owner = self.user,
-            language = 1,
-            target_audience = 1,
-=======
             title="Red Queen", 
             author = "Victoria Aveyard", 
             owner = self.user,
             language=1,target_audience = 1,
->>>>>>> feature/backend-construction
             synopsis = "This is the book synopsis.",
             copyright = 1, 
             titlepage = "This is the book title page.")
@@ -176,11 +149,7 @@ class UserBookCreationTestCase(APITestCase):
 
         #The app uses token authentication
         # self.token = Token.objects.get(user = self.user)
-<<<<<<< HEAD
-        self.client = APIClient()
-=======
         # self.client = APIClient()
->>>>>>> feature/backend-construction
         
         # #We pass the token in all calls to the API
         # self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
@@ -201,17 +170,7 @@ class UserBookCreationTestCase(APITestCase):
             response = self.client.get(f'/books/{b.owner}/') # not sure
             self.assertEqual(response.status_code, status.HTTP_200_OK)                           
     
-<<<<<<< HEAD
-    def test_a_book_property(self):
-        response = self.client.get(f'/books/{self.userbook}')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)                           
-        self.assertEqual(Book.objects.get().__getattribute__(), 'to be made')
-
     def test_getting_book_properties(self):
-
-=======
-    def test_getting_book_properties(self):
->>>>>>> feature/backend-construction
         attr_dict = {
             'title'               : "Red Queen",
             'author'              : "Victoria Aveyard",
@@ -231,24 +190,6 @@ class UserBookCreationTestCase(APITestCase):
         # self.userbook.queryset
 
     def test_retrieve_all_book(self):
-<<<<<<< HEAD
-        all_books = Book.objects.all()
-        response = self.client.get(f'/books/')
-        # attr_dict = {
-        #     'title'               : "Red Queen",
-        #     'author'              : "Victoria Aveyard",
-        #     'language'            : 1,
-        #     'target_audience'     : 1,
-        #     'synopsis'            : "This is the book synopsis.",
-        #     'copyright'           : 1,
-        #     'titlepage'           : "This is the book title page."}
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-    
-
-    def test_updating_book_properties(self):
-        self.userbook.title = "Dune"
-        bookview = BookViewSet.update() # needs fixing
-=======
         bookview = BookViewSet.retrieve()
         attr_dict = {
             'title'               : "Red Queen",
@@ -268,7 +209,6 @@ class UserBookCreationTestCase(APITestCase):
     def test_updating_book_properties(self):
         self.userbook.title = "Dune"
         bookview = BookViewSet.update()
->>>>>>> feature/backend-construction
         attr_dict = {
             'title'               : "Dune",
             'author'              : "Victoria Aveyard",
@@ -281,14 +221,7 @@ class UserBookCreationTestCase(APITestCase):
 
     def test_getting_a_specific_book(self):
         dune = Book.objects.filter(title="Dune")
-<<<<<<< HEAD
-        response = self.client.get(f'/books/{dune}')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
-=======
         response = self.client.get(f'/books/{dune.id}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
 content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
->>>>>>> feature/backend-construction
