@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'rest_framework',
+    'rest_framework_json_api',
     'rest_framework.authtoken',
     'books',
     'core',
