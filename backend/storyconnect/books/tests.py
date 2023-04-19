@@ -129,15 +129,15 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page."}
-        response = self.client.get(f"/books/{self.userbook}", attr_dict, format='json')
+        response = self.client.get(f"/books/{self.userbook.id}", attr_dict, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
         self.assertEqual(self.userbook.__getattribute__.__dict__(), attr_dict)
         # self.userbook.queryset
     
     # testing gettting a specific book properties - using sql filter method
     def test_getting_a_specific_book(self):
-        dune = Book.objects.filter(title="Dune")
-        response = self.client.get(f'/books/{dune.id}')
+        dune = Book.objects.filter(title="Red Queen")[0]
+        response = self.client.get(f'/books/{dune.title}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # testing to retrieve all books in the database
@@ -155,7 +155,7 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page."}     
-        update_book_prop = self.client.put(f'/books/{self.userbook}', data=attr_dict)
+        update_book_prop = self.client.put(f'/books/{self.userbook.id}', data=attr_dict)
         self.assertEqual(update_book_prop.status_code, status.HTTP_200_OK)
         self.assertEqual(self.userbook.__getattribute__(), attr_dict)
 

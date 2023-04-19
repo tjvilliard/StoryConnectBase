@@ -40,23 +40,20 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
     on<RebuildPages>((event, emit) => _rebuildPages(event, emit));
   }
 
-  void _addPage(
-    AddPage event,
-    PageEmitter emit,
-  ) {
+  void _addPage(AddPage event, PageEmitter emit) {
     Map<int, String> pages = Map.from(state);
-    String textToUse = event.text;
-
-    final results = pagingLogic.shouldTriggerOverflow(textToUse, style);
-    if (results.didOverflow) {
-      textToUse = results.textToKeep;
-      _addPage(
-          AddPage(
-              text: results.overflowText, callerIndex: event.callerIndex + 2),
-          emit);
-    }
-    pages[event.callerIndex + 1] = textToUse;
+    _addPageHelper(pages, event.text, event.callerIndex + 1);
     emit(pages);
+  }
+
+  void _addPageHelper(Map<int, String> pages, String text, int pageIndex) {
+    final results = pagingLogic.shouldTriggerOverflow(text, style);
+    if (results.didOverflow) {
+      pages[pageIndex] = results.textToKeep;
+      _addPageHelper(pages, results.overflowText, pageIndex + 1);
+    } else {
+      pages[pageIndex] = text;
+    }
   }
 
   void _removePage(RemovePage event, PageEmitter emit) {
@@ -74,6 +71,6 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
 
   void _rebuildPages(RebuildPages event, PageEmitter emit) {
     emit({});
-    add(AddPage(text: event.text, callerIndex: -1));
+    _addPage(AddPage(text: event.text, callerIndex: -1), emit);
   }
 }
