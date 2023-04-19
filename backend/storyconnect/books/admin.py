@@ -4,7 +4,7 @@ from .models import Book, Chapter, Character, Location
 # Register your models here.
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'cover', 'date_created', 'date_modified', 'owner')
+    list_display = ('id', 'title', 'author', 'cover', 'date_created', 'date_modified', 'owner')
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):   

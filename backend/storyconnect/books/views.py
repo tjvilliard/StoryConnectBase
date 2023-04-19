@@ -28,7 +28,7 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        return Book.objects.filter(owner=self.request.user)
+        return Book.objects.filter(owner=self.request.user.id)
 
 # def create_book(request):
 #     if request.method == 'POST':

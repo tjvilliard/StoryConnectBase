@@ -10,10 +10,8 @@ services:
       - "8000:8000"
       
     volumes:
-      - ./backend/:/src
       - ./config/nginx:/etc/nginx/conf.d
       - ./backend/static:/static
-      - ./backend/static/MEDIA:/MEDIA
       - ./frontend/storyconnect/build/web:/usr/share/nginx/flutter
 
     depends_on:
@@ -32,3 +30,5 @@ services:
       - ./backend/storyconnect/static:/static
     expose:
       - "8000"
+
+  
