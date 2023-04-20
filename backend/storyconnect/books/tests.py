@@ -33,7 +33,7 @@ class BookViewSetTestCase(APITestCase):
         )
 
         # URL for the books API
-        self.books_url = '/api/books/'
+        self.books_url = '/books/'
     
     def test_create_book(self):
         data = {
@@ -51,7 +51,7 @@ class BookViewSetTestCase(APITestCase):
 
     def test_update_book(self):
         updated_title = 'Updated Test Book'
-        book_detail_url = reverse('book-detail', kwargs={'pk': self.book.pk})
+        book_detail_url = reverse('books-detail', kwargs={'pk': self.book.pk})
         data = {
             'title': updated_title,
             'author': self.book.author,
@@ -67,7 +67,7 @@ class BookViewSetTestCase(APITestCase):
         self.assertEqual(self.book.title, updated_title)
 
     def test_delete_book(self):
-        book_detail_url = reverse('book-detail', kwargs={'pk': self.book.pk})
+        book_detail_url = reverse('books-detail', kwargs={'pk': self.book.pk})
         response = self.client.delete(book_detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Book.objects.count(), 0)
@@ -116,7 +116,7 @@ class UserBookCreationTestCase(APITestCase):
     def test_author_all_books(self):
         authorbooks = Book.objects.filter(owner = self.user)
         for b in authorbooks:
-            response = self.client.get(f'/books/{b.owner}/') # not sure
+            response = self.client.get(f'/books/{b.id}/') # not sure
             self.assertEqual(response.status_code, status.HTTP_200_OK)                           
     
     # testing gettting the userbook book properties - using non-sql filter method
@@ -155,7 +155,7 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page."}     
-        update_book_prop = self.client.put(f'/books/{self.userbook}', data=attr_dict)
+        update_book_prop = self.client.put(f'/books/{self.userbook.id}', data=attr_dict)
         self.assertEqual(update_book_prop.status_code, status.HTTP_200_OK)
         self.assertEqual(self.userbook.__getattribute__(), attr_dict)
 
