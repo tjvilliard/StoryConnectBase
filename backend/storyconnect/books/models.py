@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Book(models.Model):
@@ -49,6 +50,15 @@ class Library(models.Model):
     status = models.IntegerField(choices=BOOK_STATUS)
     reader = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def get_chapters(self):
+        return Chapter.objects.filter(book=self)
+    
+    def get_locations(self):
+        return Location.objects.filter(book=self)
+    
+    def get_characters(self):
+        return Character.objects.filter(book=self)
+
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
@@ -63,6 +73,11 @@ class Chapter(models.Model):
 
     def __str__(self):
         return self.chapter_title
+    
+    def get_scenes(self):
+        return Scene.objects.filter(chapter=self)
+    
+    
 
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
