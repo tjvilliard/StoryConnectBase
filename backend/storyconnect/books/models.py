@@ -41,6 +41,15 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+    def get_chapters(self):
+        return Chapter.objects.filter(book=self)
+    
+    def get_locations(self):
+        return Location.objects.filter(book=self)
+    
+    def get_characters(self):
+        return Character.objects.filter(book=self)
+    
 class Library(models.Model):
     BOOK_STATUS = [
         (1, "Reading"), 
@@ -50,14 +59,6 @@ class Library(models.Model):
     status = models.IntegerField(choices=BOOK_STATUS)
     reader = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def get_chapters(self):
-        return Chapter.objects.filter(book=self)
-    
-    def get_locations(self):
-        return Location.objects.filter(book=self)
-    
-    def get_characters(self):
-        return Character.objects.filter(book=self)
 
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
