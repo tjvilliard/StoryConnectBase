@@ -1,5 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 
 class RenderPageSliver extends RenderSliverFixedExtentList {
   RenderPageSliver({
@@ -9,7 +10,7 @@ class RenderPageSliver extends RenderSliverFixedExtentList {
 
   @override
   SliverConstraints get constraints {
-    return super.constraints.copyWith(crossAxisExtent: 800);
+    return super.constraints.copyWith(crossAxisExtent: PageBloc.pageWidth);
   }
 }
 

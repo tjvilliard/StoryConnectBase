@@ -1,4 +1,5 @@
 import 'package:flutter/painting.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 
 class OverFlowStruct {
   final bool didOverflow;
@@ -19,10 +20,10 @@ class PagingLogic {
     bool didOverflow = false;
 
     _textPainter.text = TextSpan(text: text, style: style);
-    _textPainter.layout(maxWidth: 800);
+    _textPainter.layout(maxWidth: PageBloc.pageWidth);
 
     Size size = _textPainter.size;
-    while (size.height > 850) {
+    while (size.height > (PageBloc.pageHeight - 100)) {
       didOverflow = true;
       // move the last line to the next page
       int start = text.lastIndexOf(' ');
@@ -38,7 +39,7 @@ class PagingLogic {
         text: text,
         style: style,
       );
-      _textPainter.layout(maxWidth: 800);
+      _textPainter.layout(maxWidth: PageBloc.pageWidth);
       size = _textPainter.size;
     }
 

@@ -11,7 +11,7 @@ class PagingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(maxWidth: 800),
+        constraints: BoxConstraints(maxWidth: PageBloc.pageWidth),
         child: BlocBuilder<ChapterBloc, ChapterBlocStruct>(
             buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex;
@@ -25,7 +25,7 @@ class PagingView extends StatelessWidget {
             return CustomScrollView(
               slivers: [
                 PageSliver(
-                  itemExtent: 1100,
+                  itemExtent: PageBloc.pageHeight,
                   delegate: SliverChildBuilderDelegate(
                     childCount: context.watch<PageBloc>().state.pages.length,
                     (BuildContext context, int index) {
