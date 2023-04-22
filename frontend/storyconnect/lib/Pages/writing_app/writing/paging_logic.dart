@@ -12,41 +12,54 @@ class OverFlowStruct {
 }
 
 class PagingLogic {
-  OverFlowStruct shouldTriggerOverflow(String text, TextStyle style) {
-    final TextPainter _textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
-    StringBuffer moveToNextPage = StringBuffer();
-    bool didOverflow = false;
+  static TextPainter _textPainter = TextPainter(
+    textDirection: TextDirection.ltr,
+  );
+  static StringBuffer moveToNextPage = StringBuffer();
+  static int? _maxCharsPerPage;
 
-    _textPainter.text = TextSpan(text: text, style: style);
-    _textPainter.layout(maxWidth: PageBloc.pageWidth);
+  Future<OverFlowStruct> shouldTriggerOverflow(
+      String text, TextStyle style) async {
+    return await Future.microtask(() async {
+      moveToNextPage.clear();
+      bool didOverflow = false;
 
-    Size size = _textPainter.size;
-    while (size.height > (PageBloc.pageHeight - 100)) {
-      didOverflow = true;
-      // move the last line to the next page
-      int start = text.lastIndexOf(' ');
-      final int end = text.length;
-
-      if (start == -1) {
-        start = end - 100;
+      if (_maxCharsPerPage == null) {
+        _calculateMaxCharsPerPage(style);
       }
 
-      moveToNextPage.write(text.substring(start, end));
-      text = text.replaceRange(start, end, "");
-      _textPainter.text = TextSpan(
-        text: text,
-        style: style,
-      );
+      while (text.length > _maxCharsPerPage!) {
+        didOverflow = true;
+        int start = text.lastIndexOf(' ', _maxCharsPerPage!);
+        if (start == -1) {
+          start = _maxCharsPerPage! - 100;
+        }
+
+        moveToNextPage.write(text.substring(start));
+        text = text.substring(0, start);
+      }
+
+      return OverFlowStruct(
+          didOverflow: didOverflow,
+          textToKeep: text,
+          overflowText: moveToNextPage.toString());
+    });
+  }
+
+  void _calculateMaxCharsPerPage(TextStyle style) {
+    StringBuffer testBuffer = StringBuffer();
+    int max = 0;
+
+    _textPainter.text = TextSpan(text: "A", style: style);
+    _textPainter.layout(maxWidth: PageBloc.pageWidth);
+    while (_textPainter.size.height < PageBloc.pageHeight) {
+      testBuffer.write("AAAA");
+      max += 4;
+      _textPainter.text = TextSpan(text: testBuffer.toString(), style: style);
       _textPainter.layout(maxWidth: PageBloc.pageWidth);
-      size = _textPainter.size;
     }
 
-    return OverFlowStruct(
-        didOverflow: didOverflow,
-        textToKeep: text,
-        overflowText: moveToNextPage.toString());
+    _maxCharsPerPage = max;
   }
 
   bool shouldTriggerUnderFlow(String text, TextStyle style) {

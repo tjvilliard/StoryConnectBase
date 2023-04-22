@@ -80,37 +80,34 @@ class WritingPageViewState extends State<WritingPageView> {
   }
 
   void scrollToSelf(BuildContext context, PageBlocStruct state) {
-    print("here");
-    if (mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        node.requestFocus();
-        if (state.cursorStart) {
-          controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length));
-        } else {
-          controller.selection =
-              TextSelection.fromPosition(TextPosition(offset: 0));
-        }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      node.requestFocus();
+      if (state.cursorStart) {
+        controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: controller.text.length));
+      } else {
+        controller.selection =
+            TextSelection.fromPosition(TextPosition(offset: 0));
+      }
 
-        final pageOffset = (PageBloc.pageHeight) * index;
-        final cursorPosition =
-            await _getCursorPosition(context, controller.selection);
+      final pageOffset = (PageBloc.pageHeight) * index;
+      final cursorPosition =
+          await _getCursorPosition(context, controller.selection);
 
-        double to;
-        if (index == 0) {
-          to = max(0, cursorPosition.dy - 100);
-        } else {
-          to = max(0, cursorPosition.dy + pageOffset - 50);
-        }
+      double to;
+      if (index == 0) {
+        to = max(0, cursorPosition.dy - 100);
+      } else {
+        to = max(0, cursorPosition.dy + pageOffset - 50);
+      }
 
-        final scroll = Scrollable.maybeOf(context);
-        scroll?.position.animateTo(
-          to,
-          duration: Duration(milliseconds: 350),
-          curve: Curves.easeInOut,
-        );
-      });
-    }
+      final scroll = Scrollable.maybeOf(context);
+      scroll?.position.animateTo(
+        to,
+        duration: Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
@@ -166,8 +163,8 @@ class WritingPageViewState extends State<WritingPageView> {
           child: TextField(
             key: _textFieldKey,
             focusNode: node,
-            onChanged: (value) {
-              final results = pagingLogic.shouldTriggerOverflow(
+            onChanged: (value) async {
+              final results = await pagingLogic.shouldTriggerOverflow(
                   value, TextStyle(fontSize: 20));
               cursorPosition = controller.selection.baseOffset;
 
