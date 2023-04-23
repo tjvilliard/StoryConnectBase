@@ -6,6 +6,8 @@ import 'package:storyconnect/Pages/writing_app/view.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
+import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
+import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
   @override
@@ -32,7 +34,17 @@ class WriterLocations extends BeamLocation<BeamState> {
             ], child: WritingAppView())));
       } else {
         pages.add(
-          const BeamPage(key: ValueKey('writer'), child: WritingHomeView()),
+          BeamPage(
+              key: ValueKey('writer'),
+              child: RepositoryProvider(
+                lazy: false,
+                create: (_) => WritingHomeRepository(),
+                child: BlocProvider(
+                  create: (context) => WritingHomeBloc(
+                      repository: context.read<WritingHomeRepository>()),
+                  child: WritingHomeView(),
+                ),
+              )),
         );
       }
     }
