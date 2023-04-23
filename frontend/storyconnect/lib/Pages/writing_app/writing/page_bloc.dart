@@ -68,11 +68,11 @@ class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
     on<RebuildPages>((event, emit) => _rebuildPages(event, emit));
   }
 
-  void _addPage(AddPage event, PageEmitter emit) async {
+  void _addPage(AddPage event, PageEmitter emit) {
     Map<int, String> pages = Map.from(state.pages);
     Map<int, bool> pagesCreated = Map.from(state.pagesCreated);
-    int recursivePageInt = await _addPageHelper(
-        pages, pagesCreated, event.text, event.callerIndex + 1);
+    int recursivePageInt =
+        _addPageHelper(pages, pagesCreated, event.text, event.callerIndex + 1);
 
     for (var pageIndex in pagesCreated.keys) {
       if ((pagesCreated[pageIndex] == true &&
@@ -92,12 +92,12 @@ class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
         cursorStart: false));
   }
 
-  Future<int> _addPageHelper(Map<int, String> pages,
-      Map<int, bool> pagesCreated, String text, int pageIndex) async {
+  int _addPageHelper(Map<int, String> pages, Map<int, bool> pagesCreated,
+      String text, int pageIndex) {
     final existingPageContent = pages[pageIndex] ?? "";
 
-    final results = await pagingLogic.shouldTriggerOverflow(
-        "$text $existingPageContent", style);
+    final results =
+        pagingLogic.shouldTriggerOverflow("$text $existingPageContent", style);
     pagesCreated[pageIndex] = true;
     if (results.didOverflow) {
       pages[pageIndex] = results.textToKeep;

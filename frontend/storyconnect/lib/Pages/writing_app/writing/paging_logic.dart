@@ -18,32 +18,29 @@ class PagingLogic {
   static StringBuffer moveToNextPage = StringBuffer();
   static int? _maxCharsPerPage;
 
-  Future<OverFlowStruct> shouldTriggerOverflow(
-      String text, TextStyle style) async {
-    return await Future.microtask(() async {
-      moveToNextPage.clear();
-      bool didOverflow = false;
+  OverFlowStruct shouldTriggerOverflow(String text, TextStyle style) {
+    moveToNextPage.clear();
+    bool didOverflow = false;
 
-      if (_maxCharsPerPage == null) {
-        _calculateMaxCharsPerPage(style);
+    if (_maxCharsPerPage == null) {
+      _calculateMaxCharsPerPage(style);
+    }
+
+    while (text.length > _maxCharsPerPage!) {
+      didOverflow = true;
+      int start = text.lastIndexOf(' ', _maxCharsPerPage!);
+      if (start == -1) {
+        start = _maxCharsPerPage! - 100;
       }
 
-      while (text.length > _maxCharsPerPage!) {
-        didOverflow = true;
-        int start = text.lastIndexOf(' ', _maxCharsPerPage!);
-        if (start == -1) {
-          start = _maxCharsPerPage! - 100;
-        }
+      moveToNextPage.write(text.substring(start));
+      text = text.substring(0, start);
+    }
 
-        moveToNextPage.write(text.substring(start));
-        text = text.substring(0, start);
-      }
-
-      return OverFlowStruct(
-          didOverflow: didOverflow,
-          textToKeep: text,
-          overflowText: moveToNextPage.toString());
-    });
+    return OverFlowStruct(
+        didOverflow: didOverflow,
+        textToKeep: text,
+        overflowText: moveToNextPage.toString());
   }
 
   void _calculateMaxCharsPerPage(TextStyle style) {
