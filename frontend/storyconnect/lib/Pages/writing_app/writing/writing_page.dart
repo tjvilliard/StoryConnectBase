@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
+typedef void ScrollToIndexCallback(PageBlocStruct state);
+
 class WritingPageView extends StatefulWidget {
   final int index;
   const WritingPageView({super.key, required this.index});
@@ -13,7 +15,8 @@ class WritingPageView extends StatefulWidget {
   State<WritingPageView> createState() => WritingPageViewState();
 }
 
-class WritingPageViewState extends State<WritingPageView> {
+class WritingPageViewState extends State<WritingPageView>
+    with AutomaticKeepAliveClientMixin {
   late final TextEditingController controller;
   late final int index;
   late final FocusNode node;
@@ -27,7 +30,6 @@ class WritingPageViewState extends State<WritingPageView> {
   @override
   void initState() {
     controller = TextEditingController();
-
     index = widget.index;
     node = FocusNode();
     pagingLogic = PagingLogic();
@@ -56,8 +58,7 @@ class WritingPageViewState extends State<WritingPageView> {
     super.didChangeDependencies();
   }
 
-  Future<Offset> _getCursorPosition(
-      BuildContext context, TextSelection caretPosition) async {
+  Offset getCursorPosition(BuildContext context, TextSelection caretPosition) {
     final RenderObject? textFieldRenderObject =
         _textFieldKey.currentContext?.findRenderObject();
     if (textFieldRenderObject == null) {
@@ -79,62 +80,17 @@ class WritingPageViewState extends State<WritingPageView> {
     return localPosition;
   }
 
-  void scrollToSelf(BuildContext context, PageBlocStruct state) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      node.requestFocus();
-      if (state.cursorStart) {
-        controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: controller.text.length));
-      } else {
-        controller.selection =
-            TextSelection.fromPosition(TextPosition(offset: 0));
-      }
-
-      final pageOffset = (PageBloc.pageHeight) * index;
-      final cursorPosition =
-          await _getCursorPosition(context, controller.selection);
-
-      double to;
-      if (index == 0) {
-        to = max(0, cursorPosition.dy - 100);
-      } else {
-        to = max(0, cursorPosition.dy + pageOffset - 50);
-      }
-
-      final scroll = Scrollable.maybeOf(context);
-      scroll?.position.animateTo(
-        to,
-        duration: Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext parentContext) {
-    return BlocConsumer<PageBloc, PageBlocStruct>(
-        listenWhen: (previous, current) {
-      final bool wasFocused =
-          previous.navigateToIndex == current.navigateToIndex;
-      return current.navigateToIndex == index &&
-          node.context != null &&
-          !wasFocused;
-    }, listener: (context, state) async {
-      shouldNav = true;
-    }, buildWhen: (previousStruct, currentStruct) {
+    super.build(context);
+    return BlocBuilder<PageBloc, PageBlocStruct>(
+        buildWhen: (previousStruct, currentStruct) {
       final bool rebuild = controller.text != currentStruct.pages[index];
       if (rebuild) {
         controller.text = currentStruct.pages[index] ?? "";
       }
       return rebuild;
     }, builder: (context, state) {
-      if (shouldNav) {
-        scrollToSelf(context, state);
-        shouldNav = false;
-      } else if (firstNav) {
-        scrollToSelf(context, state);
-        firstNav = false;
-      }
       if (node.hasFocus) {
         try {
           final pos = controller.selection =
@@ -202,4 +158,7 @@ class WritingPageViewState extends State<WritingPageView> {
           ));
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
