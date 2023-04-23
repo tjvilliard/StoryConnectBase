@@ -27,7 +27,7 @@ class PagingView extends StatelessWidget {
                 PageSliver(
                   itemExtent: PageBloc.pageHeight,
                   delegate: SliverChildBuilderDelegate(
-                    childCount: context.watch<PageBloc>().state.pages.length,
+                    childCount: state.pages.length,
                     (BuildContext context, int index) {
                       return WritingPageView(
                         index: index,
