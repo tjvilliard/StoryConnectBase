@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
 
@@ -26,34 +27,6 @@ class BookToNavigate {
   BookToNavigate({required this.bookId});
 }
 
-class LoadingStruct {
-  final bool isLoading;
-  final String? message;
-
-  LoadingStruct({required this.isLoading, this.message});
-
-  factory LoadingStruct.loading(bool isLoading) {
-    return LoadingStruct(isLoading: isLoading);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is LoadingStruct &&
-        other.isLoading == isLoading &&
-        other.message == message;
-  }
-
-  @override
-  int get hashCode => isLoading.hashCode ^ message.hashCode;
-
-  @override
-  String toString() {
-    return 'LoadingStruct(isLoading: $isLoading, message: $message)';
-  }
-}
-
 class WritingHomeStruct {
   final List<Book> books;
   final BookToNavigate? bookToNavigate;
@@ -66,7 +39,7 @@ typedef WritingHomeEmitter = Emitter<WritingHomeStruct>;
 
 class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
   late final WritingHomeRepository repository;
-  WritingHomeBloc({required this.repository})
+  WritingHomeBloc(this.repository)
       : super(WritingHomeStruct(
             books: [], loadingStruct: LoadingStruct(isLoading: false))) {
     on<GetBooksEvent>((event, emit) => updateBooks(event, emit));

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingHomeView extends StatefulWidget {
   const WritingHomeView({Key? key}) : super(key: key);
@@ -97,14 +98,8 @@ class WritingHomeState extends State<WritingHomeView> {
                   itemBuilder: (context, index) {
                     if (index == state.books.length) {
                       return Center(
-                          child: Column(
-                        children: [
-                          if (state.loadingStruct.message != null)
-                            Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: Text(state.loadingStruct.message!)),
-                          CircularProgressIndicator()
-                        ],
+                          child: LoadingWidget(
+                        loadingStruct: state.loadingStruct,
                       ));
                     }
 

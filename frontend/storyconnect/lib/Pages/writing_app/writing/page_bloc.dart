@@ -1,5 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:bloc/bloc.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
+import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
 abstract class PageEvent {
@@ -28,12 +30,50 @@ class RebuildPages extends PageEvent {
   RebuildPages({required this.text}) : super(callerIndex: 0);
 }
 
-typedef PageEmitter = Emitter<Map<int, String>>;
+class PageBlocStruct {
+  final LoadingStruct loadingStruct;
+  final Map<int, String> pages;
 
-class PageBloc extends Bloc<PageEvent, Map<int, String>> {
+  PageBlocStruct({required this.loadingStruct, required this.pages});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is PageBlocStruct &&
+        other.loadingStruct == loadingStruct &&
+        _mapsAreEqual(other.pages, pages);
+  }
+
+  @override
+  int get hashCode => loadingStruct.hashCode ^ _mapHashCode(pages);
+
+  bool _mapsAreEqual(Map<int, String> a, Map<int, String> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  int _mapHashCode(Map<int, String> map) {
+    int hash = 0;
+    for (int i = 0; i < map.length; i++) {
+      hash ^= map[i].hashCode;
+    }
+    return hash;
+  }
+}
+
+typedef PageEmitter = Emitter<PageBlocStruct>;
+
+class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
+  final PagesProviderRepository repository;
   final PagingLogic pagingLogic = PagingLogic();
   final TextStyle style = TextStyle(fontSize: 20);
-  PageBloc() : super({0: ""}) {
+  PageBloc(this.repository)
+      : super(PageBlocStruct(
+            loadingStruct: LoadingStruct.loading(true), pages: {0: ''})) {
     on<AddPage>((event, emit) => _addPage(event, emit));
     on<RemovePage>((event, emit) => _removePage(event, emit));
     on<UpdatePage>((event, emit) => _updatePage(event, emit));
@@ -41,9 +81,10 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
   }
 
   void _addPage(AddPage event, PageEmitter emit) {
-    Map<int, String> pages = Map.from(state);
+    Map<int, String> pages = Map.from(state.pages);
     _addPageHelper(pages, event.text, event.callerIndex + 1);
-    emit(pages);
+    emit(PageBlocStruct(
+        loadingStruct: LoadingStruct.loading(false), pages: pages));
   }
 
   void _addPageHelper(Map<int, String> pages, String text, int pageIndex) {
@@ -58,19 +99,22 @@ class PageBloc extends Bloc<PageEvent, Map<int, String>> {
 
   void _removePage(RemovePage event, PageEmitter emit) {
     if (event.callerIndex != 0) {
-      state.remove(event.callerIndex);
-      emit(state);
+      final Map<int, String> pages = Map.from(state.pages);
+      pages.remove(event.callerIndex);
+      emit(PageBlocStruct(
+          loadingStruct: LoadingStruct.loading(false), pages: pages));
     }
   }
 
   void _updatePage(UpdatePage event, PageEmitter emit) {
-    Map<int, String> pages = Map.from(state);
+    Map<int, String> pages = Map.from(state.pages);
     pages[event.callerIndex] = event.text;
-    emit(pages);
+    emit(PageBlocStruct(
+        loadingStruct: LoadingStruct.loading(false), pages: pages));
   }
 
   void _rebuildPages(RebuildPages event, PageEmitter emit) {
-    emit({});
+    emit(PageBlocStruct(loadingStruct: LoadingStruct.loading(true), pages: {}));
     _addPage(AddPage(text: event.text, callerIndex: -1), emit);
   }
 }

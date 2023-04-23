@@ -16,16 +16,16 @@ class PagingView extends StatelessWidget {
             buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex;
         }, builder: (context, state) {
-          return BlocBuilder<PageBloc, Map<int, String>>(
+          return BlocBuilder<PageBloc, PageBlocStruct>(
               buildWhen: (previous, current) {
-            return previous.length != current.length;
+            return previous != current;
           }, builder: (context, state) {
             return CustomScrollView(
               slivers: [
                 PageSliver(
                   itemExtent: 1100,
                   delegate: SliverChildBuilderDelegate(
-                    childCount: context.watch<PageBloc>().state.length,
+                    childCount: state.pages.length,
                     (BuildContext context, int index) {
                       return WritingPageView(
                         index: index,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_create_button.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_nav_button.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 
 class ChapterNavigation extends StatelessWidget {
@@ -40,15 +40,7 @@ class ChapterNavigation extends StatelessWidget {
                         itemCount: chapterState.chapters.length + 1,
                         itemBuilder: (context, index) {
                           if (index == chapterState.chapters.length) {
-                            return OutlinedButton(
-                                onPressed: () => context
-                                    .read<ChapterBloc>()
-                                    .add(AddChapter(
-                                      pageBloc: context.read<PageBloc>(),
-                                      callerIndex: chapterState.currentIndex,
-                                      pages: context.read<PageBloc>().state,
-                                    )),
-                                child: Text("Add Chapter"));
+                            return ChapterCreateButton();
                           }
                           return ChapterNavigationButton(index: index);
                         })
