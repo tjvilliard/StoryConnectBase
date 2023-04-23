@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django_extensions.db.models import TimeStampedModel
 
 # Create your models here.
 
-class Book(models.Model):
+class Book(TimeStampedModel, models.Model):
     # LANGUAGES = [
     #     (1, "English"),
     #     (2, "Indonesian")
@@ -27,8 +27,8 @@ class Book(models.Model):
     language = models.CharField(max_length=20)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES)
     cover = models.ImageField(upload_to='covers/', blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
+    # date_created = models.DateTimeField(auto_now_add=True)
+    # date_modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000)
     copyright = models.IntegerField(choices=COPYRIGHTS)
     titlepage = models.TextField()
