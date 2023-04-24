@@ -21,11 +21,7 @@ from books import views as books_views
 
 
 router = routers.DefaultRouter()
-<<<<<<< HEAD
-router.register(r'api/books', books_views.BookViewSet, basename='books')
-=======
 router.register(r'api/books', books_views.BookViewSet)
->>>>>>> feature/backend-construction
 
 
 urlpatterns = router.urls
