@@ -98,7 +98,7 @@ class UserBookCreationTestCase(APITestCase):
 
         #The app uses token authentication
         # self.token = Token.objects.get(user = self.user)
-        # self.client = APIClient()
+        self.client = APIClient()
         
         # #We pass the token in all calls to the API
         # self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
@@ -108,15 +108,15 @@ class UserBookCreationTestCase(APITestCase):
         '''
         test BookViewSet list method
         '''
-        self.assertEqual(Book.objects.count(), 2)
-        response = self.client.get('/books/')
+        self.assertEqual(Book.objects.count(), 1)
+        response = self.client.get('/api/books/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
     # testing perform query to only show the author's books
     def test_author_all_books(self):
         authorbooks = Book.objects.filter(owner = self.user)
         for b in authorbooks:
-            response = self.client.get(f'/books/{b.owner}/') # not sure
+            response = self.client.get(f'/api/books/{b.pk}/') # not sure
             self.assertEqual(response.status_code, status.HTTP_200_OK)                           
     
     # testing gettting the userbook book properties - using non-sql filter method
@@ -129,20 +129,20 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page."}
-        response = self.client.get(f"/books/{self.userbook.id}", attr_dict, format='json')
+        response = self.client.get(f"/api/books/{self.userbook.pk}")
         self.assertEqual(response.status_code, status.HTTP_200_OK) 
         self.assertEqual(self.userbook.__getattribute__.__dict__(), attr_dict)
         # self.userbook.queryset
     
     # testing gettting a specific book properties - using sql filter method
     def test_getting_a_specific_book(self):
-        dune = Book.objects.filter(title="Red Queen")[0]
-        response = self.client.get(f'/books/{dune.title}')
+        dune = Book.objects.filter(title="Red Queen")
+        response = self.client.get(f'/api/books/{dune.pk}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # testing to retrieve all books in the database
     def test_retrieve_all_book(self):
-        get_all_book = self.client.get('/books', format='json')
+        get_all_book = self.client.get('/api/books/')
         self.assertEqual(get_all_book.status_code, status.HTTP_200_OK)
 
     # testing updating a certain book properties
@@ -155,7 +155,7 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page."}     
-        update_book_prop = self.client.put(f'/books/{self.userbook.id}', data=attr_dict)
+        update_book_prop = self.client.put(f'/api/books/{self.userbook.pk}', data=attr_dict)
         self.assertEqual(update_book_prop.status_code, status.HTTP_200_OK)
         self.assertEqual(self.userbook.__getattribute__(), attr_dict)
 
@@ -169,10 +169,11 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis too.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page too."}
-        create_a_book = self.client.post('/books', data=book_create)
+        create_a_book = self.client.post('/api/books/', data=book_create)
+        self.assertEqual(Book.objects.count(), 2)
         self.assertEqual(create_a_book.status_code, status.HTTP_200_OK)
         newbook = Book.objects.filter(title="Glass Sword")
-        response = self.client.get(f'/books/{newbook}')
+        response = self.client.get(f'/api/books/{newbook}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
     
     # testing deleting a book in the database
@@ -185,11 +186,14 @@ class UserBookCreationTestCase(APITestCase):
             'synopsis'            : "This is the book synopsis too.",
             'copyright'           : 1,
             'titlepage'           : "This is the book title page too."}
-        delete_a_book = self.client.delete('/books', data=book_delete)
+        book_delete_filter = Book.objects.filter(title="Glass Sword")
+        delete_a_book = self.client.delete(f'/api/books/{book_delete_filter.pk}')
         self.assertEqual(delete_a_book.status_code, status.HTTP_200_OK)
         deletedbook = Book.objects.filter(title="Glass Sword")
-        response = self.client.get(f'/books/{delete_a_book}')
+        response = self.client.get(f'/api/books/{delete_a_book}')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(len(deletedbook), 0)
 
-content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
+# content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
+
+# http://localhost:8000/api/admin/login/?next=/api/admin/
