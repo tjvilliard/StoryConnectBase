@@ -15,7 +15,6 @@ class PagesApiProvider {
     final undecodedChapterList = jsonDecode(result.body) as List;
     List<Chapter> results = [];
     for (var undecodedChapter in undecodedChapterList) {
-      print(undecodedChapter);
       results.add(Chapter.fromJson(undecodedChapter));
     }
     return results;
