@@ -9,6 +9,7 @@ import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
+import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
   @override
@@ -21,12 +22,12 @@ class WriterLocations extends BeamLocation<BeamState> {
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
-    final pages = <BeamPage>[];
+    final pages = <CustomBeamPage>[];
 
     if (state.uri.pathSegments.contains('writer')) {
       if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
-        pages.add(BeamPage(
+        pages.add(CustomBeamPage(
             key: ValueKey('book-$bookId'),
             child: RepositoryProvider(
                 lazy: false,
@@ -45,7 +46,7 @@ class WriterLocations extends BeamLocation<BeamState> {
                 ], child: WritingAppView()))));
       } else {
         pages.add(
-          BeamPage(
+          CustomBeamPage(
               key: ValueKey('writer'),
               child: RepositoryProvider(
                 lazy: false,
@@ -62,7 +63,7 @@ class WriterLocations extends BeamLocation<BeamState> {
     // hardcoded place to nowhere
 
     else if (state.uri.pathSegments.isEmpty) {
-      pages.add(BeamPage(
+      pages.add(CustomBeamPage(
           key: const ValueKey('login'),
           child: Scaffold(
               body: Center(

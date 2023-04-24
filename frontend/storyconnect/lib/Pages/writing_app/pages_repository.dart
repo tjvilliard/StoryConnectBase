@@ -7,13 +7,18 @@ import 'package:storyconnect/Models/models.dart';
 class PagesApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
     final result = await http.get(
-        Uri.parse('https://storyconnect.app/api/books/$bookId/chapters'),
+        Uri.parse('https://storyconnect.app/api/books/$bookId/get_chapters'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
 
     final undecodedChapterList = jsonDecode(result.body) as List;
-    return undecodedChapterList.map((e) => Chapter.fromJson(e)).toList();
+    List<Chapter> results = [];
+    for (var undecodedChapter in undecodedChapterList) {
+      print(undecodedChapter);
+      results.add(Chapter.fromJson(undecodedChapter));
+    }
+    return results;
   }
 
   Future<bool> createChapter(int bookId, int number) async {
@@ -48,9 +53,7 @@ class PagesProviderRepository {
   PagesProviderRepository({required this.bookId});
 
   Future<List<Chapter>> getChapters() async {
-    return Future.delayed(Duration(seconds: 2), () {
-      return <Chapter>[];
-    });
+    return _api.getChapters(bookId);
   }
 
   Future<bool> createChapter(int number) {

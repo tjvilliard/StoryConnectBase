@@ -61,10 +61,16 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
         books: state.books,
         loadingStruct: LoadingStruct(
             isLoading: event.isLoading, message: "Creating book")));
-    Book newBook = await repository.createBook(title: event.title);
-    emit(WritingHomeStruct(
-        books: [...state.books, newBook],
-        loadingStruct: LoadingStruct.loading(false)));
+    Book? newBook = await repository.createBook(title: event.title);
+
+    if (newBook != null) {
+      emit(WritingHomeStruct(
+          books: [...state.books, newBook],
+          loadingStruct: LoadingStruct.loading(false)));
+    } else {
+      emit(WritingHomeStruct(
+          books: state.books, loadingStruct: LoadingStruct.loading(false)));
+    }
   }
 
   void openBook(OpenBookEvent event, WritingHomeEmitter emit) async {
