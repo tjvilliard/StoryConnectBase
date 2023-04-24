@@ -57,7 +57,7 @@ class BookViewSet(viewsets.ModelViewSet):
         book = self.get_object()
         chapters = book.get_chapters()
         serializer = ChapterSerializer(chapters, many=True)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
