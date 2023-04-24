@@ -5,6 +5,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
 from .models import *
 from .serializers import *
@@ -35,6 +36,12 @@ class BookViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return JsonResponse(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def get_chapters(self, request, pk=None):
+        book = self.get_object()
+        chapters = book.get_chapters()
+        serializer = ChapterSerializer(chapters, many=True)
+        return Response(serializer.data)
     
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
