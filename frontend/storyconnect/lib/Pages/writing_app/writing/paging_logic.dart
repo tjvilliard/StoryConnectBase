@@ -1,4 +1,5 @@
 import 'package:flutter/painting.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 
 class OverFlowStruct {
   final bool didOverflow;
@@ -12,17 +13,15 @@ class OverFlowStruct {
 
 class PagingLogic {
   OverFlowStruct shouldTriggerOverflow(String text, TextStyle style) {
-    final TextPainter _textPainter = TextPainter(
+    TextPainter overflowPainter = TextPainter(
       textDirection: TextDirection.ltr,
     );
-    StringBuffer moveToNextPage = StringBuffer();
+    StringBuffer overflowBuffer = StringBuffer();
     bool didOverflow = false;
+    overflowPainter.text = TextSpan(text: text, style: style);
+    overflowPainter.layout(maxWidth: PageBloc.pageWidth);
 
-    _textPainter.text = TextSpan(text: text, style: style);
-    _textPainter.layout(maxWidth: 800);
-
-    Size size = _textPainter.size;
-    while (size.height > 850) {
+    while (overflowPainter.height > (PageBloc.pageHeight - 100)) {
       didOverflow = true;
       // move the last line to the next page
       int start = text.lastIndexOf(' ');
@@ -32,20 +31,19 @@ class PagingLogic {
         start = end - 100;
       }
 
-      moveToNextPage.write(text.substring(start, end));
+      overflowBuffer.write(text.substring(start, end));
       text = text.replaceRange(start, end, "");
-      _textPainter.text = TextSpan(
+      overflowPainter.text = TextSpan(
         text: text,
         style: style,
       );
-      _textPainter.layout(maxWidth: 800);
-      size = _textPainter.size;
+      overflowPainter.layout(maxWidth: PageBloc.pageWidth);
     }
 
     return OverFlowStruct(
         didOverflow: didOverflow,
         textToKeep: text,
-        overflowText: moveToNextPage.toString());
+        overflowText: overflowBuffer.toString());
   }
 
   bool shouldTriggerUnderFlow(String text, TextStyle style) {
