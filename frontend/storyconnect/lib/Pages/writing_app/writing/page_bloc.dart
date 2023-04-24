@@ -12,71 +12,69 @@ abstract class PageEvent {
 
 class AddPage extends PageEvent {
   final String text;
-  AddPage({required this.text, required int callerIndex})
-      : super(callerIndex: callerIndex);
+  final bool shouldJump;
+  AddPage({
+    required this.text,
+    required this.shouldJump,
+    required int callerIndex,
+  }) : super(callerIndex: callerIndex);
 }
 
 class RemovePage extends PageEvent {
-  RemovePage({required int callerIndex}) : super(callerIndex: callerIndex);
+  RemovePage({required super.callerIndex});
 }
 
 class UpdatePage extends PageEvent {
   final String text;
+  final bool shouldJump;
   final ChapterBloc chapterBloc;
+
   UpdatePage(
-      {required this.text, required int callerIndex, required this.chapterBloc})
-      : super(callerIndex: callerIndex);
+      {required this.text,
+      required super.callerIndex,
+      required this.shouldJump,
+      required this.chapterBloc});
 }
 
 class RebuildPages extends PageEvent {
   String text;
-  RebuildPages({required this.text}) : super(callerIndex: 0);
+  RebuildPages({
+    required this.text,
+  }) : super(callerIndex: 0);
+}
+
+class ResetNavigation extends PageEvent {
+  ResetNavigation({required super.callerIndex});
 }
 
 class PageBlocStruct {
-  final LoadingStruct loadingStruct;
   final Map<int, String> pages;
+  final int? navigateToIndex;
+  final Map<int, bool> pagesCreated;
+  final bool cursorStart;
+  final LoadingStruct loadingStruct;
 
-  PageBlocStruct({required this.loadingStruct, required this.pages});
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is PageBlocStruct &&
-        other.loadingStruct == loadingStruct &&
-        _mapsAreEqual(other.pages, pages);
-  }
-
-  @override
-  int get hashCode => loadingStruct.hashCode ^ _mapHashCode(pages);
-
-  bool _mapsAreEqual(Map<int, String> a, Map<int, String> b) {
-    if (a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
-  }
-
-  int _mapHashCode(Map<int, String> map) {
-    int hash = 0;
-    for (int i = 0; i < map.length; i++) {
-      hash ^= map[i].hashCode;
-    }
-    return hash;
-  }
+  PageBlocStruct(
+      {required this.pages,
+      this.navigateToIndex,
+      required this.pagesCreated,
+      this.cursorStart = true,
+      required this.loadingStruct});
 }
 
 typedef PageEmitter = Emitter<PageBlocStruct>;
 
 class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
+  static double pageHeight = 1100.0;
+  static double pageWidth = 800.0;
   final PagesProviderRepository repository;
   final PagingLogic pagingLogic = PagingLogic();
   final TextStyle style = TextStyle(fontSize: 20);
   PageBloc(this.repository)
       : super(PageBlocStruct(
-            loadingStruct: LoadingStruct.loading(true), pages: {0: ''})) {
+            pagesCreated: {},
+            loadingStruct: LoadingStruct.loading(true),
+            pages: {0: ''})) {
     on<AddPage>((event, emit) => _addPage(event, emit));
     on<RemovePage>((event, emit) => _removePage(event, emit));
     on<UpdatePage>((event, emit) => _updatePage(event, emit));
@@ -85,40 +83,81 @@ class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
 
   void _addPage(AddPage event, PageEmitter emit) {
     Map<int, String> pages = Map.from(state.pages);
-    _addPageHelper(pages, event.text, event.callerIndex + 1);
+    Map<int, bool> pagesCreated = Map.from(state.pagesCreated);
+    int recursivePageInt =
+        _addPageHelper(pages, pagesCreated, event.text, event.callerIndex + 1);
+
+    for (var pageIndex in pagesCreated.keys) {
+      if ((pagesCreated[pageIndex] == true &&
+              pagesCreated[pageIndex + 1] == true) ||
+          event.shouldJump == false) {
+        pagesCreated[pageIndex] = false;
+      }
+    }
+    int? pageToJumpTo;
+    if (event.shouldJump) {
+      pageToJumpTo = recursivePageInt;
+    }
     emit(PageBlocStruct(
-        loadingStruct: LoadingStruct.loading(false), pages: pages));
+        pages: pages,
+        navigateToIndex: pageToJumpTo,
+        pagesCreated: pagesCreated,
+        cursorStart: false,
+        loadingStruct: LoadingStruct.loading(false)));
   }
 
-  void _addPageHelper(Map<int, String> pages, String text, int pageIndex) {
-    final results = pagingLogic.shouldTriggerOverflow(text, style);
+  int _addPageHelper(Map<int, String> pages, Map<int, bool> pagesCreated,
+      String text, int pageIndex) {
+    final existingPageContent = pages[pageIndex] ?? "";
+
+    final results =
+        pagingLogic.shouldTriggerOverflow("$text $existingPageContent", style);
+    pagesCreated[pageIndex] = true;
     if (results.didOverflow) {
       pages[pageIndex] = results.textToKeep;
-      _addPageHelper(pages, results.overflowText, pageIndex + 1);
+      return _addPageHelper(
+          pages, pagesCreated, results.overflowText, pageIndex + 1);
     } else {
-      pages[pageIndex] = text;
+      // Append the new text to the existing content instead of overwriting it
+      pages[pageIndex] = "$text $existingPageContent".trim();
+      return pageIndex;
     }
   }
 
   void _removePage(RemovePage event, PageEmitter emit) {
     if (event.callerIndex != 0) {
-      final Map<int, String> pages = Map.from(state.pages);
+      Map<int, String> pages = Map.from(state.pages);
+      Map<int, bool> pagesCreated = Map.from(state.pagesCreated);
       pages.remove(event.callerIndex);
-      emit(PageBlocStruct(
-          loadingStruct: LoadingStruct.loading(false), pages: pages));
+      pagesCreated.remove(event.callerIndex);
+
+      final result = PageBlocStruct(
+          pages: pages,
+          navigateToIndex: event.callerIndex - 1,
+          pagesCreated: pagesCreated,
+          loadingStruct: LoadingStruct.loading(false),
+          cursorStart: false);
+      emit(result);
     }
   }
 
   void _updatePage(UpdatePage event, PageEmitter emit) {
     Map<int, String> pages = Map.from(state.pages);
     pages[event.callerIndex] = event.text;
-    emit(PageBlocStruct(
-        loadingStruct: LoadingStruct.loading(false), pages: pages));
-    event.chapterBloc.add(UpdateChapter(text: pages.values.join()));
+    PageBlocStruct result = PageBlocStruct(
+        pages: pages,
+        pagesCreated: state.pagesCreated,
+        navigateToIndex: null,
+        loadingStruct: LoadingStruct.loading(false));
+    emit(result);
   }
 
   void _rebuildPages(RebuildPages event, PageEmitter emit) {
-    emit(PageBlocStruct(loadingStruct: LoadingStruct.loading(true), pages: {}));
-    _addPage(AddPage(text: event.text, callerIndex: -1), emit);
+    emit(PageBlocStruct(
+        pages: {},
+        pagesCreated: {0: true},
+        loadingStruct: LoadingStruct.message("Building Book")));
+    _addPage(
+        AddPage(text: event.text, callerIndex: -1, shouldJump: true), emit);
   }
 }

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+# from dotenv import load_dotenv
+
+# load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +33,7 @@ ALLOWED_HOSTS = ["storyconnect", "localhost", "127.0.0.1", "storyconnect.app"]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://storyconnect.app',
+    'http://localhost:8000',
 ]
 
 CSRF_COOKIE_DOMAIN = 'storyconnect.app'
