@@ -12,39 +12,37 @@ class ChapterNavigationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-        builder: (chapterContext, ChapterBlocStruct chapterState) {
-      final selectedColor = Theme.of(context).primaryColor;
-      final selectedTextColor = Colors.white;
-      return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: BlocBuilder<PageBloc, Map<int, String>>(
-            builder: (BuildContext context, pages) {
-              return OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      backgroundColor: chapterState.currentIndex == index
-                          ? selectedColor
-                          : Colors.transparent),
-                  onPressed: () {
-                    context.read<ChapterBloc>().add(SwitchChapter(
-                        pageBloc: context.read<PageBloc>(),
-                        callerIndex: index,
-                        pages: pages,
-                        chapterToSwitchFrom: chapterState.currentIndex));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text("Chapter ${index + 1}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
-                            ?.copyWith(
-                                color: chapterState.currentIndex == index
-                                    ? selectedTextColor
-                                    : null)),
-                  ));
-            },
-          ));
-    });
+    final selectedColor = Theme.of(context).primaryColor;
+    final selectedTextColor = Colors.white;
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: BlocBuilder<PageBloc, PageBlocStruct>(
+          builder: (BuildContext context, PageBlocStruct pageBlocStruct) {
+            return OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    backgroundColor:
+                        context.read<ChapterBloc>().state.currentIndex == index
+                            ? selectedColor
+                            : Colors.transparent),
+                onPressed: () {
+                  context.read<ChapterBloc>().add(SwitchChapter(
+                      pageBloc: context.read<PageBloc>(),
+                      callerIndex: index,
+                      pages: pageBlocStruct.pages,
+                      chapterToSwitchFrom:
+                          context.read<ChapterBloc>().state.currentIndex));
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text("Chapter ${index + 1}",
+                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                          color:
+                              context.read<ChapterBloc>().state.currentIndex ==
+                                      index
+                                  ? selectedTextColor
+                                  : null)),
+                ));
+          },
+        ));
   }
 }
