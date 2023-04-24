@@ -4,7 +4,7 @@ from django_extensions.db.models import TimeStampedModel
 
 # Create your models here.
 
-class Book(TimeStampedModel, models.Model):
+class Book(models.Model):
     # LANGUAGES = [
     #     (1, "English"),
     #     (2, "Indonesian")
@@ -22,16 +22,16 @@ class Book(TimeStampedModel, models.Model):
     ]
     
     title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    language = models.CharField(max_length=20)
-    target_audience = models.IntegerField(choices=TARGET_AUDIENCES)
-    cover = models.ImageField(upload_to='covers/', blank=True)
-    # date_created = models.DateTimeField(auto_now_add=True)
-    # date_modified = models.DateTimeField(auto_now=True)
-    synopsis = models.TextField(max_length=1000)
-    copyright = models.IntegerField(choices=COPYRIGHTS)
-    titlepage = models.TextField()
+    author = models.CharField(max_length=100, null = True, blank = True)
+    owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
+    language = models.CharField(max_length=20, null=True, blank=True)
+    target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
+    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    synopsis = models.TextField(max_length=1000, null=True, blank=True)
+    copyright = models.IntegerField(choices=COPYRIGHTS, null=True, blank=True)
+    titlepage = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -57,11 +57,16 @@ class Library(models.Model):
 
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-
-    # redundant?
+    chapter_number = models.IntegerField(default=0)
     chapter_title = models.CharField(max_length=100) 
+    content = models.TextField()
 
-    chapter_content = models.TextField()
+    def save(self, *args, **kwargs):
+        if not self.pk:  # check if the instance is not yet saved to the database
+            last_chapter = Chapter.objects.filter(book=self.book).order_by('-chapter_number').first()
+            if last_chapter:
+                self.chapter_number = last_chapter.chapter_number + 1
+        super().save(*args, **kwargs)
 
     # What are these for?
     # scene = models.CharField(max_length=50, blank=True)
