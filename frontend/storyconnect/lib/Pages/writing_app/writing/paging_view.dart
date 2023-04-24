@@ -6,6 +6,7 @@ import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_sliver.dart';
 import 'package:storyconnect/Pages/writing_app/writing/writing_page.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class PagingView extends StatefulWidget {
   const PagingView({super.key});
@@ -14,8 +15,7 @@ class PagingView extends StatefulWidget {
   _PagingViewState createState() => _PagingViewState();
 }
 
-class _PagingViewState extends State<PagingView>
-    with AutomaticKeepAliveClientMixin {
+class _PagingViewState extends State<PagingView> {
   late final ScrollController _controller;
 
   @override
@@ -30,8 +30,6 @@ class _PagingViewState extends State<PagingView>
     final index = state.navigateToIndex!;
 
     WritingPageViewState? pageState = _pageKeys[index]?.currentState;
-
-    final pageOffset = (PageBloc.pageHeight) * index;
     if (pageState == null) {
       setState(() {
         _pageKeys[index] = GlobalKey<WritingPageViewState>();
@@ -84,6 +82,13 @@ class _PagingViewState extends State<PagingView>
             final current = currentStruct.pages;
             return previous.length != current.length;
           }, builder: (context, state) {
+            if (state.loadingStruct.isLoading) {
+              return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 100),
+                  child: LoadingWidget(loadingStruct: state.loadingStruct));
+            }
+
             return CustomScrollView(
               controller: _controller,
               slivers: [
@@ -107,7 +112,4 @@ class _PagingViewState extends State<PagingView>
           });
         }));
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

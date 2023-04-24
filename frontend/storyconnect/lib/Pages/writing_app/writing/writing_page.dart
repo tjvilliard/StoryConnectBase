@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
@@ -119,8 +118,9 @@ class WritingPageViewState extends State<WritingPageView>
           child: TextField(
             key: _textFieldKey,
             focusNode: node,
-            onChanged: (value) async {
-              final results = await pagingLogic.shouldTriggerOverflow(
+            onChanged: (value) {
+              final chapterBloc = context.read<ChapterBloc>();
+              final results = pagingLogic.shouldTriggerOverflow(
                   value, TextStyle(fontSize: 20));
               cursorPosition = controller.selection.baseOffset;
 
@@ -135,7 +135,8 @@ class WritingPageViewState extends State<WritingPageView>
                 context.read<PageBloc>().add(UpdatePage(
                     text: results.textToKeep,
                     callerIndex: index,
-                    shouldJump: shouldJump));
+                    shouldJump: shouldJump,
+                    chapterBloc: chapterBloc));
                 context.read<PageBloc>().add(AddPage(
                     text: results.overflowText,
                     callerIndex: index,
@@ -146,7 +147,8 @@ class WritingPageViewState extends State<WritingPageView>
                 context.read<PageBloc>().add(UpdatePage(
                     text: controller.text,
                     callerIndex: index,
-                    shouldJump: false));
+                    shouldJump: false,
+                    chapterBloc: chapterBloc));
               }
             },
             controller: controller,

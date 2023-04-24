@@ -27,8 +27,9 @@ class WritingMenuBar extends StatelessWidget {
             MenuItemButton(
               leadingIcon: Icon(FontAwesomeIcons.list),
               child: Text("Chapters"),
-              onPressed: () =>
-                  context.read<WritingUIBloc>().toggleChapterOutline(),
+              onPressed: () {
+                BlocProvider.of<WritingUIBloc>(context).toggleChapterOutline();
+              },
             ),
           ]),
           MenuBar(
