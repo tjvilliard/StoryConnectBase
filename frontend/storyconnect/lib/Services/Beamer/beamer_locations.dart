@@ -30,7 +30,8 @@ class WriterLocations extends BeamLocation<BeamState> {
             key: ValueKey('book-$bookId'),
             child: RepositoryProvider(
                 lazy: false,
-                create: (_) => PagesProviderRepository(),
+                create: (_) =>
+                    PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
                 child: MultiBlocProvider(providers: [
                   BlocProvider(
                       lazy: false,

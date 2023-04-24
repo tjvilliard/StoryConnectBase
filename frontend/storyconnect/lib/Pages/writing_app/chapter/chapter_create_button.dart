@@ -4,30 +4,37 @@ import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
-class ChapterCreateButton extends StatefulWidget {
+class ChapterCreateButton extends StatelessWidget {
   const ChapterCreateButton({super.key});
 
   @override
-  State<ChapterCreateButton> createState() => _ChapterCreateButtonState();
-}
-
-class _ChapterCreateButtonState extends State<ChapterCreateButton> {
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-        buildWhen: (previous, current) {
+    return BlocConsumer<ChapterBloc, ChapterBlocStruct>(
+        listener: (context, state) {
+      Scrollable.ensureVisible(context,
+          duration: Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          alignment: 1);
+    }, listenWhen: (previous, current) {
+      return previous.loadingStruct != current.loadingStruct;
+    }, buildWhen: (previous, current) {
       return previous.loadingStruct != current.loadingStruct;
     }, builder: (context, chapterState) {
-      if (chapterState.loadingStruct.isLoading) {
-        return LoadingWidget(loadingStruct: chapterState.loadingStruct);
-      }
-      return OutlinedButton(
-          onPressed: () => context.read<ChapterBloc>().add(AddChapter(
-                pageBloc: context.read<PageBloc>(),
-                callerIndex: chapterState.currentIndex,
-                callerPages: context.read<PageBloc>().state.pages,
-              )),
-          child: Text("Add Chapter"));
+      return BlocBuilder<PageBloc, PageBlocStruct>(
+          buildWhen: (previous, current) {
+        return previous.loadingStruct != current.loadingStruct;
+      }, builder: (context, pageState) {
+        if (chapterState.loadingStruct.isLoading) {
+          return LoadingWidget(loadingStruct: chapterState.loadingStruct);
+        }
+        return OutlinedButton(
+            onPressed: () => context.read<ChapterBloc>().add(AddChapter(
+                  pageBloc: context.read<PageBloc>(),
+                  callerIndex: chapterState.currentIndex,
+                  callerPages: pageState.pages,
+                )),
+            child: Text("Add Chapter"));
+      });
     });
   }
 }

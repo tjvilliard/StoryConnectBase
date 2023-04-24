@@ -8,6 +8,10 @@ class LoadingStruct {
     return LoadingStruct(isLoading: isLoading);
   }
 
+  factory LoadingStruct.message(String message) {
+    return LoadingStruct(isLoading: true, message: message);
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

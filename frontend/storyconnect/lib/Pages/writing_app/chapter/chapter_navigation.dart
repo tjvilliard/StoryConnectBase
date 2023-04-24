@@ -5,19 +5,21 @@ import 'package:storyconnect/Pages/writing_app/chapter/chapter_create_button.dar
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_nav_button.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 
-class ChapterNavigation extends StatelessWidget {
+class ChapterNavigation extends StatefulWidget {
   const ChapterNavigation({super.key});
 
   @override
+  _ChapterNavigationState createState() => _ChapterNavigationState();
+}
+
+class _ChapterNavigationState extends State<ChapterNavigation> {
+  ScrollController _scrollController = ScrollController();
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<WritingUIBloc, WritingUIStatus>(
-        buildWhen: (previous, current) {
-      return previous.chapterOutlineShown != current.chapterOutlineShown;
-    }, builder: (context, uiState) {
+        builder: (context, uiState) {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-          buildWhen: (previous, current) {
-        return previous.chapters.length != current.chapters.length;
-      }, builder: (chapterBlocContext, chapterState) {
+          builder: (context, chapterState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
@@ -37,6 +39,7 @@ class ChapterNavigation extends StatelessWidget {
                 constraints: BoxConstraints(minWidth: 300, maxWidth: 300),
                 child: uiState.chapterOutlineShown
                     ? ListView.builder(
+                        controller: _scrollController,
                         itemCount: chapterState.chapters.length + 1,
                         itemBuilder: (context, index) {
                           if (index == chapterState.chapters.length) {

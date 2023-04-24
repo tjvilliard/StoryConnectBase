@@ -1,6 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
@@ -21,7 +22,9 @@ class RemovePage extends PageEvent {
 
 class UpdatePage extends PageEvent {
   final String text;
-  UpdatePage({required this.text, required int callerIndex})
+  final ChapterBloc chapterBloc;
+  UpdatePage(
+      {required this.text, required int callerIndex, required this.chapterBloc})
       : super(callerIndex: callerIndex);
 }
 
@@ -111,6 +114,7 @@ class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
     pages[event.callerIndex] = event.text;
     emit(PageBlocStruct(
         loadingStruct: LoadingStruct.loading(false), pages: pages));
+    event.chapterBloc.add(UpdateChapter(text: pages.values.join()));
   }
 
   void _rebuildPages(RebuildPages event, PageEmitter emit) {

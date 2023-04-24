@@ -53,6 +53,7 @@ class Chapter with _$Chapter {
     required int book,
     @JsonKey(name: 'chapter_title') required String chapterTitle,
     @JsonKey(name: 'chapter_content') required String chapterContent,
+    @JsonKey(name: 'number') required int number,
   }) = _Chapter;
 
   factory Chapter.fromJson(Map<String, dynamic> json) =>

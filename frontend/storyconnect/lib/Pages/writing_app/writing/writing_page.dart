@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_logic.dart';
 
@@ -62,6 +63,7 @@ class WritingPageViewState extends State<WritingPageView> {
           child: TextField(
             focusNode: node,
             onChanged: (value) {
+              final chapterBloc = context.read<ChapterBloc>();
               final results = pagingLogic.shouldTriggerOverflow(
                   value, TextStyle(fontSize: 20));
 
@@ -71,12 +73,15 @@ class WritingPageViewState extends State<WritingPageView> {
                 node.unfocus();
                 context.read<PageBloc>().add(
                     AddPage(text: results.overflowText, callerIndex: index));
-                context.read<PageBloc>().add(
-                    UpdatePage(text: results.textToKeep, callerIndex: index));
+                context.read<PageBloc>().add(UpdatePage(
+                    text: results.textToKeep,
+                    callerIndex: index,
+                    chapterBloc: chapterBloc));
               } else {
-                context
-                    .read<PageBloc>()
-                    .add(UpdatePage(text: controller.text, callerIndex: index));
+                context.read<PageBloc>().add(UpdatePage(
+                    text: controller.text,
+                    callerIndex: index,
+                    chapterBloc: chapterBloc));
               }
               if (controller.text.isEmpty && index != 0) {
                 context.read<PageBloc>().add(RemovePage(callerIndex: index));
