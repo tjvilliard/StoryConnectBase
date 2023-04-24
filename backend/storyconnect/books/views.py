@@ -9,20 +9,15 @@ from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
 from .models import *
 from .serializers import *
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
-class CsrfExemptMixin:
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+
 
 # Create your views here.
-class BookViewSet(CsrfExemptMixin, viewsets.ModelViewSet):
+class BookViewSet( viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     #permission_classes = [IsAuthenticated]
-    @method_decorator(csrf_exempt)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
