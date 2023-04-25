@@ -17,6 +17,12 @@ class WritingHomeState extends State<WritingHomeView> {
   final TextEditingController textController = TextEditingController();
   bool initialLoad = true;
 
+  final ButtonStyle BookButtonStyle = ButtonStyle(
+      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+        return RoundedRectangleBorder();
+      }),
+      minimumSize: MaterialStatePropertyAll<Size>(Size(100 * 3, 100 * 4)));
+
   @override
   void initState() {
     super.initState();
@@ -93,10 +99,16 @@ class WritingHomeState extends State<WritingHomeView> {
               //GridView of Books
               Flexible(
                   child: Container(
-                      padding: EdgeInsets.only(left: 100, right: 100),
+                      padding: EdgeInsets.only(left: 75, right: 75, bottom: 50),
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            crossAxisSpacing: 10, maxCrossAxisExtent: 150),
+                            crossAxisSpacing: 25.0,
+                            mainAxisSpacing: 25.0,
+                            //Set Max size of Grid Item
+                            mainAxisExtent: 400,
+                            maxCrossAxisExtent: 350
+                            //Set Max size of Grid Item
+                            ),
 
                         itemCount: state.books.length + addLoading,
 
@@ -110,19 +122,16 @@ class WritingHomeState extends State<WritingHomeView> {
                           }
 
                           Book book = state.books[index];
-                          return Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(),
-                              child: FilledButton(
-                                onPressed: () {
-                                  final writingHomeBloc =
-                                      context.read<WritingHomeBloc>();
-                                  writingHomeBloc
-                                      .add(OpenBookEvent(book: book));
-                                },
-                                child: Text(book.title),
-                              ));
+                          return Align(
+                              child: ElevatedButton(
+                            onPressed: () {
+                              final writingHomeBloc =
+                                  context.read<WritingHomeBloc>();
+                              writingHomeBloc.add(OpenBookEvent(book: book));
+                            },
+                            style: BookButtonStyle,
+                            child: Text(book.title, style: TextStyle()),
+                          ));
                         },
                       ))),
             ],
