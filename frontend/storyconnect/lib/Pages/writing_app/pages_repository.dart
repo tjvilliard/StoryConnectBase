@@ -21,13 +21,22 @@ class PagesApiProvider {
   }
 
   Future<bool> createChapter(int bookId, int number) async {
-    final result = await http.post(
-      Uri.parse('https://storyconnect.app/api/books/$bookId/chapter/$number'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    return result.statusCode == 201;
+    try {
+      final ChapterUpload toUpload =
+          ChapterUpload(number: number, chapterContent: "", book: bookId);
+
+      final result = await http.post(
+        Uri.parse('https://storyconnect.app/api/chapters/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(toUpload.toJson()),
+      );
+      return result.statusCode == 201;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<bool> updateChapter(int bookId, int number, String text) async {
@@ -56,9 +65,7 @@ class PagesProviderRepository {
   }
 
   Future<bool> createChapter(int number) {
-    return Future.delayed(Duration(seconds: 2), () {
-      return true;
-    });
+    return _api.createChapter(bookId, number);
   }
 
   Future<bool> updateChapter(int number, String text) {

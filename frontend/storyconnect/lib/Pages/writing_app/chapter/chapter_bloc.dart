@@ -106,15 +106,18 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     sortedChapterNum.sort((b, a) => a.compareTo(b));
     final newChapterNum = sortedChapterNum.first + 1;
     print(state.loadingStruct.isLoading);
-    await repository.createChapter(newChapterNum);
-    print(state.loadingStruct.isLoading);
-    chapters[event.callerIndex] = event.callerPages.values.join();
-    chapters[newChapterNum] = "";
-    emit.call(ChapterBlocStruct(
-        currentIndex: newChapterNum,
-        chapters: chapters,
-        loadingStruct: LoadingStruct.loading(false)));
-    event.pageBloc.add(RebuildPages(text: ""));
+    final result = await repository.createChapter(newChapterNum);
+    if (result) {
+      chapters[event.callerIndex] = event.callerPages.values.join();
+      chapters[newChapterNum] = "";
+      emit.call(ChapterBlocStruct(
+          currentIndex: newChapterNum,
+          chapters: chapters,
+          loadingStruct: LoadingStruct.loading(false)));
+      event.pageBloc.add(RebuildPages(text: ""));
+    } else {
+      emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
+    }
   }
 
   void removeChapter(ChapterEvent event, ChapterEmitter emit) {
