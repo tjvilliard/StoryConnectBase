@@ -33,30 +33,34 @@ class WriterLocations extends BeamLocation<BeamState> {
                 lazy: false,
                 create: (_) =>
                     PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
-                child: MultiBlocProvider(providers: [
-                  BlocProvider(
-                      lazy: false,
-                      create: (context) =>
-                          PageBloc(context.read<PagesProviderRepository>())),
-                  BlocProvider(
-                      lazy: false,
-                      create: (context) =>
-                          ChapterBloc(context.read<PagesProviderRepository>())),
-                  BlocProvider(lazy: false, create: (_) => WritingUIBloc()),
-                ], child: WritingAppView()))));
+                child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                          lazy: false,
+                          create: (context) => PageBloc(
+                              context.read<PagesProviderRepository>())),
+                      BlocProvider(
+                          lazy: false,
+                          create: (context) => ChapterBloc(
+                              context.read<PagesProviderRepository>())),
+                      BlocProvider(
+                          lazy: false,
+                          create: (_) => WritingUIBloc(
+                              repository: context.read<WritingRepository>())),
+                    ],
+                    child: WritingAppView(
+                      bookId: int.tryParse(bookId ?? ""),
+                    )))));
       } else {
         pages.add(
           CustomBeamPage(
-              key: ValueKey('writer'),
-              child: RepositoryProvider(
-                lazy: false,
-                create: (_) => WritingHomeRepository(),
-                child: BlocProvider(
-                  create: (context) =>
-                      WritingHomeBloc(context.read<WritingHomeRepository>()),
-                  child: WritingHomeView(),
-                ),
-              )),
+            key: ValueKey('writer'),
+            child: BlocProvider(
+              create: (context) =>
+                  WritingHomeBloc(context.read<WritingRepository>()),
+              child: WritingHomeView(),
+            ),
+          ),
         );
       }
     }

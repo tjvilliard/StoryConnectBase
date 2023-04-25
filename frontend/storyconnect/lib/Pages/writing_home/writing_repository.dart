@@ -41,8 +41,8 @@ class WritingHomeApiProvider {
   }
 }
 
-class WritingHomeRepository {
-  // ignore: unused_field
+class WritingRepository {
+  List<Book> books = [];
   WritingHomeApiProvider _api = WritingHomeApiProvider();
   Future<Book?> createBook({
     required String title,
@@ -51,7 +51,9 @@ class WritingHomeRepository {
   }
 
   Future<List<Book>> getBooks() async {
-    return _api.getBooks();
+    final result = await _api.getBooks();
+    books = result;
+    return result;
   }
 
   Future<List<Chapter>> getChapters({required int bookId}) async {
