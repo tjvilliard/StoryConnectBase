@@ -71,31 +71,6 @@ class WritingHomeState extends State<WritingHomeView> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    //Add Book Widget
-                    Expanded(
-                      child: TextField(
-                        controller: textController,
-                        onSubmitted: (_) => state.loadingStruct.isLoading
-                            ? null
-                            : create(context),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: FilledButton.icon(
-                        onPressed: () => state.loadingStruct.isLoading
-                            ? null
-                            : create(context),
-                        icon: Icon(FontAwesomeIcons.plus),
-                        label: Text("CreateBook"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               //GridView of Books
               Flexible(
                   child: Container(
@@ -114,6 +89,39 @@ class WritingHomeState extends State<WritingHomeView> {
 
                         //Fills out the books in book state
                         itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return Align(
+                                child: ElevatedButton(
+                              onPressed: () {},
+                              style: BookButtonStyle,
+                              child: Row(
+                                children: [
+                                  //Add Book Widget
+                                  Flexible(
+                                    child: TextField(
+                                      controller: textController,
+                                      onSubmitted: (_) =>
+                                          state.loadingStruct.isLoading
+                                              ? null
+                                              : create(context),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    child: FilledButton.icon(
+                                      onPressed: () =>
+                                          state.loadingStruct.isLoading
+                                              ? null
+                                              : create(context),
+                                      icon: Icon(FontAwesomeIcons.plus),
+                                      label: Text("CreateBook"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ));
+                          }
+
                           if (index == state.books.length) {
                             return Center(
                                 child: LoadingWidget(
