@@ -22,6 +22,7 @@ from books import views as books_views
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
+router.register(r'api/chapters', books_views.ChapterViewSet)
 
 
 urlpatterns = router.urls
