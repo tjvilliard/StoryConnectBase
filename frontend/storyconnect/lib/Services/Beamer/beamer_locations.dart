@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/login/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
@@ -67,16 +68,8 @@ class WriterLocations extends BeamLocation<BeamState> {
     // hardcoded place to nowhere
 
     else if (state.uri.pathSegments.isEmpty) {
-      pages.add(CustomBeamPage(
-          key: const ValueKey('login'),
-          child: Scaffold(
-              body: Center(
-                  child: OutlinedButton(
-            child: Text("Should be login page"),
-            onPressed: () {
-              Beamer.of(context).beamToNamed('/writer');
-            },
-          )))));
+      pages.add(
+          CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
     }
 
     return pages;
