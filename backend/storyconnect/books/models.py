@@ -58,8 +58,8 @@ class Library(models.Model):
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_number = models.IntegerField(default=0)
-    chapter_title = models.CharField(max_length=100) 
-    content = models.TextField()
+    chapter_title = models.CharField(max_length=100,blank=True) 
+    content = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # check if the instance is not yet saved to the database
