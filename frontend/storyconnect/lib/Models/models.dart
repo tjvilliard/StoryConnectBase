@@ -64,8 +64,8 @@ class Chapter with _$Chapter {
 class ChapterUpload with _$ChapterUpload {
   const factory ChapterUpload({
     required int book,
-    @JsonKey(name: 'chapter_title') String? chapterTitle,
-    @JsonKey(name: 'content') required String? chapterContent,
+    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'content') required String chapterContent,
     @JsonKey(name: 'chapter_number') required int number,
   }) = _ChapterUpload;
 

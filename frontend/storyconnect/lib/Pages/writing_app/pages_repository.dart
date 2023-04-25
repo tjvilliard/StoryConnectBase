@@ -22,8 +22,11 @@ class PagesApiProvider {
 
   Future<bool> createChapter(int bookId, int number) async {
     try {
-      final ChapterUpload toUpload =
-          ChapterUpload(number: number, chapterContent: "", book: bookId);
+      final ChapterUpload toUpload = ChapterUpload(
+          number: number,
+          chapterContent: "",
+          book: bookId,
+          chapterTitle: "$number");
 
       final result = await http.post(
         Uri.parse('https://storyconnect.app/api/chapters/'),
