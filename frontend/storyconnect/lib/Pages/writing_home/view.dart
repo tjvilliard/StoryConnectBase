@@ -68,6 +68,7 @@ class WritingHomeState extends State<WritingHomeView> {
               Expanded(
                 child: Row(
                   children: [
+                    //Add Book Widget
                     Expanded(
                       child: TextField(
                         controller: textController,
@@ -89,33 +90,41 @@ class WritingHomeState extends State<WritingHomeView> {
                   ],
                 ),
               ),
+              //GridView of Books
               Flexible(
-                child: ListView.separated(
-                  itemCount: state.books.length + addLoading,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 10,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    if (index == state.books.length) {
-                      return Center(
-                          child: LoadingWidget(
-                        loadingStruct: state.loadingStruct,
-                      ));
-                    }
+                  child: Container(
+                      padding: EdgeInsets.only(left: 100, right: 100),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            crossAxisSpacing: 10, maxCrossAxisExtent: 150),
 
-                    Book book = state.books[index];
-                    return FilledButton(
-                      onPressed: () {
-                        final writingHomeBloc = context.read<WritingHomeBloc>();
-                        writingHomeBloc.add(OpenBookEvent(book: book));
-                      },
-                      child: Text(book.title),
-                    );
-                  },
-                ),
-              ),
+                        itemCount: state.books.length + addLoading,
+
+                        //Fills out the books in book state
+                        itemBuilder: (context, index) {
+                          if (index == state.books.length) {
+                            return Center(
+                                child: LoadingWidget(
+                              loadingStruct: state.loadingStruct,
+                            ));
+                          }
+
+                          Book book = state.books[index];
+                          return Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(),
+                              child: FilledButton(
+                                onPressed: () {
+                                  final writingHomeBloc =
+                                      context.read<WritingHomeBloc>();
+                                  writingHomeBloc
+                                      .add(OpenBookEvent(book: book));
+                                },
+                                child: Text(book.title),
+                              ));
+                        },
+                      ))),
             ],
           );
         },
