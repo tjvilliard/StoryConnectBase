@@ -45,7 +45,7 @@ class BookViewSet( viewsets.ModelViewSet):
         book = self.get_object()
         chapters = book.get_chapters()
         serializer = ChapterSerializer(chapters, many=True)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data)
     
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
@@ -53,11 +53,14 @@ class ChapterViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        try: 
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except Exception as e: print(e)
+            return JsonResponse({"sucess": false})
 
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
