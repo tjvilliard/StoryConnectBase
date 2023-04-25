@@ -45,8 +45,10 @@ class WritingHomeState extends State<WritingHomeView> {
       body: BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
         listener: (context, state) {
           if (state.bookToNavigate != null) {
-            final url = "/writer/${state.bookToNavigate!.bookId}";
-            Beamer.of(context).beamToNamed(url);
+            final url = "/writer/${state.bookToNavigate!.id}";
+            Beamer.of(context).beamToNamed(url, data: {
+              "book": state.bookToNavigate,
+            });
           }
         },
         buildWhen: (previous, current) {
@@ -107,7 +109,7 @@ class WritingHomeState extends State<WritingHomeView> {
                     return FilledButton(
                       onPressed: () {
                         final writingHomeBloc = context.read<WritingHomeBloc>();
-                        writingHomeBloc.add(OpenBookEvent(bookId: book.id));
+                        writingHomeBloc.add(OpenBookEvent(book: book));
                       },
                       child: Text(book.title),
                     );

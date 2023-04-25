@@ -116,6 +116,7 @@ class WritingPageViewState extends State<WritingPageView>
           padding: EdgeInsets.all(20),
           margin: EdgeInsets.all(20),
           child: TextField(
+            scrollPhysics: NeverScrollableScrollPhysics(),
             key: _textFieldKey,
             focusNode: node,
             onChanged: (value) {

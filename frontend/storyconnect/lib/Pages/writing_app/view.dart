@@ -6,9 +6,12 @@ import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
+import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingAppView extends StatefulWidget {
-  const WritingAppView({super.key});
+  final int? bookId;
+  const WritingAppView({super.key, required this.bookId});
 
   @override
   _WritingAppViewState createState() => _WritingAppViewState();
@@ -16,14 +19,20 @@ class WritingAppView extends StatefulWidget {
 
 class _WritingAppViewState extends State<WritingAppView> {
   bool firstLoaded = true;
+  String? title;
   @override
   void initState() {
     if (firstLoaded) {
       firstLoaded = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        context
-            .read<ChapterBloc>()
-            .add(LoadEvent(pageBloc: context.read<PageBloc>()));
+        if (widget.bookId == null) {
+          Beamer.of(context).beamToNamed("/writer");
+          return;
+        }
+        BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
+            bookId: widget.bookId!,
+            chapterBloc: context.read<ChapterBloc>(),
+            pageBloc: context.read<PageBloc>()));
       });
     }
 
@@ -52,10 +61,13 @@ class _WritingAppViewState extends State<WritingAppView> {
             SizedBox(
               width: 10,
             ),
-            Text(
-              "Book",
-              style: Theme.of(context).textTheme.displayLarge,
-            )
+            BlocBuilder<WritingUIBloc, WritingUIStruct>(
+                builder: (context, state) {
+              if (state.title != null) {
+                return Text(state.title!);
+              }
+              return LoadingWidget(loadingStruct: state.loadingStruct);
+            }),
           ],
         ),
         centerTitle: false,

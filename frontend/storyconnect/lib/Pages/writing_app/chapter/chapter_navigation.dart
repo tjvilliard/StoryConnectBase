@@ -16,7 +16,7 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIStatus>(
+    return BlocBuilder<WritingUIBloc, WritingUIStruct>(
         builder: (context, uiState) {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (context, chapterState) {
