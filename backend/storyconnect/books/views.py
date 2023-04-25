@@ -59,8 +59,9 @@ class ChapterViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        except Exception as e: print(e)
-            return JsonResponse({"sucess": false})
+        except Exception as e: 
+            print(e)
+            return JsonResponse({"sucess": False})
 
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
