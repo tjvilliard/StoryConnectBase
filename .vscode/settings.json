@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./backend/storyconnect/django-rest-framework-json-api"
+    ]
+}

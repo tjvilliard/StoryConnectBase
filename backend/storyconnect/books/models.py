@@ -36,6 +36,14 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+    def get_attribute(self, attr):
+        if attr == "title":
+            return Book.objects.filter(title=self.title)
+        elif attr == "author":
+            return Book.objects.filter(author=self.author)
+        elif attr == "language":
+            return Book.objects.filter(author=self.language)
+        
     def get_chapters(self):
         return Chapter.objects.filter(book=self)
     
