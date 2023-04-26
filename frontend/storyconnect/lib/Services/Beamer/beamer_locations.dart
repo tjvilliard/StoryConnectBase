@@ -67,15 +67,9 @@ class WriterLocations extends BeamLocation<BeamState> {
     }
     // hardcoded place to nowhere
 
-<<<<<<< HEAD
-    else if (state.uri.pathSegments.contains('login') ||
-        state.uri.pathSegments.isEmpty) {
-      pages.add(BeamPage(key: const ValueKey('login'), child: LoginPage()));
-=======
     else if (state.uri.pathSegments.isEmpty) {
       pages.add(
           CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
->>>>>>> develop
     }
 
     return pages;
