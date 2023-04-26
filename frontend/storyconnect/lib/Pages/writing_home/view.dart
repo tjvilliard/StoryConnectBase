@@ -23,6 +23,12 @@ class WritingHomeState extends State<WritingHomeView> {
       }),
       minimumSize: MaterialStatePropertyAll<Size>(Size(100 * 3, 100 * 4)));
 
+  final ButtonStyle LogoutButtonStyle = ButtonStyle(
+      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+        return RoundedRectangleBorder();
+      }),
+      minimumSize: MaterialStatePropertyAll<Size>(Size(1.5 * 139, 139)));
+
   @override
   void initState() {
     super.initState();
@@ -51,15 +57,27 @@ class WritingHomeState extends State<WritingHomeView> {
         height: 139,
         color: Colors.white,
         alignment: Alignment.center,
-        child: Text(
-          "StoryConnect",
-          style: TextStyle(fontSize: 40),
-        ));
+        child: Stack(children: [
+          Spacer(flex: 1),
+          Align(
+              alignment: Alignment.center,
+              child: Text(
+                "StoryConnect",
+                style: TextStyle(fontSize: 40),
+              )),
+          Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () => {Beamer.of(context).beamToNamed(("/"))},
+                style: LogoutButtonStyle,
+                child: Text("Sign out", style: TextStyle(fontSize: 20)),
+              ))
+        ]));
 
     Widget WriterViewTitle = Container(
         alignment: Alignment.centerLeft,
         child: Padding(
-            padding: EdgeInsets.all(75),
+            padding: EdgeInsets.only(left: 75, top: 50, bottom: 50),
             child: Text(
               "My Books",
               style: TextStyle(fontSize: 30),
@@ -94,8 +112,7 @@ class WritingHomeState extends State<WritingHomeView> {
               //GridView of Books
               Flexible(
                   child: Container(
-                      padding: EdgeInsets.only(
-                          left: 75, right: 75, bottom: 50, top: 25),
+                      padding: EdgeInsets.only(left: 75, right: 75, bottom: 50),
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                             crossAxisSpacing: 25.0,
