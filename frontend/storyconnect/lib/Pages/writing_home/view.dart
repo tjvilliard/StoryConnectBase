@@ -95,7 +95,7 @@ class WritingHomeState extends State<WritingHomeView> {
               Flexible(
                   child: Container(
                       padding: EdgeInsets.only(
-                          left: 75, right: 75, bottom: 50, top: 75),
+                          left: 75, right: 75, bottom: 50, top: 25),
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                             crossAxisSpacing: 25.0,
@@ -124,7 +124,7 @@ class WritingHomeState extends State<WritingHomeView> {
                                     children: [
                                       //Textfield is where submission text is handled.
                                       Padding(
-                                          padding: EdgeInsets.only(top: 95),
+                                          padding: EdgeInsets.only(top: 135),
                                           child: Icon(FontAwesomeIcons.plus,
                                               size: 50)),
                                       Padding(
@@ -164,7 +164,9 @@ class WritingHomeState extends State<WritingHomeView> {
                               writingHomeBloc.add(OpenBookEvent(book: book));
                             },
                             style: BookButtonStyle,
-                            child: Text(book.title, style: TextStyle()),
+                            child: Text(book.title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 18)),
                           ));
                         },
                       ))),
