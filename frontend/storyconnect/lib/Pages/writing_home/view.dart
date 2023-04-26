@@ -119,7 +119,7 @@ class WritingHomeState extends State<WritingHomeView> {
                             mainAxisSpacing: 25.0,
                             //Set Max size of Grid Item
                             mainAxisExtent: 400,
-                            maxCrossAxisExtent: 350
+                            maxCrossAxisExtent: 300
                             //Set Max size of Grid Item
                             ),
 
