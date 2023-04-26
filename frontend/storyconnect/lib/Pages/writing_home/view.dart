@@ -47,6 +47,24 @@ class WritingHomeState extends State<WritingHomeView> {
 
   @override
   Widget build(BuildContext context) {
+    Widget WriterViewHeader = Container(
+        height: 139,
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Text(
+          "StoryConnect",
+          style: TextStyle(fontSize: 40),
+        ));
+
+    Widget WriterViewTitle = Container(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+            padding: EdgeInsets.all(75),
+            child: Text(
+              "My Books",
+              style: TextStyle(fontSize: 30),
+            )));
+
     return Scaffold(
       body: BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
         listener: (context, state) {
@@ -71,10 +89,13 @@ class WritingHomeState extends State<WritingHomeView> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              WriterViewHeader,
+              WriterViewTitle,
               //GridView of Books
               Flexible(
                   child: Container(
-                      padding: EdgeInsets.only(left: 75, right: 75, bottom: 50),
+                      padding: EdgeInsets.only(
+                          left: 75, right: 75, bottom: 50, top: 75),
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                             crossAxisSpacing: 25.0,
@@ -90,36 +111,41 @@ class WritingHomeState extends State<WritingHomeView> {
                         //Fills out the books in book state
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                            return Align(
-                                child: ElevatedButton(
-                              onPressed: () {},
-                              style: BookButtonStyle,
-                              child: Row(
-                                children: [
-                                  //Add Book Widget
-                                  Flexible(
-                                    child: TextField(
-                                      controller: textController,
-                                      onSubmitted: (_) =>
-                                          state.loadingStruct.isLoading
-                                              ? null
-                                              : create(context),
-                                    ),
+                            //Button indicates submission
+                            return ElevatedButton(
+                                onPressed: () {
+                                  state.loadingStruct.isLoading
+                                      ? null
+                                      : create(context);
+                                },
+                                style: BookButtonStyle,
+                                child: Flexible(
+                                  child: Column(
+                                    children: [
+                                      //Textfield is where submission text is handled.
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 95),
+                                          child: Icon(FontAwesomeIcons.plus,
+                                              size: 50)),
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 55),
+                                          child: TextField(
+                                            controller: textController,
+                                            onSubmitted: (_) =>
+                                                state.loadingStruct.isLoading
+                                                    ? null
+                                                    : create(context),
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter New Book Title',
+                                                suffixIcon: (IconButton(
+                                                    onPressed:
+                                                        textController.clear,
+                                                    icon: Icon(Icons.clear)))),
+                                          )),
+                                    ],
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 20),
-                                    child: FilledButton.icon(
-                                      onPressed: () =>
-                                          state.loadingStruct.isLoading
-                                              ? null
-                                              : create(context),
-                                      icon: Icon(FontAwesomeIcons.plus),
-                                      label: Text("CreateBook"),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ));
+                                ));
                           }
 
                           if (index == state.books.length) {
