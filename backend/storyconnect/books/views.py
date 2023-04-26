@@ -14,7 +14,7 @@ from .serializers import *
 # Create your views here.
 
 class BookViewSet(viewsets.ModelViewSet):
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter)
     search_fields = ['title', 'author', 'language']
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -63,18 +63,19 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 
-    # @action(detail=False, methods=['get'])
-    # def filter(self, request, filter, *args, **kwargs):
-    #     # filter_query = Book.objects.filter()
-    #     # data = BookSerializer(filter_query, many=False)
-    #     # # book = self.filter_queryset(filter)
-    #     # model_data = Book.objects.all().order_by("?")
+    @action(detail=False, methods=['get'])
+    def filter(self, request, filter, *args, **kwargs):
+        # filter_query = Book.objects.filter()
+        # data = BookSerializer(filter_query, many=False)
+        # # book = self.filter_queryset(filter)
+        # model_data = Book.objects.all().order_by("?")
 
-    #     # book = self.get_object()
-    #     # serializer = self.get_serializer(book, data=request.data)
-    #     # serializer.is_valid(raise_exception=True)
-    #     # self.filter_queryset(filter)
-    #     return self.filter_backends.get_search_fields(BookViewSet, request)
+        # book = self.get_object()
+        # serializer = self.get_serializer(book, data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # self.filter_queryset(filter)
+        # serializer = self.get_serializer(data=request.data)
+        return self.filter_backends.get_search_fields(BookViewSet, request)
 
 
 
