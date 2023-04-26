@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
@@ -14,10 +14,13 @@ from .serializers import *
 # Create your views here.
 
 class BookViewSet(viewsets.ModelViewSet):
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['title', 'author', 'language']
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     #permission_classes = [IsAuthenticated]
 
+    
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -28,7 +31,7 @@ class BookViewSet(viewsets.ModelViewSet):
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
 
-    # @action(detail=True, methods=['get'])
+    # @action(detail=False, methods=['get'])
     # def list(self, request, *args, **kwargs):
     #     queryset = self.filter_queryset(self.get_queryset())
 
@@ -59,6 +62,20 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = ChapterSerializer(chapters, many=True)
         return Response(serializer.data)
     
+
+    # @action(detail=False, methods=['get'])
+    # def filter(self, request, filter, *args, **kwargs):
+    #     # filter_query = Book.objects.filter()
+    #     # data = BookSerializer(filter_query, many=False)
+    #     # # book = self.filter_queryset(filter)
+    #     # model_data = Book.objects.all().order_by("?")
+
+    #     # book = self.get_object()
+    #     # serializer = self.get_serializer(book, data=request.data)
+    #     # serializer.is_valid(raise_exception=True)
+    #     # self.filter_queryset(filter)
+    #     return self.filter_backends.get_search_fields(BookViewSet, request)
+
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
