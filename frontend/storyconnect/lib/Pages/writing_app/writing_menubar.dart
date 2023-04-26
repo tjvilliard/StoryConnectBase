@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:storyconnect/Pages/writing_app/unimplemented_popup.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 
 class WritingMenuBar extends StatelessWidget {
   const WritingMenuBar({super.key});
+
+  Future<void> showPopup(String caller, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return UnimplementedPopup(featureName: caller);
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +48,37 @@ class WritingMenuBar extends StatelessWidget {
               children: [
                 MenuItemButton(
                     leadingIcon: Icon(FontAwesomeIcons.arrowRotateLeft),
-                    child: Container()),
+                    child: Container(),
+                    onPressed: () {
+                      showPopup("Undo", context);
+                    }),
                 MenuItemButton(
                     leadingIcon: Icon(FontAwesomeIcons.arrowRotateRight),
-                    child: Container()),
+                    child: Container(),
+                    onPressed: () {
+                      showPopup("Redo", context);
+                    }),
               ]),
           MenuBar(children: [
             MenuItemButton(
                 leadingIcon: Icon(FontAwesomeIcons.comment),
-                child: Text("Comments"))
-          ])
+                child: Text("Comments"),
+                onPressed: () {
+                  showPopup("Comments", context);
+                }),
+            MenuItemButton(
+                leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
+                child: Text("Character Sheet"),
+                onPressed: () {
+                  showPopup("Character Sheet", context);
+                }),
+            MenuItemButton(
+                leadingIcon: Icon(FontAwesomeIcons.check),
+                child: Text("Continuity Checker"),
+                onPressed: () {
+                  showPopup("Continuity Checker", context);
+                }),
+          ]),
         ]));
   }
 }

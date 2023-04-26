@@ -149,6 +149,7 @@ class PageBloc extends Bloc<PageEvent, PageBlocStruct> {
         pagesCreated: state.pagesCreated,
         navigateToIndex: null,
         loadingStruct: LoadingStruct.loading(false));
+    event.chapterBloc.add(UpdateChapterEvent(pageBloc: this));
     emit(result);
   }
 

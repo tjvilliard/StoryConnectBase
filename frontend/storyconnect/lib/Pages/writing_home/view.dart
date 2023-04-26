@@ -17,6 +17,18 @@ class WritingHomeState extends State<WritingHomeView> {
   final TextEditingController textController = TextEditingController();
   bool initialLoad = true;
 
+  final ButtonStyle BookButtonStyle = ButtonStyle(
+      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+        return RoundedRectangleBorder();
+      }),
+      minimumSize: MaterialStatePropertyAll<Size>(Size(100 * 3, 100 * 4)));
+
+  final ButtonStyle LogoutButtonStyle = ButtonStyle(
+      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+        return RoundedRectangleBorder();
+      }),
+      minimumSize: MaterialStatePropertyAll<Size>(Size(1.5 * 139, 139)));
+
   @override
   void initState() {
     super.initState();
@@ -41,12 +53,44 @@ class WritingHomeState extends State<WritingHomeView> {
 
   @override
   Widget build(BuildContext context) {
+    Widget WriterViewHeader = Container(
+        height: 139,
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Stack(children: [
+          Spacer(flex: 1),
+          Align(
+              alignment: Alignment.center,
+              child: Text(
+                "StoryConnect",
+                style: TextStyle(fontSize: 40),
+              )),
+          Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () => {Beamer.of(context).beamToNamed(("/"))},
+                style: LogoutButtonStyle,
+                child: Text("Sign out", style: TextStyle(fontSize: 20)),
+              ))
+        ]));
+
+    Widget WriterViewTitle = Container(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+            padding: EdgeInsets.only(left: 75, top: 50, bottom: 50),
+            child: Text(
+              "My Books",
+              style: TextStyle(fontSize: 30),
+            )));
+
     return Scaffold(
       body: BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
         listener: (context, state) {
           if (state.bookToNavigate != null) {
-            final url = "/writer/${state.bookToNavigate!.bookId}";
-            Beamer.of(context).beamToNamed(url);
+            final url = "/writer/${state.bookToNavigate!.id}";
+            Beamer.of(context).beamToNamed(url, data: {
+              "book": state.bookToNavigate,
+            });
           }
         },
         buildWhen: (previous, current) {
@@ -63,57 +107,86 @@ class WritingHomeState extends State<WritingHomeView> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: textController,
-                        onSubmitted: (_) => state.loadingStruct.isLoading
-                            ? null
-                            : create(context),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: FilledButton.icon(
-                        onPressed: () => state.loadingStruct.isLoading
-                            ? null
-                            : create(context),
-                        icon: Icon(FontAwesomeIcons.plus),
-                        label: Text("CreateBook"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              WriterViewHeader,
+              WriterViewTitle,
+              //GridView of Books
               Flexible(
-                child: ListView.separated(
-                  itemCount: state.books.length + addLoading,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 10,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    if (index == state.books.length) {
-                      return Center(
-                          child: LoadingWidget(
-                        loadingStruct: state.loadingStruct,
-                      ));
-                    }
+                  child: Container(
+                      padding: EdgeInsets.only(left: 75, right: 75, bottom: 50),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            crossAxisSpacing: 25.0,
+                            mainAxisSpacing: 25.0,
+                            //Set Max size of Grid Item
+                            mainAxisExtent: 400,
+                            maxCrossAxisExtent: 300
+                            //Set Max size of Grid Item
+                            ),
 
-                    Book book = state.books[index];
-                    return FilledButton(
-                      onPressed: () {
-                        final writingHomeBloc = context.read<WritingHomeBloc>();
-                        writingHomeBloc.add(OpenBookEvent(bookId: book.id));
-                      },
-                      child: Text(book.title),
-                    );
-                  },
-                ),
-              ),
+                        itemCount: state.books.length + addLoading,
+
+                        //Fills out the books in book state
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            //Button indicates submission
+                            return ElevatedButton(
+                                onPressed: () {
+                                  state.loadingStruct.isLoading
+                                      ? null
+                                      : create(context);
+                                },
+                                style: BookButtonStyle,
+                                child: Flexible(
+                                  child: Column(
+                                    children: [
+                                      //Textfield is where submission text is handled.
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 135),
+                                          child: Icon(FontAwesomeIcons.plus,
+                                              size: 50)),
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 55),
+                                          child: TextField(
+                                            controller: textController,
+                                            onSubmitted: (_) =>
+                                                state.loadingStruct.isLoading
+                                                    ? null
+                                                    : create(context),
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter New Book Title',
+                                                suffixIcon: (IconButton(
+                                                    onPressed:
+                                                        textController.clear,
+                                                    icon: Icon(Icons.clear)))),
+                                          )),
+                                    ],
+                                  ),
+                                ));
+                          }
+
+                          if (index == state.books.length) {
+                            return Center(
+                                child: LoadingWidget(
+                              loadingStruct: state.loadingStruct,
+                            ));
+                          }
+
+                          Book book = state.books[index];
+                          return Align(
+                              child: ElevatedButton(
+                            onPressed: () {
+                              final writingHomeBloc =
+                                  context.read<WritingHomeBloc>();
+                              writingHomeBloc.add(OpenBookEvent(book: book));
+                            },
+                            style: BookButtonStyle,
+                            child: Text(book.title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 18)),
+                          ));
+                        },
+                      ))),
             ],
           );
         },

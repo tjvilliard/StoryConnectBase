@@ -22,10 +22,10 @@ class SwitchChapter extends ChapterEvent {
       required this.pageBloc});
 }
 
-class UpdateChapter extends ChapterEvent {
-  final String text;
-  UpdateChapter({
-    required this.text,
+class UpdateChapterEvent extends ChapterEvent {
+  final PageBloc pageBloc;
+  UpdateChapterEvent({
+    required this.pageBloc,
   }) : super(callerIndex: 0);
 }
 
@@ -74,6 +74,7 @@ class ChapterBlocStruct {
 typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
 
 class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
+  final chapterNumToID = <int, int>{};
   final PagesProviderRepository repository;
   ChapterBloc(this.repository)
       : super(ChapterBlocStruct(
@@ -90,7 +91,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     on<SwitchChapter>(
       (event, emit) => switchChapter(event, emit),
     );
-    on<UpdateChapter>((event, emit) => updateChapter(event, emit),
+    on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit),
         transformer: sequential());
 
     on<LoadEvent>((event, emit) => loadEvent(event, emit));
@@ -106,15 +107,19 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     sortedChapterNum.sort((b, a) => a.compareTo(b));
     final newChapterNum = sortedChapterNum.first + 1;
     print(state.loadingStruct.isLoading);
-    await repository.createChapter(newChapterNum);
-    print(state.loadingStruct.isLoading);
-    chapters[event.callerIndex] = event.callerPages.values.join();
-    chapters[newChapterNum] = "";
-    emit.call(ChapterBlocStruct(
-        currentIndex: newChapterNum,
-        chapters: chapters,
-        loadingStruct: LoadingStruct.loading(false)));
-    event.pageBloc.add(RebuildPages(text: ""));
+    final result = await repository.createChapter(newChapterNum);
+    if (result != null) {
+      chapterNumToID[newChapterNum] = result.id;
+      chapters[event.callerIndex] = event.callerPages.values.join();
+      chapters[newChapterNum] = "";
+      emit.call(ChapterBlocStruct(
+          currentIndex: newChapterNum,
+          chapters: chapters,
+          loadingStruct: LoadingStruct.loading(false)));
+      event.pageBloc.add(RebuildPages(text: ""));
+    } else {
+      emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
+    }
   }
 
   void removeChapter(ChapterEvent event, ChapterEmitter emit) {
@@ -143,21 +148,28 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
           loadingStruct: LoadingStruct.loading(false)),
     );
 
-    await repository.updateChapter(event.chapterToSwitchFrom, pageString);
+    await repository.updateChapter(
+        chapterId: chapterNumToID[event.chapterToSwitchFrom]!,
+        number: event.chapterToSwitchFrom,
+        text: pageString);
   }
 
   void updateChapter(
-      UpdateChapter event, Emitter<ChapterBlocStruct> emit) async {
+      UpdateChapterEvent event, Emitter<ChapterBlocStruct> emit) async {
     Map<int, String> chapters = Map.from(state.chapters);
-    chapters[state.currentIndex] = event.text;
+    chapters[state.currentIndex] = event.pageBloc.state.pages.values.join();
 
-    await repository.updateChapter(state.currentIndex, event.text);
+    await repository.updateChapter(
+        chapterId: chapterNumToID[state.currentIndex]!,
+        number: state.currentIndex,
+        text: chapters[state.currentIndex]!);
   }
 
   // helper function to load chapters into expected format
   Map<int, String> parseChapters(List<Chapter> chapters) {
     Map<int, String> parsedChapters = {};
     for (Chapter chapter in chapters) {
+      chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
     }
     return parsedChapters;

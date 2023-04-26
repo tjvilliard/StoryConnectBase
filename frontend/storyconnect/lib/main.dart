@@ -1,5 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/beamer_locations.dart';
 import 'package:storyconnect/theme.dart';
 
@@ -20,12 +22,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: myTheme,
-      routerDelegate: routerDelegate,
-      routeInformationParser: BeamerParser(),
-      backButtonDispatcher:
-          BeamerBackButtonDispatcher(delegate: routerDelegate),
-    );
+    return RepositoryProvider(
+        lazy: false,
+        create: (_) => WritingRepository(),
+        child: MaterialApp.router(
+          theme: myTheme,
+          routerDelegate: routerDelegate,
+          routeInformationParser: BeamerParser(),
+          backButtonDispatcher:
+              BeamerBackButtonDispatcher(delegate: routerDelegate),
+        ));
   }
 }

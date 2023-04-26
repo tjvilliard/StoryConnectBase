@@ -21,7 +21,7 @@ class PagingLogic {
     overflowPainter.text = TextSpan(text: text, style: style);
     overflowPainter.layout(maxWidth: PageBloc.pageWidth);
 
-    while (overflowPainter.height > (PageBloc.pageHeight - 100)) {
+    while (overflowPainter.height > (PageBloc.pageHeight - 200)) {
       didOverflow = true;
       // move the last line to the next page
       int start = text.lastIndexOf(' ');

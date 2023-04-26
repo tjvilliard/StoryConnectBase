@@ -18,18 +18,13 @@ class CreateBookEvent extends WritingHomeEvent {
 }
 
 class OpenBookEvent extends WritingHomeEvent {
-  int bookId;
-  OpenBookEvent({required this.bookId}) : super(isLoading: true);
-}
-
-class BookToNavigate {
-  final int bookId;
-  BookToNavigate({required this.bookId});
+  Book book;
+  OpenBookEvent({required this.book}) : super(isLoading: true);
 }
 
 class WritingHomeStruct {
   final List<Book> books;
-  final BookToNavigate? bookToNavigate;
+  final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
   WritingHomeStruct(
       {required this.books, required this.loadingStruct, this.bookToNavigate});
@@ -38,7 +33,7 @@ class WritingHomeStruct {
 typedef WritingHomeEmitter = Emitter<WritingHomeStruct>;
 
 class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
-  late final WritingHomeRepository repository;
+  late final WritingRepository repository;
   WritingHomeBloc(this.repository)
       : super(WritingHomeStruct(
             books: [], loadingStruct: LoadingStruct(isLoading: false))) {
@@ -61,16 +56,22 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
         books: state.books,
         loadingStruct: LoadingStruct(
             isLoading: event.isLoading, message: "Creating book")));
-    Book newBook = await repository.createBook(title: event.title);
-    emit(WritingHomeStruct(
-        books: [...state.books, newBook],
-        loadingStruct: LoadingStruct.loading(false)));
+    Book? newBook = await repository.createBook(title: event.title);
+
+    if (newBook != null) {
+      emit(WritingHomeStruct(
+          books: [...state.books, newBook],
+          loadingStruct: LoadingStruct.loading(false)));
+    } else {
+      emit(WritingHomeStruct(
+          books: state.books, loadingStruct: LoadingStruct.loading(false)));
+    }
   }
 
   void openBook(OpenBookEvent event, WritingHomeEmitter emit) async {
     emit(WritingHomeStruct(
         books: state.books,
         loadingStruct: LoadingStruct.loading(false),
-        bookToNavigate: BookToNavigate(bookId: event.bookId)));
+        bookToNavigate: event.book));
   }
 }

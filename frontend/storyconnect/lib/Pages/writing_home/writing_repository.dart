@@ -5,57 +5,55 @@ import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
 
 class WritingHomeApiProvider {
-  Future<Book> createBook({required String title}) async {
-    final result = await http.post(
-      Uri.parse('https://storyconnect.app/api/books'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': title,
-      }),
-    );
-    return Book.fromJson(jsonDecode(result.body));
+  Future<Book?> createBook({required String title}) async {
+    try {
+      final result = await http.post(
+        Uri.parse('https://storyconnect.app/api/books/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'title': title,
+        }),
+      );
+      return Book.fromJson(jsonDecode(result.body));
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future<List<Book>> getBooks() async {
-    final result = await http.get(
+    try {
+      final result = await http.get(
         Uri.parse('https://storyconnect.app/api/books'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-
-    final undecodedBookList = jsonDecode(result.body) as List;
-    return undecodedBookList.map((e) => Book.fromJson(e)).toList();
+      );
+      final undecodedBookList = jsonDecode(result.body) as List;
+      List<Book> results = [];
+      for (var book in undecodedBookList) {
+        results.add(Book.fromJson(book));
+      }
+      return results;
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 }
 
-class WritingHomeRepository {
-  // ignore: unused_field
+class WritingRepository {
+  List<Book> books = [];
   WritingHomeApiProvider _api = WritingHomeApiProvider();
-  Future<Book> createBook({
+  Future<Book?> createBook({
     required String title,
   }) {
-    return Future.delayed(Duration(seconds: 2), () {
-      return Book(
-          id: 1,
-          title: title,
-          author: "author",
-          owner: 1,
-          language: "english",
-          targetAudience: 1,
-          dateCreated: DateTime.now(),
-          dateModified: DateTime.now(),
-          synopsis: "synopsis",
-          copyright: 1,
-          titlepage: "titlepage");
-    });
+    return _api.createBook(title: title);
   }
 
   Future<List<Book>> getBooks() async {
-    return Future.delayed(Duration(seconds: 2), () {
-      return <Book>[];
-    });
+    final result = await _api.getBooks();
+    books = result;
+    return result;
   }
 
   Future<List<Chapter>> getChapters({required int bookId}) async {

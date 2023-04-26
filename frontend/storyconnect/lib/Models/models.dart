@@ -18,16 +18,16 @@ class Book with _$Book {
   const factory Book({
     required int id,
     required String title,
-    required String author,
-    required int owner,
-    required String language,
-    @JsonKey(name: 'target_audience') required int targetAudience,
+    String? author,
+    int? owner,
+    String? language,
+    @JsonKey(name: 'target_audience') int? targetAudience,
     String? cover,
-    @JsonKey(name: 'date_created') required DateTime dateCreated,
-    @JsonKey(name: 'date_modified') required DateTime dateModified,
-    required String synopsis,
-    required int copyright,
-    required String titlepage,
+    @JsonKey(name: 'created') required DateTime created,
+    @JsonKey(name: 'modified') required DateTime modified,
+    String? synopsis,
+    int? copyright,
+    String? titlepage,
   }) = _Book;
 
   factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
@@ -52,12 +52,25 @@ class Chapter with _$Chapter {
     required int id,
     required int book,
     @JsonKey(name: 'chapter_title') required String chapterTitle,
-    @JsonKey(name: 'chapter_content') required String chapterContent,
-    @JsonKey(name: 'number') required int number,
+    @JsonKey(name: 'content') required String chapterContent,
+    @JsonKey(name: 'chapter_number') required int number,
   }) = _Chapter;
 
   factory Chapter.fromJson(Map<String, dynamic> json) =>
       _$ChapterFromJson(json);
+}
+
+@freezed
+class ChapterUpload with _$ChapterUpload {
+  const factory ChapterUpload({
+    required int book,
+    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'content') required String chapterContent,
+    @JsonKey(name: 'chapter_number') required int number,
+  }) = _ChapterUpload;
+
+  factory ChapterUpload.fromJson(Map<String, dynamic> json) =>
+      _$ChapterUploadFromJson(json);
 }
 
 @freezed
