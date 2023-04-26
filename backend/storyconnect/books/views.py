@@ -16,6 +16,7 @@ from .serializers import *
 class BookViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ['title', 'author', 'language']
+
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     #permission_classes = [IsAuthenticated]
@@ -81,6 +82,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
     serializer_class = ChapterSerializer
     #permission_classes = [IsAuthenticated]
 
+    @action(detail=True, methods=['post'])
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
