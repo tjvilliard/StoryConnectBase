@@ -58,7 +58,6 @@ class WritingHomeState extends State<WritingHomeView> {
         color: Colors.white,
         alignment: Alignment.center,
         child: Stack(children: [
-          Spacer(flex: 1),
           Align(
               alignment: Alignment.center,
               child: Text(
@@ -130,39 +129,36 @@ class WritingHomeState extends State<WritingHomeView> {
                           if (index == 0) {
                             //Button indicates submission
                             return ElevatedButton(
-                                onPressed: () {
-                                  state.loadingStruct.isLoading
-                                      ? null
-                                      : create(context);
-                                },
-                                style: BookButtonStyle,
-                                child: Flexible(
-                                  child: Column(
-                                    children: [
-                                      //Textfield is where submission text is handled.
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 135),
-                                          child: Icon(FontAwesomeIcons.plus,
-                                              size: 50)),
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 55),
-                                          child: TextField(
-                                            controller: textController,
-                                            onSubmitted: (_) =>
-                                                state.loadingStruct.isLoading
-                                                    ? null
-                                                    : create(context),
-                                            decoration: InputDecoration(
-                                                hintText:
-                                                    'Enter New Book Title',
-                                                suffixIcon: (IconButton(
-                                                    onPressed:
-                                                        textController.clear,
-                                                    icon: Icon(Icons.clear)))),
-                                          )),
-                                    ],
-                                  ),
-                                ));
+                              onPressed: () {
+                                state.loadingStruct.isLoading
+                                    ? null
+                                    : create(context);
+                              },
+                              style: BookButtonStyle,
+                              child: Column(
+                                children: [
+                                  //Textfield is where submission text is handled.
+                                  Padding(
+                                      padding: EdgeInsets.only(top: 135),
+                                      child: Icon(FontAwesomeIcons.plus,
+                                          size: 50)),
+                                  Padding(
+                                      padding: EdgeInsets.only(top: 55),
+                                      child: TextField(
+                                        controller: textController,
+                                        onSubmitted: (_) =>
+                                            state.loadingStruct.isLoading
+                                                ? null
+                                                : create(context),
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter New Book Title',
+                                            suffixIcon: (IconButton(
+                                                onPressed: textController.clear,
+                                                icon: Icon(Icons.clear)))),
+                                      )),
+                                ],
+                              ),
+                            );
                           }
 
                           if (index == state.books.length) {
