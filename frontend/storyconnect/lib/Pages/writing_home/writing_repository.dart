@@ -55,10 +55,4 @@ class WritingRepository {
     books = result;
     return result;
   }
-
-  Future<List<Chapter>> getChapters({required int bookId}) async {
-    return Future.delayed(Duration(seconds: 2), () {
-      return <Chapter>[];
-    });
-  }
 }
