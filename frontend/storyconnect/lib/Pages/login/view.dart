@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
-import 'package:storyconnect/Widgets/unimplemented_popup.dart';
 import 'package:storyconnect/theme.dart';
 
 class LoginPage extends StatelessWidget {
@@ -9,14 +8,6 @@ class LoginPage extends StatelessWidget {
   static const Color white = Color(0xD3D3D3D3);
   static const Color charcoalBlue = Color(0xFF28536B);
   static Color lightCharcoalBlue = Color.alphaBlend(charcoalBlue, white);
-
-  Future<void> showPopup(String caller, BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return UnimplementedPopup(featureName: caller);
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +98,7 @@ class LoginPage extends StatelessWidget {
         height: 75,
         child: OutlinedButton(
           onPressed: () {
-            showPopup("Sign Up", context);
+            // showPopup("Sign Up", context);
           },
           child: Container(
               decoration: BoxDecoration(

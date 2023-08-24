@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ChapterCreateButton extends StatelessWidget {
@@ -20,21 +19,12 @@ class ChapterCreateButton extends StatelessWidget {
     }, buildWhen: (previous, current) {
       return previous.loadingStruct != current.loadingStruct;
     }, builder: (context, chapterState) {
-      return BlocBuilder<PageBloc, PageBlocStruct>(
-          buildWhen: (previous, current) {
-        return previous.loadingStruct != current.loadingStruct;
-      }, builder: (context, pageState) {
-        if (chapterState.loadingStruct.isLoading) {
-          return LoadingWidget(loadingStruct: chapterState.loadingStruct);
-        }
-        return OutlinedButton(
-            onPressed: () => context.read<ChapterBloc>().add(AddChapter(
-                  pageBloc: context.read<PageBloc>(),
-                  callerIndex: chapterState.currentIndex,
-                  callerPages: pageState.pages,
-                )),
-            child: Text("Add Chapter"));
-      });
+      if (chapterState.loadingStruct.isLoading) {
+        return LoadingWidget(loadingStruct: chapterState.loadingStruct);
+      }
+      return OutlinedButton(
+          onPressed: () => context.read<ChapterBloc>().add(AddChapter()),
+          child: Text("Add Chapter"));
     });
   }
 }

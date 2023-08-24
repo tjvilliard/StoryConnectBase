@@ -85,6 +85,9 @@ class PagesProviderRepository {
 
   Future<Chapter?> updateChapter(
       {required int chapterId, required int number, required String text}) {
+    if (number == -1) {
+      print("number is -1");
+    }
     return _api.updateChapter(bookId, chapterId, number, text);
   }
 }
