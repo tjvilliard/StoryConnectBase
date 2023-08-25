@@ -3,13 +3,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_sliver.dart';
 
-class PagingView extends StatelessWidget {
+class PagingView extends StatefulWidget {
+  const PagingView({super.key});
+
+  @override
+  _PagingViewState createState() => _PagingViewState();
+}
+
+class _PagingViewState extends State<PagingView> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    _controller = TextEditingController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
-        child: BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-            builder: (context, state) {
+        child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
+            listener: (context, state) {
+          if (state.caretOffset != null &&
+              state.caretOffset != _controller.selection.baseOffset) {
+            _controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: state.caretOffset!));
+          }
+        }, buildWhen: (previous, current) {
+          return previous.currentIndex != current.currentIndex;
+        }, builder: (context, state) {
           return SingleChildScrollView(
               child: Container(
             margin: EdgeInsets.all(20),
@@ -17,15 +40,16 @@ class PagingView extends StatelessWidget {
             color: Colors.white,
             constraints: BoxConstraints(minHeight: RenderPageSliver.pageHeight),
             child: TextField(
+              controller: _controller,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Enter your text here',
               ),
-              controller: TextEditingController(
-                  text: state.chapters[state.currentIndex]),
               onChanged: (value) {
-                BlocProvider.of<ChapterBloc>(context)
-                    .add(UpdateChapterEvent(text: value));
+                context.read<ChapterBloc>().add(UpdateChapterEvent(
+                      text: value,
+                      selection: _controller.selection,
+                    ));
               },
               maxLines: null, // Allows multiple lines
               keyboardType: TextInputType.multiline,

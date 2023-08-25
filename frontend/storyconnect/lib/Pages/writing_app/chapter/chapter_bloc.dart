@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
@@ -17,7 +18,8 @@ class SwitchChapter extends ChapterEvent {
 
 class UpdateChapterEvent extends ChapterEvent {
   String text;
-  UpdateChapterEvent({required this.text});
+  TextSelection selection;
+  UpdateChapterEvent({required this.text, required this.selection});
 }
 
 class LoadEvent extends ChapterEvent {
@@ -37,21 +39,26 @@ class ChapterBlocStruct {
   final int currentIndex;
   final Map<int, String> chapters;
   final LoadingStruct loadingStruct;
+  final int? caretOffset;
 
-  ChapterBlocStruct(
-      {required this.currentIndex,
-      required this.chapters,
-      required this.loadingStruct});
+  ChapterBlocStruct({
+    required this.currentIndex,
+    required this.chapters,
+    required this.loadingStruct,
+    this.caretOffset,
+  });
 
   ChapterBlocStruct copyWith({
     int? currentIndex,
     Map<int, String>? chapters,
     LoadingStruct? loadingStruct,
+    int? caretOffset,
   }) {
     return ChapterBlocStruct(
       currentIndex: currentIndex ?? this.currentIndex,
       chapters: chapters ?? this.chapters,
       loadingStruct: loadingStruct ?? this.loadingStruct,
+      caretOffset: caretOffset ?? this.caretOffset,
     );
   }
 
