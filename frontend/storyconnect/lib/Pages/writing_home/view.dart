@@ -21,6 +21,8 @@ class WritingHomeState extends State<WritingHomeView> {
   final TextEditingController textController = TextEditingController();
   bool initialLoad = true;
 
+  // End Const Widgets
+
   // The Book Button Placeholder
   final ButtonStyle BookButtonStyle = ButtonStyle(
       shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
@@ -35,6 +37,8 @@ class WritingHomeState extends State<WritingHomeView> {
       }),
       minimumSize: MaterialStatePropertyAll<Size>(Size(1.5 * 139, 139)));
 
+  // End Const Widgets
+
   //Initialize state of widget
   @override
   void initState() {
@@ -48,7 +52,7 @@ class WritingHomeState extends State<WritingHomeView> {
     });
   }
 
-  //
+  // Creates a new book
   void create(BuildContext context) {
     final writingHomeBloc = context.read<WritingHomeBloc>();
     writingHomeBloc.add(
