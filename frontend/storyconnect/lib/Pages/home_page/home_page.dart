@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,31 +9,44 @@ import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 ///
-///The base view for all home pages, should contain tabs to navigate between
-///the writer pages, reader pages, and anything else that needs to be supported
+/// The base view for all home pages, should contain tabs to navigate between
+/// the writer pages, reader pages, and anything else that needs to be supported
+/// State of other main home view items should probably be managed here as well.
 ///
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
   //State object for the home view
-  //
-  HomeState createState() => HomeState();
+  State createState() => HomeState();
 }
 
 ///
 /// Manages the State of our Home Page
 ///
 class HomeState extends State<HomeView> {
-  bool initialLoad = true;
+  /// The Number of Tabs and Coresponding Views.
+  static const int views = 4;
 
-  TabBar tabs = TabBar(tabs: [Tab(text: )]);
+  /// The Placeholder Icon
+  static const Icon placeholder = Icon(Icons.add_photo_alternate_outlined);
 
-  // called when initialized
+  AppBar _mainAppBar = AppBar(leading: placeholder, actions: []);
+
+  bool _initialLoad = true;
+
+  //Our Set of Tabs, shouldn't change
+  static TabBar _mainAppTabBar =
+      TabBar(tabs: [Tab(text: "Writing"), Tab(text: "Reading")]);
+
+  TabBarView _tabViews = new TabBarView(children: []);
+
+  // called when HomeState is first initialized
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (initialLoad) {
-        initialLoad = false;
+      if (this._initialLoad) {
+        this._initialLoad = false;
         final writingHomeBloc = context.read<WritingHomeBloc>();
         writingHomeBloc.add(GetBooksEvent());
       }
@@ -41,7 +56,8 @@ class HomeState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        //
-        home: DefaultTabController(child: Scaffold(), length: 2));
+        home: DefaultTabController(
+            child: Scaffold(appBar: this._mainAppBar, body: this._tabViews),
+            length: HomeState.views));
   }
 }
