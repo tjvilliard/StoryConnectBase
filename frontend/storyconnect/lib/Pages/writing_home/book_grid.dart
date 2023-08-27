@@ -14,6 +14,10 @@ class WritingHomeGridView extends StatefulWidget {
   WritingHomeGridState createState() => WritingHomeGridState();
 }
 
+///
+/// Manages the State of the Writing Home page, specifically the only
+/// component with state, the Grid. The Grid lists all of the books, and
+/// updates when a new book is added.
 class WritingHomeGridState extends State<WritingHomeGridView> {
   final TextEditingController _textController = TextEditingController();
   bool initialLoad = true;
@@ -53,6 +57,8 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
     return Scaffold(body: this.getGridBlocConsumer(context));
   }
 
+  ///
+  ///
   BlocConsumer<WritingHomeBloc, WritingHomeStruct> getGridBlocConsumer(
       BuildContext context) {
     return BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
