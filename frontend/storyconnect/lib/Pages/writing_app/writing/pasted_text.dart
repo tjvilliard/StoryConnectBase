@@ -1,20 +1,33 @@
+import 'dart:collection';
+
 import 'package:flutter/services.dart';
 
-class PasteTextInputFormatter extends TextInputFormatter {
-  final Function(String originalText, String pastedText) onPasted;
+final class LinkedTextEditingValue<T extends TextEditingValue>
+    extends LinkedListEntry<LinkedTextEditingValue<T>> {
+  T value;
+  LinkedTextEditingValue(this.value);
+}
 
-  PasteTextInputFormatter({required this.onPasted});
+/// A [TextInputFormatter] that keeps track of the history of the text field,
+/// allowing for undo and redo, up to the most recent 100 changes.
+class RedoUndoInputFormatter extends TextInputFormatter {
+  final LinkedList _history =
+      LinkedList<LinkedTextEditingValue<TextEditingValue>>();
+
+  final _redoStack = <LinkedTextEditingValue<TextEditingValue>>[];
+
+  RedoUndoInputFormatter();
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final int difference = newValue.text.length - oldValue.text.length;
-
-    // If the difference is greater than 1, it's likely that the text has been pasted
-    if (difference > 1) {
-      onPasted(newValue.text, newValue.text.substring(oldValue.text.length));
-      return oldValue; // Prevent TextField update and onChanged from being called
+    if (oldValue == newValue) {
+      return newValue;
     }
-    return newValue; // Allow TextField update and onChanged to be called
+    _history.add(LinkedTextEditingValue(newValue));
+    if (_history.length > 100) {
+      _history.first.unlink();
+    }
+    return newValue;
   }
 }

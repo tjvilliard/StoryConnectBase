@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,7 +123,7 @@ class WritingHomeState extends State<WritingHomeView> {
                             //Set Max size of Grid Item
                             ),
 
-                        itemCount: max(1, state.books.length),
+                        itemCount: state.books.length + 1,
 
                         //Fills out the books in book state
                         itemBuilder: (context, index) {
