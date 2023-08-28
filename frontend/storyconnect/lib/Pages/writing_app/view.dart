@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/paging_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
@@ -30,9 +29,9 @@ class _WritingAppViewState extends State<WritingAppView> {
           return;
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
-            bookId: widget.bookId!,
-            chapterBloc: context.read<ChapterBloc>(),
-            pageBloc: context.read<PageBloc>()));
+          bookId: widget.bookId!,
+          chapterBloc: context.read<ChapterBloc>(),
+        ));
       });
     }
 

@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
 from .models import *
 from .serializers import *
+from django.db import transaction
 
 
 # Create your views here.
@@ -22,16 +23,22 @@ class BookViewSet(viewsets.ModelViewSet):
 
     
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
 
-        # create initial chapter
-        Chapter.objects.create(book=serializer.instance)
+            # Use the instance directly instead of querying it again
+            book = serializer.instance
 
-        headers = self.get_success_headers(serializer.data)
+            # Create the first chapter for the book
+            Chapter.objects.create(book=book)
+
+        # Commit the transaction
+        transaction.set_autocommit(True)
+
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
 
@@ -63,6 +70,9 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_chapters(self, request, pk=None):
         book = self.get_object()
         chapters = book.get_chapters()
+        # assert that that there is always at least one chapter
+        assert len(chapters) > 0
+
         serializer = ChapterSerializer(chapters, many=True)
         return Response(serializer.data)
     
