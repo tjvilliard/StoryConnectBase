@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
-import firebase_admin
 # from dotenv import load_dotenv
 
 # load_dotenv()
@@ -159,11 +158,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Firebase
-cred = firebase_admin.credentials.Certificate(os.path.join(BASE_DIR, "firebase_credentials.json"))
-firebase_admin.initialize_app(cred)
 
-REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication',]}
+# FIREBASE CREDENTIALS
+FIREBASE_ACCOUNT_TYPE = os.environ.get('FIREBASE_ACCOUNT_TYPE')
+FIREBASE_PROJECT_ID = os.environ.get('FIREBASE_PROJECT_ID')
+FIREBASE_PRIVATE_KEY_ID = os.environ.get('FIREBASE_PRIVATE_KEY_ID')
+FIREBASE_PRIVATE_KEY = os.environ.get('FIREBASE_PRIVATE_KEY')
+FIREBASE_CLIENT_EMAIL = os.environ.get('FIREBASE_CLIENT_EMAIL')
+FIREBASE_CLIENT_ID = os.environ.get('FIREBASE_CLIENT_ID')
+FIREBASE_AUTH_URI = os.environ.get('FIREBASE_AUTH_URI')
+FIREBASE_TOKEN_URI = os.environ.get('FIREBASE_TOKEN_URI')
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL')
+FIREBASE_CLIENT_X509_CERT_URL = os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
+
+REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
+                                                    'core.authentication.FirebaseAuthentication']}
+
 
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
