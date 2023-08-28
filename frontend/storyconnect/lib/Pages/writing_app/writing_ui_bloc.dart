@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
 
 class WritingUIStruct {
@@ -38,11 +37,10 @@ class UpdateAllEvent extends WritingUIEvent {
 class WritingLoadEvent extends WritingUIEvent {
   final int bookId;
   final ChapterBloc chapterBloc;
-  final PageBloc pageBloc;
-  WritingLoadEvent(
-      {required this.bookId,
-      required this.chapterBloc,
-      required this.pageBloc});
+  WritingLoadEvent({
+    required this.bookId,
+    required this.chapterBloc,
+  });
 }
 
 typedef WritingUIEmiter = Emitter<WritingUIStruct>;
@@ -61,18 +59,15 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIStruct> {
   }
 
   Future<String> _getBookTitle(int bookId) async {
-    String? title;
     for (final book in repository.books) {
       if (book.id == bookId) {
         return book.title;
       }
     }
-    if (title == null) {
-      final books = await repository.getBooks();
-      for (final book in books) {
-        if (book.id == bookId) {
-          return book.title;
-        }
+    final books = await repository.getBooks();
+    for (final book in books) {
+      if (book.id == bookId) {
+        return book.title;
       }
     }
     return "Error: Title not found";
@@ -80,7 +75,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIStruct> {
 
   Future<void> loadEvent(WritingLoadEvent event, WritingUIEmiter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
-    event.chapterBloc.add(LoadEvent(pageBloc: event.pageBloc));
+    event.chapterBloc.add(LoadEvent());
 
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(false),
