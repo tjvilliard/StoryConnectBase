@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import firebase_admin
 # from dotenv import load_dotenv
 
 # load_dotenv()
@@ -107,7 +108,7 @@ DATABASES = {
         'NAME': os.getenv('NAME'),
         'PORT': os.getenv('PORT'),
         'USER': os.getenv('DBUSER'),
-        'PASSWORD':  os.getenv('PASSWORD').strip(),
+        'PASSWORD':  os.getenv('PASSWORD').strip(), 
         'OPTIONS': {'sslmode': os.getenv('SSLMODE')},
     }
 }
@@ -130,6 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
@@ -155,6 +157,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Firebase
+cred = firebase_admin.credentials.Certificate(os.path.join(BASE_DIR, "firebase_credentials.json"))
+firebase_admin.initialize_app(cred)
+
+REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication',]}
 
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
