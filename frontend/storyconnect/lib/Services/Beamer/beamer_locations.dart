@@ -5,7 +5,6 @@ import 'package:storyconnect/Pages/login/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
@@ -36,10 +35,6 @@ class WriterLocations extends BeamLocation<BeamState> {
                     PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
                 child: MultiBlocProvider(
                     providers: [
-                      BlocProvider(
-                          lazy: false,
-                          create: (context) => PageBloc(
-                              context.read<PagesProviderRepository>())),
                       BlocProvider(
                           lazy: false,
                           create: (context) => ChapterBloc(

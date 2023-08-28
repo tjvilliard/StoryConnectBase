@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 class WritingHomeApiProvider {
+  final UrlBuilder _urlBuilder = UrlBuilder();
   Future<Book?> createBook({required String title}) async {
     try {
+      final url = _urlBuilder.build(Uri.parse('books/'));
       final result = await http.post(
-        Uri.parse('https://storyconnect.app/api/books/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -25,8 +28,9 @@ class WritingHomeApiProvider {
 
   Future<List<Book>> getBooks() async {
     try {
+      final url = _urlBuilder.build(Uri.parse('books/'));
       final result = await http.get(
-        Uri.parse('https://storyconnect.app/api/books'),
+        url,
       );
       final undecodedBookList = jsonDecode(result.body) as List;
       List<Book> results = [];
@@ -54,11 +58,5 @@ class WritingRepository {
     final result = await _api.getBooks();
     books = result;
     return result;
-  }
-
-  Future<List<Chapter>> getChapters({required int bookId}) async {
-    return Future.delayed(Duration(seconds: 2), () {
-      return <Chapter>[];
-    });
   }
 }

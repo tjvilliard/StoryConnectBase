@@ -1,12 +1,7 @@
-import 'dart:math';
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_sliver.dart';
-import 'package:storyconnect/Pages/writing_app/writing/writing_page.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
-import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class PagingView extends StatefulWidget {
   const PagingView({super.key});
@@ -16,100 +11,61 @@ class PagingView extends StatefulWidget {
 }
 
 class _PagingViewState extends State<PagingView> {
-  late final ScrollController _controller;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
-    _controller = ScrollController();
+    _controller = TextEditingController();
     super.initState();
   }
 
-  Map<int, GlobalKey<WritingPageViewState>> _pageKeys = {};
-
-  void scrollToIndex(PageBlocStruct state) {
-    final index = state.navigateToIndex!;
-
-    WritingPageViewState? pageState = _pageKeys[index]?.currentState;
-    if (pageState == null) {
-      setState(() {
-        _pageKeys[index] = GlobalKey<WritingPageViewState>();
-      });
+  @override
+  void didChangeDependencies() {
+    if (mounted) {
+      final blocState = BlocProvider.of<ChapterBloc>(context).state;
+      _controller.text = blocState.chapters[blocState.currentIndex] ?? "";
       ;
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      scroll(state);
-    });
-  }
-
-  void scroll(PageBlocStruct state) {
-    final index = state.navigateToIndex!;
-
-    final pageState = _pageKeys[index]?.currentState;
-
-    final pageOffset = (PageBloc.pageHeight) * index;
-    double to = max(0, pageOffset - 50);
-    _controller.animateTo(to,
-        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-
-    ;
-
-    if (pageState != null) {
-      Scrollable.ensureVisible(pageState.context,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-    } else {
-      print("here");
-    }
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(maxWidth: PageBloc.pageWidth),
-        child: BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-            buildWhen: (previous, current) {
+        constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
+        child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
+            listener: (context, state) {
+          _controller.text = state.chapters[state.currentIndex] ?? "";
+          // if (state.caretOffset != null &&
+          //     state.caretOffset != _controller.selection.baseOffset) {
+          //   _controller.selection = TextSelection.fromPosition(
+          //       TextPosition(offset: state.caretOffset!));
+          // }
+        }, buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex;
         }, builder: (context, state) {
-          return BlocConsumer<PageBloc, PageBlocStruct>(
-              listenWhen: (previous, current) {
-            final bool wasFocused =
-                previous.navigateToIndex == current.navigateToIndex;
-            return !wasFocused && current.navigateToIndex != null;
-          }, listener: (context, state) async {
-            scrollToIndex(state);
-          }, buildWhen: (previousStruct, currentStruct) {
-            final previous = previousStruct.pages;
-            final current = currentStruct.pages;
-            return previous.length != current.length;
-          }, builder: (context, state) {
-            if (state.loadingStruct.isLoading) {
-              return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 100),
-                  child: LoadingWidget(loadingStruct: state.loadingStruct));
-            }
-
-            return CustomScrollView(
+          return SingleChildScrollView(
+              child: Container(
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
+            color: Colors.white,
+            constraints: BoxConstraints(minHeight: RenderPageSliver.pageHeight),
+            child: TextField(
               controller: _controller,
-              slivers: [
-                PageSliver(
-                  itemExtent: PageBloc.pageHeight,
-                  delegate: SliverChildBuilderDelegate(
-                    childCount: state.pages.length,
-                    (BuildContext context, int index) {
-                      if (!_pageKeys.containsKey(index)) {
-                        _pageKeys[index] = GlobalKey<WritingPageViewState>();
-                      }
-                      return WritingPageView(
-                        key: _pageKeys[index],
-                        index: index,
-                      );
-                    },
-                  ),
-                )
-              ],
-            );
-          });
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter your text here',
+              ),
+              onChanged: (value) {
+                context.read<ChapterBloc>().add(UpdateChapterEvent(
+                      text: value,
+                      selection: _controller.selection,
+                    ));
+              },
+              maxLines: null, // Allows multiple lines
+              keyboardType: TextInputType.multiline,
+            ),
+          ));
         }));
   }
 }
