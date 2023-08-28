@@ -137,6 +137,8 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
   }
 
   ///
+  /// Creates the Grid State Manager for the writer home view,
+  /// the Grid State Bloc manages state and opening a new book.
   ///
   BlocConsumer<WritingHomeBloc, WritingHomeStruct> getGridBlocConsumer(
       BuildContext context) {

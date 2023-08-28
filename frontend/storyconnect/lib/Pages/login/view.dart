@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/theme.dart';
-import 'package:storyconnect/Pages/home_page/base_app_bar.dart';
+import 'package:storyconnect/Pages/home_page/base_appbar.dart';
 import 'login_box.dart';
 
 ///
+/// Login page for the StoryConnect App
 ///
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);

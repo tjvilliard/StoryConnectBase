@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/home_page/base_app_bar.dart';
+import 'package:storyconnect/Pages/home_page/base_appbar.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 
 import '../../theme.dart';
-import 'book_grid.dart';
+import 'writing_home_book_grid.dart';
 
 class WritingHomeView extends StatefulWidget {
   const WritingHomeView({Key? key}) : super(key: key);
