@@ -66,6 +66,9 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
       emit(WritingHomeStruct(
           books: state.books, loadingStruct: LoadingStruct.loading(false)));
     }
+
+    // update books
+    add(GetBooksEvent());
   }
 
   void openBook(OpenBookEvent event, WritingHomeEmitter emit) async {

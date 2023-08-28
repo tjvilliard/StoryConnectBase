@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -108,6 +110,7 @@ class WritingHomeState extends State<WritingHomeView> {
             children: [
               WriterViewHeader,
               WriterViewTitle,
+
               //GridView of Books
               Flexible(
                   child: Container(
@@ -122,7 +125,7 @@ class WritingHomeState extends State<WritingHomeView> {
                             //Set Max size of Grid Item
                             ),
 
-                        itemCount: state.books.length + addLoading,
+                        itemCount: max(1, state.books.length),
 
                         //Fills out the books in book state
                         itemBuilder: (context, index) {

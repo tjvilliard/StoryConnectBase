@@ -15,7 +15,7 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   freezed_annotation: ^2.4.1
   google_fonts: ^5.1.0
-  json_annotation: ^4.8.0
+  json_annotation: ^4.8.1
   synchronized: ^3.1.0
   tuple: ^2.0.1
     

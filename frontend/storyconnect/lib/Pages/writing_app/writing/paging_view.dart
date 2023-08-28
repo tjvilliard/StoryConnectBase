@@ -20,16 +20,27 @@ class _PagingViewState extends State<PagingView> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (mounted) {
+      final blocState = BlocProvider.of<ChapterBloc>(context).state;
+      _controller.text = blocState.chapters[blocState.currentIndex] ?? "";
+      ;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
         child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
             listener: (context, state) {
-          if (state.caretOffset != null &&
-              state.caretOffset != _controller.selection.baseOffset) {
-            _controller.selection = TextSelection.fromPosition(
-                TextPosition(offset: state.caretOffset!));
-          }
+          _controller.text = state.chapters[state.currentIndex] ?? "";
+          // if (state.caretOffset != null &&
+          //     state.caretOffset != _controller.selection.baseOffset) {
+          //   _controller.selection = TextSelection.fromPosition(
+          //       TextPosition(offset: state.caretOffset!));
+          // }
         }, buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex;
         }, builder: (context, state) {

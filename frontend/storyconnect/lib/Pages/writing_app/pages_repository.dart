@@ -1,16 +1,17 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 class PagesApiProvider {
+  final UrlBuilder _urlBuilder = UrlBuilder();
+
   Future<List<Chapter>> getChapters(int bookId) async {
-    final result = await http.get(
-        Uri.parse('https://storyconnect.app/api/books/$bookId/get_chapters'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
+    final url = _urlBuilder.build(Uri.parse('books/$bookId/get_chapters'));
+    final result = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
 
     final undecodedChapterList =
         jsonDecode(utf8.decode(result.bodyBytes)) as List;
@@ -28,9 +29,10 @@ class PagesApiProvider {
           chapterContent: "",
           book: bookId,
           chapterTitle: "$number");
+      final url = _urlBuilder.build(Uri.parse('chapters/'));
 
       final result = await http.post(
-        Uri.parse('https://storyconnect.app/api/chapters/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,9 +54,10 @@ class PagesApiProvider {
           chapterContent: text,
           book: bookId,
           chapterTitle: "$number");
+      final url = _urlBuilder.build(Uri.parse('chapters/$chapterId/'));
 
       final result = await http.patch(
-        Uri.parse('https://storyconnect.app/api/chapters/$chapterId/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -69,7 +72,6 @@ class PagesApiProvider {
 }
 
 class PagesProviderRepository {
-  // ignore: unused_field
   PagesApiProvider _api = PagesApiProvider();
   final int bookId;
 

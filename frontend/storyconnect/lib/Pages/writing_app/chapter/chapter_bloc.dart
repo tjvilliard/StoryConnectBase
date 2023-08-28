@@ -10,8 +10,10 @@ abstract class ChapterEvent {
 }
 
 class SwitchChapter extends ChapterEvent {
+  int chaptertoSwitchFrom;
   int chapterToSwitchTo;
   SwitchChapter({
+    required this.chaptertoSwitchFrom,
     required this.chapterToSwitchTo,
   });
 }
@@ -107,10 +109,9 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     if (result != null) {
       chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
-      emit.call(ChapterBlocStruct(
-          currentIndex: newChapterNum,
-          chapters: chapters,
-          loadingStruct: LoadingStruct.loading(false)));
+      emit.call(state.copyWith(
+        chapters: chapters,
+      ));
     } else {
       emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
     }
@@ -127,13 +128,12 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
 
   void switchChapter(SwitchChapter event, ChapterEmitter emit) async {
     Map<int, String> chapters = Map.from(state.chapters);
+    // save current chapter
+    print(chapters[event.chaptertoSwitchFrom]);
 
-    emit(
-      ChapterBlocStruct(
-          currentIndex: event.chapterToSwitchTo,
-          chapters: chapters,
-          loadingStruct: LoadingStruct.loading(false)),
-    );
+    emit(state.copyWith(
+      currentIndex: event.chapterToSwitchTo,
+    ));
   }
 
   void updateChapter(
@@ -141,10 +141,12 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[state.currentIndex] = event.text;
 
-    await repository.updateChapter(
+    repository.updateChapter(
         chapterId: chapterNumToID[state.currentIndex] ?? -1,
         number: state.currentIndex,
         text: chapters[state.currentIndex]!);
+
+    emit(state.copyWith(chapters: chapters));
   }
 
   // helper function to load chapters into expected format

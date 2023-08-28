@@ -23,9 +23,9 @@ class ChapterNavigationButton extends StatelessWidget {
                       ? selectedColor
                       : Colors.transparent),
               onPressed: () {
-                context
-                    .read<ChapterBloc>()
-                    .add(SwitchChapter(chapterToSwitchTo: index));
+                context.read<ChapterBloc>().add(SwitchChapter(
+                    chapterToSwitchTo: index,
+                    chaptertoSwitchFrom: chapterState.currentIndex));
               },
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
