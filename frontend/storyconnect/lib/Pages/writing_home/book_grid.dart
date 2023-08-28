@@ -6,6 +6,10 @@ import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
+///
+/// The Book Layout Grid Component of the Writing Home Page.
+/// Lists each book for writing and the option to write new books.
+///
 class WritingHomeGridView extends StatefulWidget {
   const WritingHomeGridView({Key? key}) : super(key: key);
 
@@ -18,6 +22,7 @@ class WritingHomeGridView extends StatefulWidget {
 /// Manages the State of the Writing Home page, specifically the only
 /// component with state, the Grid. The Grid lists all of the books, and
 /// updates when a new book is added.
+///
 class WritingHomeGridState extends State<WritingHomeGridView> {
   final TextEditingController _textController = TextEditingController();
   bool initialLoad = true;
@@ -34,6 +39,7 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
 
   ///
   /// Manages the Visible Properites of a Book Button
+  ///
   final ButtonStyle _bookButtonStyle = ButtonStyle(
       shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
         return RoundedRectangleBorder();
@@ -50,6 +56,79 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
         writingHomeBloc.add(GetBooksEvent());
       }
     });
+  }
+
+  ///
+  /// Builds the Actual Gridview responisble for displaying our books.
+  ///
+  GridView _buildGrid(
+      BuildContext context, WritingHomeStruct state, int addLoading) {
+    return GridView.builder(
+      /// The Gridview Grid Delegate, always Constant
+      gridDelegate: this._writingBookGridDelegate,
+
+      // The Number of books we need to pad out
+      itemCount: state.books.length + addLoading,
+
+      // List each book
+      itemBuilder: (context, index) {
+        // If the Index is zero, rather than place the book at index 0, place
+        // the widget that creates a new book.
+        if (index == 0) {
+          //Button indicates submission
+          return ElevatedButton(
+            onPressed: () {
+              state.loadingStruct.isLoading ? null : create(context);
+            },
+            style: this._bookButtonStyle,
+            child: Column(
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(top: 135),
+                    child: Icon(FontAwesomeIcons.plus, size: 50)),
+                Padding(
+                    padding: EdgeInsets.only(top: 55),
+                    child: TextField(
+                      controller: this._textController,
+                      onSubmitted: (_) => state.loadingStruct.isLoading
+                          ? null
+                          : create(context),
+                      decoration: InputDecoration(
+                          hintText: 'Enter New Book Title',
+                          suffixIcon: (IconButton(
+                              onPressed: this._textController.clear,
+                              icon: Icon(Icons.clear)))),
+                    )),
+              ],
+            ),
+          );
+        }
+
+        // If we've reached the index limit,
+        // stop adding books to the list
+        if (index == state.books.length) {
+          return Center(
+              child: LoadingWidget(
+            loadingStruct: state.loadingStruct,
+          ));
+        }
+
+        // Else get the next book to add to the list
+        else {
+          Book book = state.books[index];
+          return Align(
+              child: ElevatedButton(
+            onPressed: () {
+              final writingHomeBloc = context.read<WritingHomeBloc>();
+              writingHomeBloc.add(OpenBookEvent(book: book));
+            },
+            style: _bookButtonStyle,
+            child: Text(book.title,
+                textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+          ));
+        }
+      },
+    );
   }
 
   @override
@@ -69,108 +148,33 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
           "book": state.bookToNavigate,
         });
       }
-    },
-
-        // Conditions for rebuilding the Widget
-        buildWhen: (previous, current) {
+    }, buildWhen: (previous, current) {
       final loadingDiff = previous.loadingStruct != current.loadingStruct;
       final bookDiff = previous.books != current.books;
       return bookDiff || loadingDiff;
-    },
-
-        // What we are actually building with the widget
-        builder: (context, state) {
+    }, builder: (context, state) {
       int addLoading = 0;
       if (state.loadingStruct.isLoading) {
         addLoading++;
       }
 
       return Container(
-          padding: EdgeInsets.only(left: 75, right: 75, bottom: 50),
-
-          //The grid we are laying out our books on
-          child: GridView.builder(
-            /// The Gridview Grid Delegate, always Constant
-            gridDelegate: this._writingBookGridDelegate,
-
-            // The Number of books we need to pad out
-            itemCount: state.books.length + addLoading,
-
-            // List each book
-            itemBuilder: (context, index) {
-              // The book at index 0 should not be a new book, but rather an option to add a new book
-              if (index == 0) {
-                //Button indicates submission
-                return ElevatedButton(
-                  onPressed: () {
-                    state.loadingStruct.isLoading ? null : create(context);
-                  },
-                  style: this._bookButtonStyle,
-                  child: Column(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.only(top: 135),
-                          child: Icon(FontAwesomeIcons.plus, size: 50)),
-                      Padding(
-                          padding: EdgeInsets.only(top: 55),
-                          child: TextField(
-                            controller: this._textController,
-                            onSubmitted: (_) => state.loadingStruct.isLoading
-                                ? null
-                                : create(context),
-                            decoration: InputDecoration(
-                                hintText: 'Enter New Book Title',
-                                suffixIcon: (IconButton(
-                                    onPressed: this._textController.clear,
-                                    icon: Icon(Icons.clear)))),
-                          )),
-                    ],
-                  ),
-                );
-              }
-
-              // If we've reached the index limit,
-              // stop adding books to the list
-              if (index == state.books.length) {
-                return Center(
-                    child: LoadingWidget(
-                  loadingStruct: state.loadingStruct,
-                ));
-              }
-
-              // Get the next book to add to the list
-              else {
-                Book book = state.books[index];
-                return Align(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    final writingHomeBloc = context.read<WritingHomeBloc>();
-                    writingHomeBloc.add(OpenBookEvent(book: book));
-                  },
-                  style: _bookButtonStyle,
-                  child: Text(book.title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18)),
-                ));
-              }
-            },
-          ));
+          padding: EdgeInsets.only(top: 50, left: 75, right: 75, bottom: 50),
+          child: this._buildGrid(context, state, addLoading));
     });
   }
 
   ///
-  /// Handles the Front End Side of Creating a new Book
+  /// Handles the Front End Side of Creating a new Book, creates the
+  /// Post Request sends via Create Book Event
   ///
   void create(BuildContext context) {
-    // Get the current state of the writing home bloc
     final writingHomeBloc = context.read<WritingHomeBloc>();
 
-    // Insert our new book with our title into the bloc
     writingHomeBloc.add(
       CreateBookEvent(title: this._textController.text.trim()),
     );
 
-    // Reset the state of the text controller
     this._textController.text = "";
   }
 
