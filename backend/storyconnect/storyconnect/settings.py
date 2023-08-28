@@ -58,7 +58,9 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework.authtoken',
     'books',
-    'core',
+    # 'core',
+    # 'firebase_admin',
+    # 'requests'
 ]
 
 MIDDLEWARE = [

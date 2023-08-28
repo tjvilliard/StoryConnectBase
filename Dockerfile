@@ -9,6 +9,7 @@ RUN mkdir /config
 ADD /config/requirements.txt /config/
 
 RUN pip install -r /config/requirements.txt
+RUN pip install requests
 RUN mkdir /src;
 WORKDIR /src
 
