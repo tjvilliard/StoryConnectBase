@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
-import 'package:storyconnect/Pages/writing_app/writing/paging_view.dart';
+import 'package:storyconnect/Pages/writing_app/writing/page_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -81,7 +81,7 @@ class _WritingAppViewState extends State<WritingAppView> {
               // where chapter navigation is displayed
               ChapterNavigation(),
               // Where pages are displayed
-              Flexible(child: PagingView()),
+              Flexible(child: WritingPageView()),
 
               Container()
             ],
