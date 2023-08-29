@@ -1,27 +1,36 @@
-import 'package:bloc/bloc.dart';
+import 'dart:async';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
+import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 
-abstract class ChapterEvent {
+abstract class ChapterEvent extends ReplayEvent {
   ChapterEvent();
 }
 
 class SwitchChapter extends ChapterEvent {
   int chaptertoSwitchFrom;
   int chapterToSwitchTo;
+  bool storeCommand;
   SwitchChapter({
     required this.chaptertoSwitchFrom,
     required this.chapterToSwitchTo,
+    this.storeCommand = true,
   });
 }
 
 class UpdateChapterEvent extends ChapterEvent {
   String text;
   TextSelection selection;
-  UpdateChapterEvent({required this.text, required this.selection});
+  bool storeCommand;
+  UpdateChapterEvent({
+    required this.text,
+    required this.selection,
+    this.storeCommand = true,
+  });
 }
 
 class LoadEvent extends ChapterEvent {
@@ -35,6 +44,19 @@ class AddChapter extends ChapterEvent {
 class RemoveChapter extends ChapterEvent {
   int chapterNum;
   RemoveChapter({required this.chapterNum});
+}
+
+class UndoCommand extends ChapterEvent {
+  UndoCommand();
+}
+
+class RedoCommand extends ChapterEvent {
+  RedoCommand();
+}
+
+class _UpdateChapterHelperEvent extends ChapterEvent {
+  UpdateChapterEvent event;
+  _UpdateChapterHelperEvent({required this.event});
 }
 
 class ChapterBlocStruct {
@@ -75,8 +97,12 @@ class ChapterBlocStruct {
 
 typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
 
-class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
+class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
+    with ReplayBlocMixin<ChapterEvent, ChapterBlocStruct> {
+  Timer? debounceTimer;
+
   final chapterNumToID = <int, int>{};
+
   final PagesProviderRepository repository;
   ChapterBloc(this.repository) : super(ChapterBlocStruct.initial()) {
     on<AddChapter>(
@@ -93,6 +119,12 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
         transformer: sequential());
 
     on<LoadEvent>((event, emit) => loadEvent(event, emit));
+
+    on<UndoCommand>((event, emit) => undoCommand(event, emit));
+    on<RedoCommand>((event, emit) => redoCommand(event, emit));
+
+    on<_UpdateChapterHelperEvent>(
+        (event, emit) => _updateChapterHelper(event.event, emit));
   }
 
   Future<void> addChapter(AddChapter event, ChapterEmitter emit) async {
@@ -127,10 +159,6 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
   }
 
   void switchChapter(SwitchChapter event, ChapterEmitter emit) async {
-    Map<int, String> chapters = Map.from(state.chapters);
-    // save current chapter
-    print(chapters[event.chaptertoSwitchFrom]);
-
     emit(state.copyWith(
       currentIndex: event.chapterToSwitchTo,
     ));
@@ -138,15 +166,26 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
 
   void updateChapter(
       UpdateChapterEvent event, Emitter<ChapterBlocStruct> emit) async {
+    if (debounceTimer != null && debounceTimer!.isActive) {
+      debounceTimer!.cancel();
+    }
+    debounceTimer = Timer(Duration(milliseconds: 250), () {
+      add(_UpdateChapterHelperEvent(event: event));
+    });
+  }
+
+  void _updateChapterHelper(
+      UpdateChapterEvent event, Emitter<ChapterBlocStruct> emit) async {
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[state.currentIndex] = event.text;
 
-    repository.updateChapter(
-        chapterId: chapterNumToID[state.currentIndex] ?? -1,
-        number: state.currentIndex,
-        text: chapters[state.currentIndex]!);
-
     emit(state.copyWith(chapters: chapters));
+
+    repository.updateChapter(
+      chapterId: chapterNumToID[state.currentIndex] ?? -1,
+      number: state.currentIndex,
+      text: chapters[state.currentIndex]!,
+    );
   }
 
   // helper function to load chapters into expected format
@@ -164,7 +203,19 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     final unParsedChapters = await repository.getChapters();
 
     final chapters = parseChapters(unParsedChapters);
+
     emit(state.copyWith(
         chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
+    clearHistory();
+  }
+
+  /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,
+  /// and then perform the undo command. Multiple chapter switches in a row will be undone in reverse order.
+  undoCommand(UndoCommand event, Emitter<ChapterBlocStruct> emit) {
+    undo();
+  }
+
+  redoCommand(RedoCommand event, Emitter<ChapterBlocStruct> emit) {
+    redo();
   }
 }
