@@ -14,6 +14,17 @@ class TitleChangedEvent extends BookCreateEvent {
   const TitleChangedEvent({required this.title});
 }
 
+class LanguageChangedEvent extends BookCreateEvent {
+  final String language;
+  const LanguageChangedEvent({required this.language});
+}
+
+class TargetAudienceChangedEvent extends BookCreateEvent {
+  final int targetAudience;
+  TargetAudienceChangedEvent({required TargetAudience targetAudience})
+      : this.targetAudience = targetAudience.index;
+}
+
 class SaveBookEvent extends BookCreateEvent {
   const SaveBookEvent();
 }

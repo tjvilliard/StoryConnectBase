@@ -10,9 +10,9 @@ class Book(models.Model):
     #     (2, "Indonesian")
     # ]
     TARGET_AUDIENCES = [
-        (1, "Young Adult (13-18 years old)"), 
-        (2, "New Adult (18-25 years old)"),
-        (3, "Adult (25+ years old)")
+        (1, "Children "), 
+        (2, "Young Adult"),
+        (3, "Adult (18+)")
     ]
     # taken from chapterly.com and wattpad.com
     COPYRIGHTS = [

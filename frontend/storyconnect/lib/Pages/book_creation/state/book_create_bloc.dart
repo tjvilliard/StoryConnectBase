@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
-import 'package:storyconnect/Pages/writing_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 
 part 'book_create_bloc.freezed.dart';
 part 'book_create_state.dart';
@@ -21,6 +22,18 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
       emit(state.copyWith(
           serializer: state.serializer.copyWith(title: event.title)));
     });
+
+    on<LanguageChangedEvent>((event, emit) {
+      emit(state.copyWith(
+          serializer: state.serializer.copyWith(language: event.language)));
+    });
+
+    on<TargetAudienceChangedEvent>((event, emit) {
+      emit(state.copyWith(
+          serializer:
+              state.serializer.copyWith(targetAudience: event.targetAudience)));
+    });
+
     on<SaveBookEvent>((event, emit) {
       saveBook(event, emit);
     });

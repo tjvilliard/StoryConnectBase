@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {

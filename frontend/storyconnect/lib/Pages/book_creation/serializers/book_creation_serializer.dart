@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
 
 part 'book_creation_serializer.freezed.dart';
 part 'book_creation_serializer.g.dart';
@@ -7,11 +8,10 @@ part 'book_creation_serializer.g.dart';
 class BookCreationSerializer with _$BookCreationSerializer {
   const factory BookCreationSerializer({
     required String title,
-    String? author,
-    String? cover, // base 64
-    String? synopsis,
-    int? copyRight,
-    String? titlePage,
+    required String author,
+    required String? language,
+    int? targetAudience,
+    int? copyright,
   }) = _BookCreationSerializer;
 
   factory BookCreationSerializer.fromJson(Map<String, dynamic> json) =>
@@ -21,6 +21,8 @@ class BookCreationSerializer with _$BookCreationSerializer {
   factory BookCreationSerializer.initial() {
     return BookCreationSerializer(
       title: "",
+      author: "",
+      language: LanguageConstant.english.label,
     );
   }
 }
