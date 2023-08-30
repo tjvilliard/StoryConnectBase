@@ -18,12 +18,14 @@ class SaveBookButton extends StatelessWidget {
                 padding: EdgeInsets.all(10),
                 child: Text(state.loadingStruct.message!)),
           if (state.loadingStruct.isLoading == false)
-            FilledButton(
-              child: Text("Create Book"),
-              onPressed: () {
-                context.read<BookCreateBloc>().add(SaveBookEvent());
-              },
-            )
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: FilledButton(
+                  child: Text("Create Book"),
+                  onPressed: () {
+                    context.read<BookCreateBloc>().add(SaveBookEvent());
+                  },
+                ))
         ],
       );
     });
