@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -26,7 +23,6 @@ class WritingHomeGridView extends StatefulWidget {
 /// updates when a new book is added.
 ///
 class WritingHomeGridState extends State<WritingHomeGridView> {
-  final TextEditingController _textController = TextEditingController();
   bool initialLoad = true;
 
   final SliverGridDelegate _writingBookGridDelegate =
@@ -70,42 +66,10 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
       gridDelegate: this._writingBookGridDelegate,
 
       // The Number of books we need to pad out
-      itemCount: max(1, state.books.length + addLoading),
+      itemCount: state.books.length + addLoading,
 
       // List each book
       itemBuilder: (context, index) {
-        // If the Index is zero, rather than place the book at index 0, place
-        // the widget that creates a new book.
-        if (index == 0) {
-          //Button indicates submission
-          return ElevatedButton(
-            onPressed: () {
-              state.loadingStruct.isLoading ? null : create(context);
-            },
-            style: this._bookButtonStyle,
-            child: Column(
-              children: [
-                Padding(
-                    padding: EdgeInsets.only(top: 135),
-                    child: Icon(FontAwesomeIcons.plus, size: 50)),
-                Padding(
-                    padding: EdgeInsets.only(top: 55),
-                    child: TextField(
-                      controller: this._textController,
-                      onSubmitted: (_) => state.loadingStruct.isLoading
-                          ? null
-                          : create(context),
-                      decoration: InputDecoration(
-                          hintText: 'Enter New Book Title',
-                          suffixIcon: (IconButton(
-                              onPressed: this._textController.clear,
-                              icon: Icon(Icons.clear)))),
-                    )),
-              ],
-            ),
-          );
-        }
-
         // If we've reached the index limit,
         // stop adding books to the list
         if (index == state.books.length) {
@@ -166,20 +130,6 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
           padding: EdgeInsets.only(top: 50, left: 75, right: 75, bottom: 50),
           child: this._buildGrid(context, state, addLoading));
     });
-  }
-
-  ///
-  /// Handles the Front End Side of Creating a new Book, creates the
-  /// Post Request sends via Create Book Event
-  ///
-  void create(BuildContext context) {
-    final writingHomeBloc = context.read<WritingHomeBloc>();
-
-    writingHomeBloc.add(
-      CreateBookEvent(title: this._textController.text.trim()),
-    );
-
-    this._textController.text = "";
   }
 
   void openBook(WritingHomeBloc state) {}

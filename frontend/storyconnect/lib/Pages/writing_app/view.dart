@@ -25,7 +25,7 @@ class _WritingAppViewState extends State<WritingAppView> {
       firstLoaded = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (widget.bookId == null) {
-          Beamer.of(context).beamToNamed("/writer");
+          Beamer.of(context).beamToNamed("/writer/home");
           return;
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
@@ -53,7 +53,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                 if (beamer.canBeamBack) {
                   Beamer.of(context).beamBack();
                 } else {
-                  Beamer.of(context).beamToNamed("/writer");
+                  Beamer.of(context).beamToNamed("/writer/home");
                 }
               },
             ),
