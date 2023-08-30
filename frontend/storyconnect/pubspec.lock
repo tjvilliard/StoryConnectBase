@@ -536,6 +536,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  replay_bloc:
+    dependency: "direct main"
+    description:
+      name: replay_bloc
+      sha256: "30194068437403c93d4d6f24a7a62638b306af5afde4d83486463311bf0c8440"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
   shelf:
     dependency: transitive
     description:
@@ -676,11 +684,7 @@ packages:
       sha256: "3d2ad6751b3c16cf07c7fca317a1413b3f26530319181b37e3b9039b84fc01d8"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "1.0.2"
-=======
     version: "1.1.0"
->>>>>>> feature/Paging_Removal
   web:
     dependency: transitive
     description:
@@ -723,8 +727,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.1.0-185.0.dev <4.0.0"
-<<<<<<< HEAD
-  flutter: ">=3.0.0"
-=======
   flutter: ">=3.3.0"
->>>>>>> feature/Paging_Removal
