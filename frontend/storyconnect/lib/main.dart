@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/beamer_locations.dart';
 import 'package:storyconnect/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 final routerDelegate = BeamerDelegate(
   locationBuilder: BeamerLocationBuilder(
@@ -13,7 +15,11 @@ final routerDelegate = BeamerDelegate(
   ),
 );
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MainApp());
 }
 
