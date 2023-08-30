@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,7 +70,7 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
       gridDelegate: this._writingBookGridDelegate,
 
       // The Number of books we need to pad out
-      itemCount: state.books.length + addLoading,
+      itemCount: max(1, state.books.length + addLoading),
 
       // List each book
       itemBuilder: (context, index) {

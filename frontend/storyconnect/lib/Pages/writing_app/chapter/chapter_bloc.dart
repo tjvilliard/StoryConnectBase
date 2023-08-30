@@ -142,8 +142,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
       chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
       emit.call(state.copyWith(
-        chapters: chapters,
-      ));
+          chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
     } else {
       emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
     }
