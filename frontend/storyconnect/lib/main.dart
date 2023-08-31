@@ -33,7 +33,8 @@ class MainApp extends StatelessWidget {
         lazy: false,
         create: (_) => WritingRepository(),
         child: MaterialApp.router(
-          theme: myTheme,
+          theme: lightTheme,
+          darkTheme: darkTheme,
           routerDelegate: routerDelegate,
           routeInformationParser: BeamerParser(),
           backButtonDispatcher:

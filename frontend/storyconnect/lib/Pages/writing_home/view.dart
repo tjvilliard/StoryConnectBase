@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/home_page/base_appbar.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-
-import '../../theme.dart';
 import 'writing_home_book_grid.dart';
 
 class WritingHomeView extends StatefulWidget {
@@ -37,20 +35,17 @@ class WritingHomeState extends State<WritingHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'StoryConnect Writing Home View',
-      theme: myTheme,
-      home: Scaffold(
-          appBar: baseAppBar,
-          body: Column(
-            children: [
-              CreateBookButton(onPressed: () {
-                // TODO: Add urls to a constants file
-                Beamer.of(context).beamToNamed("/writer/create_book");
-              }),
-              Expanded(child: WritingHomeGridView())
-            ],
-          )),
+    return Scaffold(
+      appBar: baseAppBar,
+      body: Column(
+        children: [
+          CreateBookButton(onPressed: () {
+            // TODO: Add urls to a constants file
+            Beamer.of(context).beamToNamed("/writer/create_book");
+          }),
+          Expanded(child: WritingHomeGridView())
+        ],
+      ),
     );
   }
 }

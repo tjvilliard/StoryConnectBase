@@ -14,7 +14,6 @@ class WritingCreationView extends StatelessWidget {
     return BlocListener<BookCreateBloc, BookCreateState>(
         listener: (context, state) {
           if (state.createdBookId != null) {
-            // delay call for 250 milliseconds to give the users a chance to see the loading widget
             Beamer.of(context)
                 .beamToReplacementNamed("/writer/${state.createdBookId}");
           }
@@ -30,7 +29,7 @@ class WritingCreationView extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Header(
-                    title: "Create A Book",
+                    title: "Create a Book",
                     subtitle: "Let's get started!",
                     crossAxisAlignment: CrossAxisAlignment.center,
                   ),

@@ -13,7 +13,7 @@ class CustomFormField extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(24),
         ),
         labelText: label,
       ),
