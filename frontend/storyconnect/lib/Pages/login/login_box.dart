@@ -85,7 +85,7 @@ class LoginBox extends StatelessWidget {
         width: 310,
         height: 75,
         child: OutlinedButton(
-          onPressed: () => {Beamer.of(context).beamToNamed(("/writer"))},
+          onPressed: () => {Beamer.of(context).beamToNamed(("/writer/home"))},
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),

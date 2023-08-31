@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
-class WritingHomeApiProvider {
+class WritingApiProvider {
   final UrlBuilder _urlBuilder = UrlBuilder();
-  Future<Book?> createBook({required String title}) async {
+
+  Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
       final url = _urlBuilder.build(Uri.parse('books/'));
       final result = await http.post(
@@ -15,9 +18,7 @@ class WritingHomeApiProvider {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
-          'title': title,
-        }),
+        body: jsonEncode(serialzer.toJson()),
       );
       return Book.fromJson(jsonDecode(result.body));
     } catch (e) {
@@ -26,37 +27,39 @@ class WritingHomeApiProvider {
     }
   }
 
-  Future<List<Book>> getBooks() async {
+  Stream<Book> getBooks() async* {
     try {
       final url = _urlBuilder.build(Uri.parse('books/'));
       final result = await http.get(
         url,
       );
-      final undecodedBookList = jsonDecode(result.body) as List;
-      List<Book> results = [];
-      for (var book in undecodedBookList) {
-        results.add(Book.fromJson(book));
+
+      for (var book in jsonDecode(result.body)) {
+        yield Book.fromJson(book);
       }
-      return results;
     } catch (e) {
       print(e);
-      return [];
     }
   }
 }
 
 class WritingRepository {
   List<Book> books = [];
-  WritingHomeApiProvider _api = WritingHomeApiProvider();
-  Future<Book?> createBook({
-    required String title,
-  }) {
-    return _api.createBook(title: title);
+  WritingApiProvider _api = WritingApiProvider();
+  Future<int?> createBook({
+    required BookCreationSerializer serializer,
+  }) async {
+    final output = await _api.createBook(serialzer: serializer);
+    if (output != null) {
+      books.add(output);
+      return output.id;
+    }
+    return null;
   }
 
   Future<List<Book>> getBooks() async {
     final result = await _api.getBooks();
-    books = result;
-    return result;
+    // convert stream to future list and return
+    return result.toList();
   }
 }

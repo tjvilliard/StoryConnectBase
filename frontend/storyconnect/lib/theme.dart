@@ -20,17 +20,8 @@ const ColorScheme myColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-final TextTheme myTextTheme = TextTheme(
-  displayLarge: GoogleFonts.ramabhadra(
-    fontSize: 24,
-    color: Colors.black,
-  ),
-  bodyLarge: GoogleFonts.ramabhadra(
-    fontSize: 16,
-    color: charcoalBlue,
-  ),
-);
-
 ThemeData myTheme = ThemeData.from(
-        colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true)
+        colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue),
+        textTheme: GoogleFonts.ramabhadraTextTheme(),
+        useMaterial3: true)
     .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
