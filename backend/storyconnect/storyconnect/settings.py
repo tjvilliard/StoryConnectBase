@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import firebase_admin
+from firebase_admin import storage
+from firebase_admin import credentials
 # from dotenv import load_dotenv
 
 # load_dotenv()
@@ -59,6 +62,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'books',
     'core',
+
+
 ]
 
 MIDDLEWARE = [
@@ -107,7 +112,7 @@ DATABASES = {
         'NAME': os.getenv('NAME'),
         'PORT': os.getenv('PORT'),
         'USER': os.getenv('DBUSER'),
-        'PASSWORD':  os.getenv('PASSWORD').strip(),
+        'PASSWORD':  os.getenv('PASSWORD').strip(), 
         'OPTIONS': {'sslmode': os.getenv('SSLMODE')},
     }
 }
@@ -130,6 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization
@@ -155,6 +161,45 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# FIREBASE CREDENTIALS
+FIREBASE_ACCOUNT_TYPE = os.environ.get('FIREBASE_ACCOUNT_TYPE')
+FIREBASE_PROJECT_ID = os.environ.get('FIREBASE_PROJECT_ID')
+FIREBASE_PRIVATE_KEY_ID = os.environ.get('FIREBASE_PRIVATE_KEY_ID')
+FIREBASE_PRIVATE_KEY = os.environ.get('FIREBASE_PRIVATE_KEY')
+FIREBASE_CLIENT_EMAIL = os.environ.get('FIREBASE_CLIENT_EMAIL')
+FIREBASE_CLIENT_ID = os.environ.get('FIREBASE_CLIENT_ID')
+FIREBASE_AUTH_URI = os.environ.get('FIREBASE_AUTH_URI')
+FIREBASE_TOKEN_URI = os.environ.get('FIREBASE_TOKEN_URI')
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL = os.environ.get('FIREBASE_AUTH_PROVIDER_X509_CERT_URL')
+FIREBASE_CLIENT_X509_CERT_URL = os.environ.get('FIREBASE_CLIENT_X509_CERT_URL')
+
+cred = credentials.Certificate(
+    {
+        "type": "service_account",
+        "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
+        "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
+        "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+        "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
+        "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_CERT_URL"),
+    }
+)
+
+
+# cred = firebase_admin.credentials.Certificate('storyconnect/firbase_credentials.json', options = {'storageBucket' : 'gs://storyconnect-9c7dd.appspot.com'})
+default_app = firebase_admin.initialize_app(cred, name='[DEFAULT]', options = {'storageBucket' : 'gs://storyconnect-9c7dd.appspot.com'})
+
+FIREBASE_BUCKET = storage.bucket(app=default_app, name= 'storyconnect-9c7dd.appspot.com')
+
+REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
+                                                    'core.authentication.FirebaseAuthentication']}
+
 
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
