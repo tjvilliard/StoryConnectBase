@@ -46,15 +46,15 @@ class WritingApiProvider {
 class WritingRepository {
   List<Book> books = [];
   WritingApiProvider _api = WritingApiProvider();
-  Future<bool> createBook({
+  Future<int?> createBook({
     required BookCreationSerializer serializer,
   }) async {
     final output = await _api.createBook(serialzer: serializer);
     if (output != null) {
       books.add(output);
-      return true;
+      return output.id;
     }
-    return false;
+    return null;
   }
 
   Future<List<Book>> getBooks() async {

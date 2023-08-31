@@ -13,7 +13,7 @@ class SaveBookButton extends StatelessWidget {
           if (state.loadingStruct.isLoading)
             LoadingWidget(loadingStruct: state.loadingStruct),
           if (state.loadingStruct.message != null &&
-              state.loadingStruct.message!.isNotEmpty)
+              state.loadingStruct.isLoading == false)
             Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(state.loadingStruct.message!)),

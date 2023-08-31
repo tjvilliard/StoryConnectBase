@@ -14,14 +14,14 @@ class BookCreationFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BookCreationFormField(
-          onChanged: (value) {
-            context
-                .read<BookCreateBloc>()
-                .add(AuthorChangedEvent(author: value));
-          },
-          label: "Author",
-        ),
+        // BookCreationFormField(
+        //   onChanged: (value) {
+        //     context
+        //         .read<BookCreateBloc>()
+        //         .add(AuthorChangedEvent(author: value));
+        //   },
+        //   label: "Author",
+        // ),
         BookCreationFormField(
           onChanged: (value) {
             context.read<BookCreateBloc>().add(TitleChangedEvent(title: value));
@@ -33,7 +33,7 @@ class BookCreationFormFields extends StatelessWidget {
             padding: padding,
             child: Text("Let us know more about your book",
                 textAlign: TextAlign.left,
-                style: Theme.of(context).textTheme.titleSmall)),
+                style: Theme.of(context).textTheme.titleMedium)),
         Wrap(
           children: [
             Padding(padding: EdgeInsets.all(10), child: LanguageDropdown()),

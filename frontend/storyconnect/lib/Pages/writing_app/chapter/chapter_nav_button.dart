@@ -30,7 +30,8 @@ class ChapterNavigationButton extends StatelessWidget {
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Text("Chapter ${index + 1}",
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      style: Theme.of(context).textTheme.labelLarge?.apply(
+                          fontSizeDelta: 4,
                           color: chapterState.currentIndex == index
                               ? selectedTextColor
                               : null)))));

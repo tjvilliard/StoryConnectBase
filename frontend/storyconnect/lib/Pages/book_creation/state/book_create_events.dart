@@ -28,3 +28,7 @@ class TargetAudienceChangedEvent extends BookCreateEvent {
 class SaveBookEvent extends BookCreateEvent {
   const SaveBookEvent();
 }
+
+class ResetEvent extends BookCreateEvent {
+  const ResetEvent();
+}

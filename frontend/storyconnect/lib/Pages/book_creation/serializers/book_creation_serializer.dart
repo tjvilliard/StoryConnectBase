@@ -8,12 +8,12 @@ part 'book_creation_serializer.g.dart';
 class BookCreationSerializer with _$BookCreationSerializer {
   const factory BookCreationSerializer({
     required String title,
-    required String author,
+    // required String author,
     required String? language,
-    int? targetAudience,
-    int? copyright,
+    @JsonKey(name: 'target_audience') int? targetAudience,
+    // int? copyright,
   }) = _BookCreationSerializer;
-
+  const BookCreationSerializer._();
   factory BookCreationSerializer.fromJson(Map<String, dynamic> json) =>
       _$BookCreationSerializerFromJson(json);
 
@@ -21,8 +21,24 @@ class BookCreationSerializer with _$BookCreationSerializer {
   factory BookCreationSerializer.initial() {
     return BookCreationSerializer(
       title: "",
-      author: "",
+      // author: "",
       language: LanguageConstant.english.label,
     );
+  }
+
+  bool verify() {
+    if (title.isEmpty) {
+      return false;
+    }
+    // if (author.isEmpty) {
+    //   return false;
+    // }
+    if (language == null) {
+      return false;
+    }
+    if (targetAudience == null) {
+      return false;
+    }
+    return true;
   }
 }

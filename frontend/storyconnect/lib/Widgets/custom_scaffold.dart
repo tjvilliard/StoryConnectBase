@@ -39,20 +39,20 @@ class CustomScaffold extends Scaffold {
           Positioned(
             top: 0,
             left: 0,
+            right: 0, // Add this
+            bottom: 0, // Add this
+            child: super.body!,
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
             child: IconButton(
               icon: Icon(FontAwesomeIcons.arrowLeft),
-              onPressed: navigateBackFunction,
+              onPressed: navigateBackFunction!,
             ),
           ),
 
           // position the body slighly below the back button
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0, // Add this
-            bottom: 0, // Add this
-            child: super.body!,
-          )
         ],
       );
     } else {
