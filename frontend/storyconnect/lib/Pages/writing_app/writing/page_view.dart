@@ -64,7 +64,10 @@ class WritingPageViewState extends State<WritingPageView> {
               child: Container(
                   margin: EdgeInsets.all(20),
                   padding: EdgeInsets.all(20),
-                  color: Colors.white,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[200]!, width: 1),
+                    color: Colors.white,
+                  ),
                   constraints:
                       BoxConstraints(minHeight: RenderPageSliver.pageHeight),
                   child: TextField(

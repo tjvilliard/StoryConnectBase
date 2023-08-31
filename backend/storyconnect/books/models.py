@@ -10,15 +10,15 @@ class Book(models.Model):
     #     (2, "Indonesian")
     # ]
     TARGET_AUDIENCES = [
-        (1, "Young Adult (13-18 years old)"), 
-        (2, "New Adult (18-25 years old)"),
-        (3, "Adult (25+ years old)")
+        (0, "Children "), 
+        (1, "Young Adult"),
+        (2, "Adult (18+)")
     ]
     # taken from chapterly.com and wattpad.com
     COPYRIGHTS = [
-        (1, "All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission."), 
-        (2, "Public Domain: This story is open source for the public to use for any purposes."), 
-        (3, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
+        (0, "All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission."), 
+        (1, "Public Domain: This story is open source for the public to use for any purposes."), 
+        (2, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
     ]
     
     title = models.CharField(max_length=100)

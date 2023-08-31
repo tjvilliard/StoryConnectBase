@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
+import 'package:storyconnect/Repositories/writing_repository.dart';
 
 class WritingUIStruct {
   final bool chapterOutlineShown;
