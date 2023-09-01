@@ -77,9 +77,6 @@ class BookViewSet(viewsets.ModelViewSet):
         # serializer = self.get_serializer(data=request.data)
         return self.filter_backends.get_search_fields(BookViewSet, request)
 
-
-
-
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
@@ -162,7 +159,6 @@ class LocationViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return JsonResponse(serializer.data)
     
-
 class SceneViewSet(viewsets.ModelViewSet):
     queryset = Scene.objects.all()
     serializer_class = SceneSerializer
@@ -199,6 +195,50 @@ def writer_page(request, book_id):
     }
     return JsonResponse(context)
 
+def library_page(request, user_id):
+    user_books = Book.objects.filter(owner=user_id)
+    context = {}
+    for book in user_books:
+        book_detail = []
+        for detail in Book.objects.get(id=book.pk):
+            book_title = detail.title
+            book_cover = detail.cover
+            book_detail.append(book_title)
+            book_detail.append(book_cover)
+        context[book.pk] = book_detail
+    return JsonResponse(context) 
+
+def my_page(request, user_id):
+    curr_read = Library.objects.filter(reader=user_id, status=1)
+    user_books = Book.objects.filter(owner=user_id)
+    content = {
+        'curr_read': curr_read,
+        'user_books': user_books
+    }
+    # to set up goals, should I make a new models for user's data analytics?
+    return JsonResponse(content)
+
+def writer_feedback(request, user_id,book_id):
+    writer_books = Book.objects.filter(owner=user_id) # for the drop down
+    book_feedback = Book.objects.get(id=book_id)
+    chapter_feedback = Chapter.objects.filter(book=book_feedback)
+    comments = Comments.objects.filter(chapter=chapter_feedback)
+    content = {
+        'writer_books': writer_books,
+        'book_feedback': book_feedback,
+        'chapter_feedback': chapter_feedback,
+        'comments': comments
+    }
+    return JsonResponse(content)
+
+def book_detail_page(request, book_id):
+    book_details = Book.objects.get(id=book_id)
+    characters = Character.objects.filter(book=book_id)
+    content = {
+        'book_details': book_details,
+        'characters': characters
+    }
+    return JsonResponse(content)
 
 # def create_book(request):
 #     if request.method == 'POST':

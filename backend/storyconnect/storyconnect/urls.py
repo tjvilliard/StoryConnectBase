@@ -29,4 +29,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path('api/admin/', admin.site.urls),
+    # path('library', books_views.library, name = "library-books"),
 ]

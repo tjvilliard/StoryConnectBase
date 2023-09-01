@@ -3,7 +3,6 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
 from .models import *
-# from sklearn.feature_extraction.text import CountVectorizer
 
 def data_collection():
     book = {}

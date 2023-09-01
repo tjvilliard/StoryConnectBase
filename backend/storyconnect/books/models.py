@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_extensions.db.models import TimeStampedModel
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -20,12 +21,19 @@ class Book(models.Model):
         (2, "Public Domain: This story is open source for the public to use for any purposes."), 
         (3, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
     ]
+
+    # STATUS = [
+    #     (1, "Complete"),
+    #     (2, "In progress")
+    # ]
     
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100, null = True, blank = True)
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
+    # book_status = models.IntegerField(choices=STATUS, null=False, default=2)
+    tags = ArrayField(models.CharField(max_length=50), blank=True)
     cover = models.ImageField(upload_to='covers/', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -62,7 +70,6 @@ class Library(models.Model):
     status = models.IntegerField(choices=BOOK_STATUS)
     reader = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_number = models.IntegerField(default=0)
@@ -86,8 +93,9 @@ class Chapter(models.Model):
     def get_scenes(self):
         return Scene.objects.filter(chapter=self)
     
+    def get_comments(self):
+        return Comments.objects.filter(chapter=self)
     
-
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
@@ -122,3 +130,12 @@ class Scene(models.Model):
 
     def __str__(self):
         return self.scene_title
+
+class Comments(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, null=False)
+    content = models.TextField(blank=False)
+
+    def __str__(self):
+        return self.content
