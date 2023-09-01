@@ -112,7 +112,7 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
     return BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
         listener: (context, state) {
       if (state.bookToNavigate != null) {
-        final url = PageUrls.bookBaseUrl + state.bookToNavigate!.id.toString();
+        final url = PageUrls.bookBaseUrl(state.bookToNavigate!.id);
         Beamer.of(context).beamToNamed(url, data: {
           "book": state.bookToNavigate,
         });
