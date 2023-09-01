@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/form_field.dart';
 
 class LoginBox extends StatelessWidget {
@@ -56,7 +57,7 @@ class LoginBox extends StatelessWidget {
       height: 40,
       margin: EdgeInsets.symmetric(vertical: 10),
       child: FilledButton(
-        onPressed: () => {Beamer.of(context).beamToNamed(("/writer/home"))},
+        onPressed: () => {Beamer.of(context).beamToNamed(PageUrls.writerHome)},
         child: Text('Sign In', textAlign: TextAlign.center),
       ));
 

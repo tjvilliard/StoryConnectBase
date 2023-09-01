@@ -6,6 +6,7 @@ import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
 import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingAppView extends StatefulWidget {
@@ -25,7 +26,8 @@ class _WritingAppViewState extends State<WritingAppView> {
       firstLoaded = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (widget.bookId == null) {
-          Beamer.of(context).beamToNamed("/writer/home");
+          Beamer.of(context).beamToNamed(PageUrls.writerHome);
+
           return;
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
@@ -53,7 +55,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                 if (beamer.canBeamBack) {
                   Beamer.of(context).beamBack();
                 } else {
-                  Beamer.of(context).beamToNamed("/writer/home");
+                  Beamer.of(context).beamToNamed(PageUrls.writerHome);
                 }
               },
             ),
