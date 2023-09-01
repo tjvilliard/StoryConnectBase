@@ -22,17 +22,17 @@ class Book(models.Model):
         (3, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
     ]
 
-    # STATUS = [
-    #     (1, "Complete"),
-    #     (2, "In progress")
-    # ]
+    STATUS = [
+        (1, "Complete"),
+        (2, "In progress")
+    ]
     
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100, null = True, blank = True)
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
-    # book_status = models.IntegerField(choices=STATUS, null=False, default=2)
+    book_status = models.IntegerField(choices=STATUS, null=False, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True)
     cover = models.ImageField(upload_to='covers/', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)

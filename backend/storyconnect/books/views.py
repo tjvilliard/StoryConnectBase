@@ -195,6 +195,10 @@ def writer_page(request, book_id):
     }
     return JsonResponse(context)
 
+def browser_page(request):
+    all_books = {Book.objects.all()}
+    return JsonResponse(all_books)
+
 def library_page(request, user_id):
     user_books = Book.objects.filter(owner=user_id)
     context = {}
