@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/home_page/base_appbar.dart';
@@ -26,13 +27,22 @@ class WritingHomeState extends State<WritingHomeView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (initialLoad) {
-        initialLoad = false;
-        final writingHomeBloc = context.read<WritingHomeBloc>();
-        writingHomeBloc.add(GetBooksEvent());
-      }
-    });
+
+    final User? current_user = FirebaseAuth.instance.currentUser;
+
+    if (current_user != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (initialLoad) {
+          initialLoad = false;
+          final writingHomeBloc = context.read<WritingHomeBloc>();
+          writingHomeBloc.add(GetBooksEvent());
+        }
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Beamer.of(context).beamToNamed("/");
+      });
+    }
   }
 
   @override
