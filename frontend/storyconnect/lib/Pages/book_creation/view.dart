@@ -19,7 +19,6 @@ class WritingCreationView extends StatelessWidget {
           }
         },
         child: CustomScaffold(
-            // TODO: Make a navigation app bar
             appBar: AppBar(),
             navigateBackFunction: () {
               Beamer.of(context).beamBack();
