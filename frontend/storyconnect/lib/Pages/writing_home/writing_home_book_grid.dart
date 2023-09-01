@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
+import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 ///
@@ -111,7 +112,7 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
     return BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
         listener: (context, state) {
       if (state.bookToNavigate != null) {
-        final url = "/writer/${state.bookToNavigate!.id}";
+        final url = PageUrls.bookBaseUrl + state.bookToNavigate!.id.toString();
         Beamer.of(context).beamToNamed(url, data: {
           "book": state.bookToNavigate,
         });
