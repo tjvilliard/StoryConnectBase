@@ -1,10 +1,9 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/home_page/base_appbar.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
+import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-import 'package:storyconnect/Services/url_service.dart';
 import 'writing_home_book_grid.dart';
 
 class WritingHomeView extends StatefulWidget {
@@ -40,9 +39,8 @@ class WritingHomeState extends State<WritingHomeView> {
       appBar: baseAppBar,
       body: Column(
         children: [
-          CreateBookButton(onPressed: () {
-            Beamer.of(context).beamToNamed(PageUrls.createBook);
-          }),
+          CreateBookButton(),
+          ViewProfileButton(),
           Expanded(child: WritingHomeGridView())
         ],
       ),

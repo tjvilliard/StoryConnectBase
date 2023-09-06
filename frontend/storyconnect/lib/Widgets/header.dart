@@ -6,14 +6,14 @@ class Header extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final Widget? child;
-  final CrossAxisAlignment crossAxisAlignment;
+  final Alignment alignment;
 
   Header(
       {required this.title,
       required this.subtitle,
       this.leading,
       this.trailing,
-      this.crossAxisAlignment = CrossAxisAlignment.start,
+      this.alignment = Alignment.topLeft,
       this.child});
 
   @override
@@ -24,9 +24,8 @@ class Header extends StatelessWidget {
         children: [
           if (leading != null) leading!,
           Align(
-            alignment: Alignment.center,
+            alignment: alignment,
             child: Column(
-              crossAxisAlignment: crossAxisAlignment,
               children: [
                 Text(title, style: Theme.of(context).textTheme.displaySmall),
                 Text(subtitle, style: Theme.of(context).textTheme.titleMedium),
