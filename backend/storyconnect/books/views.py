@@ -74,7 +74,7 @@ class BookViewSet(viewsets.ModelViewSet):
         assert len(chapters) > 0
 
         serializer = ChapterSerializer(chapters, many=True)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data)
     
 
     # @action(detail=False, methods=['get'])
