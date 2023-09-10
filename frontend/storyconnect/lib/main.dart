@@ -17,9 +17,11 @@ final routerDelegate = BeamerDelegate(
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+  // await Firebase.initializeApp(
+  //   name: "FlutterApp",
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   runApp(const MainApp());
 }
