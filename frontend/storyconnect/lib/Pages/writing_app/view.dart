@@ -45,7 +45,6 @@ class _WritingAppViewState extends State<WritingAppView> {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.white,
         title: Row(
           children: [
             IconButton(
@@ -65,7 +64,8 @@ class _WritingAppViewState extends State<WritingAppView> {
             BlocBuilder<WritingUIBloc, WritingUIStruct>(
                 builder: (context, state) {
               if (state.title != null) {
-                return Text(state.title!);
+                return Text(state.title!,
+                    style: Theme.of(context).textTheme.displaySmall);
               }
               return LoadingWidget(loadingStruct: state.loadingStruct);
             }),

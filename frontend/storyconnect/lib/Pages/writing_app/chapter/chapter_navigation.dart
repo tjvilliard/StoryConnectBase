@@ -23,31 +23,24 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Theme.of(context).dividerColor,
-                          blurRadius: 10,
-                          offset: Offset(3, 3),
-                          spreadRadius: 5)
-                    ],
-                    // border: Border.all(color: Colors.black, width: .5),
-                    borderRadius: BorderRadius.circular(16)),
-                padding: EdgeInsets.all(25),
-                margin: EdgeInsets.all(15),
-                constraints: BoxConstraints(minWidth: 300, maxWidth: 300),
-                child: uiState.chapterOutlineShown
-                    ? ListView.builder(
-                        controller: _scrollController,
-                        itemCount: chapterState.chapters.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == chapterState.chapters.length) {
-                            return ChapterCreateButton();
-                          }
-                          return ChapterNavigationButton(index: index);
-                        })
-                    : Container()),
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.all(8),
+                width: 300,
+                child: Card(
+                    elevation: 3,
+                    child: uiState.chapterOutlineShown
+                        ? Padding(
+                            padding: EdgeInsets.all(16),
+                            child: ListView.builder(
+                                controller: _scrollController,
+                                itemCount: chapterState.chapters.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index == chapterState.chapters.length) {
+                                    return ChapterCreateButton();
+                                  }
+                                  return ChapterNavigationButton(index: index);
+                                }))
+                        : Container())),
             crossFadeState: uiState.chapterOutlineShown
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,

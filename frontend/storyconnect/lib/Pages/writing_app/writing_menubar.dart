@@ -18,68 +18,63 @@ class WritingMenuBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context).dividerColor.withOpacity(0.25),
-                  spreadRadius: 1,
-                  blurRadius: 10,
-                  offset: Offset(0, 1))
-            ],
-            border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 1.5))),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          MenuBar(children: [
-            MenuItemButton(
-              leadingIcon: Icon(FontAwesomeIcons.list),
-              child: Text("Chapters"),
-              onPressed: () {
-                BlocProvider.of<WritingUIBloc>(context).toggleChapterOutline();
-              },
-            ),
-          ]),
-          MenuBar(
-              style: MenuStyle(
-                  alignment: Alignment.centerLeft,
-                  maximumSize: MaterialStatePropertyAll(Size(500, 200))),
-              children: [
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.arrowRotateLeft),
-                    child: Container(),
-                    onPressed: () {
-                      context.read<ChapterBloc>().add(UndoCommand());
-                    }),
-                MenuItemButton(
-                    leadingIcon: Icon(FontAwesomeIcons.arrowRotateRight),
-                    child: Container(),
-                    onPressed: () {
-                      context.read<ChapterBloc>().add(RedoCommand());
-                    }),
-              ]),
-          MenuBar(children: [
-            MenuItemButton(
-                leadingIcon: Icon(FontAwesomeIcons.comment),
-                child: Text("Comments"),
-                onPressed: () {
-                  showPopup("Comments", context);
-                }),
-            MenuItemButton(
-                leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
-                child: Text("Character Sheet"),
-                onPressed: () {
-                  showPopup("Character Sheet", context);
-                }),
-            MenuItemButton(
-                leadingIcon: Icon(FontAwesomeIcons.check),
-                child: Text("Continuity Checker"),
-                onPressed: () {
-                  showPopup("Continuity Checker", context);
-                }),
-          ]),
-        ]));
+    return Card(
+        margin: EdgeInsets.all(16),
+        child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MenuBar(children: [
+                    MenuItemButton(
+                      leadingIcon: Icon(FontAwesomeIcons.list),
+                      child: Text("Chapters"),
+                      onPressed: () {
+                        BlocProvider.of<WritingUIBloc>(context)
+                            .toggleChapterOutline();
+                      },
+                    ),
+                  ]),
+                  MenuBar(
+                      style: MenuStyle(
+                          alignment: Alignment.centerLeft,
+                          maximumSize:
+                              MaterialStatePropertyAll(Size(500, 200))),
+                      children: [
+                        MenuItemButton(
+                            leadingIcon: Icon(FontAwesomeIcons.arrowRotateLeft),
+                            child: Container(),
+                            onPressed: () {
+                              context.read<ChapterBloc>().add(UndoCommand());
+                            }),
+                        MenuItemButton(
+                            leadingIcon:
+                                Icon(FontAwesomeIcons.arrowRotateRight),
+                            child: Container(),
+                            onPressed: () {
+                              context.read<ChapterBloc>().add(RedoCommand());
+                            }),
+                      ]),
+                  MenuBar(children: [
+                    MenuItemButton(
+                        leadingIcon: Icon(FontAwesomeIcons.comment),
+                        child: Text("Comments"),
+                        onPressed: () {
+                          showPopup("Comments", context);
+                        }),
+                    MenuItemButton(
+                        leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
+                        child: Text("Character Sheet"),
+                        onPressed: () {
+                          showPopup("Character Sheet", context);
+                        }),
+                    MenuItemButton(
+                        leadingIcon: Icon(FontAwesomeIcons.check),
+                        child: Text("Continuity Checker"),
+                        onPressed: () {
+                          showPopup("Continuity Checker", context);
+                        }),
+                  ]),
+                ])));
   }
 }
