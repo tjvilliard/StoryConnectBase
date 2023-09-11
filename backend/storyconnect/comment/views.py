@@ -6,19 +6,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
+from storyconnect.mixins import *
 from .models import *
 from .serializers import *
 from django.db import transaction
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-class AnnotationViewSet(viewsets.ModelViewSet):
+class AnnotationViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson):
     queryset = Annotation.objects.all()
     serializer_class = AnnotationSerializer
 
-class HighlightViewSet(viewsets.ModelViewSet):
+class HighlightViewSet(viewsets.ModelViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson ):
     queryset = Highlight.objects.all()
     serializer_class = HighlightSerializer    
