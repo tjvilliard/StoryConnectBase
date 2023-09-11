@@ -19,7 +19,7 @@ class WriterLocations extends BeamLocation<BeamState> {
         '/',
         '/login',
         '/writer/home',
-        '/writer/:bookId',
+        '/writer/book/:bookId',
         '/writer/create_book',
       ];
 
