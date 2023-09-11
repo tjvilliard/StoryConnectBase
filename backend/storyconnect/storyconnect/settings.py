@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework_json_api',
     'rest_framework.authtoken',
     'books',
+    'comment',
     'core',
 
 
