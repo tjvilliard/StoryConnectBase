@@ -33,7 +33,7 @@ class Book(models.Model):
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
     book_status = models.IntegerField(choices=STATUS, null=False, default=2)
-    tags = ArrayField(models.CharField(max_length=50), blank=True)
+    tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
     cover = models.ImageField(upload_to='covers/', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -134,7 +134,7 @@ class Scene(models.Model):
 class Comments(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    commenter = models.ForeignKey(User, null=False)
+    commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     content = models.TextField(blank=False)
 
     def __str__(self):

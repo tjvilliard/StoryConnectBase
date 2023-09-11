@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, status, filters
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
@@ -181,7 +182,30 @@ class SceneViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return JsonResponse(serializer.data)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comments.objects.all()
+    serializer_class = CommentSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return JsonResponse(serializer.data)
+
+
+
     
+
 def writer_page(request, book_id):
     book = Book.objects.get(id=book_id)
     chapters = Chapter.objects.filter(book=book)
@@ -195,54 +219,7 @@ def writer_page(request, book_id):
     }
     return JsonResponse(context)
 
-def browser_page(request):
-    all_books = {'all_books': Book.objects.all()}
-    return JsonResponse(all_books)
 
-def library_page(request, user_id):
-    user_books = Book.objects.filter(owner=user_id)
-    context = {}
-    for book in user_books:
-        book_detail = []
-        for detail in Book.objects.get(id=book.pk):
-            book_title = detail.title
-            book_cover = detail.cover
-            book_detail.append(book_title)
-            book_detail.append(book_cover)
-        context[book.pk] = book_detail
-    return JsonResponse(context) 
-
-def my_page(request, user_id):
-    curr_read = Library.objects.filter(reader=user_id, status=1)
-    user_books = Book.objects.filter(owner=user_id)
-    content = {
-        'curr_read': curr_read,
-        'user_books': user_books
-    }
-    # to set up goals, should I make a new models for user's data analytics?
-    return JsonResponse(content)
-
-def writer_feedback(request, user_id,book_id):
-    writer_books = Book.objects.filter(owner=user_id) # for the drop down
-    book_feedback = Book.objects.get(id=book_id)
-    chapter_feedback = Chapter.objects.filter(book=book_feedback)
-    comments = Comments.objects.filter(chapter=chapter_feedback)
-    content = {
-        'writer_books': writer_books,
-        'book_feedback': book_feedback,
-        'chapter_feedback': chapter_feedback,
-        'comments': comments
-    }
-    return JsonResponse(content)
-
-def book_detail_page(request, book_id):
-    book_details = Book.objects.get(id=book_id)
-    characters = Character.objects.filter(book=book_id)
-    content = {
-        'book_details': book_details,
-        'characters': characters
-    }
-    return JsonResponse(content)
 
 # def create_book(request):
 #     if request.method == 'POST':

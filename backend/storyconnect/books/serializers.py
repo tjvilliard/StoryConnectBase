@@ -9,19 +9,16 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = "__all__"
 
-
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
         fields = "__all__"
-
 
 class CharacterSerializer(serializers.ModelSerializer):
     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
     class Meta:
         model = Character
         fields = "__all__"
-
 
 class LocationSerializer(serializers.ModelSerializer):
     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)

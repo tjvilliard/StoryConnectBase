@@ -18,16 +18,21 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from books import views as books_views
+from books import pages_views as pages_views
 
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
-
+# router.register(r'api/browser', pages_views.Browser_Page)
 
 urlpatterns = router.urls
 
 urlpatterns += [
     path('api/admin/', admin.site.urls),
-    # path('library', books_views.library, name = "library-books"),
+    path('api/browser/', pages_views.Browser_Page.as_view(), name='browser-page'),
+    path('api/library/<int:user_id>/', pages_views.Library_Page.as_view(), name='library-page'),
+    path('api/account/<int:user_id>/', pages_views.My_Page.as_view(), name='my-page'),
+    path('api/feedback/<int:user_id>/<int:book_id>/', pages_views.Writer_Feedback_Page.as_view(), name='writer-feedback'),
+    path('api/details/<int:book_id>/',pages_views.Book_Detail_Page.as_view(), name='book-details-page')
 ]
