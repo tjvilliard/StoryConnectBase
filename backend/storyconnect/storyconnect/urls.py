@@ -18,8 +18,9 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from books import views as books_views
-from books import pages_views as pages_views
+# from books import pages_views as pages_views
 
+from pages import views as pages_views
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
