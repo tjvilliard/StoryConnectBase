@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 # Create your views here.
 from json import JSONDecodeError
@@ -14,18 +13,14 @@ from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelM
 from books import models as book_models
 from books import serializers as book_serializers
 
-class Browser_Page(APIView):
-    # filter_backends = (filters.SearchFilter)
-    # search_fields = ['title', 'author', 'language']
-    # queryset = Book.objects.all()
-    # serializer_class = BookSerializer
+class BrowserPage(APIView):
 
     def get(self, request):
         all_books = book_models.Book.objects.all()
         serializer = book_serializers.BookSerializer(all_books, many=True)
         return Response(serializer.data)
 
-class Library_Page(APIView):
+class LibraryPage(APIView):
     
 
     def get (self, request, user_id):
@@ -42,7 +37,7 @@ class Library_Page(APIView):
         serializer = book_serializers.BookSerializer(user_books, many=True)
         return Response(serializer.data)
       
-class My_Page(APIView):
+class MyPage(APIView):
 
     def get(self,request, user_id):
         curr_read = book_models.Library.objects.filter(reader=user_id, status=1)
@@ -56,7 +51,7 @@ class My_Page(APIView):
         }
         return JsonResponse(content)
 
-class Writer_Feedback_Page(APIView):
+class WriterFeedbackPage(APIView):
 
     def get(self,request, user_id, book_id):
         writer_books = book_models.Book.objects.filter(owner=user_id) # for the drop down
@@ -79,7 +74,7 @@ class Writer_Feedback_Page(APIView):
         }
         return JsonResponse(content)
 
-class Book_Detail_Page(APIView):
+class BookDetailPage(APIView):
 
     def get(self,request, book_id):
         book_details = book_models.Book.objects.get(id=book_id)

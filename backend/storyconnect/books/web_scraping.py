@@ -9,9 +9,9 @@ def data_collection():
     months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
     # counter = 0
     # for i in range(1):
-    url = "https://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index=0"
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, features="html.parser")
+    # url = "https://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index=0"
+    # r = requests.get(url)
+    # soup = BeautifulSoup(r.text, features="html.parser")
 
     # links = []
     # for line in soup.findAll('a', {'class': 'link'}):
@@ -119,4 +119,79 @@ def create_book_chapters(book):
                 content = ch
             )
 
+def integrate_to_models(all_book):
+    books = []
+    for ebook in all_book.values():
+        b = Book(
+            title = ebook["title"],
+            author = ebook["author"],
+            owner = 3,
+            language = ebook["language"],
+            target_audience = 1,
+            book_status = 1,
+            tags = ebook["subject"],
+            cover = "",
+            created = ebook['released date'],
+            synopsis = "",
+            copyright = 1,
+            titlepage = ""
+        )
+        books.append(b)
+    
+    book_res = Book.objects.bulk_create(books)
+
+    libraries = []
+    chapters = []
+    scenes = []
+    locations = []
+    commentss = []
+
+    for b in books:
+        lib = Library(
+            book = b,
+            status = 1,
+            reader = 3
+        )
+        libraries.append(lib)
+
+        for ebook in all_book.values():
+            c = 1
+            for ch in ebook['chapteredcontent']:
+                chp = Chapter(
+                    book = b,
+                    chapter_number = c,
+                    chapter_title = str(c),
+                    chapter_content = ch[0]
+                )
+                chapters.append(chp)
+                sc = Scene(
+                    chapter = chp,
+                    scene_title = "",
+                    scene_content = ""
+                )
+                scenes.append(sc)
+                com = Comments(
+                    book = b,
+                    chapter = chp,
+                    commenter = 3,
+                    content = "hi"
+                )
+                commentss.append(com)
+                c += 1
+
+        loc = Location(
+            book = b,
+            name = "",
+            description = ""
+        )
+        locations.append(loc)  
+    
+    chapter_res = Chapter.objects.bulk_create(chapters)
+    library_res = Library.objects.bulk_create(libraries)
+    scene_res = Scene.objects.bulk_create(scenes)
+    location_res = Location.objects.bulk_create(locations)
+    comment_res = Comments.objects.bulk_create(commentss)
+
+
 book = data_collection()
+integrate_to_models(book)
