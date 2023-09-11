@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/comments/state/comments_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
-import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/view.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
@@ -47,17 +48,20 @@ class WriterLocations extends BeamLocation<BeamState> {
             child: RepositoryProvider(
                 lazy: false,
                 create: (_) =>
-                    PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
+                    BookProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider(
                           lazy: false,
                           create: (context) => ChapterBloc(
-                              context.read<PagesProviderRepository>())),
+                              context.read<BookProviderRepository>())),
                       BlocProvider(
                           lazy: false,
                           create: (_) => WritingUIBloc(
                               repository: context.read<WritingRepository>())),
+                      BlocProvider(
+                          create: (context) =>
+                              CommentsBloc(context.read<WritingRepository>()))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),

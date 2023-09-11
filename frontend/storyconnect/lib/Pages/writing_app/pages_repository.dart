@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
-class PagesApiProvider {
+class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
     final result = await http
         .get(UrlContants.getChapters(bookId), headers: <String, String>{
@@ -69,11 +69,11 @@ class PagesApiProvider {
   }
 }
 
-class PagesProviderRepository {
-  PagesApiProvider _api = PagesApiProvider();
+class BookProviderRepository {
+  BookApiProvider _api = BookApiProvider();
   final int bookId;
 
-  PagesProviderRepository({required this.bookId});
+  BookProviderRepository({required this.bookId});
 
   Future<List<Chapter>> getChapters() async {
     return _api.getChapters(bookId);

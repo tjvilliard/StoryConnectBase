@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Widgets/unimplemented_popup.dart';
 
 class WritingMenuBar extends StatelessWidget {
@@ -31,7 +31,7 @@ class WritingMenuBar extends StatelessWidget {
                       child: Text("Chapters"),
                       onPressed: () {
                         BlocProvider.of<WritingUIBloc>(context)
-                            .toggleChapterOutline();
+                            .add(ToggleChapterOutlineEvent());
                       },
                     ),
                   ]),
@@ -60,7 +60,8 @@ class WritingMenuBar extends StatelessWidget {
                         leadingIcon: Icon(FontAwesomeIcons.comment),
                         child: Text("Comments"),
                         onPressed: () {
-                          showPopup("Comments", context);
+                          BlocProvider.of<WritingUIBloc>(context)
+                              .add(ToggleCommentsUIEvent());
                         }),
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
