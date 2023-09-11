@@ -6,7 +6,6 @@ import 'package:storyconnect/Services/Beamer/beamer_locations.dart';
 import 'package:storyconnect/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 final routerDelegate = BeamerDelegate(
   locationBuilder: BeamerLocationBuilder(
@@ -35,7 +34,8 @@ class MainApp extends StatelessWidget {
         lazy: false,
         create: (_) => WritingRepository(),
         child: MaterialApp.router(
-          theme: myTheme,
+          theme: lightTheme,
+          darkTheme: darkTheme,
           routerDelegate: routerDelegate,
           routeInformationParser: BeamerParser(),
           backButtonDispatcher:
