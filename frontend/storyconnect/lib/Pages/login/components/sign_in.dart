@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Pages/login/components/sign_up.dart';
 import 'package:storyconnect/Pages/login/components/static_components.dart';
 import 'package:storyconnect/Services/Authentication/authentication_service.dart';
 
@@ -67,6 +68,7 @@ class _signInState extends State<SignInForm> {
         }
       } else {
         // make api call with token
+        print("Sign in success?!");
       }
     } else {
       setState(() {
@@ -133,8 +135,14 @@ class _signInState extends State<SignInForm> {
         onPressed: () => {this._signIn()}, child: Text("Sign In"));
   }
 
-  ElevatedButton _signUpButton() {
-    return ElevatedButton(onPressed: () => {}, child: Text("Sign Up"));
+  OutlinedButton _signUpButton() {
+    return OutlinedButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => SignUpForm(_authService));
+        },
+        child: Text("Sign Up"));
   }
 
   @override
