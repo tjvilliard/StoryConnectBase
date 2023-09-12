@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth;
@@ -15,7 +16,17 @@ class AuthenticationService {
           ._firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
-      print(credential.credential!.accessToken);
+      String idToken = await credential.user!.getIdToken(true) as String;
+
+      String uid = this._firebaseAuth.currentUser!.uid;
+
+      print(idToken.toString());
+
+      http.put(Uri.parse("http://storyconnect.app/api/users/" + uid + "/"),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Token " + idToken
+          });
 
       return SUCCESS;
     } on FirebaseAuthException catch (e) {
