@@ -1,7 +1,7 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
+import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
 import 'writing_home_book_grid.dart';
 
@@ -39,10 +39,8 @@ class WritingHomeState extends State<WritingHomeView> {
       appBar: AppBar(),
       body: Column(
         children: [
-          CreateBookButton(onPressed: () {
-            // TODO: Add urls to a constants file
-            Beamer.of(context).beamToNamed("/writer/create_book");
-          }),
+          CreateBookButton(),
+          ViewProfileButton(),
           Expanded(child: WritingHomeGridView())
         ],
       ),

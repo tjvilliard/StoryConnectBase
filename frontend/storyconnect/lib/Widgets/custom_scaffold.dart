@@ -37,10 +37,10 @@ class CustomScaffold extends Scaffold {
       return Stack(
         children: [
           Positioned(
-            top: 0,
+            top: 15,
             left: 0,
-            right: 0, // Add this
-            bottom: 0, // Add this
+            right: 0,
+            bottom: 0,
             child: super.body!,
           ),
           Positioned(

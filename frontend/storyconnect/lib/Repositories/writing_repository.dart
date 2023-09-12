@@ -8,11 +8,9 @@ import 'package:storyconnect/Pages/book_creation/serializers/book_creation_seria
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {
-  final UrlBuilder _urlBuilder = UrlBuilder();
-
   Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
-      final url = _urlBuilder.build(Uri.parse('books/'));
+      final url = UrlContants.books;
       final result = await http.post(
         url,
         headers: <String, String>{
@@ -29,7 +27,7 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = _urlBuilder.build(Uri.parse('books/'));
+      final url = UrlContants.books;
       final result = await http.get(
         url,
       );

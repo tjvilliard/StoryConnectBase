@@ -5,11 +5,9 @@ import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class PagesApiProvider {
-  final UrlBuilder _urlBuilder = UrlBuilder();
-
   Future<List<Chapter>> getChapters(int bookId) async {
-    final url = _urlBuilder.build(Uri.parse('books/$bookId/get_chapters'));
-    final result = await http.get(url, headers: <String, String>{
+    final result = await http
+        .get(UrlContants.getChapters(bookId), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     });
 
@@ -29,7 +27,7 @@ class PagesApiProvider {
           chapterContent: "",
           book: bookId,
           chapterTitle: "$number");
-      final url = _urlBuilder.build(Uri.parse('chapters/'));
+      final url = UrlContants.createChapter(bookId);
 
       final result = await http.post(
         url,
@@ -54,7 +52,7 @@ class PagesApiProvider {
           chapterContent: text,
           book: bookId,
           chapterTitle: "$number");
-      final url = _urlBuilder.build(Uri.parse('chapters/$chapterId/'));
+      final url = UrlContants.updateChapter(chapterId);
 
       final result = await http.patch(
         url,

@@ -30,7 +30,7 @@ class WritingCreationView extends StatelessWidget {
                   Header(
                     title: "Create a Book",
                     subtitle: "Let's get started!",
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    alignment: Alignment.center,
                   ),
                   Body(
                       child: Card(
