@@ -85,14 +85,16 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
           Book book = state.books[index];
           return Align(
               child: ElevatedButton(
-            onPressed: () {
-              final url = PageUrls.book(book.id);
-              Beamer.of(context).beamToNamed(url, data: {"book": book});
-            },
-            style: _bookButtonStyle,
-            child: Text(book.title,
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-          ));
+                  onPressed: () {
+                    final url = PageUrls.book(book.id);
+                    Beamer.of(context).beamToNamed(url, data: {"book": book});
+                  },
+                  style: _bookButtonStyle,
+                  child: Text(
+                    book.title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  )));
         }
       },
     );

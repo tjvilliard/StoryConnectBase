@@ -29,6 +29,7 @@ ThemeData lightTheme = ThemeData(
 
 ThemeData darkTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
+        dividerColor: Colors.white,
         colorScheme: ColorScheme.fromSeed(
             seedColor: charcoalBlue, brightness: Brightness.dark),
         useMaterial3: true)
