@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_extensions.db.models import TimeStampedModel
+from firebase_admin import storage
+from storyconnect.settings import FIREBASE_BUCKET
+import os
 
 # Create your models here.
 
@@ -10,15 +13,15 @@ class Book(models.Model):
     #     (2, "Indonesian")
     # ]
     TARGET_AUDIENCES = [
-        (1, "Young Adult (13-18 years old)"), 
-        (2, "New Adult (18-25 years old)"),
-        (3, "Adult (25+ years old)")
+        (0, "Children "), 
+        (1, "Young Adult"),
+        (2, "Adult (18+)")
     ]
     # taken from chapterly.com and wattpad.com
     COPYRIGHTS = [
-        (1, "All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission."), 
-        (2, "Public Domain: This story is open source for the public to use for any purposes."), 
-        (3, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
+        (0, "All Rights Reserved: No part of this publication may be reproduced, stored or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, scanning, or otherwise without written permission from the publisher. It is illegal to copy this book, post it to a website, or distribute it by any other means without permission."), 
+        (1, "Public Domain: This story is open source for the public to use for any purposes."), 
+        (2, "Creative Commons (CC) Attribution: Author of the story has some rights to some extent and allow the public to use this story for purposes like translations or adaptations credited back to the author.")
     ]
     
     title = models.CharField(max_length=100)
@@ -26,12 +29,32 @@ class Book(models.Model):
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+    
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000, null=True, blank=True)
     copyright = models.IntegerField(choices=COPYRIGHTS, null=True, blank=True)
     titlepage = models.TextField(null=True, blank=True)
+
+
+    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.cover:
+            # uses local covers/ temporarily for image upload to bucket
+            image_path = str(self.cover)
+            bucket = FIREBASE_BUCKET
+            blob = bucket.blob(image_path)
+            blob.upload_from_filename(self.cover.path)
+
+            # delete local covers/ after upload
+            os.remove(image_path)
+
+            # make the image public and save the public url to the image field
+            blob.make_public()
+            self.cover = blob.public_url  # Save the public URL to the image field
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

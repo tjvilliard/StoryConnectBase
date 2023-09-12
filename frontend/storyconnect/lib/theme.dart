@@ -20,17 +20,17 @@ const ColorScheme myColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-final TextTheme myTextTheme = TextTheme(
-  displayLarge: GoogleFonts.ramabhadra(
-    fontSize: 24,
-    color: Colors.black,
-  ),
-  bodyLarge: GoogleFonts.ramabhadra(
-    fontSize: 16,
-    color: charcoalBlue,
-  ),
-);
+ThemeData lightTheme = ThemeData(
+        fontFamily: GoogleFonts.ramabhadra().fontFamily,
+        colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue),
+        textTheme: GoogleFonts.ramabhadraTextTheme(),
+        useMaterial3: true)
+    .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
 
-ThemeData myTheme = ThemeData.from(
-        colorScheme: myColorScheme, textTheme: myTextTheme, useMaterial3: true)
+ThemeData darkTheme = ThemeData(
+        fontFamily: GoogleFonts.ramabhadra().fontFamily,
+        dividerColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: charcoalBlue, brightness: Brightness.dark),
+        useMaterial3: true)
     .copyWith(dividerTheme: DividerThemeData(color: Colors.black));

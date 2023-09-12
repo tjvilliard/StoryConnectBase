@@ -1,16 +1,15 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
-class PagesApiProvider {
+class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    final result = await http.get(
-        Uri.parse('https://storyconnect.app/api/books/$bookId/get_chapters'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
+    final result = await http
+        .get(UrlContants.getChapters(bookId), headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
 
     final undecodedChapterList =
         jsonDecode(utf8.decode(result.bodyBytes)) as List;
@@ -28,9 +27,10 @@ class PagesApiProvider {
           chapterContent: "",
           book: bookId,
           chapterTitle: "$number");
+      final url = UrlContants.createChapter(bookId);
 
       final result = await http.post(
-        Uri.parse('https://storyconnect.app/api/chapters/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,9 +52,10 @@ class PagesApiProvider {
           chapterContent: text,
           book: bookId,
           chapterTitle: "$number");
+      final url = UrlContants.updateChapter(chapterId);
 
       final result = await http.patch(
-        Uri.parse('https://storyconnect.app/api/chapters/$chapterId/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -68,12 +69,11 @@ class PagesApiProvider {
   }
 }
 
-class PagesProviderRepository {
-  // ignore: unused_field
-  PagesApiProvider _api = PagesApiProvider();
+class BookProviderRepository {
+  BookApiProvider _api = BookApiProvider();
   final int bookId;
 
-  PagesProviderRepository({required this.bookId});
+  BookProviderRepository({required this.bookId});
 
   Future<List<Chapter>> getChapters() async {
     return _api.getChapters(bookId);
@@ -85,6 +85,9 @@ class PagesProviderRepository {
 
   Future<Chapter?> updateChapter(
       {required int chapterId, required int number, required String text}) {
+    if (number == -1) {
+      print("number is -1");
+    }
     return _api.updateChapter(bookId, chapterId, number, text);
   }
 }

@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
+import 'package:storyconnect/Pages/book_creation/view.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-import 'package:storyconnect/Pages/writing_home/writing_repository.dart';
+import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
@@ -17,42 +19,54 @@ class WriterLocations extends BeamLocation<BeamState> {
   List<Pattern> get pathPatterns => [
         '/',
         '/login',
-        '/writer',
-        '/writer/:bookId',
+        '/writer/home',
+        '/writer/book/:bookId',
+        '/writer/create_book',
       ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final pages = <CustomBeamPage>[];
+    final url = state.uri.pathSegments;
 
-    if (state.uri.pathSegments.contains('writer')) {
-      if (state.pathParameters.containsKey('bookId')) {
+    if (url.contains('writer')) {
+      if (url.contains('create_book')) {
+        pages.add(
+          CustomBeamPage(
+            key: ValueKey('create_book'),
+            child: BlocProvider(
+              create: (context) =>
+                  BookCreateBloc(context.read<WritingRepository>()),
+              child: WritingCreationView(),
+            ),
+          ),
+        );
+      } else if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
         pages.add(CustomBeamPage(
             key: ValueKey('book-$bookId'),
             child: RepositoryProvider(
                 lazy: false,
                 create: (_) =>
-                    PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
+                    BookProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider(
                           lazy: false,
-                          create: (context) => PageBloc(
-                              context.read<PagesProviderRepository>())),
-                      BlocProvider(
-                          lazy: false,
                           create: (context) => ChapterBloc(
-                              context.read<PagesProviderRepository>())),
+                              context.read<BookProviderRepository>())),
                       BlocProvider(
                           lazy: false,
                           create: (_) => WritingUIBloc(
                               repository: context.read<WritingRepository>())),
+                      BlocProvider<FeedbackBloc>(
+                          create: (context) =>
+                              FeedbackBloc(context.read<WritingRepository>()))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
-      } else {
+      } else if (url.contains('home')) {
         pages.add(
           CustomBeamPage(
             key: ValueKey('writer'),

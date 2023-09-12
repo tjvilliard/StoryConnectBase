@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:latest
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN mkdir /config
 ADD /config/requirements.txt /config/
 
-RUN pip install -r /config/requirements.txt
+RUN pip3 install -r /config/requirements.txt
 RUN mkdir /src;
 WORKDIR /src
 

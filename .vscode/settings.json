@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
         "./backend/storyconnect/django-rest-framework-json-api"
-    ]
+    ],
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "C:/Users/david/source/repos/Capstone/frontend/storyconnect/windows/flutter"
 }

@@ -1,8 +1,13 @@
-class LoadingStruct {
-  final bool isLoading;
-  final String? message;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  LoadingStruct({required this.isLoading, this.message});
+part 'loading_struct.freezed.dart';
+
+@freezed
+class LoadingStruct with _$LoadingStruct {
+  const factory LoadingStruct({
+    @Default(false) bool isLoading,
+    String? message,
+  }) = _LoadingStruct;
 
   factory LoadingStruct.loading(bool isLoading) {
     return LoadingStruct(isLoading: isLoading);
@@ -12,17 +17,9 @@ class LoadingStruct {
     return LoadingStruct(isLoading: true, message: message);
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is LoadingStruct &&
-        other.isLoading == isLoading &&
-        other.message == message;
+  factory LoadingStruct.errorMessage(String message) {
+    return LoadingStruct(isLoading: false, message: message);
   }
-
-  @override
-  int get hashCode => isLoading.hashCode ^ message.hashCode;
 
   @override
   String toString() {
