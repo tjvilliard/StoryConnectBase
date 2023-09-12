@@ -2,7 +2,7 @@ from json import JSONDecodeError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -19,7 +19,7 @@ class BookViewSet(viewsets.ModelViewSet):
     # search_fields = ['title', 'author', 'language']
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     
     def create(self, request, *args, **kwargs):
@@ -97,7 +97,7 @@ class BookViewSet(viewsets.ModelViewSet):
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -133,7 +133,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
 class CharacterViewSet(viewsets.ModelViewSet):
     queryset = Character.objects.all()
     serializer_class = CharacterSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -156,7 +156,7 @@ class CharacterViewSet(viewsets.ModelViewSet):
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -180,7 +180,7 @@ class LocationViewSet(viewsets.ModelViewSet):
 class SceneViewSet(viewsets.ModelViewSet):
     queryset = Scene.objects.all()
     serializer_class = SceneSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -189,8 +189,6 @@ class SceneViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -214,41 +212,4 @@ def writer_page(request, book_id):
     return JsonResponse(context)
 
 
-# def create_book(request):
-#     if request.method == 'POST':
-#         title = request.POST['title']
-#         author = request.POST['author']
-#         user = request.user  # get the currently logged-in user
-#         book = Book(title=title, author=author, content=content, user=user)
-#         book.save()
-#         return redirect('writer_page', book_id=book.id) # would i redirect to the writer page? 
-#     else:
-#         return render(request, 'create_book.html')
-
-# def create_chapter(request): # would i need to pass in the book id here?
-#     if request.method == 'POST':
-#         title = request.POST['title']
-#         content = request.POST['content']
-#         book = request.POST['book']
-#         chapter = Chapter(title=title, content=content, book=book)
-#         chapter.save()
-#     return render(request, 'books/create_chapter.html')
-
-# def create_character(request):
-#     if request.method == 'POST':
-#         name = request.POST['name']
-#         description = request.POST['description']
-#         book = request.POST['book']
-#         character = Character(name=name, description=description, book=book)
-#         character.save()
-#     return render(request, 'books/create_character.html')
-
-# def create_location(request):
-#     if request.method == 'POST':
-#         name = request.POST['name']
-#         description = request.POST['description']
-#         book = request.POST['book']
-#         location = Location(name=name, description=description, book=book)
-#         location.save()
-#     return render(request, 'books/create_location.html')
 
