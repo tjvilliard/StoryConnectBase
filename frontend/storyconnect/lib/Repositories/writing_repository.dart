@@ -60,4 +60,6 @@ class WritingRepository {
     // convert stream to future list and return
     return result.toList();
   }
+
+  getChapterComments(int chapterId) {}
 }

@@ -10,8 +10,13 @@ class _UrlBuilder {
 class PageUrls {
   static const String writerHome = "/writer/home";
   static const String createBook = "/writer/create_book";
-  static String bookBaseUrl(int bookID) {
+
+  static String book(int bookID) {
     return "/writer/book/$bookID";
+  }
+
+  static String writerProfile(int userID) {
+    return "/profile/writer/$userID";
   }
 }
 

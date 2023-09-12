@@ -85,14 +85,16 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
           Book book = state.books[index];
           return Align(
               child: ElevatedButton(
-            onPressed: () {
-              final writingHomeBloc = context.read<WritingHomeBloc>();
-              writingHomeBloc.add(OpenBookEvent(book: book));
-            },
-            style: _bookButtonStyle,
-            child: Text(book.title,
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
-          ));
+                  onPressed: () {
+                    final url = PageUrls.book(book.id);
+                    Beamer.of(context).beamToNamed(url, data: {"book": book});
+                  },
+                  style: _bookButtonStyle,
+                  child: Text(
+                    book.title,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  )));
         }
       },
     );
@@ -107,17 +109,9 @@ class WritingHomeGridState extends State<WritingHomeGridView> {
   /// Creates the Grid State Manager for the writer home view,
   /// the Grid State Bloc manages state and opening a new book.
   ///
-  BlocConsumer<WritingHomeBloc, WritingHomeStruct> getGridBlocConsumer(
-      BuildContext context) {
-    return BlocConsumer<WritingHomeBloc, WritingHomeStruct>(
-        listener: (context, state) {
-      if (state.bookToNavigate != null) {
-        final url = PageUrls.bookBaseUrl(state.bookToNavigate!.id);
-        Beamer.of(context).beamToNamed(url, data: {
-          "book": state.bookToNavigate,
-        });
-      }
-    }, buildWhen: (previous, current) {
+  Widget getGridBlocConsumer(BuildContext context) {
+    return BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
+        buildWhen: (previous, current) {
       final loadingDiff = previous.loadingStruct != current.loadingStruct;
       final bookDiff = previous.books != current.books;
       return bookDiff || loadingDiff;
