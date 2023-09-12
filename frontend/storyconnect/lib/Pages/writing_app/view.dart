@@ -86,7 +86,7 @@ class _WritingAppViewState extends State<WritingAppView> {
               // Where pages are displayed
               Flexible(child: WritingPageView()),
 
-              CommentsWidget()
+              FeedbackWidget()
             ],
           ))
         ],

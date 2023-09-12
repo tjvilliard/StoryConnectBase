@@ -4,7 +4,7 @@ part of 'writing_ui_bloc.dart';
 class WritingUIState with _$WritingUIState {
   const factory WritingUIState({
     required bool chapterOutlineShown,
-    required bool commentsUIshown,
+    required bool feedbackUIshown,
     String? title,
     required LoadingStruct loadingStruct,
   }) = _WritingUIState;
@@ -13,7 +13,7 @@ class WritingUIState with _$WritingUIState {
   factory WritingUIState.initial() {
     return WritingUIState(
       chapterOutlineShown: false,
-      commentsUIshown: false,
+      feedbackUIshown: false,
       loadingStruct: LoadingStruct.loading(true),
     );
   }

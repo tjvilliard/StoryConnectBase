@@ -16,3 +16,8 @@ class ToggleChapterOutlineEvent extends WritingUIEvent {
 class ToggleCommentsUIEvent extends WritingUIEvent {
   ToggleCommentsUIEvent();
 }
+
+class SwitchChapterEvent extends WritingUIEvent {
+  final int chapterId;
+  SwitchChapterEvent({required this.chapterId});
+}

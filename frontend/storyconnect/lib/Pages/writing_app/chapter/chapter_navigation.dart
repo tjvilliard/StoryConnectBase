@@ -32,6 +32,7 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                         ? Padding(
                             padding: EdgeInsets.all(16),
                             child: ListView.builder(
+                                shrinkWrap: true,
                                 controller: _scrollController,
                                 itemCount: chapterState.chapters.length + 1,
                                 itemBuilder: (context, index) {

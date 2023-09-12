@@ -61,7 +61,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(chapterOutlineShown: !state.chapterOutlineShown));
   }
 
-  toggleCommentsUI(WritingUIEvent event, Emitter<WritingUIState> emit) {
-    emit(state.copyWith(commentsUIshown: !state.commentsUIshown));
+  toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
+    emit(state.copyWith(feedbackUIshown: !state.feedbackUIshown));
   }
 }

@@ -6,26 +6,29 @@ import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 
-part 'comments_event.dart';
-part 'comments_state.dart';
-part 'comments_bloc.freezed.dart';
+part 'feedback_event.dart';
+part 'feedback_state.dart';
+part 'feedback_bloc.freezed.dart';
 
-typedef CommentsEmitter = Emitter<CommentsState>;
+typedef FeedbackEmitter = Emitter<FeedbackState>;
 
-class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
+class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   late final WritingRepository _repo;
-  CommentsBloc(WritingRepository repo) : super(CommentsState.initial()) {
+  FeedbackBloc(WritingRepository repo) : super(FeedbackState.initial()) {
     _repo = repo;
     on<LoadChapterComments>((event, emit) => loadChapterComments(event, emit));
+    on<FeedbackTypeChanged>((event, emit) => feedbackTypeChanged(event, emit));
+    on<ToggleGhostFeedbackEvent>(
+        (event, emit) => toggleGhostFeedback(event, emit));
   }
 
   Stream<void> loadChapterComments(
-      LoadChapterComments event, CommentsEmitter emit) async* {
-    emit(CommentsState(
+      LoadChapterComments event, FeedbackEmitter emit) async* {
+    emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(true),
     ));
 
-    final commentsState = state.comments ?? {};
+    final commentsState = state.comments;
 
     final List<Comment> comments =
         await _repo.getChapterComments(event.chapterId);
@@ -36,9 +39,21 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
     // add the newly fetched comments to the oldComments storage
     commentsState[event.chapterId] = comments;
 
-    emit(CommentsState(
+    emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(false),
       comments: commentsState,
+    ));
+  }
+
+  feedbackTypeChanged(FeedbackTypeChanged event, FeedbackEmitter emit) {
+    emit(state.copyWith(
+      selectedFeedbackType: event.feedbackType,
+    ));
+  }
+
+  toggleGhostFeedback(ToggleGhostFeedbackEvent event, FeedbackEmitter emit) {
+    emit(state.copyWith(
+      showGhostFeedback: !state.showGhostFeedback,
     ));
   }
 }

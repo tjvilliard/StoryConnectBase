@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/comments/state/comments_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
 import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
@@ -59,9 +59,9 @@ class WriterLocations extends BeamLocation<BeamState> {
                           lazy: false,
                           create: (_) => WritingUIBloc(
                               repository: context.read<WritingRepository>())),
-                      BlocProvider(
+                      BlocProvider<FeedbackBloc>(
                           create: (context) =>
-                              CommentsBloc(context.read<WritingRepository>()))
+                              FeedbackBloc(context.read<WritingRepository>()))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),
