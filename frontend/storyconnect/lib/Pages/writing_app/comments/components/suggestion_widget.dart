@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/comments/components/navigate_button.dart';
 import 'package:storyconnect/Widgets/horizontal_divider.dart';
 
 class SuggestionWidget extends StatelessWidget {
@@ -22,14 +23,24 @@ class SuggestionWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Align(
-                      alignment: Alignment.topRight,
-                      child: Text("Chapter ${comment.chapterId}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .apply(fontStyle: FontStyle.italic)),
+                      alignment: Alignment.topCenter,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Chapter ${comment.chapterId}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .apply(fontStyle: FontStyle.italic)),
+                            if (comment.isGhost() == false)
+                              NavigateToFeedbackButton(
+                                suggestion: comment,
+                              )
+                          ]),
                     ),
-                    Align(
+                    Container(
+                      constraints:
+                          BoxConstraints(minHeight: 50, maxHeight: 100),
                       alignment: Alignment.center,
                       child: Text(comment.comment ?? "No comment",
                           style: Theme.of(context).textTheme.titleSmall),
