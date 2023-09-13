@@ -5,10 +5,7 @@ services:
     image: nginx:latest
     container_name: nginx_storyconnect
     ports:
-      # - "80:80"
-      # - "443:443"
       - "8000:8000"
-      
     volumes:
       - ./config/nginx:/etc/nginx/conf.d
       - ./backend/static:/static
@@ -25,11 +22,11 @@ services:
     command: |-
       bash -c "python manage.py migrate && 
       python manage.py collectstatic --noinput && 
-      gunicorn storyconnect.wsgi:application --bind 0.0.0.0:8000 --reload --timeout 30"
+      python -m debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/storyconnect:/src
       - ./backend/storyconnect/static:/static
     expose:
       - "8000"
-
-  
+    ports:
+      - "5678:5678"

@@ -200,7 +200,6 @@ FIREBASE_BUCKET = storage.bucket(app=default_app, name= 'storyconnect-9c7dd.apps
 # REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
 #                                                     'core.authentication.FirebaseAuthentication']}
 
-
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
 #     'DEFAULT_PARSER_CLASSES': (
