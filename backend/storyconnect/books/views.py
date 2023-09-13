@@ -10,6 +10,7 @@ from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelM
 from .models import *
 from .serializers import *
 from django.db import transaction
+import pdb
 
 
 # Create your views here.
@@ -39,20 +40,7 @@ class BookViewSet(viewsets.ModelViewSet):
         transaction.set_autocommit(True)
 
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
-    # @action(detail=False, methods=['get'])
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-
-    #     serializer = self.get_serializer(queryset, many=True)
-    #     return Response(serializer.data)
     
     def put(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -66,15 +54,31 @@ class BookViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
     
+
+    # @action(detail=True, methods=['get'])
+    # def get_chapters(self, request, pk=None):
+    #     book = self.get_object()
+    #     chapters = book.get_chapters()
+
+    #     if len(chapters) == 0:
+    #         # Handle the case of no chapters, return an empty list
+    #         return JsonResponse([], safe=False)
+
+    #     serializer = ChapterSerializer(chapters, many=True, safe=False)
+    
+    #     return JsonResponse(serializer.data)
+
     @action(detail=True, methods=['get'])
     def get_chapters(self, request, pk=None):
+        
         book = self.get_object()
         chapters = book.get_chapters()
-        # assert that that there is always at least one chapter
-        assert len(chapters) > 0
+        
+        assert len(chapters) > 0, "No chapters found for this book"
 
         serializer = ChapterSerializer(chapters, many=True)
-        return JsonResponse(serializer.data)
+        
+        return Response(serializer.data)
     
 
     # @action(detail=False, methods=['get'])
