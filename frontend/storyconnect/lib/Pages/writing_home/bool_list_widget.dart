@@ -13,21 +13,24 @@ class BookListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Wrap(
-      spacing: 20,
-      runSpacing: 20,
-      alignment: WrapAlignment.center,
-      children: books
-          .map((book) => Container(
-              width: 150,
-              height: 200,
-              child: Clickable(
-                  onPressed: () {
-                    final url = PageUrls.book(book.id);
-                    Beamer.of(context).beamToNamed(url, data: {"book": book});
-                  },
-                  child: BookWidget(title: book.title, coverCDN: ""))))
-          .toList(),
-    ));
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              alignment: WrapAlignment.center,
+              children: books
+                  .map((book) => Container(
+                      width: 150,
+                      height: 200,
+                      child: Clickable(
+                          onPressed: () {
+                            final url = PageUrls.book(book.id);
+                            Beamer.of(context)
+                                .beamToNamed(url, data: {"book": book});
+                          },
+                          child: BookWidget(title: book.title, coverCDN: ""))))
+                  .toList(),
+            )));
   }
 }
