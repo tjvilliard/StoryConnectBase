@@ -64,10 +64,11 @@ class WritingMenuBar extends StatelessWidget {
                               .add(ToggleCommentsUIEvent());
                         }),
                     MenuItemButton(
-                        leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
-                        child: Text("Character Sheet"),
+                        leadingIcon: Icon(FontAwesomeIcons.lightbulb),
+                        child: Text("RoadUnblocker"),
                         onPressed: () {
-                          showPopup("Character Sheet", context);
+                          BlocProvider.of<WritingUIBloc>(context)
+                              .add(ToggleRoadUnblockerEvent());
                         }),
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.check),

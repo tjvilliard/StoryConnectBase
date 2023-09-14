@@ -166,6 +166,7 @@ class Highlight with _$Highlight {
 @freezed
 class RoadUnblockerRequest with _$RoadUnblockerRequest {
   const factory RoadUnblockerRequest({
+    required String chapter,
     required String selection,
     required String question,
   }) = _RoadUnblockerRequest;

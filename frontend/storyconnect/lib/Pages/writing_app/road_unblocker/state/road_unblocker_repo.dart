@@ -32,7 +32,7 @@ class RoadUnblockerApi {
               original:
                   "Jonathan isn't sure why he's doing this. He's just following orders.",
               replacement:
-                  "Jonathan spits in the face of his commanding officer and says, 'Sir, yes sir'"),
+                  "Jonathan spits in the face of his commanding officer and defiantly says, 'Sir, yes sir'"),
         ]);
   }
 }

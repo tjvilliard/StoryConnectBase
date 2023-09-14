@@ -4,9 +4,9 @@ abstract class RoadUnblockerEvent {
   const RoadUnblockerEvent();
 }
 
-class PreloadChapterEvent extends RoadUnblockerEvent {
+class UpdateChapterEvent extends RoadUnblockerEvent {
   final String chapter;
-  const PreloadChapterEvent({required this.chapter});
+  const UpdateChapterEvent({required this.chapter});
 }
 
 class OnGuidingQuestionChangedEvent extends RoadUnblockerEvent {
@@ -15,13 +15,10 @@ class OnGuidingQuestionChangedEvent extends RoadUnblockerEvent {
 }
 
 class LoadSelectionEvent extends RoadUnblockerEvent {
-  final String chapter;
   final int startOffset;
   final int endOffset;
   const LoadSelectionEvent(
-      {required this.chapter,
-      required this.startOffset,
-      required this.endOffset});
+      {required this.startOffset, required this.endOffset});
 }
 
 class SubmitUnblockEvent extends RoadUnblockerEvent {
@@ -31,4 +28,8 @@ class SubmitUnblockEvent extends RoadUnblockerEvent {
 class RecieveUnblockEvent extends RoadUnblockerEvent {
   final RoadUnblockerResponse response;
   const RecieveUnblockEvent({required this.response});
+}
+
+class ClearUnblockEvent extends RoadUnblockerEvent {
+  const ClearUnblockEvent();
 }
