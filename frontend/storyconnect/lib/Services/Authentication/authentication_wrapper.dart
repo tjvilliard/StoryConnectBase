@@ -9,16 +9,16 @@ import 'package:storyconnect/Services/Authentication/authentication_service.dart
 class AuthenticationWrapper extends StatelessWidget {
   late final Widget _child;
   late final Stream<User?> _authState;
-  late final AuthenticationService _authService;
+  late final AuthenticationService _authService = AuthenticationService();
+  final bool _require;
 
   /// Get the authenticaton state
   Stream<User?> get state {
     return this._authState;
   }
 
-  AuthenticationWrapper(Widget child, AuthenticationService authService) {
+  AuthenticationWrapper(Widget child, this._require) {
     this._child = child;
-    this._authService = authService;
     this._authState = this._authService.authStateChanges;
   }
 
@@ -27,10 +27,14 @@ class AuthenticationWrapper extends StatelessWidget {
     return StreamBuilder<User?>(
         stream: this._authState,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return this._child;
+          if (this._require) {
+            if (snapshot.hasData) {
+              return this._child;
+            } else {
+              return LoginPage();
+            }
           } else {
-            return LoginPage(this._authService);
+            return this._child;
           }
         });
   }

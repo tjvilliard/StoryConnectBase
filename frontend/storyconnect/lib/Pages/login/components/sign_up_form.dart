@@ -5,19 +5,17 @@ import 'package:storyconnect/Services/Authentication/authentication_service.dart
 ///
 /// Contains the State parts of the Sign In Widget
 class SignUpForm extends StatefulWidget {
-  final AuthenticationService _authService;
-
-  const SignUpForm(this._authService);
+  const SignUpForm();
 
   @override
-  State<StatefulWidget> createState() => _signUpState(_authService);
+  State<StatefulWidget> createState() => _signUpState();
 }
 
 ///
 /// Manages the state of the sign-in widget: The fields and button
 /// are the components with state.
 class _signUpState extends State<SignUpForm> {
-  final AuthenticationService _authService;
+  final AuthenticationService _authService = AuthenticationService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailErrorController = TextEditingController();
@@ -27,7 +25,7 @@ class _signUpState extends State<SignUpForm> {
   bool _validateEmail = false;
   bool _validatePassword = false;
 
-  _signUpState(this._authService);
+  _signUpState();
 
   void _resetState() {
     setState(() {

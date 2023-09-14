@@ -30,8 +30,7 @@ class WriterLocations extends BeamLocation<BeamState> {
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final pages = <CustomBeamPage>[];
     final url = state.uri.pathSegments;
-    final AuthenticationService authService =
-        AuthenticationService(FirebaseAuth.instance);
+    final AuthenticationService authService = AuthenticationService();
 
     if (url.contains('writer')) {
       if (url.contains('create_book')) {
@@ -43,46 +42,51 @@ class WriterLocations extends BeamLocation<BeamState> {
         pages.add(
           CustomBeamPage(
             key: ValueKey('create_book'),
-            child: AuthenticationWrapper(createBookProvider, authService),
+            child: AuthenticationWrapper(createBookProvider, false),
           ),
         );
       } else if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
+
+        RepositoryProvider bookProvider = RepositoryProvider(
+            lazy: false,
+            create: (_) =>
+                PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
+            child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                      lazy: false,
+                      create: (context) =>
+                          ChapterBloc(context.read<PagesProviderRepository>())),
+                  BlocProvider(
+                      lazy: false,
+                      create: (_) => WritingUIBloc(
+                          repository: context.read<WritingRepository>())),
+                ],
+                child: WritingAppView(
+                  bookId: int.tryParse(bookId ?? ""),
+                )));
+
         pages.add(CustomBeamPage(
             key: ValueKey('book-$bookId'),
-            child: RepositoryProvider(
-                lazy: false,
-                create: (_) =>
-                    PagesProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
-                child: MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                          lazy: false,
-                          create: (context) => ChapterBloc(
-                              context.read<PagesProviderRepository>())),
-                      BlocProvider(
-                          lazy: false,
-                          create: (_) => WritingUIBloc(
-                              repository: context.read<WritingRepository>())),
-                    ],
-                    child: WritingAppView(
-                      bookId: int.tryParse(bookId ?? ""),
-                    )))));
+            child: AuthenticationWrapper(bookProvider, true)));
       } else if (url.contains('home')) {
+        BlocProvider homeBloc = BlocProvider(
+          create: (context) =>
+              WritingHomeBloc(context.read<WritingRepository>()),
+          child: WritingHomeView(),
+        );
+
         pages.add(CustomBeamPage(
             key: ValueKey('writer'),
-            child: BlocProvider(
-              create: (context) =>
-                  WritingHomeBloc(context.read<WritingRepository>()),
-              child: WritingHomeView(),
-            )));
+            child: AuthenticationWrapper(homeBloc, true)));
       }
     }
     // hardcoded place to nowhere
 
     else if (state.uri.pathSegments.isEmpty) {
-      pages.add(CustomBeamPage(
-          key: const ValueKey('login'), child: LoginPage(authService)));
+      pages.add(
+          CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
     }
 
     return pages;
