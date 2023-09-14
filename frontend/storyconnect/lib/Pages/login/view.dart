@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Pages/login/components/sign_in_form.dart';
-import 'package:storyconnect/Services/Authentication/authentication_service.dart';
 
 ///
 /// Login page for the StoryConnect App

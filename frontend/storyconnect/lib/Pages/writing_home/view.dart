@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_home/bool_list_widget.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
@@ -38,14 +39,28 @@ class WritingHomeState extends State<WritingHomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: baseAppBar,
+      appBar: AppBar(),
       body: Column(
         children: [
-          CreateBookButton(onPressed: () {
-            // TODO: Add urls to a constants file
-            Beamer.of(context).beamToNamed("/writer/create_book");
-          }),
-          Expanded(child: WritingHomeGridView())
+          Header(
+            title: "Writing Home",
+            subtitle: "",
+            leading: ViewProfileButton(),
+            trailing: CreateBookButton(),
+          ),
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800),
+              child: BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
+                builder: (context, state) {
+                  if (state.loadingStruct.isLoading) {
+                    return LoadingWidget(loadingStruct: state.loadingStruct);
+                  }
+                  return BookListWidget(books: state.books);
+                },
+              ),
+            ),
+          )
         ],
       ),
     );
