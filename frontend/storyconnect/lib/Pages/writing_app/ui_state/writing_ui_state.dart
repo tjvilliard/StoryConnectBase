@@ -5,6 +5,7 @@ class WritingUIState with _$WritingUIState {
   const factory WritingUIState({
     required bool chapterOutlineShown,
     required bool feedbackUIshown,
+    required bool roadUnblockerShown,
     String? title,
     required LoadingStruct loadingStruct,
   }) = _WritingUIState;
@@ -14,6 +15,7 @@ class WritingUIState with _$WritingUIState {
     return WritingUIState(
       chapterOutlineShown: false,
       feedbackUIshown: false,
+      roadUnblockerShown: false,
       loadingStruct: LoadingStruct.loading(true),
     );
   }

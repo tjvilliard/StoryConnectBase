@@ -162,3 +162,42 @@ class Highlight with _$Highlight {
   factory Highlight.fromJson(Map<String, dynamic> json) =>
       _$HighlightFromJson(json);
 }
+
+@freezed
+class RoadUnblockerRequest with _$RoadUnblockerRequest {
+  const factory RoadUnblockerRequest({
+    required String selection,
+    required String question,
+  }) = _RoadUnblockerRequest;
+  const RoadUnblockerRequest._();
+
+  factory RoadUnblockerRequest.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerRequestFromJson(json);
+}
+
+@freezed
+class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
+  const factory RoadUnblockerSuggestion({
+    required int offsetStart,
+    required int offsetEnd,
+    required String suggestion,
+    required String original,
+    required String replacement,
+  }) = _RoadUnblockerSuggestion;
+  const RoadUnblockerSuggestion._();
+
+  factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerSuggestionFromJson(json);
+}
+
+@freezed
+class RoadUnblockerResponse with _$RoadUnblockerResponse {
+  const factory RoadUnblockerResponse({
+    required String message,
+    required List<RoadUnblockerSuggestion> suggestions,
+  }) = _RoadUnblockerResponse;
+  const RoadUnblockerResponse._();
+
+  factory RoadUnblockerResponse.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerResponseFromJson(json);
+}

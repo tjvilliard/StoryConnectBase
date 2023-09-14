@@ -27,6 +27,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     on<ToggleChapterOutlineEvent>(
         (event, emit) => toggleChapterOutline(event, emit));
     on<ToggleCommentsUIEvent>((event, emit) => toggleCommentsUI(event, emit));
+    on<ToggleRoadUnblockerEvent>(
+        (event, emit) => toggleRoadUnblocker(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -61,7 +63,12 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(chapterOutlineShown: !state.chapterOutlineShown));
   }
 
-  toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
+  void toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
     emit(state.copyWith(feedbackUIshown: !state.feedbackUIshown));
+  }
+
+  void toggleRoadUnblocker(
+      ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
+    emit(state.copyWith(roadUnblockerShown: !state.roadUnblockerShown));
   }
 }
