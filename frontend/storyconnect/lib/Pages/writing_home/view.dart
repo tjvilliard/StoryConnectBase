@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
+import 'package:storyconnect/Pages/writing_home/bool_list_widget.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-import 'writing_home_book_grid.dart';
+import 'package:storyconnect/Widgets/header.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingHomeView extends StatefulWidget {
   const WritingHomeView({Key? key}) : super(key: key);
@@ -39,9 +42,25 @@ class WritingHomeState extends State<WritingHomeView> {
       appBar: AppBar(),
       body: Column(
         children: [
-          CreateBookButton(),
-          ViewProfileButton(),
-          Expanded(child: WritingHomeGridView())
+          Header(
+            title: "Writing Home",
+            subtitle: "",
+            leading: ViewProfileButton(),
+            trailing: CreateBookButton(),
+          ),
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 800),
+              child: BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
+                builder: (context, state) {
+                  if (state.loadingStruct.isLoading) {
+                    return LoadingWidget(loadingStruct: state.loadingStruct);
+                  }
+                  return BookListWidget(books: state.books);
+                },
+              ),
+            ),
+          )
         ],
       ),
     );

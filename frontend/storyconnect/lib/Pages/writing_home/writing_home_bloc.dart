@@ -12,14 +12,8 @@ class GetBooksEvent extends WritingHomeEvent {
   GetBooksEvent() : super(isLoading: true);
 }
 
-class CreateBookEvent extends WritingHomeEvent {
-  String title;
-  CreateBookEvent({required this.title}) : super(isLoading: true);
-}
-
-class OpenBookEvent extends WritingHomeEvent {
-  Book book;
-  OpenBookEvent({required this.book}) : super(isLoading: true);
+class InitialLoadEvent extends WritingHomeEvent {
+  InitialLoadEvent() : super(isLoading: true);
 }
 
 class WritingHomeStruct {
@@ -38,7 +32,6 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
       : super(WritingHomeStruct(
             books: [], loadingStruct: LoadingStruct(isLoading: false))) {
     on<GetBooksEvent>((event, emit) => updateBooks(event, emit));
-    on<OpenBookEvent>((event, emit) => openBook(event, emit));
   }
 
   void updateBooks(WritingHomeEvent event, WritingHomeEmitter emit) async {
@@ -48,12 +41,5 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeStruct> {
     List<Book> books = await repository.getBooks();
     emit(WritingHomeStruct(
         books: books, loadingStruct: LoadingStruct.loading(false)));
-  }
-
-  void openBook(OpenBookEvent event, WritingHomeEmitter emit) async {
-    emit(WritingHomeStruct(
-        books: state.books,
-        loadingStruct: LoadingStruct.loading(false),
-        bookToNavigate: event.book));
   }
 }

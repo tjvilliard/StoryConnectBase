@@ -18,8 +18,12 @@ class AnnouncementsCard extends StatelessWidget {
                 padding: EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    Text("Annoucements"),
+                    Text(
+                      "Annoucements",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                     SizedBox(height: 20),
+
                     ...List.generate(
                         3,
                         (index) => _Announcement(

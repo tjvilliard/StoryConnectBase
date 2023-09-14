@@ -197,9 +197,8 @@ default_app = firebase_admin.initialize_app(cred, name='[DEFAULT]', options = {'
 
 FIREBASE_BUCKET = storage.bucket(app=default_app, name= 'storyconnect-9c7dd.appspot.com')
 
-REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
-                                                    'core.authentication.FirebaseAuthentication']}
-
+# REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
+#                                                     'core.authentication.FirebaseAuthentication']}
 
 # REST_FRAMEWORK = {
 #     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',

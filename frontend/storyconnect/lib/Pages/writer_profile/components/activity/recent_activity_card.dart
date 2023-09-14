@@ -15,7 +15,7 @@ class RecentActivityCard extends StatelessWidget {
                 Text(
                   "Recent Activity",
                   textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(height: 20),
                 ...List.generate(

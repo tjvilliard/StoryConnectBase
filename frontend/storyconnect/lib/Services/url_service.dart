@@ -3,7 +3,13 @@ class _UrlBuilder {
   String baseUrl = "http://localhost:8000/api/";
 
   Uri build(String path) {
-    return Uri.parse(baseUrl).resolveUri(Uri.parse(path));
+    final Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
+    // if we don't have a trailing slash, add one
+    if (!partialURI.path.endsWith('/')) {
+      return partialURI.replace(path: partialURI.path + '/');
+    } else {
+      return partialURI;
+    }
   }
 }
 
@@ -11,7 +17,7 @@ class PageUrls {
   static const String writerHome = "/writer/home";
   static const String createBook = "/writer/create_book";
 
-  static String bookBaseUrl(int bookID) {
+  static String book(int bookID) {
     return "/writer/book/$bookID";
   }
 

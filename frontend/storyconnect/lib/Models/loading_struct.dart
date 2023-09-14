@@ -4,7 +4,7 @@ part 'loading_struct.freezed.dart';
 
 @freezed
 class LoadingStruct with _$LoadingStruct {
-  factory LoadingStruct({
+  const factory LoadingStruct({
     @Default(false) bool isLoading,
     String? message,
   }) = _LoadingStruct;

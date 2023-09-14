@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
+import 'package:storyconnect/Pages/writing_app/comments/view.dart';
 import 'package:storyconnect/Pages/writing_app/writing/page_view.dart';
 import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
-import 'package:storyconnect/Pages/writing_app/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -45,7 +46,6 @@ class _WritingAppViewState extends State<WritingAppView> {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.white,
         title: Row(
           children: [
             IconButton(
@@ -62,12 +62,17 @@ class _WritingAppViewState extends State<WritingAppView> {
             SizedBox(
               width: 10,
             ),
-            BlocBuilder<WritingUIBloc, WritingUIStruct>(
+            BlocBuilder<WritingUIBloc, WritingUIState>(
                 builder: (context, state) {
+              Widget toReturn;
               if (state.title != null) {
-                return Text(state.title!);
+                toReturn = Text(state.title!,
+                    style: Theme.of(context).textTheme.displaySmall);
+              } else {
+                toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
               }
-              return LoadingWidget(loadingStruct: state.loadingStruct);
+              return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500), child: toReturn);
             }),
           ],
         ),
@@ -85,7 +90,7 @@ class _WritingAppViewState extends State<WritingAppView> {
               // Where pages are displayed
               Flexible(child: WritingPageView()),
 
-              Container()
+              FeedbackWidget()
             ],
           ))
         ],

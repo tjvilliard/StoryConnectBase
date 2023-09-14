@@ -1,24 +1,23 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/components/sign_up.dart';
+import 'package:storyconnect/Pages/login/components/sign_up_form.dart';
 import 'package:storyconnect/Pages/login/components/static_components.dart';
 import 'package:storyconnect/Services/Authentication/authentication_service.dart';
 
 ///
 /// Contains the State parts of the Sign In Widget
 class SignInForm extends StatefulWidget {
-  final AuthenticationService _authService;
-
-  const SignInForm(this._authService);
+  const SignInForm();
 
   @override
-  State<StatefulWidget> createState() => _signInState(_authService);
+  State<StatefulWidget> createState() => _signInState();
 }
 
 ///
 /// Manages the state of the sign-in widget: The fields and button
 /// are the components with state.
 class _signInState extends State<SignInForm> {
-  final AuthenticationService _authService;
+  final AuthenticationService _authService = AuthenticationService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailErrorController = TextEditingController();
@@ -27,8 +26,6 @@ class _signInState extends State<SignInForm> {
 
   bool _validateEmail = false;
   bool _validatePassword = false;
-
-  _signInState(this._authService);
 
   void _resetState() {
     setState(() {
@@ -67,7 +64,7 @@ class _signInState extends State<SignInForm> {
           });
         }
       } else {
-        // make api call with token
+        Beamer.of(context).beamToNamed("/writer/home");
         print("Sign in success?!");
       }
     } else {
@@ -140,7 +137,7 @@ class _signInState extends State<SignInForm> {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (BuildContext context) => SignUpForm(_authService));
+              builder: (BuildContext context) => SignUpForm());
         },
         child: Text("Sign Up"));
   }

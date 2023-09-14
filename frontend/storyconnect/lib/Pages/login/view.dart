@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/components/sign_in.dart';
-import 'package:storyconnect/Services/Authentication/authentication_service.dart';
+import 'package:storyconnect/Pages/login/components/sign_in_form.dart';
 
 ///
 /// Login page for the StoryConnect App
 ///
 class LoginPage extends StatelessWidget {
-  final AuthenticationService _authService;
-
-  const LoginPage(this._authService, {Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
         body: ListView(
-          children: [Center(child: LoginWidget(this._authService))],
+          children: [Center(child: LoginWidget())],
         ));
   }
 }
 
 ///
 /// Manages Login Page Widget for the StoryConnect App
-///
-///
 class LoginWidget extends StatelessWidget {
   static Color charcoalBlue = Color(0xFF28536B);
 
-  final AuthenticationService _authService;
-
-  const LoginWidget(this._authService);
+  const LoginWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +34,6 @@ class LoginWidget extends StatelessWidget {
         decoration: BoxDecoration(
             border: Border.all(width: 1.5, color: charcoalBlue),
             borderRadius: BorderRadius.circular(10)),
-        child: SignInForm(this._authService));
+        child: SignInForm());
   }
 }

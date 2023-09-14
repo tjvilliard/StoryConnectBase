@@ -103,8 +103,10 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
 
   final chapterNumToID = <int, int>{};
 
-  final PagesProviderRepository repository;
-  ChapterBloc(this.repository) : super(ChapterBlocStruct.initial()) {
+  late final BookProviderRepository _repo;
+  ChapterBloc(BookProviderRepository repository)
+      : super(ChapterBlocStruct.initial()) {
+    _repo = repository;
     on<AddChapter>(
       (event, emit) => addChapter(event, emit),
       transformer: sequential(),
@@ -137,7 +139,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     sortedChapterNum.sort((b, a) => a.compareTo(b));
     final newChapterNum = sortedChapterNum.first + 1;
     print(state.loadingStruct.isLoading);
-    final result = await repository.createChapter(newChapterNum);
+    final result = await _repo.createChapter(newChapterNum);
     if (result != null) {
       chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
@@ -180,7 +182,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
 
     emit(state.copyWith(chapters: chapters));
 
-    repository.updateChapter(
+    _repo.updateChapter(
       chapterId: chapterNumToID[state.currentIndex] ?? -1,
       number: state.currentIndex,
       text: chapters[state.currentIndex]!,
@@ -199,7 +201,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
 
   void loadEvent(LoadEvent event, Emitter<ChapterBlocStruct> emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
-    final unParsedChapters = await repository.getChapters();
+    final unParsedChapters = await _repo.getChapters();
 
     final chapters = parseChapters(unParsedChapters);
 
