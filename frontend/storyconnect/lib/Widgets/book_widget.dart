@@ -21,7 +21,7 @@ class BookWidget extends StatelessWidget {
     return Card(
       margin: EdgeInsets.all(0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
