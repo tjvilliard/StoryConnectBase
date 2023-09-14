@@ -68,7 +68,7 @@ class BookViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def get_chapters(self, request, pk=None):
-        book = self.get_object()
+        book = self.get_object() # type: Book
         chapters = book.get_chapters()
         # assert that that there is always at least one chapter
         assert len(chapters) > 0

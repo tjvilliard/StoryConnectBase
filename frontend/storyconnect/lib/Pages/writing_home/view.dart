@@ -1,9 +1,12 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:storyconnect/Pages/writing_home/bool_list_widget.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
+import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-import 'writing_home_book_grid.dart';
+import 'package:storyconnect/Widgets/header.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingHomeView extends StatefulWidget {
   const WritingHomeView({Key? key}) : super(key: key);
@@ -37,14 +40,38 @@ class WritingHomeState extends State<WritingHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          CreateBookButton(onPressed: () {
-            // TODO: Add urls to a constants file
-            Beamer.of(context).beamToNamed("/writer/create_book");
-          }),
-          Expanded(child: WritingHomeGridView())
-        ],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Header(
+                title: "Writing Home",
+                subtitle: "",
+                leading: ViewProfileButton(),
+                trailing: CreateBookButton(),
+              ),
+              Flexible(
+                child: BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
+                  builder: (context, state) {
+                    Widget toReturn;
+                    if (state.loadingStruct.isLoading) {
+                      toReturn =
+                          LoadingWidget(loadingStruct: state.loadingStruct);
+                    } else {
+                      toReturn = BookListWidget(
+                        books: state.books,
+                      );
+                    }
+                    return AnimatedSwitcher(
+                        duration: Duration(milliseconds: 500), child: toReturn);
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

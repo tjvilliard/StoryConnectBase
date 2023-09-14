@@ -5,13 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
-class PagesApiProvider {
-  final UrlBuilder _urlBuilder = UrlBuilder();
-
+class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    String authToken =
-        await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
     final url = _urlBuilder.build(Uri.parse('books/$bookId/get_chapters'));
     final result = await http.get(url, headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -37,7 +32,7 @@ class PagesApiProvider {
           chapterContent: "",
           book: bookId,
           chapterTitle: "$number");
-      final url = _urlBuilder.build(Uri.parse('chapters/'));
+      final url = UrlContants.createChapter(bookId);
 
       final result = await http.post(
         url,
@@ -66,7 +61,7 @@ class PagesApiProvider {
           chapterContent: text,
           book: bookId,
           chapterTitle: "$number");
-      final url = _urlBuilder.build(Uri.parse('chapters/$chapterId/'));
+      final url = UrlContants.updateChapter(chapterId);
 
       final result = await http.patch(
         url,
@@ -84,11 +79,11 @@ class PagesApiProvider {
   }
 }
 
-class PagesProviderRepository {
-  PagesApiProvider _api = PagesApiProvider();
+class BookProviderRepository {
+  BookApiProvider _api = BookApiProvider();
   final int bookId;
 
-  PagesProviderRepository({required this.bookId});
+  BookProviderRepository({required this.bookId});
 
   Future<List<Chapter>> getChapters() async {
     return _api.getChapters(bookId);

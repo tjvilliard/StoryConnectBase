@@ -114,3 +114,51 @@ class Scene with _$Scene {
 
   factory Scene.fromJson(Map<String, dynamic> json) => _$SceneFromJson(json);
 }
+
+@freezed
+class Comment with _$Comment {
+  const factory Comment({
+    required int id,
+    int? userId,
+    int? chapterId,
+    int? offset,
+    @JsonKey(name: 'offset_end') int? offsetEnd,
+    String? comment,
+  }) = _Comment;
+
+  const Comment._();
+
+  bool isGhost() {
+    return false; // TODO: implement
+  }
+
+  factory Comment.fromJson(Map<String, dynamic> json) =>
+      _$CommentFromJson(json);
+}
+
+@freezed
+class Annotation with _$Annotation {
+  const factory Annotation({
+    required int id,
+    int? commentId,
+  }) = _Annotation;
+
+  factory Annotation.fromJson(Map<String, dynamic> json) =>
+      _$AnnotationFromJson(json);
+}
+
+@freezed
+class Highlight with _$Highlight {
+  const factory Highlight({
+    required int id,
+    int? userId,
+    int? chapterId,
+    int? chapterOffset,
+    int? length,
+    String? text,
+    String? color,
+  }) = _Highlight;
+
+  factory Highlight.fromJson(Map<String, dynamic> json) =>
+      _$HighlightFromJson(json);
+}

@@ -2,37 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class WritingUIStruct {
-  final bool chapterOutlineShown;
-  final String? title;
-  final LoadingStruct loadingStruct;
-  WritingUIStruct(
-      {required this.chapterOutlineShown,
-      required this.loadingStruct,
-      this.title});
-
-  WritingUIStruct copyWith({
-    bool? chapterOutlineShown,
-    String? title,
-    LoadingStruct? loadingStruct,
-  }) {
-    return WritingUIStruct(
-      chapterOutlineShown: chapterOutlineShown ?? this.chapterOutlineShown,
-      title: title ?? this.title,
-      loadingStruct: loadingStruct ?? this.loadingStruct,
-    );
-  }
-}
-
-abstract class WritingUIEvent {
-  WritingUIEvent();
-}
-
-class UpdateAllEvent extends WritingUIEvent {
-  final WritingUIStruct status;
-  UpdateAllEvent({required this.status});
-}
+part 'writing_ui_bloc.freezed.dart';
+part 'writing_ui_state.dart';
+part 'writing_ui_event.dart';
 
 class WritingLoadEvent extends WritingUIEvent {
   final int bookId;
@@ -43,16 +17,16 @@ class WritingLoadEvent extends WritingUIEvent {
   });
 }
 
-typedef WritingUIEmiter = Emitter<WritingUIStruct>;
+typedef WritingUIEmiter = Emitter<WritingUIState>;
 
-class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIStruct> {
+class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   WritingRepository repository = WritingRepository();
-  WritingUIBloc({required this.repository})
-      : super(WritingUIStruct(
-            chapterOutlineShown: false,
-            loadingStruct: LoadingStruct.loading(true))) {
+  WritingUIBloc({required this.repository}) : super(WritingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
     on<WritingLoadEvent>((event, emit) => loadEvent(event, emit));
+    on<ToggleChapterOutlineEvent>(
+        (event, emit) => toggleChapterOutline(event, emit));
+    on<ToggleCommentsUIEvent>((event, emit) => toggleCommentsUI(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -83,9 +57,11 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIStruct> {
         loadingStruct: LoadingStruct.loading(false), title: title));
   }
 
-  void toggleChapterOutline() {
-    add(UpdateAllEvent(
-        status:
-            state.copyWith(chapterOutlineShown: !state.chapterOutlineShown)));
+  void toggleChapterOutline(WritingUIEvent event, WritingUIEmiter emit) {
+    emit(state.copyWith(chapterOutlineShown: !state.chapterOutlineShown));
+  }
+
+  toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
+    emit(state.copyWith(feedbackUIshown: !state.feedbackUIshown));
   }
 }
