@@ -7,6 +7,7 @@ class CurrentWorksCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        constraints: BoxConstraints(maxWidth: 550),
         height: 300,
         child: Card(
             child: Padding(
@@ -15,10 +16,9 @@ class CurrentWorksCard extends StatelessWidget {
                   Text(
                     "Current Works",
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-
-                  // horizontally scrollable list of books
+                  SizedBox(height: 20), // horizontally scrollable list of books
                   Expanded(
                       child: ListView.separated(
                           separatorBuilder: (context, index) {

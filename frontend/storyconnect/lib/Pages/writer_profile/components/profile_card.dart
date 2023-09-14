@@ -37,7 +37,7 @@ class ProfileCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Bio", style: Theme.of(context).textTheme.titleMedium),
+                    Text("Bio", style: Theme.of(context).textTheme.titleLarge),
                     Text("Lorem ipsum // 100 characters"),
                   ],
                 ),
