@@ -93,3 +93,8 @@ data/
 docker-compose.yml
 config/nginx/storyconnect.conf
 .vscode/launch.json
+backend/storyconnect/firebase_credentials.json
+frontend/storyconnect/android/app/google-services.json
+frontend/storyconnect/android/app/google-services.json
+frontend/storyconnect/ios/Runner/GoogleService-Info.plist
+frontend/storyconnect/ios/firebase_app_id_file.json

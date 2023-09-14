@@ -2,38 +2,50 @@ import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final Widget? leading;
   final Widget? trailing;
   final Widget? child;
-  final CrossAxisAlignment crossAxisAlignment;
+  final WrapAlignment alignment;
 
   Header(
       {required this.title,
-      required this.subtitle,
+      this.subtitle,
       this.leading,
       this.trailing,
-      this.crossAxisAlignment = CrossAxisAlignment.start,
+      this.alignment = WrapAlignment.spaceBetween,
       this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20),
-      child: Column(
+      child: Wrap(
+        alignment: alignment,
         children: [
-          if (leading != null) leading!,
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: crossAxisAlignment,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.displaySmall),
-                Text(subtitle, style: Theme.of(context).textTheme.titleMedium),
-              ],
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (leading != null)
+                Padding(
+                    padding: EdgeInsets.only(top: 5, right: 10),
+                    child: leading!),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(title, style: Theme.of(context).textTheme.displaySmall),
+                  if (subtitle != null)
+                    Text(subtitle!,
+                        style: Theme.of(context).textTheme.titleMedium),
+                ],
+              ),
+            ],
           ),
-          if (trailing != null) trailing!,
+          if (trailing == null) Container(),
+          if (trailing != null)
+            Padding(
+                padding: EdgeInsets.only(top: 5, left: 10), child: trailing!),
         ],
       ),
     );

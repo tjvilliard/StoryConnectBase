@@ -9,14 +9,12 @@ import 'package:storyconnect/Pages/book_creation/serializers/book_creation_seria
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {
-  final UrlBuilder _urlBuilder = UrlBuilder();
-
   Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
       String authToken =
           await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
 
-      final url = _urlBuilder.build(Uri.parse('books/'));
+      final url = UrlContants.books;
       final result = await http.post(
         url,
         headers: <String, String>{
@@ -37,7 +35,7 @@ class WritingApiProvider {
       String authToken =
           await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
 
-      final url = _urlBuilder.build(Uri.parse('books/'));
+      final url = UrlContants.books;
       final result = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token $authToken'
@@ -71,4 +69,6 @@ class WritingRepository {
     // convert stream to future list and return
     return result.toList();
   }
+
+  getChapterComments(int chapterId) {}
 }
