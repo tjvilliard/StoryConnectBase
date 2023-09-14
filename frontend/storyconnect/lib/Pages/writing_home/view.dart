@@ -39,30 +39,38 @@ class WritingHomeState extends State<WritingHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: baseAppBar,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Header(
-            title: "Writing Home",
-            subtitle: "",
-            leading: ViewProfileButton(),
-            trailing: CreateBookButton(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Header(
+                title: "Writing Home",
+                subtitle: "",
+                leading: ViewProfileButton(),
+                trailing: CreateBookButton(),
+              ),
+              Flexible(
+                child: BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
+                  builder: (context, state) {
+                    Widget toReturn;
+                    if (state.loadingStruct.isLoading) {
+                      toReturn =
+                          LoadingWidget(loadingStruct: state.loadingStruct);
+                    } else {
+                      toReturn = BookListWidget(
+                        books: state.books,
+                      );
+                    }
+                    return AnimatedSwitcher(
+                        duration: Duration(milliseconds: 500), child: toReturn);
+                  },
+                ),
+              )
+            ],
           ),
-          Flexible(
-              child: Container(
-            constraints: BoxConstraints(maxWidth: 800),
-            child: BlocBuilder<WritingHomeBloc, WritingHomeStruct>(
-              builder: (context, state) {
-                if (state.loadingStruct.isLoading) {
-                  return LoadingWidget(loadingStruct: state.loadingStruct);
-                }
-                return BookListWidget(
-                  books: state.books,
-                );
-              },
-            ),
-          ))
-        ],
+        ),
       ),
     );
   }
