@@ -64,11 +64,15 @@ class _WritingAppViewState extends State<WritingAppView> {
             ),
             BlocBuilder<WritingUIBloc, WritingUIState>(
                 builder: (context, state) {
+              Widget toReturn;
               if (state.title != null) {
-                return Text(state.title!,
+                toReturn = Text(state.title!,
                     style: Theme.of(context).textTheme.displaySmall);
+              } else {
+                toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
               }
-              return LoadingWidget(loadingStruct: state.loadingStruct);
+              return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500), child: toReturn);
             }),
           ],
         ),
