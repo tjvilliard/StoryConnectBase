@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/view.dart';
+import 'package:storyconnect/Pages/login/sign_in/view.dart';
 import 'package:storyconnect/Services/Authentication/authentication_service.dart';
 
 ///

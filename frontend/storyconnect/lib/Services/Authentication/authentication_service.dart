@@ -25,34 +25,6 @@ class AuthenticationService {
   }
 
   ///
-  /// Sign In to the app with a standard email and password
-  /// Returns an exception message or a success message.
-  Future<String?> signIn(String email, String password) async {
-    try {
-      await this
-          ._firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-      return SUCCESS;
-    } on FirebaseAuthException catch (e) {
-      return e.message;
-    }
-  }
-
-  ///
-  /// Sign Up with the app with a standard email and password
-  /// Returns an exception message or a success message.
-  Future<String?> signUp(String email, String password) async {
-    try {
-      await this
-          ._firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return SUCCESS;
-    } on FirebaseAuthException catch (e) {
-      return e.message;
-    }
-  }
-
-  ///
   /// Sign Out of the app
   /// Returns an exception message or a success message.
   Future<String?> signOut() async {

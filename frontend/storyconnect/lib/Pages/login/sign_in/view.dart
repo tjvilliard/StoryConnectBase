@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/components/sign_in_form.dart';
+import 'package:storyconnect/Pages/login/sign_in/sign_in_form.dart';
 
-///
 /// Login page for the StoryConnect App
-///
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -17,8 +15,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-///
-/// Manages Login Page Widget for the StoryConnect App
+/// Builds around the Widget for a different kind of login.
 class LoginWidget extends StatelessWidget {
   static Color charcoalBlue = Color(0xFF28536B);
 

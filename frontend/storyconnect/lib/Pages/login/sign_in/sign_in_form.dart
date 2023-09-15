@@ -1,10 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/components/sign_up_form.dart';
-import 'package:storyconnect/Pages/login/components/static_components.dart';
-import 'package:storyconnect/Services/Authentication/authentication_service.dart';
 
-///
+import 'package:storyconnect/Pages/login/sign_up/sign_up_form.dart';
+import 'package:storyconnect/Pages/login/static_components.dart';
+import 'package:storyconnect/Services/Authentication/sign_in_service.dart';
+
 /// Contains the State parts of the Sign In Widget
 class SignInForm extends StatefulWidget {
   const SignInForm();
@@ -13,11 +13,10 @@ class SignInForm extends StatefulWidget {
   State<StatefulWidget> createState() => _signInState();
 }
 
-///
 /// Manages the state of the sign-in widget: The fields and button
 /// are the components with state.
 class _signInState extends State<SignInForm> {
-  final AuthenticationService _authService = AuthenticationService();
+  final SignInService _signInService = SignInService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailErrorController = TextEditingController();
@@ -36,82 +35,66 @@ class _signInState extends State<SignInForm> {
     });
   }
 
-  void _signIn() async {
+  /// Attempts a sign in and/or sets the state of
+  /// the page's fields.
+  Future<void> _signIn() async {
     this._resetState();
 
+    // If one of the fields is empty
+    if (this._emailController.text.isEmpty) {
+      setState(() {
+        this._emailErrorController.text = "Email cannot be empty!";
+        this._validateEmail = true;
+      });
+      return;
+    }
+    if (this._passwordController.text.isEmpty) {
+      setState(() {
+        this._passwordErrorController.text = "Password cannot be empty!";
+        this._validatePassword = true;
+      });
+      return;
+    }
+
+    // If the fields contain data, attempt a sign-in
     if (this._emailController.text.isNotEmpty &&
         this._passwordController.text.isNotEmpty) {
-      String? message = await this
-          ._authService
-          .signIn(this._emailController.text, this._passwordController.text);
+      String Code = await this._signInService.signIn(
+          this._emailController.text, this._passwordController.text) as String;
 
-      if (message != AuthenticationService.SUCCESS) {
-        if (message!.contains("email")) {
-          setState(() {
+      // If the Sign-In attempt was not successful
+      if (Code != this._signInService.SUCCESS) {
+        setState(() {
+          if (Code.contains("email")) {
+            this._emailErrorController.text = Code;
             this._validateEmail = true;
-            this._emailErrorController.text = message;
-          });
-        } else if (message.contains("password")) {
-          setState(() {
+          } else if (Code.contains("password")) {
+            this._passwordErrorController.text = Code;
             this._validatePassword = true;
-            this._passwordErrorController.text = message;
-          });
-        } else {
-          setState(() {
-            this._validateEmail = true;
-            this._validatePassword = true;
-            this._passwordErrorController.text = message;
-          });
-        }
-      } else {
-        Beamer.of(context).beamToNamed("/writer/home");
-        print("Sign in success?!");
+          }
+        });
       }
-    } else {
-      setState(() {
-        if (this._emailController.text.isEmpty) {
-          this._validateEmail = true;
-          this._emailErrorController.text = "Username should not be empty!";
-        }
-
-        if (this._passwordController.text.isEmpty) {
-          this._validatePassword = true;
-          this._passwordErrorController.text = "Password should not be empty!";
-        }
-      });
+      // Complete the sign in and move on to the next page.
+      else {
+        Beamer.of(context).beamToNamed("/writer/home");
+      }
     }
   }
 
-  Container _fieldContainer(Widget field) {
-    return Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        width: 310,
-        //height: 75,
-        child: field);
-  }
-
-  Container _elementContainer(Widget button) {
-    return Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        width: 310,
-        height: 75,
-        child: button);
-  }
-
+  /// Builds the current state of the email field.
   TextField _emailField() {
     return TextField(
       controller: this._emailController,
       obscureText: false,
       decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Username',
+          labelText: 'Email',
           errorText:
               this._validateEmail ? this._emailErrorController.text : null),
     );
   }
 
-  ///
-  ///
+  /// Builds the current state of the password field
   TextField _passwordField() {
     return TextField(
       controller: this._passwordController,
@@ -125,13 +108,13 @@ class _signInState extends State<SignInForm> {
     );
   }
 
-  ///
   /// Builds the sign in button
   OutlinedButton _signInButton() {
     return OutlinedButton(
         onPressed: () => {this._signIn()}, child: Text("Sign In"));
   }
 
+  /// Builds the sign-up button
   OutlinedButton _signUpButton() {
     return OutlinedButton(
         onPressed: () {
@@ -147,12 +130,12 @@ class _signInState extends State<SignInForm> {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          signInLabel,
-          this._fieldContainer(this._emailField()),
-          this._fieldContainer(this._passwordField()),
-          this._elementContainer(this._signInButton()),
-          separator,
-          this._elementContainer(this._signUpButton())
+          StaticComponents.signInLabel,
+          StaticComponents.fieldContainer(this._emailField()),
+          StaticComponents.fieldContainer(this._passwordField()),
+          StaticComponents.elementContainer(this._signInButton()),
+          StaticComponents.separator,
+          StaticComponents.elementContainer(this._signUpButton())
         ]);
   }
 }
