@@ -24,6 +24,8 @@ ThemeData lightTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
         colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
+        cardTheme: CardTheme(
+            surfaceTintColor: Color.fromARGB(255, 198, 198, 198), elevation: 2),
         useMaterial3: true)
     .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
 

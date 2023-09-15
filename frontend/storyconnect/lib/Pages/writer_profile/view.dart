@@ -18,28 +18,33 @@ class WriterProfileWidget extends StatelessWidget {
         navigateBackFunction: () {
           Beamer.of(context).beamBack();
         },
-        body: ListView(children: [
-          Column(mainAxisSize: MainAxisSize.min, children: [
-            Header(
-              title: "Profile Page",
-              subtitle: "",
-            ),
-            Body(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ProfileCard(),
-                AnnouncementsCard(),
-                Wrap(
-                  alignment: WrapAlignment.spaceEvenly,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+                child: ListView(children: [
+              Column(mainAxisSize: MainAxisSize.min, children: [
+                Header(
+                  title: "Profile Page",
+                  subtitle: "",
+                ),
+                Body(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CurrentWorksCard(),
-                    RecentActivityCard(),
+                    ProfileCard(),
+                    AnnouncementsCard(),
+                    Wrap(
+                      alignment: WrapAlignment.spaceEvenly,
+                      children: [
+                        CurrentWorksCard(),
+                        RecentActivityCard(),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ))
-          ])
-        ]));
+                ))
+              ])
+            ]));
+          },
+        ));
   }
 }

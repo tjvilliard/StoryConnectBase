@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/comments/components/navigate_button.dart';
 
 class CommentWidget extends StatelessWidget {
   final Comment comment;
@@ -20,12 +21,20 @@ class CommentWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Align(
-                      alignment: Alignment.topRight,
-                      child: Text("Chapter ${comment.chapterId}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .apply(fontStyle: FontStyle.italic)),
+                      alignment: Alignment.topCenter,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Chapter ${comment.chapterId}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .apply(fontStyle: FontStyle.italic)),
+                            if (comment.isGhost() == false)
+                              NavigateToFeedbackButton(
+                                comment: comment,
+                              )
+                          ]),
                     ),
                     Container(
                       alignment: Alignment.center,

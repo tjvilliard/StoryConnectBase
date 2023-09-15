@@ -39,7 +39,18 @@ class BookViewSet(viewsets.ModelViewSet):
         # Commit the transaction
         transaction.set_autocommit(True)
 
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+    # @action(detail=False, methods=['get'])
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
 
     
     def put(self, request, *args, **kwargs):
@@ -70,8 +81,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def get_chapters(self, request, pk=None):
-        
-        book = self.get_object()
+        book = self.get_object() # type: Book
         chapters = book.get_chapters()
         
         assert len(chapters) > 0, "No chapters found for this book"

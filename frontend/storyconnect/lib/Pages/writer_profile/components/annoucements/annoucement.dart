@@ -35,9 +35,13 @@ class _Announcement extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(announcement),
-          IconButton(
+          IconButton.filledTonal(
             onPressed: () => _readAnnouncement(context),
-            icon: Icon(FontAwesomeIcons.readme),
+            padding: EdgeInsets.only(right: 2),
+            icon: Icon(
+              FontAwesomeIcons.readme,
+              size: 20,
+            ),
           )
         ],
       ),

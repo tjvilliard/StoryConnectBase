@@ -12,9 +12,8 @@ class GetBooksEvent extends WritingHomeEvent {
   GetBooksEvent() : super(isLoading: true);
 }
 
-class CreateBookEvent extends WritingHomeEvent {
-  String title;
-  CreateBookEvent({required this.title}) : super(isLoading: true);
+class InitialLoadEvent extends WritingHomeEvent {
+  InitialLoadEvent() : super(isLoading: true);
 }
 
 class WritingHomeStruct {

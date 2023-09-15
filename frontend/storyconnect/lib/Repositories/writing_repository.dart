@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
@@ -10,11 +11,15 @@ import 'package:storyconnect/Services/url_service.dart';
 class WritingApiProvider {
   Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
+      String authToken =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
       final url = UrlContants.books;
       final result = await http.post(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $authToken'
         },
         body: jsonEncode(serialzer.toJson()),
       );
@@ -27,10 +32,14 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
+      String authToken =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
       final url = UrlContants.books;
-      final result = await http.get(
-        url,
-      );
+      final result = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $authToken'
+      });
 
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);

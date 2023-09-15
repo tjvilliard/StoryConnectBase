@@ -126,6 +126,12 @@ class Comment with _$Comment {
     String? comment,
   }) = _Comment;
 
+  const Comment._();
+
+  bool isGhost() {
+    return false; // TODO: implement
+  }
+
   factory Comment.fromJson(Map<String, dynamic> json) =>
       _$CommentFromJson(json);
 }

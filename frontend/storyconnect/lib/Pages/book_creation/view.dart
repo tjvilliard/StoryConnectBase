@@ -23,29 +23,28 @@ class WritingCreationView extends StatelessWidget {
             navigateBackFunction: () {
               Beamer.of(context).beamBack();
             },
-            body: ListView(children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Header(
-                    title: "Create a Book",
-                    subtitle: "Let's get started!",
-                    alignment: Alignment.center,
-                  ),
-                  Body(
-                      child: Card(
-                          surfaceTintColor: Colors.white,
-                          elevation: 4,
-                          child: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  BookCreationFormFields(),
-                                  SaveBookButton()
-                                ],
-                              )))),
-                ],
-              )
-            ])));
+            body: SingleChildScrollView(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Header(
+                  title: "Create a Book",
+                  subtitle: "Let's get started!",
+                  alignment: WrapAlignment.center,
+                ),
+                Body(
+                    child: Card(
+                        surfaceTintColor: Colors.white,
+                        elevation: 4,
+                        child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                BookCreationFormFields(),
+                                SaveBookButton()
+                              ],
+                            )))),
+              ],
+            ))));
   }
 }

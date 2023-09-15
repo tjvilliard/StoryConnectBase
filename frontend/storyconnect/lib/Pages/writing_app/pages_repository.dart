@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
+    String authToken =
+        await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
     final result = await http
         .get(UrlContants.getChapters(bookId), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $authToken'
     });
 
     final undecodedChapterList =
@@ -22,6 +27,9 @@ class BookApiProvider {
 
   Future<Chapter?> createChapter(int bookId, int number) async {
     try {
+      String authToken =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
       final ChapterUpload toUpload = ChapterUpload(
           number: number,
           chapterContent: "",
@@ -33,6 +41,7 @@ class BookApiProvider {
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $authToken'
         },
         body: jsonEncode(toUpload.toJson()),
       );
@@ -46,6 +55,9 @@ class BookApiProvider {
   Future<Chapter?> updateChapter(
       int bookId, int chapterId, int number, String text) async {
     try {
+      String authToken =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
       Chapter toUpload = Chapter(
           id: chapterId,
           number: number,
@@ -58,6 +70,7 @@ class BookApiProvider {
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $authToken'
         },
         body: jsonEncode(toUpload.toJson()),
       );
