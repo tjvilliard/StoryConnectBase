@@ -11,10 +11,19 @@ from .models import *
 from .serializers import *
 from django.db import transaction
 
+
+
 class CommentViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @action(detail=True, methods=['post'])
+    def dismiss(self, request, pk=None):
+        comment = self.get_object()
+        comment.dismissed = True
+        comment.save()
+        return Response(status=status.HTTP_200_OK)
 
 class AnnotationViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson):
     queryset = Annotation.objects.all()
