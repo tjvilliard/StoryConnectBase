@@ -7,8 +7,11 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    final url = _urlBuilder.build(Uri.parse('books/$bookId/get_chapters'));
-    final result = await http.get(url, headers: <String, String>{
+    String authToken =
+        await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
+    final result = await http
+        .get(UrlContants.getChapters(bookId), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': 'Token $authToken'
     });

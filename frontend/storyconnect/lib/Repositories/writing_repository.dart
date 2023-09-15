@@ -14,7 +14,7 @@ class WritingApiProvider {
       String authToken =
           await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
 
-      final url = _urlBuilder.build(Uri.parse('books/'));
+      final url = UrlContants.books;
       final result = await http.post(
         url,
         headers: <String, String>{
@@ -32,10 +32,14 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = _urlBuilder.build(Uri.parse('books/'));
-      final result = await http.get(
-        url,
-      );
+      String authToken =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+
+      final url = UrlContants.books;
+      final result = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $authToken'
+      });
 
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);
