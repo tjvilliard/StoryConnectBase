@@ -1,35 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-<<<<<<< HEAD
-import 'package:http/http.dart' as http;
-
-class AuthenticationService {
-  final FirebaseAuth _firebaseAuth;
-
-  static const String SUCCESS = "Success";
-
-  AuthenticationService(this._firebaseAuth);
-
-  Stream<User?> get authStateChanges => this._firebaseAuth.authStateChanges();
-
-  Future<String?> signIn(String email, String password) async {
-    try {
-      UserCredential credential = await this
-          ._firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-
-      String idToken = await credential.user!.getIdToken(true) as String;
-
-      String uid = this._firebaseAuth.currentUser!.uid;
-
-      print(idToken.toString());
-
-      http.put(Uri.parse("http://storyconnect.app/api/users/" + uid + "/"),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Token " + idToken
-          });
-
-=======
 
 /// Wrapper singleton for the firebase authentication singleton
 /// and the Functions that go with it.
@@ -63,19 +32,15 @@ class AuthenticationService {
       await this
           ._firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
->>>>>>> develop
       return SUCCESS;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
 
-<<<<<<< HEAD
-=======
   ///
   /// Sign Up with the app with a standard email and password
   /// Returns an exception message or a success message.
->>>>>>> develop
   Future<String?> signUp(String email, String password) async {
     try {
       await this
@@ -87,8 +52,6 @@ class AuthenticationService {
     }
   }
 
-<<<<<<< HEAD
-=======
   ///
   /// Sign Out of the app
   /// Returns an exception message or a success message.
@@ -103,7 +66,6 @@ class AuthenticationService {
 
   ///
   /// Anonymous sign-in, for administrators only.
->>>>>>> develop
   Future<String?> signInAnon() async {
     try {
       await this._firebaseAuth.signInAnonymously();
