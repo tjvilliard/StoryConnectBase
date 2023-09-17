@@ -89,7 +89,7 @@ class _signUpState extends State<SignUpForm> {
       obscureText: false,
       decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Username',
+          labelText: 'Email',
           errorText:
               this._validateEmail ? this._emailErrorController.text : null),
     );
@@ -120,10 +120,11 @@ class _signUpState extends State<SignUpForm> {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          StaticComponents.signInLabel,
+          StaticComponents.signUpLabel,
           StaticComponents.fieldContainer(this._emailField()),
           StaticComponents.fieldContainer(this._passwordField()),
-          StaticComponents.elementContainer(this._signUpButton()),
+          StaticComponents.buttonContainer(this._signUpButton(),
+              width: StaticComponents.elementWidth),
         ]);
   }
 }

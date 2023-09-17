@@ -1,9 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 
-import 'package:storyconnect/Pages/login/sign_up/sign_up_form.dart';
+import 'package:storyconnect/Pages/login/sign_up/view.dart';
 import 'package:storyconnect/Pages/login/static_components.dart';
 import 'package:storyconnect/Services/Authentication/sign_in_service.dart';
+import 'package:storyconnect/Widgets/unimplemented_popup.dart';
 
 /// Contains the State parts of the Sign In Widget
 class SignInForm extends StatefulWidget {
@@ -24,12 +25,12 @@ class _signInState extends State<SignInForm> {
       TextEditingController();
 
   bool _validateEmail = false;
-  bool _validatePassword = false;
+  bool _validatePass = false;
 
   void _resetState() {
     setState(() {
       this._validateEmail = false;
-      this._validatePassword = false;
+      this._validatePass = false;
       this._emailErrorController.text = "";
       this._passwordErrorController.text = "";
     });
@@ -46,12 +47,11 @@ class _signInState extends State<SignInForm> {
         this._emailErrorController.text = "Email cannot be empty!";
         this._validateEmail = true;
       });
-      return;
     }
     if (this._passwordController.text.isEmpty) {
       setState(() {
         this._passwordErrorController.text = "Password cannot be empty!";
-        this._validatePassword = true;
+        this._validatePass = true;
       });
       return;
     }
@@ -70,7 +70,7 @@ class _signInState extends State<SignInForm> {
             this._validateEmail = true;
           } else if (Code.contains("password")) {
             this._passwordErrorController.text = Code;
-            this._validatePassword = true;
+            this._validatePass = true;
           }
         });
       }
@@ -84,10 +84,12 @@ class _signInState extends State<SignInForm> {
   /// Builds the current state of the email field.
   TextField _emailField() {
     return TextField(
+      style: StaticComponents.textFieldStyle,
       controller: this._emailController,
       obscureText: false,
       decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.email_rounded),
+          border: StaticComponents.textFieldBorderStyle,
           labelText: 'Email',
           errorText:
               this._validateEmail ? this._emailErrorController.text : null),
@@ -97,32 +99,48 @@ class _signInState extends State<SignInForm> {
   /// Builds the current state of the password field
   TextField _passwordField() {
     return TextField(
+      style: StaticComponents.textFieldStyle,
       controller: this._passwordController,
       obscureText: true,
       decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.lock_rounded),
+          border: StaticComponents.textFieldBorderStyle,
           labelText: 'Password',
-          errorText: this._validatePassword
-              ? this._passwordErrorController.text
-              : null),
+          errorText:
+              this._validatePass ? this._passwordErrorController.text : null),
     );
   }
 
   /// Builds the sign in button
   OutlinedButton _signInButton() {
     return OutlinedButton(
-        onPressed: () => {this._signIn()}, child: Text("Sign In"));
+        style: StaticComponents.buttonStyle,
+        onPressed: () => {this._signIn()},
+        child: Text("Sign In"));
   }
 
   /// Builds the sign-up button
   OutlinedButton _signUpButton() {
     return OutlinedButton(
+        style: StaticComponents.buttonStyle,
         onPressed: () {
           showDialog(
               context: context,
-              builder: (BuildContext context) => SignUpForm());
+              builder: (BuildContext context) => SignUpWidget());
         },
-        child: Text("Sign Up"));
+        child: Text("Register"));
+  }
+
+  OutlinedButton _forgotPasswordButton() {
+    return OutlinedButton(
+        style: StaticComponents.buttonStyle,
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  UnimplementedPopup(featureName: "Password Reset"));
+        },
+        child: Text("Forgot Password?"));
   }
 
   @override
@@ -130,12 +148,16 @@ class _signInState extends State<SignInForm> {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          StaticComponents.storyConnectLabel,
           StaticComponents.signInLabel,
-          StaticComponents.fieldContainer(this._emailField()),
-          StaticComponents.fieldContainer(this._passwordField()),
-          StaticComponents.elementContainer(this._signInButton()),
-          StaticComponents.separator,
-          StaticComponents.elementContainer(this._signUpButton())
+          StaticComponents.fieldContainer(this._emailField(),
+              width: StaticComponents.elementWidth),
+          StaticComponents.fieldContainer(this._passwordField(),
+              width: StaticComponents.elementWidth),
+          StaticComponents.buttonContainer(this._signInButton(),
+              width: StaticComponents.elementWidth),
+          StaticComponents.signUpAndForgotWidget(
+              this._signUpButton(), this._forgotPasswordButton()),
         ]);
   }
 }

@@ -11,8 +11,7 @@ class SignUpWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: Container(
-          alignment: Alignment.bottomCenter,
-          margin: EdgeInsets.only(top: 75, bottom: 75),
+          alignment: Alignment.center,
           constraints: BoxConstraints(
               minWidth: 400, minHeight: 400, maxHeight: 425, maxWidth: 400),
           decoration: BoxDecoration(
