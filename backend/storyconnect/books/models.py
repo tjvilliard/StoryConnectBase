@@ -33,7 +33,7 @@ class Book(models.Model):
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
-    book_status = models.IntegerField(choices=STATUS, null=False, default=2)
+    book_status = models.IntegerField(choices=STATUS, null=True, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
     cover = models.ImageField(upload_to='covers/', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
