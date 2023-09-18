@@ -27,13 +27,17 @@ class BookWidget extends StatelessWidget {
         children: [
           // Image.network(coverCDN),
           _imagePlaceHolder(),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge,
-            textAlign: TextAlign.center,
-          ),
+          Flexible(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelMedium,
+                    textAlign: TextAlign.center,
+                  ))),
           if (author != null)
-            Text(author!, style: Theme.of(context).textTheme.labelMedium),
+            Text(author!, style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
     );
