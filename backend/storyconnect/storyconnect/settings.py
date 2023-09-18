@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'books',
     'core',
+    'management',
 ]
 
 MIDDLEWARE = [
@@ -111,6 +112,7 @@ DATABASES = {
         'OPTIONS': {'sslmode': os.getenv('SSLMODE')},
     }
 }
+
 
 
 # Password validation
