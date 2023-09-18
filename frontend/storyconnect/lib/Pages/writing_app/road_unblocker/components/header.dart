@@ -15,7 +15,7 @@ class _Header extends StatelessWidget {
         ),
         IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.read<WritingUIBloc>().add(ToggleRoadUnblockerEvent());
             },
             icon: Icon(Icons.close))
       ],

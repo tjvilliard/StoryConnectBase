@@ -16,7 +16,7 @@ class RoadUnblockerState with _$RoadUnblockerState {
     required String currentChapterText,
   }) {
     return RoadUnblockerState(
-      loadingStruct: LoadingStruct.loading(true),
+      loadingStruct: LoadingStruct.loading(false),
       chapter: currentChapterText,
       responses: [],
     );
