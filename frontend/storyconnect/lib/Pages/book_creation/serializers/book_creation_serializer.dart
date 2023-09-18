@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/language_constants.dart';
 
 part 'book_creation_serializer.freezed.dart';
@@ -11,7 +12,8 @@ class BookCreationSerializer with _$BookCreationSerializer {
     // required String author,
     required String? language,
     @JsonKey(name: 'target_audience') int? targetAudience,
-    // int? copyright,
+    String? synopsis,
+    int? copyright,
   }) = _BookCreationSerializer;
   const BookCreationSerializer._();
   factory BookCreationSerializer.fromJson(Map<String, dynamic> json) =>
@@ -20,10 +22,11 @@ class BookCreationSerializer with _$BookCreationSerializer {
   // initial constructor
   factory BookCreationSerializer.initial() {
     return BookCreationSerializer(
-      title: "",
-      // author: "",
-      language: LanguageConstant.english.label,
-    );
+        title: "",
+        // author: "",
+        language: LanguageConstant.english.label,
+        synopsis: "",
+        copyright: CopyrightOption.allRightsReserved.index);
   }
 
   bool verify() {
@@ -39,6 +42,14 @@ class BookCreationSerializer with _$BookCreationSerializer {
     if (targetAudience == null) {
       return false;
     }
+    // Synopsis can be empty, but it shouldn't be null.
+    if (synopsis == null) {
+      return false;
+    }
+    if (copyright == null) {
+      return false;
+    }
+
     return true;
   }
 }
