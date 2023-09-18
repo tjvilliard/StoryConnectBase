@@ -44,7 +44,7 @@ class BookCreationFormFields extends StatelessWidget {
         Wrap(
           children: [Padding(padding: padding, child: CopyrightDropdown())],
         ),
-        BookCreationFormField(
+        SynopsisFormField(
           onChanged: (value) {
             context
                 .read<BookCreateBloc>()
