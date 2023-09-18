@@ -27,6 +27,7 @@ class BookViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            # serializer['owner'] = request.user
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
@@ -40,19 +41,8 @@ class BookViewSet(viewsets.ModelViewSet):
         transaction.set_autocommit(True)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
-    # @action(detail=False, methods=['get'])
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
 
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-
-    
     def put(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -66,19 +56,6 @@ class BookViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
     
 
-    # @action(detail=True, methods=['get'])
-    # def get_chapters(self, request, pk=None):
-    #     book = self.get_object()
-    #     chapters = book.get_chapters()
-
-    #     if len(chapters) == 0:
-    #         # Handle the case of no chapters, return an empty list
-    #         return JsonResponse([], safe=False)
-
-    #     serializer = ChapterSerializer(chapters, many=True, safe=False)
-    
-    #     return JsonResponse(serializer.data)
-
     @action(detail=True, methods=['get'])
     def get_chapters(self, request, pk=None):
         book = self.get_object() # type: Book
@@ -91,23 +68,6 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 
-    # @action(detail=False, methods=['get'])
-    # def filter(self, request, filter, *args, **kwargs):
-    #     # filter_query = Book.objects.filter()
-    #     # data = BookSerializer(filter_query, many=False)
-    #     # # book = self.filter_queryset(filter)
-    #     # model_data = Book.objects.all().order_by("?")
-
-    #     # book = self.get_object()
-    #     # serializer = self.get_serializer(book, data=request.data)
-    #     # serializer.is_valid(raise_exception=True)
-    #     # self.filter_queryset(filter)
-    #     # serializer = self.get_serializer(data=request.data)
-    #     return self.filter_backends.get_search_fields(BookViewSet, request)
-
-
-
-
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
@@ -119,9 +79,6 @@ class ChapterViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
