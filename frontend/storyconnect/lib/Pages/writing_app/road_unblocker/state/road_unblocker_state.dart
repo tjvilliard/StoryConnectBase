@@ -7,7 +7,7 @@ class RoadUnblockerState with _$RoadUnblockerState {
     required String chapter,
     String? question,
     String? selection,
-    RoadUnblockerResponse? response,
+    required List<RoadUnblockerResponse> responses,
   }) = _RoadUnblockerState;
   const RoadUnblockerState._();
 
@@ -18,6 +18,7 @@ class RoadUnblockerState with _$RoadUnblockerState {
     return RoadUnblockerState(
       loadingStruct: LoadingStruct.loading(true),
       chapter: currentChapterText,
+      responses: [],
     );
   }
 }

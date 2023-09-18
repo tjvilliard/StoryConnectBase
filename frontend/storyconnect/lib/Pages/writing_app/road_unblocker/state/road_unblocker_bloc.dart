@@ -53,7 +53,10 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   }
 
   recieveUnblock(RecieveUnblockEvent event, RoadUnblockerEmitter emit) {
-    emit(state.copyWith(response: event.response));
+    final responses = List<RoadUnblockerResponse>.from(state.responses);
+    responses.add(event.response);
+
+    emit(state.copyWith(responses: responses));
   }
 
   loadSelection(LoadSelectionEvent event, RoadUnblockerEmitter emit) {
@@ -63,6 +66,6 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   }
 
   clearUnblock(ClearUnblockEvent event, Emitter<RoadUnblockerState> emit) {
-    emit(state.copyWith(response: null, question: null, selection: null));
+    emit(state.copyWith(responses: [], question: null, selection: null));
   }
 }
