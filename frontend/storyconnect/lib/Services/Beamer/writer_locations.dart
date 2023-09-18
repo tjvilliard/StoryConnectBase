@@ -1,7 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/login/view.dart';
+import 'package:storyconnect/Pages/login/sign_in/view.dart';
 import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
