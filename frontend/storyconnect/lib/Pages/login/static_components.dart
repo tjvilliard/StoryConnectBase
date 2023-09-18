@@ -26,7 +26,7 @@ class StaticComponents {
   // Text label for sign up page
   static Container signUpLabel = Container(
       padding: EdgeInsets.only(top: 25, bottom: 25),
-      child: Text("Register", style: TextStyle(fontSize: 25)));
+      child: Text("Create Account", style: TextStyle(fontSize: 25)));
 
   // Settings for text field style
   static TextStyle textFieldStyle = TextStyle(fontSize: fontSize, height: 1.05);
@@ -40,7 +40,8 @@ class StaticComponents {
 
   // Settings for button border style
   static ButtonStyle buttonStyle = ButtonStyle(
-      textStyle: MaterialStatePropertyAll(TextStyle(fontSize: fontSize)),
+      textStyle: MaterialStatePropertyAll(
+          TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold)),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: elementRadius)));
 

@@ -78,6 +78,7 @@ class _signInState extends State<SignInForm> {
       else {
         Beamer.of(context).beamToNamed("/writer/home");
       }
+      return;
     }
   }
 
@@ -128,9 +129,10 @@ class _signInState extends State<SignInForm> {
               context: context,
               builder: (BuildContext context) => SignUpWidget());
         },
-        child: Text("Register"));
+        child: Text("Create Account"));
   }
 
+  /// Builds the forgot password button
   OutlinedButton _forgotPasswordButton() {
     return OutlinedButton(
         style: StaticComponents.buttonStyle,

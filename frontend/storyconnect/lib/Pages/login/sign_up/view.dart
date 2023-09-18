@@ -10,13 +10,11 @@ class SignUpWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       content: Container(
           alignment: Alignment.center,
           constraints: BoxConstraints(
               minWidth: 400, minHeight: 400, maxHeight: 425, maxWidth: 400),
-          decoration: BoxDecoration(
-              border: Border.all(width: 1.5, color: charcoalBlue),
-              borderRadius: BorderRadius.circular(10)),
           child: SignUpForm()),
       actions: <Widget>[],
     );

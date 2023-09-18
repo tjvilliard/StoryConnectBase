@@ -18,21 +18,26 @@ class _signUpState extends State<SignUpForm> {
   final SignUpService _signUpService = SignUpService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordVerifyController =
+      TextEditingController();
   final TextEditingController _emailErrorController = TextEditingController();
   final TextEditingController _passwordErrorController =
       TextEditingController();
+  final TextEditingController _passwordVerifyErrorController =
+      TextEditingController();
 
   bool _validateEmail = false;
-  bool _validatePassword = false;
-
-  _signUpState();
+  bool _validatePass = false;
+  bool _validatePassVerify = false;
 
   void _resetState() {
     setState(() {
       this._validateEmail = false;
-      this._validatePassword = false;
+      this._validatePass = false;
+      this._validatePassVerify = false;
       this._emailErrorController.text = "";
       this._passwordErrorController.text = "";
+      this._passwordVerifyErrorController.text = "";
     });
   }
 
@@ -47,19 +52,34 @@ class _signUpState extends State<SignUpForm> {
         this._emailErrorController.text = "Email cannot be empty!";
         this._validateEmail = true;
       });
-      return;
     }
     if (this._passwordController.text.isEmpty) {
       setState(() {
         this._passwordErrorController.text = "Password cannot be empty!";
-        this._validatePassword = true;
+        this._validatePass = true;
+      });
+    }
+    if (this._passwordVerifyController.text.isEmpty) {
+      setState(() {
+        this._passwordVerifyErrorController.text = "Password cannot be empty!";
+        this._validatePassVerify = true;
       });
       return;
     }
 
     // If the fields contain data, attempt a sign-in
     if (this._emailController.text.isNotEmpty &&
-        this._passwordController.text.isNotEmpty) {
+        this._passwordController.text.isNotEmpty &&
+        this._passwordVerifyController.text.isNotEmpty) {
+      if (this._passwordController.text !=
+          this._passwordVerifyController.text) {
+        setState(() {
+          this._passwordVerifyErrorController.text = "Passwords must match!";
+          this._validatePass = true;
+          this._validatePassVerify = true;
+        });
+      }
+
       String Code = await this._signUpService.signUp(
           this._emailController.text, this._passwordController.text) as String;
 
@@ -71,7 +91,7 @@ class _signUpState extends State<SignUpForm> {
             this._validateEmail = true;
           } else if (Code.contains("password")) {
             this._passwordErrorController.text = Code;
-            this._validatePassword = true;
+            this._validatePass = true;
           }
         });
       }
@@ -85,9 +105,11 @@ class _signUpState extends State<SignUpForm> {
   /// Builds the current state of the email field.
   TextField _emailField() {
     return TextField(
+      style: StaticComponents.textFieldStyle,
       controller: this._emailController,
       obscureText: false,
       decoration: InputDecoration(
+          prefixIcon: Icon(Icons.email_rounded),
           border: OutlineInputBorder(),
           labelText: 'Email',
           errorText:
@@ -98,13 +120,30 @@ class _signUpState extends State<SignUpForm> {
   /// Builds the current state of the password field
   TextField _passwordField() {
     return TextField(
+      style: StaticComponents.textFieldStyle,
       controller: this._passwordController,
       obscureText: true,
       decoration: InputDecoration(
+          prefixIcon: Icon(Icons.lock_rounded),
           border: OutlineInputBorder(),
           labelText: 'Password',
-          errorText: this._validatePassword
-              ? this._passwordErrorController.text
+          errorText:
+              this._validatePass ? this._passwordErrorController.text : null),
+    );
+  }
+
+  /// Builds the current state of the password verification field
+  TextField _passwordVerifyField() {
+    return TextField(
+      style: StaticComponents.textFieldStyle,
+      controller: this._passwordVerifyController,
+      obscureText: true,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.lock_rounded),
+          border: OutlineInputBorder(),
+          labelText: 'Re-Enter Password',
+          errorText: this._validatePassVerify
+              ? this._passwordVerifyErrorController.text
               : null),
     );
   }
@@ -112,7 +151,9 @@ class _signUpState extends State<SignUpForm> {
   /// Builds the sign-up button
   OutlinedButton _signUpButton() {
     return OutlinedButton(
-        onPressed: () => {this._signUp()}, child: Text("Sign Up"));
+        style: StaticComponents.buttonStyle,
+        onPressed: () => {this._signUp()},
+        child: Text("Create Account"));
   }
 
   @override
@@ -121,8 +162,12 @@ class _signUpState extends State<SignUpForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           StaticComponents.signUpLabel,
-          StaticComponents.fieldContainer(this._emailField()),
-          StaticComponents.fieldContainer(this._passwordField()),
+          StaticComponents.fieldContainer(this._emailField(),
+              width: StaticComponents.elementWidth),
+          StaticComponents.fieldContainer(this._passwordField(),
+              width: StaticComponents.elementWidth),
+          StaticComponents.fieldContainer(this._passwordVerifyField(),
+              width: StaticComponents.elementWidth),
           StaticComponents.buttonContainer(this._signUpButton(),
               width: StaticComponents.elementWidth),
         ]);
