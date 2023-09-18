@@ -4,6 +4,7 @@ from django_extensions.db.models import TimeStampedModel
 from books.models import Chapter
 from .managers import CommentManager
 
+
 class TextSelection(TimeStampedModel):
     chapter = models.ForeignKey(Chapter, null=True,blank=True,  on_delete=models.CASCADE)
     offset = models.IntegerField(default=0)
@@ -23,7 +24,7 @@ class Comment(models.Model):
     content = models.TextField(max_length=1000, null=True, blank=True)
     parent = models.ForeignKey('self', null=True,blank=True,  on_delete=models.CASCADE)
 
-    posted = models.DateTimeField(auto_now_add=True, editable=False)
+    posted = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
 
     dismissed = models.BooleanField(default=False)

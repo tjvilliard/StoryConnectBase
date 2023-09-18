@@ -212,18 +212,5 @@ class SceneViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return JsonResponse(serializer.data)
     
-def writer_page(request, book_id):
-    book = Book.objects.get(id=book_id)
-    chapters = Chapter.objects.filter(book=book)
-    characters = Character.objects.filter(book=book)
-    locations = Location.objects.filter(book=book)
-    context = {
-        'book': book,
-        'chapters': chapters,
-        'characters': characters,
-        'locations': locations,
-    }
-    return JsonResponse(context)
-
 
 
