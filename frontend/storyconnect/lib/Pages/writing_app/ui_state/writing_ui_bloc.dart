@@ -64,11 +64,13 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   void toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
-    emit(state.copyWith(feedbackUIshown: !state.feedbackUIshown));
+    emit(state.copyWith(
+        feedbackUIshown: !state.feedbackUIshown, roadUnblockerShown: false));
   }
 
   void toggleRoadUnblocker(
       ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
-    emit(state.copyWith(roadUnblockerShown: !state.roadUnblockerShown));
+    emit(state.copyWith(
+        roadUnblockerShown: !state.roadUnblockerShown, feedbackUIshown: false));
   }
 }

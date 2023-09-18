@@ -2,6 +2,7 @@ part of 'road_unblocker_bloc.dart';
 
 // populate with dummy data for now
 class RoadUnblockerApi {
+  const RoadUnblockerApi();
   Future<RoadUnblockerResponse> submitUnblock(
       RoadUnblockerRequest request) async {
     return RoadUnblockerResponse(
@@ -39,7 +40,7 @@ class RoadUnblockerApi {
 
 class RoadUnblockerRepo {
   final RoadUnblockerApi api;
-  RoadUnblockerRepo({required this.api});
+  RoadUnblockerRepo({this.api = const RoadUnblockerApi()});
 
   Future<RoadUnblockerResponse> submitUnblock(
       RoadUnblockerRequest request) async {
