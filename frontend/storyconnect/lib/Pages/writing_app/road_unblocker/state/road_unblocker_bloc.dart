@@ -56,7 +56,8 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
     responses.add(event.response);
 
-    emit(state.copyWith(responses: responses));
+    emit(state.copyWith(
+        responses: responses, loadingStruct: LoadingStruct.loading(false)));
   }
 
   loadSelection(LoadSelectionEvent event, RoadUnblockerEmitter emit) {

@@ -12,6 +12,9 @@ class QuestionEntry extends StatelessWidget {
     }, builder: (context, state) {
       return CustomFormField(
           label: 'Question',
+          onFieldSubmitted: () {
+            context.read<RoadUnblockerBloc>().add(SubmitUnblockEvent());
+          },
           onChanged: (value) {
             context
                 .read<RoadUnblockerBloc>()
