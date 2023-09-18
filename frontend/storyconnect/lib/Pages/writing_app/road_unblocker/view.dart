@@ -32,7 +32,6 @@ class RoadUnblockerWidget extends StatelessWidget {
                                 _Header(),
                                 SizedBox(height: 10),
                                 Expanded(child: RoadUnblockerContent()),
-                                Spacer(),
                                 LayoutBuilder(
                                   builder: (context, constraints) {
                                     return Row(
