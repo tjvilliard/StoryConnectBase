@@ -38,7 +38,7 @@ class BookViewSet(viewsets.ModelViewSet):
         # Commit the transaction
         transaction.set_autocommit(True)
 
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
 

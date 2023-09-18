@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/home_page/base_appbar.dart';
+
 import 'package:storyconnect/Pages/writing_home/bool_list_widget.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
@@ -26,6 +26,7 @@ class WritingHomeState extends State<WritingHomeView> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialLoad) {
         initialLoad = false;
@@ -38,7 +39,7 @@ class WritingHomeState extends State<WritingHomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: baseAppBar,
+      appBar: AppBar(),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 800),
