@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/login/view.dart';
-import 'package:storyconnect/Services/Authentication/authentication_service.dart';
+import 'package:storyconnect/Pages/login/sign_in/view.dart';
 
 ///
 /// Wrapper class that handles authentication checking for a page.
@@ -9,7 +8,7 @@ import 'package:storyconnect/Services/Authentication/authentication_service.dart
 class AuthenticationWrapper extends StatelessWidget {
   late final Widget _child;
   late final Stream<User?> _authState;
-  late final AuthenticationService _authService = AuthenticationService();
+  late final FirebaseAuth _authService = FirebaseAuth.instance;
   final bool _require;
 
   /// Get the authenticaton state
@@ -19,7 +18,7 @@ class AuthenticationWrapper extends StatelessWidget {
 
   AuthenticationWrapper(Widget child, this._require) {
     this._child = child;
-    this._authState = this._authService.authStateChanges;
+    this._authState = this._authService.authStateChanges();
   }
 
   @override
