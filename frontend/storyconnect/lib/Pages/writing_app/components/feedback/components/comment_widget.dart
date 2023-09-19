@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_app/components/comments/components/navigate_button.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/components/navigate_button.dart';
 
 class CommentWidget extends StatelessWidget {
   final Comment comment;

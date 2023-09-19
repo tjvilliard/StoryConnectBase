@@ -124,8 +124,8 @@ class Scene with _$Scene {
 class Comment with _$Comment {
   const factory Comment({
     required int id,
-    int? userId,
-    int? chapterId,
+    @JsonKey(name: 'user_id') int? userId,
+    @JsonKey(name: 'chapter_id') int? chapterId,
     int? offset,
     @JsonKey(name: 'offset_end') int? offsetEnd,
     String? comment,
@@ -156,9 +156,9 @@ class Annotation with _$Annotation {
 class Highlight with _$Highlight {
   const factory Highlight({
     required int id,
-    int? userId,
-    int? chapterId,
-    int? chapterOffset,
+    @JsonKey(name: 'user_display_name') int? userDisplayName,
+    @JsonKey(name: 'chapter_id') int? chapterId,
+    @JsonKey(name: 'chapter_offset') int? chapterOffset,
     int? length,
     String? text,
     String? color,
@@ -187,11 +187,11 @@ class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
     // This field stores a locally generated UUID and is not serialized to JSON
     @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
     required String localId, // <- Local only UUID
-    required int offsetStart,
-    required int offsetEnd,
+    @JsonKey(name: 'offset_start') required int offsetStart,
+    @JsonKey(name: 'offset_end') required int offsetEnd,
     required String suggestion,
     String? original,
-    required String suggestedChange,
+    @JsonKey(name: 'suggested_change') required String suggestedChange,
   }) = _RoadUnblockerSuggestion;
   const RoadUnblockerSuggestion._();
 

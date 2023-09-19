@@ -13,8 +13,8 @@ class ToggleChapterOutlineEvent extends WritingUIEvent {
   ToggleChapterOutlineEvent();
 }
 
-class ToggleCommentsUIEvent extends WritingUIEvent {
-  ToggleCommentsUIEvent();
+class ToggleFeedbackUIEvent extends WritingUIEvent {
+  ToggleFeedbackUIEvent();
 }
 
 class ToggleRoadUnblockerEvent extends WritingUIEvent {

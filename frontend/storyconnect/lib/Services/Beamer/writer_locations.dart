@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/sign_in/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/comments/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/state/road_unblocker_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
