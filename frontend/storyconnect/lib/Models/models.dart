@@ -1,7 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'models.freezed.dart';
 part 'models.g.dart';
+
+String localUuidFromJson(String json) {
+  return Uuid().v8();
+}
 
 @freezed
 class User with _$User {
@@ -178,14 +183,21 @@ class RoadUnblockerRequest with _$RoadUnblockerRequest {
 
 @freezed
 class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
-  const factory RoadUnblockerSuggestion({
+  factory RoadUnblockerSuggestion({
+    // This field stores a locally generated UUID and is not serialized to JSON
+    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
+    required String localId, // <- Local only UUID
     required int offsetStart,
     required int offsetEnd,
     required String suggestion,
-    required String original,
-    required String replacement,
+    String? original,
+    required String suggestedChange,
   }) = _RoadUnblockerSuggestion;
   const RoadUnblockerSuggestion._();
+
+  bool isAddition() {
+    return original == null || original!.isEmpty;
+  }
 
   factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) =>
       _$RoadUnblockerSuggestionFromJson(json);
@@ -193,7 +205,9 @@ class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
 
 @freezed
 class RoadUnblockerResponse with _$RoadUnblockerResponse {
-  const factory RoadUnblockerResponse({
+  factory RoadUnblockerResponse({
+    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
+    required String localId, // <- Local only UUID
     required String message,
     required List<RoadUnblockerSuggestion> suggestions,
   }) = _RoadUnblockerResponse;
