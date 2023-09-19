@@ -35,6 +35,11 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
               state.serializer.copyWith(targetAudience: event.targetAudience)));
     });
 
+    on<CopyrightChangedEvent>((event, emit) {
+      emit(state.copyWith(
+          serializer: state.serializer.copyWith(copyright: event.copyright)));
+    });
+
     on<SynopsisChangedEvent>((event, emit) {
       emit(state.copyWith(
           serializer: state.serializer.copyWith(synopsis: event.Synopsis)));

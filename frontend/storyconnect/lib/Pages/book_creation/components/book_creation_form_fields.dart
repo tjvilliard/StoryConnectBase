@@ -39,10 +39,8 @@ class BookCreationFormFields extends StatelessWidget {
           children: [
             Padding(padding: padding, child: LanguageDropdown()),
             Padding(padding: padding, child: AudienceDropdown()),
+            Padding(padding: padding, child: CopyrightDropdown())
           ],
-        ),
-        Wrap(
-          children: [Padding(padding: padding, child: CopyrightDropdown())],
         ),
         SynopsisFormField(
           onChanged: (value) {
