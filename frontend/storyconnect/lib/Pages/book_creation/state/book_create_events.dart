@@ -25,6 +25,17 @@ class TargetAudienceChangedEvent extends BookCreateEvent {
       : this.targetAudience = targetAudience.index;
 }
 
+class SynopsisChangedEvent extends BookCreateEvent {
+  final String? Synopsis;
+  SynopsisChangedEvent({required String? this.Synopsis});
+}
+
+class CopyrightChangedEvent extends BookCreateEvent {
+  final int copyright;
+  CopyrightChangedEvent({required CopyrightOption copyrightOption})
+      : this.copyright = copyrightOption.index;
+}
+
 class SaveBookEvent extends BookCreateEvent {
   const SaveBookEvent();
 }

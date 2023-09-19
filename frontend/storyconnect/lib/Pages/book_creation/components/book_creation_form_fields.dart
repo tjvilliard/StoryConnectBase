@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/components/audience_dropdown.dart';
+import 'package:storyconnect/Pages/book_creation/components/copyright_dropdown.dart';
 import 'package:storyconnect/Pages/book_creation/components/language_dropdown.dart';
+import 'package:storyconnect/Pages/book_creation/components/synopsis_form_field.dart';
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Widgets/form_field.dart';
+import 'package:storyconnect/Widgets/form_field_multiline.dart';
 
 part 'book_creation_form_field.dart';
 
@@ -36,10 +39,19 @@ class BookCreationFormFields extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium)),
         Wrap(
           children: [
-            Padding(padding: EdgeInsets.all(10), child: LanguageDropdown()),
+            Padding(padding: padding, child: LanguageDropdown()),
             Padding(padding: padding, child: AudienceDropdown()),
+            Padding(padding: padding, child: CopyrightDropdown())
           ],
-        )
+        ),
+        SynopsisFormField(
+          onChanged: (value) {
+            context
+                .read<BookCreateBloc>()
+                .add(SynopsisChangedEvent(Synopsis: value));
+          },
+          label: "Book Synopsis",
+        ),
       ],
     );
   }
