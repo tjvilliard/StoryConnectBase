@@ -59,6 +59,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+    # What does this do?
     def get_attribute(self, attr):
         if attr == "title":
             return Book.objects.filter(title=self.title)
@@ -97,6 +98,9 @@ class Chapter(models.Model):
             last_chapter = Chapter.objects.filter(book=self.book).order_by('-chapter_number').first()
             if last_chapter:
                 self.chapter_number = last_chapter.chapter_number + 1
+
+            if self.chapter_title == "":
+                self.chapter_title = f"Chapter {self.chapter_number}"
         super().save(*args, **kwargs)
 
     # What are these for?
@@ -104,7 +108,7 @@ class Chapter(models.Model):
     # scene_content = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.chapter_title
+        return f'{self.book.title}: {self.chapter_number}'
     
     def get_scenes(self):
         return Scene.objects.filter(chapter=self)
@@ -145,3 +149,6 @@ class Scene(models.Model):
 
     def __str__(self):
         return self.scene_title
+
+
+
