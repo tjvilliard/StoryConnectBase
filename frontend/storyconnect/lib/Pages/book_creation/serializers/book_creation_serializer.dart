@@ -42,7 +42,7 @@ class BookCreationSerializer with _$BookCreationSerializer {
     if (targetAudience == null) {
       return false;
     }
-    // Synopsis can be empty, but it shouldn't be null.
+    // Synopsis can be an empty String, but it shouldn't be null.
     if (synopsis == null) {
       return false;
     }
