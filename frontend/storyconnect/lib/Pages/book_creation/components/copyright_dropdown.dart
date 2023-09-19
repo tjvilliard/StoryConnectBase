@@ -11,7 +11,7 @@ class CopyrightDropdown extends StatelessWidget {
       title: "Copyright Options",
       initialValue: CopyrightOption.allRightsReserved,
       items: CopyrightOption.values,
-      labelBuilder: (copy) => copy.description,
+      labelBuilder: (copy) => copy.description.split(":")[0],
       onSelected: (option) {
         context
             .read<BookCreateBloc>()
