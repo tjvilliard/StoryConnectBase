@@ -43,14 +43,14 @@ class CommentManager(models.Manager):
         '''
         if chapter_pk is None:
             if active:
-                return self.filter(dismissed=False, selection__floating=False).exclude(suggestion=None)
+                return self.filter(dismissed=False, selection__floating=False).exclude(suggestion__isnull=True)
             else:
-                return self.exclude(suggestion="")
+                return self.exclude(suggestion__isnull=True)
             
         if active:
-            return self.filter(chapter__id = chapter_pk, dismissed=False, selection__floating=False).exclude(suggestion="")
+            return self.filter(chapter__id = chapter_pk, dismissed=False, selection__floating=False).exclude(suggestion__isnull=True)
         else:
-            self.filter(chapter__id = chapter_pk).exclude(suggestion=None)
+            self.filter(chapter__id = chapter_pk).exclude(suggestion__isnull=True)
     
     def all_comments(self, active = True, chapter_pk=None):
         '''
@@ -58,11 +58,11 @@ class CommentManager(models.Manager):
         '''
         if chapter_pk is None:
             if active:
-                return self.filter(suggestion = "", dismissed=False, selection__floating=False)
+                return self.filter(suggestion__isnull = True, dismissed=False, selection__floating=False)
             else:
-                return self.filter(suggestion = "")
+                return self.filter(suggestion__isnull = True)
         
         if active:
-            return self.filter(chapter__id = chapter_pk, suggestion= "", dismissed=False, selection__floating=False)
+            return self.filter(chapter__id = chapter_pk, suggestion_isnull=True, dismissed=False, selection__floating=False)
         else:
-            return self.filter(chapter__id = chapter_pk, suggestion= "")
+            return self.filter(chapter__id = chapter_pk, suggestion__isnull=True)
