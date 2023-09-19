@@ -49,7 +49,6 @@ class BookCreationSerializer with _$BookCreationSerializer {
     if (copyright == null) {
       return false;
     }
-
     return true;
   }
 }
