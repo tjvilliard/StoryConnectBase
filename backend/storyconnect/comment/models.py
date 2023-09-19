@@ -5,22 +5,24 @@ from books.models import Chapter
 from .managers import CommentManager
 
 
-class TextSelection(TimeStampedModel):
+class TextSelection(models.Model):
     chapter = models.ForeignKey(Chapter, null=True,blank=True,  on_delete=models.CASCADE)
     offset = models.IntegerField(default=0)
     length = models.IntegerField(default=0)
     text = models.TextField(max_length=1000, null=True, blank=True)
-    floatng = models.BooleanField(default=False)
+    floating = models.BooleanField(default=False)
 
 
 
-
-    
 class Comment(models.Model):
     objects = CommentManager()
 
+    # User should be required
     user = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-    selection = models.ForeignKey(TextSelection, null=True,blank=True,  on_delete=models.CASCADE)
+
+    # Selection should be required
+    selection = models.OneToOneField(TextSelection, on_delete=models.CASCADE)
+
     content = models.TextField(max_length=1000, null=True, blank=True)
     parent = models.ForeignKey('self', null=True,blank=True,  on_delete=models.CASCADE)
 
@@ -45,7 +47,10 @@ class Comment(models.Model):
     
     @property
     def is_ghost(self):
-        return self.selection.floating == True
+        if self.selection:
+            return self.selection.floating == True
+        
+        return False
     
 
 # class Suggestion(models.Model):

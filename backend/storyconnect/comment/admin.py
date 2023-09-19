@@ -4,7 +4,7 @@ from .models import Comment, Annotation, Highlight, TextSelection
 
 @admin.register(TextSelection)
 class TextSelectionAdmin(admin.ModelAdmin):
-    list_display = ('chapter', 'offset', 'length', 'text', 'floatng')
+    list_display = ('chapter', 'offset', 'length', 'text', 'floating')
     
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
