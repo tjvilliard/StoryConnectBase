@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -27,6 +27,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     on<ToggleChapterOutlineEvent>(
         (event, emit) => toggleChapterOutline(event, emit));
     on<ToggleCommentsUIEvent>((event, emit) => toggleCommentsUI(event, emit));
+    on<ToggleRoadUnblockerEvent>(
+        (event, emit) => toggleRoadUnblocker(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -61,7 +63,14 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(chapterOutlineShown: !state.chapterOutlineShown));
   }
 
-  toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
-    emit(state.copyWith(feedbackUIshown: !state.feedbackUIshown));
+  void toggleCommentsUI(WritingUIEvent event, WritingUIEmiter emit) {
+    emit(state.copyWith(
+        feedbackUIshown: !state.feedbackUIshown, roadUnblockerShown: false));
+  }
+
+  void toggleRoadUnblocker(
+      ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
+    emit(state.copyWith(
+        roadUnblockerShown: !state.roadUnblockerShown, feedbackUIshown: false));
   }
 }

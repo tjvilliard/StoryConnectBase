@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/comments/state/feedback_bloc.dart';
 import 'package:storyconnect/Widgets/description_popup.dart';
 
 class GhostFeedbackCheckbox extends StatelessWidget {

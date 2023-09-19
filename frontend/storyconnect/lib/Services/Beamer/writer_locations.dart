@@ -2,11 +2,12 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/sign_in/view.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/comments/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
+import 'package:storyconnect/Pages/writing_app/components/road_unblocker/state/road_unblocker_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/view.dart';
-import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/view.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
@@ -45,10 +46,18 @@ class WriterLocations extends BeamLocation<BeamState> {
         final bookId = state.pathParameters['bookId'];
         pages.add(CustomBeamPage(
             key: ValueKey('book-$bookId'),
-            child: RepositoryProvider(
-                lazy: false,
-                create: (_) =>
-                    BookProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
+            child: MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider<BookProviderRepository>(
+                    lazy: false,
+                    create: (_) => BookProviderRepository(
+                        bookId: int.tryParse(bookId!) ?? 0),
+                  ),
+                  RepositoryProvider<RoadUnblockerRepo>(
+                    lazy: false,
+                    create: (_) => RoadUnblockerRepo(),
+                  ),
+                ],
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider(
@@ -61,7 +70,11 @@ class WriterLocations extends BeamLocation<BeamState> {
                               repository: context.read<WritingRepository>())),
                       BlocProvider<FeedbackBloc>(
                           create: (context) =>
-                              FeedbackBloc(context.read<WritingRepository>()))
+                              FeedbackBloc(context.read<WritingRepository>())),
+                      BlocProvider<RoadUnblockerBloc>(
+                          create: (context) => RoadUnblockerBloc(
+                              repo: context.read<RoadUnblockerRepo>(),
+                              chapterContent: ""))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 
 class ChapterNavigationButton extends StatelessWidget {
   final int index;

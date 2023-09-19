@@ -32,9 +32,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-        lazy: false,
-        create: (_) => WritingRepository(),
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            lazy: false,
+            create: (_) => WritingRepository(),
+          )
+        ],
         child: MaterialApp.router(
           theme: lightTheme,
           darkTheme: darkTheme,

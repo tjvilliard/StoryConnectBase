@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_app/pages_repository.dart';
+import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
 
 abstract class ChapterEvent extends ReplayEvent {
   ChapterEvent();

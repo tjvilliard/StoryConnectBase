@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_app/comments/components/comment_widget.dart';
-import 'package:storyconnect/Pages/writing_app/comments/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/comments/components/comment_widget.dart';
+import 'package:storyconnect/Pages/writing_app/components/comments/state/feedback_bloc.dart';
 
 class CommentsListWidget extends StatelessWidget {
   final List<Comment> comments = _mockGetComments();

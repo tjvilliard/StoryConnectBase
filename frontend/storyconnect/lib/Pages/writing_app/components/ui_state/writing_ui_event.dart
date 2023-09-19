@@ -17,6 +17,10 @@ class ToggleCommentsUIEvent extends WritingUIEvent {
   ToggleCommentsUIEvent();
 }
 
+class ToggleRoadUnblockerEvent extends WritingUIEvent {
+  ToggleRoadUnblockerEvent();
+}
+
 class SwitchChapterEvent extends WritingUIEvent {
   final int chapterId;
   SwitchChapterEvent({required this.chapterId});

@@ -1,12 +1,13 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_navigation.dart';
-import 'package:storyconnect/Pages/writing_app/comments/view.dart';
-import 'package:storyconnect/Pages/writing_app/writing/page_view.dart';
-import 'package:storyconnect/Pages/writing_app/writing_menubar.dart';
-import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/view.dart.dart';
+import 'package:storyconnect/Pages/writing_app/components/comments/view.dart';
+import 'package:storyconnect/Pages/writing_app/components/road_unblocker/view.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/page_view.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing_menubar.dart';
+import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -90,7 +91,9 @@ class _WritingAppViewState extends State<WritingAppView> {
               // Where pages are displayed
               Flexible(child: WritingPageView()),
 
-              FeedbackWidget()
+              Row(
+                children: [FeedbackWidget(), RoadUnblockerWidget()],
+              )
             ],
           ))
         ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/writing_app/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/ui_state/writing_ui_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Widgets/unimplemented_popup.dart';
 
 class WritingMenuBar extends StatelessWidget {
@@ -64,10 +64,11 @@ class WritingMenuBar extends StatelessWidget {
                               .add(ToggleCommentsUIEvent());
                         }),
                     MenuItemButton(
-                        leadingIcon: Icon(FontAwesomeIcons.personCircleCheck),
-                        child: Text("Character Sheet"),
+                        leadingIcon: Icon(FontAwesomeIcons.lightbulb),
+                        child: Text("RoadUnblocker"),
                         onPressed: () {
-                          showPopup("Character Sheet", context);
+                          BlocProvider.of<WritingUIBloc>(context)
+                              .add(ToggleRoadUnblockerEvent());
                         }),
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.check),

@@ -1,7 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'models.freezed.dart';
 part 'models.g.dart';
+
+String localUuidFromJson(String json) {
+  return Uuid().v8();
+}
 
 @freezed
 class User with _$User {
@@ -161,4 +166,53 @@ class Highlight with _$Highlight {
 
   factory Highlight.fromJson(Map<String, dynamic> json) =>
       _$HighlightFromJson(json);
+}
+
+@freezed
+class RoadUnblockerRequest with _$RoadUnblockerRequest {
+  const factory RoadUnblockerRequest({
+    required String chapter,
+    required String selection,
+    required String question,
+  }) = _RoadUnblockerRequest;
+  const RoadUnblockerRequest._();
+
+  factory RoadUnblockerRequest.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerRequestFromJson(json);
+}
+
+@freezed
+class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
+  factory RoadUnblockerSuggestion({
+    // This field stores a locally generated UUID and is not serialized to JSON
+    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
+    required String localId, // <- Local only UUID
+    required int offsetStart,
+    required int offsetEnd,
+    required String suggestion,
+    String? original,
+    required String suggestedChange,
+  }) = _RoadUnblockerSuggestion;
+  const RoadUnblockerSuggestion._();
+
+  bool isAddition() {
+    return original == null || original!.isEmpty;
+  }
+
+  factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerSuggestionFromJson(json);
+}
+
+@freezed
+class RoadUnblockerResponse with _$RoadUnblockerResponse {
+  factory RoadUnblockerResponse({
+    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
+    required String localId, // <- Local only UUID
+    required String message,
+    required List<RoadUnblockerSuggestion> suggestions,
+  }) = _RoadUnblockerResponse;
+  const RoadUnblockerResponse._();
+
+  factory RoadUnblockerResponse.fromJson(Map<String, dynamic> json) =>
+      _$RoadUnblockerResponseFromJson(json);
 }
