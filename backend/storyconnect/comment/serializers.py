@@ -7,6 +7,7 @@ from .models import *
 
 
 class TextSelectionSerializer(serializers.ModelSerializer):
+    chapter = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     class Meta:
         model = TextSelection
         fields = "__all__"
