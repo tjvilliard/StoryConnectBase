@@ -62,10 +62,7 @@ class Book(models.Model):
     
     def get_characters(self):
         return Character.objects.filter(book=self)
-    
-    # def average_rating(self) -> float:
-    #     return Review.objects.filter(post=self).aggregate(models.Avg("rating"))["rating__avg"] or 0
-    
+
 class Library(models.Model):
     BOOK_STATUS = [
         (1, "Reading"), 
@@ -145,18 +142,3 @@ class Comments(models.Model):
     def __str__(self):
         return self.content
 
-# class Review(models.Model):
-#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-#     commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-#     content = models.TextField(blank=True)
-#     # rating = models.FloatField(min = 0.0, max = 5.0) # , widget=forms.NumberInput(attrs={'step': 0.5})
-#     rating = models.IntegerField(default=0,validators=[MaxValueValidator(5), MinValueValidator(0)])
-#     class Meta:
-#             constraints = [
-#                 models.CheckConstraint(
-#                     check=models.Q(rating__gte=0) & models.Q(rating__lt=5),
-#                     name="A qty value is valid between 1 and 10",
-#                 )
-#             ]
-#     def __str__(self):
-#         return f"{self.content}: {self.rating}"

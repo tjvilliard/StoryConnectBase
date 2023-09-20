@@ -9,7 +9,6 @@
 from books.models import *
 import csv
 
-
 def integrate_books(csvfile):
 
     with open(csvfile, 'r') as file:
