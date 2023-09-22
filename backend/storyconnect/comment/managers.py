@@ -42,17 +42,43 @@ class WriterFeedbackManager(models.Manager):
         Returns all suggestions. If active is true, only suggestions that are not dismissed and not floating are returned.
         '''
         if chapter_pk is None:
-            return self.filter(suggestion=True, dismissed=include_dismissed, selection_floating=include_ghost)
             
-        return self.filter(chapter__id = chapter_pk, suggestion=True, dismissed=include_dismissed, selection__floating=include_ghost)
+            all_comments = self.filter(suggestion=True)
+
+            if not include_dismissed:
+                all_comments = all_comments.filter(dismissed=False)
+            if not include_ghost:
+                all_comments = all_comments.filter(selection__floating=False)
+        else:
+            all_comments = self.filter(suggestion=True, chapter__id=chapter_pk)
+
+            if not include_dismissed:
+                all_comments = all_comments.filter(dismissed=False)
+            if not include_ghost:
+                all_comments = all_comments.filter(selection__floating=False)
         
+        return all_comments
     
     def all_comments(self, include_dismissed=False, include_ghost=False, chapter_pk=None):
         '''
         Returns all comments. If active is true, only comments that are not dismissed and not floating are returned.
         '''
-        if chapter_pk is None:
-            return self.filter(suggestion=False, dismissed=include_dismissed, selection__floating=include_ghost)
-            
-        return self.filter(chapter__id = chapter_pk, suggestion=False, dismissed=include_dismissed, selection__floating=include_ghost)
+
         
+        if chapter_pk is None:
+            
+            all_comments = self.filter(suggestion=False)
+
+            if not include_dismissed:
+                all_comments = all_comments.filter(dismissed=False)
+            if not include_ghost:
+                all_comments = all_comments.filter(selection__floating=False)
+        else:
+            all_comments = self.filter(suggestion=False, selection__chapter__id=chapter_pk)
+
+            if not include_dismissed:
+                all_comments = all_comments.filter(dismissed=False)
+            if not include_ghost:
+                all_comments = all_comments.filter(selection__floating=False)
+            
+        return all_comments
