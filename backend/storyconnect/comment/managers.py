@@ -4,14 +4,14 @@ from books.models import Chapter
 
 
 
-class CommentManager(models.Manager):
+class WriterFeedbackManager(models.Manager):
     '''
     Custom manager for the Comment model.
     '''
 
     def all_exclude_ghost(self, chapter_pk=None):
         '''
-        Returns all comments that are not floating. If chapter_pk is provided, only comments from that chapter are returned.
+        Returns all comments and suggestions that are not floating. If chapter_pk is provided, only comments from that chapter are returned.
         '''
         if chapter_pk is None:
             return self.filter(selection__floating = False)
@@ -21,7 +21,7 @@ class CommentManager(models.Manager):
     
     def all_exclude_dismissed(self, chapter_pk=None):
         '''
-        Returns all comments that are not dismissed.
+        Returns all comments and suggestions that are not dismissed.
         '''
         if chapter_pk is None:
             return self.filter(dismissed=False)
@@ -37,32 +37,22 @@ class CommentManager(models.Manager):
         
         return self.filter(selection__chapter__id=chapter_pk, dismissed = False, selection__floating = False)
     
-    def all_suggestions(self, active=True, chapter_pk=None):
+    def all_suggestions(self, include_dismissed=False, include_ghost=False, chapter_pk=None):
         '''
         Returns all suggestions. If active is true, only suggestions that are not dismissed and not floating are returned.
         '''
         if chapter_pk is None:
-            if active:
-                return self.filter(dismissed=False, selection__floating=False).exclude(suggestion__isnull=True)
-            else:
-                return self.exclude(suggestion__isnull=True)
+            return self.filter(suggestion=True, dismissed=include_dismissed, selection_floating=include_ghost)
             
-        if active:
-            return self.filter(chapter__id = chapter_pk, dismissed=False, selection__floating=False).exclude(suggestion__isnull=True)
-        else:
-            self.filter(chapter__id = chapter_pk).exclude(suggestion__isnull=True)
+        return self.filter(chapter__id = chapter_pk, suggestion=True, dismissed=include_dismissed, selection__floating=include_ghost)
+        
     
-    def all_comments(self, active = True, chapter_pk=None):
+    def all_comments(self, include_dismissed=False, include_ghost=False, chapter_pk=None):
         '''
         Returns all comments. If active is true, only comments that are not dismissed and not floating are returned.
         '''
         if chapter_pk is None:
-            if active:
-                return self.filter(suggestion__isnull = True, dismissed=False, selection__floating=False)
-            else:
-                return self.filter(suggestion__isnull = True)
+            return self.filter(suggestion=False, dismissed=include_dismissed, selection__floating=include_ghost)
+            
+        return self.filter(chapter__id = chapter_pk, suggestion=False, dismissed=include_dismissed, selection__floating=include_ghost)
         
-        if active:
-            return self.filter(chapter__id = chapter_pk, suggestion_isnull=True, dismissed=False, selection__floating=False)
-        else:
-            return self.filter(chapter__id = chapter_pk, suggestion__isnull=True)
