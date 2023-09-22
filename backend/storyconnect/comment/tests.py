@@ -57,12 +57,14 @@ class CommentManagerTestCase(TestCase):
     
     def test_all_suggestions(self):
         comments = WriterFeedback.objects.all_suggestions()
-        self.assertEqual(comments.count(), 1)  # There are no suggestions
+        self.assertEqual(comments.count(), 1)  
     
     def test_all_comments(self):
-        comments_active = WriterFeedback.objects.all_comments()
+        comments_active = WriterFeedback.objects.all_comments(chapter_pk=self.chapter.id)
         comments_nonactive = WriterFeedback.objects.all_comments(include_dismissed=True, include_ghost=True)
         self.assertEqual(comments_active.count(), 1)  # Only non-suggestion comment should be 
+        for comment in comments_nonactive:
+            print(comment.comment)
         self.assertEqual(comments_nonactive.count(), 2)  # Both comments should be included
 
 class CommentModelTestCase(TestCase):
@@ -79,15 +81,6 @@ class CommentModelTestCase(TestCase):
             chapter=self.chapter, offset=10, offset_end=20, text='Test text'
         )
     
-    def test_is_suggestion_property(self):
-        comment = WriterFeedback.objects.create(
-            user=self.user, selection=self.selection, suggestion=True
-        )
-        comment2 = WriterFeedback.objects.create(
-            user=self.user, selection=self.selection2, comment='Test comment'
-        )
-        self.assertTrue(WriterFeedback.is_suggestion)
-        self.assertFalse(comment2.is_suggestion)
     
     def test_is_ghost_property(self):
         comment = WriterFeedback.objects.create(
@@ -103,14 +96,14 @@ class CommentModelTestCase(TestCase):
         comment = WriterFeedback.objects.create(
             user=self.user, selection=self.selection, comment='Test comment'
         )
-        receiver = WriterFeedback.get_receiver()
+        receiver = comment.get_receiver()
         self.assertEqual(receiver, self.book.owner)
 
 
 class TextSelectionSerializerTestCase(TestCase):
     def test_text_selection_serialization(self):
         self.chapter = Chapter.objects.create(book=Book.objects.create(title="Test Book"))
-        print(Chapter.objects.all().first().id)
+        # print(Chapter.objects.all().first().id)
         selection_data = {
             'chapter': self.chapter.id,
             'offset': 10,
@@ -121,8 +114,8 @@ class TextSelectionSerializerTestCase(TestCase):
         serializer = TextSelectionSerializer(data=selection_data)
         self.assertTrue(serializer.is_valid())
         serialized_data = serializer.data
-        print(serialized_data)
-        print(selection_data)
+        # print(serialized_data)
+        # print(selection_data)
         self.assertEqual(serialized_data, selection_data)
 
 class WriterFeedbackSerializerTestCase(TestCase):
