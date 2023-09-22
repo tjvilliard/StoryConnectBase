@@ -4,7 +4,7 @@ from .models import WriterFeedback, Highlight, TextSelection
 
 @admin.register(TextSelection)
 class TextSelectionAdmin(admin.ModelAdmin):
-    list_display = ('chapter', 'offset', 'length', 'text', 'floating')
+    list_display = ('chapter', 'offset', 'offset_end', 'text', 'floating')
     
 @admin.register(WriterFeedback)
 class CommentAdmin(admin.ModelAdmin):
