@@ -22,7 +22,6 @@ class BrowserPage(APIView):
 
 class LibraryPage(APIView):
     
-
     def get (self, request, user_id):
         user_books = book_models.Book.objects.filter(owner=user_id)
         # context = {}
