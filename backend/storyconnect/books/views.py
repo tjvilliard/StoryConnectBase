@@ -55,6 +55,14 @@ class BookViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
     
+    @action(detail=True, methods=['get'])
+    def get_user_books(self, request):
+
+        # Needs Testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111
+        
+        books = Book.objects.filter(owner=request.user)
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
     def get_chapters(self, request, pk=None):

@@ -26,8 +26,7 @@ router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
-router.register(r'api/annotations', comment_views.AnnotationViewSet)
-router.register(r'api/comments', comment_views.CommentViewSet)
+router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 
 
 urlpatterns = router.urls
