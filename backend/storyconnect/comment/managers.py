@@ -50,7 +50,7 @@ class WriterFeedbackManager(models.Manager):
             if not include_ghost:
                 all_comments = all_comments.filter(selection__floating=False)
         else:
-            all_comments = self.filter(suggestion=True, chapter__id=chapter_pk)
+            all_comments = self.filter(suggestion=True, selection__chapter__id=chapter_pk)
 
             if not include_dismissed:
                 all_comments = all_comments.filter(dismissed=False)

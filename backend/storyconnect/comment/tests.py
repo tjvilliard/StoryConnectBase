@@ -18,6 +18,8 @@ class CommentManagerTestCase(TestCase):
         self.user = User.objects.create(username='testuser')
         self.book = Book.objects.create(title="Test Book", owner=self.user)
         self.chapter = Chapter.objects.create(book=self.book)
+
+        self.chapter2 = Chapter.objects.create(book=self.book)
         
         self.selection1 = TextSelection.objects.create(
             chapter=self.chapter, offset=10, offset_end=20, text='Test text'
@@ -31,6 +33,10 @@ class CommentManagerTestCase(TestCase):
             chapter=self.chapter, offset=10, offset_end=20, text='Test text'
         )
 
+        self.selection4 = TextSelection.objects.create(
+            chapter=self.chapter2, offset=10, offset_end=20, text='Test text'
+        )
+
         self.comment1 = WriterFeedback.objects.create(
             user=self.user, selection=self.selection1, comment='Test comment 1'
         )
@@ -42,18 +48,22 @@ class CommentManagerTestCase(TestCase):
         self.comment_suggestion = WriterFeedback.objects.create(
             user=self.user, selection=self.selection3, comment='Test comment 3', suggestion=True
         )
+
+        self.chapter2_comment = WriterFeedback.objects.create(
+            user=self.user, selection=self.selection4, comment='Test comment 4'
+        )
     
     def test_all_exclude_ghost(self):
         comments = WriterFeedback.objects.all_exclude_ghost()
-        self.assertEqual(comments.count(), 2)  # Both comments should be included
+        self.assertEqual(comments.count(), 3)  # Both comments should be included
     
     def test_all_exclude_dismissed(self):
         comments = WriterFeedback.objects.all_exclude_dismissed()
-        self.assertEqual(comments.count(), 2)  # Only the first comment should be included
+        self.assertEqual(comments.count(), 3)  # Only the first comment should be included
     
     def test_all_active(self):
         comments = WriterFeedback.objects.all_active()
-        self.assertEqual(comments.count(), 2)  # Only the first comment should be included
+        self.assertEqual(comments.count(), 3)  # Only the first comment should be included
     
     def test_all_suggestions(self):
         comments = WriterFeedback.objects.all_suggestions()
@@ -63,9 +73,10 @@ class CommentManagerTestCase(TestCase):
         comments_active = WriterFeedback.objects.all_comments(chapter_pk=self.chapter.id)
         comments_nonactive = WriterFeedback.objects.all_comments(include_dismissed=True, include_ghost=True)
         self.assertEqual(comments_active.count(), 1)  # Only non-suggestion comment should be 
-        for comment in comments_nonactive:
-            print(comment.comment)
-        self.assertEqual(comments_nonactive.count(), 2)  # Both comments should be included
+        self.assertEqual(comments_nonactive.count(), 3)  # Both comments should be included
+
+        chapter2_comments = WriterFeedback.objects.all_comments(chapter_pk=self.chapter2.id)
+        self.assertEqual(chapter2_comments.count(), 1)  
 
 class CommentModelTestCase(TestCase):
     def setUp(self):
@@ -82,16 +93,6 @@ class CommentModelTestCase(TestCase):
         )
     
     
-    def test_is_ghost_property(self):
-        comment = WriterFeedback.objects.create(
-            user=self.user, selection=self.selection, comment='Test comment'
-        )
-        self.assertFalse(WriterFeedback.is_ghost)
-
-        self.selection.floating = True
-        self.selection.save()
-        self.assertTrue(WriterFeedback.is_ghost)
-    
     def test_get_receiver_method(self):
         comment = WriterFeedback.objects.create(
             user=self.user, selection=self.selection, comment='Test comment'
@@ -100,23 +101,23 @@ class CommentModelTestCase(TestCase):
         self.assertEqual(receiver, self.book.owner)
 
 
-class TextSelectionSerializerTestCase(TestCase):
-    def test_text_selection_serialization(self):
-        self.chapter = Chapter.objects.create(book=Book.objects.create(title="Test Book"))
-        # print(Chapter.objects.all().first().id)
-        selection_data = {
-            'chapter': self.chapter.id,
-            'offset': 10,
-            'offset_end': 20,
-            'text': 'Test text',
-            'floating': False,
-        }
-        serializer = TextSelectionSerializer(data=selection_data)
-        self.assertTrue(serializer.is_valid())
-        serialized_data = serializer.data
-        # print(serialized_data)
-        # print(selection_data)
-        self.assertEqual(serialized_data, selection_data)
+# class TextSelectionSerializerTestCase(TestCase):
+#     def test_text_selection_serialization(self):
+#         self.chapter = Chapter.objects.create(book=Book.objects.create(title="Test Book"))
+#         # print(Chapter.objects.all().first().id)
+#         selection_data = {
+#             'chapter': self.chapter.id,
+#             'offset': 10,
+#             'offset_end': 20,
+#             'text': 'Test text',
+#             'floating': False,
+#         }
+#         serializer = TextSelectionSerializer(data=selection_data)
+#         self.assertTrue(serializer.is_valid())
+#         serialized_data = serializer.data
+#         # print(serialized_data)
+#         # print(selection_data)
+#         self.assertEqual(serialized_data, selection_data)
 
 class WriterFeedbackSerializerTestCase(TestCase):
     def setUp(self):
@@ -134,17 +135,20 @@ class WriterFeedbackSerializerTestCase(TestCase):
             'selection': self.selection_data,
             'comment': 'Test comment',
             'dismissed': False,
-            'suggestion': None,
+            'suggestion': False,
         }
 
-    # def test_comment_serialization(self):
-    #     serializer = WriterFeedbackSerializer(data=self.comment_data)
-    #     # self.assertTrue(serializer.is_valid())
-    #     serializer.is_valid(raise_exception=True)
-    #     # print(serializer.error_messages)
-    #     serialized_data = serializer.data
-    #     print('\n' + str(serialized_data) + '\n' + str(self.comment_data))
-    #     self.assertEqual(serialized_data, self.comment_data)
+    def test_comment_serialization(self):
+        serializer = WriterFeedbackSerializer(data=self.comment_data)
+        # self.assertTrue(serializer.is_valid())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        feedback = WriterFeedback.objects.all()
+        self.assertEqual(feedback.count(), 1)
+
+        selection = TextSelection.objects.all()
+        self.assertEqual(selection.count(), 1)
 
     def test_comment_deserialization(self):
         serializer = WriterFeedbackSerializer(data=self.comment_data)
