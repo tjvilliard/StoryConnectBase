@@ -41,5 +41,9 @@ class UrlContants {
     return _urlBuilder.build('chapters/$chapterId/');
   }
 
+  static Uri getFeedback(int chapterId) {
+    return _urlBuilder.build('get_feedback/$chapterId/');
+  }
+
   static Uri books = _urlBuilder.build('books/');
 }

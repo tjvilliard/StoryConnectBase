@@ -16,21 +16,15 @@ class TextSelection(models.Model):
 
 class Comment(models.Model):
     objects = CommentManager()
-
     # User should be required
     user = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
 
     # Selection should be required
     selection = models.OneToOneField(TextSelection, on_delete=models.CASCADE)
-
-    content = models.TextField(max_length=1000, null=True, blank=True)
     parent = models.ForeignKey('self', null=True,blank=True,  on_delete=models.CASCADE)
-
     posted = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
-
     dismissed = models.BooleanField(default=False)
-
     suggestion = models.TextField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
