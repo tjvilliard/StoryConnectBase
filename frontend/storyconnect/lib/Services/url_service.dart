@@ -29,6 +29,12 @@ class PageUrls {
 class UrlContants {
   static final _urlBuilder = _UrlBuilder();
 
+  static Uri getComments(int chapterId) {
+    return _urlBuilder
+        .build('comments/by_chapter/')
+        .replace(queryParameters: {'chapter_id': chapterId.toString()});
+  }
+
   static Uri getChapters(int bookId) {
     return _urlBuilder.build('books/$bookId/get_chapters');
   }

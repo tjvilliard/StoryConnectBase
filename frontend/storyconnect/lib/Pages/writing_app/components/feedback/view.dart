@@ -8,52 +8,71 @@ import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedbac
 import 'package:storyconnect/Pages/writing_app/components/side_popup_header.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 
-class FeedbackWidget extends StatelessWidget {
+class FeedbackWidget extends StatefulWidget {
+  @override
+  FeedbackWidgetState createState() => FeedbackWidgetState();
+}
+
+class FeedbackWidgetState extends State<FeedbackWidget> {
+  bool firstLoaded = false;
+
+  @override
+  void initState() {
+    if (firstLoaded == false) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        firstLoaded = true;
+        BlocProvider.of<FeedbackBloc>(context).add(LoadChapterFeedback(
+            BlocProvider.of<ChapterBloc>(context).state.currentIndex));
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ChapterBloc, ChapterBlocStruct>(
-        listener: (context, chapterState) {
-          context
-              .read<FeedbackBloc>()
-              .add(LoadChapterFeedback(chapterState.currentIndex));
-        },
-        child: BlocBuilder<WritingUIBloc, WritingUIState>(
-            buildWhen: (previous, current) {
-          final bool feedbackUIshownChanged =
-              previous.feedbackUIshown != current.feedbackUIshown;
+    return BlocBuilder<WritingUIBloc, WritingUIState>(
+        buildWhen: (previous, current) {
+      final bool feedbackUIshownChanged =
+          previous.feedbackUIshown != current.feedbackUIshown;
 
-          return feedbackUIshownChanged;
-        }, builder: (context, uiState) {
-          return AnimatedCrossFade(
-            firstChild: Container(),
-            secondChild: uiState.feedbackUIshown
-                ? BlocBuilder<FeedbackBloc, FeedbackState>(
-                    builder: (context, state) {
-                      return Card(
-                        child: Container(
-                          constraints:
-                              BoxConstraints(maxWidth: 400, minWidth: 300),
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+      return feedbackUIshownChanged;
+    }, builder: (context, uiState) {
+      return AnimatedCrossFade(
+        firstChild: Container(),
+        secondChild: uiState.feedbackUIshown
+            ? BlocBuilder<FeedbackBloc, FeedbackState>(
+                builder: (context, state) {
+                  return Card(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 400, minWidth: 300),
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SidePopupHeader(
+                              title: "Comments",
+                              dismiss: () =>
+                                  BlocProvider.of<WritingUIBloc>(context)
+                                      .add(ToggleFeedbackUIEvent())),
+                          SizedBox(height: 20),
+                          Column(
                             children: [
-                              SidePopupHeader(
-                                  title: "Comments",
-                                  dismiss: () =>
-                                      BlocProvider.of<WritingUIBloc>(context)
-                                          .add(ToggleFeedbackUIEvent())),
-                              SizedBox(height: 20),
-                              Column(
-                                children: [
-                                  FeedbackTypeSelector(),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              GhostFeedbackCheckbox(),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Expanded(
+                              FeedbackTypeSelector(),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          GhostFeedbackCheckbox(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          BlocListener<ChapterBloc, ChapterBlocStruct>(
+                              listener: (context, chapterState) {
+                                context.read<FeedbackBloc>().add(
+                                    LoadChapterFeedback(
+                                        chapterState.currentIndex));
+                              },
+                              child: Expanded(
                                 child: AnimatedSwitcher(
                                   duration: Duration(milliseconds: 200),
                                   child: state.selectedFeedbackType ==
@@ -65,19 +84,19 @@ class FeedbackWidget extends StatelessWidget {
                                           key: UniqueKey(),
                                           feedbacks: state.comments),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            crossFadeState: uiState.feedbackUIshown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200),
-          );
-        }));
+                              )),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Container(),
+        crossFadeState: uiState.feedbackUIshown
+            ? CrossFadeState.showSecond
+            : CrossFadeState.showFirst,
+        duration: Duration(milliseconds: 200),
+      );
+    });
   }
 }
