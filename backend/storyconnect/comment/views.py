@@ -28,7 +28,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         comment.save()
         return Response(status=status.HTTP_200_OK)
     
-    @action(detail=True, methods=['get'])
+    @action(detail=False, methods=['get'])
     def get_comments_include_ghost(self, request, pk=None):
         '''
         Returns all comments including floating. If chapter_pk is provided, only comments from that chapter are returned.
@@ -37,7 +37,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         serializer = WriterFeedbackSerializer(comments, many=True)
         return JsonResponse(serializer.data)
     
-    @action(detail=True, methods=['get'])
+    @action(detail=False, methods=['get'])
     def get_comments_exclude_ghost(self, request, pk=None):
         '''
         Returns all comments excluding floating. If chapter_pk is provided, only comments from that chapter are returned.
@@ -46,7 +46,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         serializer = WriterFeedbackSerializer(comments, many=True)
         return JsonResponse(serializer.data)
     
-    @action(detail=True, methods=['get'])
+    @action(detail=False, methods=['get'])
     def get_suggestions_include_ghost(self, request, pk=None):
         ''' 
         Returns all suggestions including floating. If chapter_pk is provided, only comments from that chapter are returned.
@@ -55,7 +55,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         serializer = WriterFeedbackSerializer(comments, many=True)
         return JsonResponse(serializer.data)
     
-    @action(detail=True, methods=['get'])
+    @action(detail=False, methods=['get'])
     def get_suggestions_exclude_ghost(self, request, pk=None):
         '''
         Returns all suggestions excluding floating. If chapter_pk is provided, only comments from that chapter are returned.
