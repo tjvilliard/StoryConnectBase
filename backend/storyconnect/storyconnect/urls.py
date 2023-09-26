@@ -22,6 +22,7 @@ from books import views as books_views
 from comment import views as comment_views
 
 
+
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
@@ -32,6 +33,8 @@ router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
+    path('api/', include('ai_features.urls')),
+    
     path('api/admin/', admin.site.urls),
     path("debug/", include(debug_toolbar.urls)),
 ]
