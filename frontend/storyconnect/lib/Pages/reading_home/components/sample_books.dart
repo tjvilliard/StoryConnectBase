@@ -1,0 +1,24 @@
+import 'dart:collection';
+
+import 'package:storyconnect/Models/models.dart';
+
+class sampleBooksData {
+  static Map<String, List<Book>> buildSampleBooks() {
+    List<String> tags = ["Romance, Mystery, Adventure"];
+
+    List<Book> romanceBooks = [];
+    List<Book> mysteryBooks = [];
+    List<Book> adventureBooks = [
+      Book(
+          id: 501,
+          title: "Heir to the Empire",
+          created: DateTime.now(),
+          modified: DateTime.now())
+    ];
+
+    HashMap<String, List<Book>> tagged_books =
+        new HashMap<String, List<Book>>();
+
+    return tagged_books;
+  }
+}

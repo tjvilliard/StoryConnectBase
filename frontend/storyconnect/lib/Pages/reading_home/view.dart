@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
+import 'package:storyconnect/Pages/reading_home/components/tagged_books_widget.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Widgets/header.dart';
@@ -52,7 +54,12 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               LoadingWidget(loadingStruct: state.loadingStruct);
                         } else {
                           toReturn = Column(
-                            children: [],
+                            children: [
+                              TaggedBooksListWidget(
+                                  taggedBooks:
+                                      // Retrieve tags and associated books from the backend.
+                                      sampleBooksData.buildSampleBooks())
+                            ],
                           );
                         }
                         return AnimatedSwitcher(
@@ -60,8 +67,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                             child: toReturn);
                       }),
                     )
-                    // Get Content Tags and
-                    // Associated Books for each tag.
                   ],
                 ))));
   }
