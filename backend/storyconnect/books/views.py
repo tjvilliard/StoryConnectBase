@@ -77,23 +77,6 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
 
-<<<<<<< HEAD
-=======
-    @action(detail=False, methods=['get'])
-    def filter(self, request, filter, *args, **kwargs):
-        # filter_query = Book.objects.filter()
-        # data = BookSerializer(filter_query, many=False)
-        # # book = self.filter_queryset(filter)
-        # model_data = Book.objects.all().order_by("?")
-
-        # book = self.get_object()
-        # serializer = self.get_serializer(book, data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        # self.filter_queryset(filter)
-        # serializer = self.get_serializer(data=request.data)
-        return self.filter_backends.get_search_fields(BookViewSet, request)
-
->>>>>>> feature/Creating_models
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
@@ -216,62 +199,5 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
     
-<<<<<<< HEAD
 
 
-=======
-
-def writer_page(request, book_id):
-    book = Book.objects.get(id=book_id)
-    chapters = Chapter.objects.filter(book=book)
-    characters = Character.objects.filter(book=book)
-    locations = Location.objects.filter(book=book)
-    context = {
-        'book': book,
-        'chapters': chapters,
-        'characters': characters,
-        'locations': locations,
-    }
-    return JsonResponse(context)
-
-
-
-# def create_book(request):
-#     if request.method == 'POST':
-#         title = request.POST['title']
-#         author = request.POST['author']
-#         user = request.user  # get the currently logged-in user
-#         book = Book(title=title, author=author, content=content, user=user)
-#         book.save()
-#         return redirect('writer_page', book_id=book.id) # would i redirect to the writer page? 
-#     else:
-#         return render(request, 'create_book.html')
-
-# def create_chapter(request): # would i need to pass in the book id here?
-#     if request.method == 'POST':
-#         title = request.POST['title']
-#         content = request.POST['content']
-#         book = request.POST['book']
-#         chapter = Chapter(title=title, content=content, book=book)
-#         chapter.save()
-#     return render(request, 'books/create_chapter.html')
-
-# def create_character(request):
-#     if request.method == 'POST':
-#         name = request.POST['name']
-#         description = request.POST['description']
-#         book = request.POST['book']
-#         character = Character(name=name, description=description, book=book)
-#         character.save()
-#     return render(request, 'books/create_character.html')
-
-# def create_location(request):
-#     if request.method == 'POST':
-#         name = request.POST['name']
-#         description = request.POST['description']
-#         book = request.POST['book']
-#         location = Location(name=name, description=description, book=book)
-#         location.save()
-#     return render(request, 'books/create_location.html')
-
->>>>>>> feature/Creating_models
