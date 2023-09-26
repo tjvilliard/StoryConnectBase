@@ -1,8 +1,5 @@
 from rest_framework import serializers
-<<<<<<< HEAD
 # from rest_framework_json_api import serializers 
-=======
->>>>>>> feature/Creating_models
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from .models import *
