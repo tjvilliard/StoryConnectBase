@@ -27,12 +27,17 @@ class BookViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            # serializer['owner'] = request.user
-            self.perform_create(serializer)
+
+            # serializer['owner'] = request.user # test
+
+            # self.perform_create(serializer)
+            # headers = self.get_success_headers(serializer.data)
+
+            book = serializer.save(owner=request.user)
             headers = self.get_success_headers(serializer.data)
 
             # Use the instance directly instead of querying it again
-            book = serializer.instance
+            # book = serializer.instance
 
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
