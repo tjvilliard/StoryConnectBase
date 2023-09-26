@@ -21,9 +21,14 @@ class InitialLoadEvent extends ReadingHomeEvent {
 /// the database to read. Should later be refined to not get
 /// the whole list of books.
 class ReadingHomeStruct {
-  final List<Book> books;
   // add categories of books to navigate and
   // request based on user's interest.
+  /*
+  * Map of categories to books
+  * List of books in library.
+  */
+
+  final List<Book> books;
   final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
 
