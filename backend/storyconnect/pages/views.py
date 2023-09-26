@@ -58,18 +58,18 @@ class WriterFeedbackPage(APIView):
         chapter_feedback = book_models.Chapter.objects.filter(book=book_feedback)
 
         chapter_id = [ch.pk for ch in chapter_feedback]
-        comments = book_models.Comments.objects.filter(chapter__in=chapter_id)
+        # comments = book_models.Comments.objects.filter(chapter__in=chapter_id)
 
         writer_books_serializer = book_serializers.BookSerializer(writer_books, many=True)
         book_feedback_serializer = book_serializers.BookSerializer(book_feedback, many=False)
         chapter_feedback_serializer = book_serializers.ChapterSerializer(chapter_feedback, many=True)
-        comments_serializer = book_serializers.CommentSerializer(comments, many=True)
+        # comments_serializer = book_serializers.CommentSerializer(comments, many=True)
 
         content = {
             'writer_books': writer_books_serializer.data,
             'book_feedback': book_feedback_serializer.data,
-            'chapter_feedback': chapter_feedback_serializer.data,
-            'comments': comments_serializer.data
+            'chapter_feedback': chapter_feedback_serializer.data
+            # 'comments': comments_serializer.data
         }
         return JsonResponse(content)
 

@@ -40,9 +40,9 @@ class SceneSerializer(serializers.ModelSerializer):
         model = Scene
         fields = "__all__"
 
-class CommentSerializer(serializers.ModelSerializer):
-    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
-    chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all(), many=False)
-    class Meta:
-        model = Comments
-        fields = "__all__"
+# class CommentSerializer(serializers.ModelSerializer):
+#     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+#     chapter = serializers.PrimaryKeyRelatedField(queryset=Chapter.objects.all(), many=False)
+#     class Meta:
+#         model = Comments
+#         fields = "__all__"

@@ -161,12 +161,12 @@ class Scene(models.Model):
         return self.scene_title
 
 
-class Comments(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-    content = models.TextField(blank=False)
+# class Comments(models.Model):
+#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+#     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+#     commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
+#     content = models.TextField(blank=False)
 
-    def __str__(self):
-        return self.content
+#     def __str__(self):
+#         return self.content
 

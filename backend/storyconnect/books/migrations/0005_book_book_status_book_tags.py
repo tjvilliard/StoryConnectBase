@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0004_comments'),
+        ('books', '0004_alter_book_copyright_alter_book_target_audience'),
     ]
 
     operations = [
