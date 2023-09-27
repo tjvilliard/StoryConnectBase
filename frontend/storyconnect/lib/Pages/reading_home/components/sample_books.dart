@@ -19,6 +19,14 @@ class sampleBooksData {
     HashMap<String, List<Book>> tagged_books =
         new HashMap<String, List<Book>>();
 
+    Iterable<MapEntry<String, List<Book>>> entries = [
+      MapEntry(tags[0], romanceBooks),
+      MapEntry(tags[1], mysteryBooks),
+      MapEntry(tags[2], adventureBooks)
+    ];
+
+    tagged_books.addEntries(entries);
+
     return tagged_books;
   }
 }
