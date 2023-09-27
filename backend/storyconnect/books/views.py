@@ -24,8 +24,6 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all()
 
-    def get_queryset(self):
-        return Book.objects.filter(owner=self.request.user)
     
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
@@ -58,13 +56,11 @@ class BookViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-    
-    @action(detail=True, methods=['get'])
-    def get_user_books(self, request):
 
-        # Needs Testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111
-        
-        books = Book.objects.filter(owner=request.user)
+    @action(detail=False, methods=['get'])
+    def by_writer(self, request):
+        # TODO: Unit test this
+        books = self.get_queryset().filter(owner=request.user)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 
@@ -74,9 +70,7 @@ class BookViewSet(viewsets.ModelViewSet):
         chapters = book.get_chapters()
         
         assert len(chapters) > 0, "No chapters found for this book"
-
         serializer = ChapterSerializer(chapters, many=True)
-        
         return Response(serializer.data)
     
 

@@ -48,6 +48,7 @@ class UrlContants {
   }
 
   static Uri books = _urlBuilder.build('books/');
+  static Uri writerBooks = books.resolve("by_writer/");
 
   static Uri roadUnblock() {
     return _urlBuilder.build('road_unblock/');

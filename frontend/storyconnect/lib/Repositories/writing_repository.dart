@@ -35,7 +35,7 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlContants.books;
+      final url = UrlContants.writerBooks;
       final result = await http.get(
         url,
         headers: <String, String>{
