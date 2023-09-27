@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Blocs/user/user_bloc.dart';
 import 'package:storyconnect/Pages/login/sign_in/view.dart';
 
 ///
@@ -33,7 +35,13 @@ class AuthenticationWrapper extends StatelessWidget {
               return LoginPage();
             }
           } else {
-            return this._child;
+            final user = snapshot.data!;
+            return BlocProvider<UserBloc>(
+              create: (context) {
+                return UserBloc(user);
+              },
+              child: this._child,
+            );
           }
         });
   }

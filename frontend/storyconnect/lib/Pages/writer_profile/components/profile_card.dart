@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Blocs/user/user_bloc.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key});
+  final int? userId;
+  const ProfileCard({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,11 @@ class ProfileCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  Text("Author Name",
+                  Text(
+                      userId != null
+                          ? context.read<UserBloc>().state.user!.displayName ??
+                              "No display name"
+                          : "To implement",
                       style: Theme.of(context).textTheme.titleMedium),
                 ],
               ),

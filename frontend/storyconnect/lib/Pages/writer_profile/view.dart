@@ -9,7 +9,8 @@ import 'package:storyconnect/Widgets/custom_scaffold.dart';
 import 'package:storyconnect/Widgets/header.dart';
 
 class WriterProfileWidget extends StatelessWidget {
-  const WriterProfileWidget({super.key});
+  final int? userId;
+  const WriterProfileWidget({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
