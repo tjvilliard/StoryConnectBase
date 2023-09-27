@@ -1,6 +1,6 @@
 class _UrlBuilder {
   int version = 1; // use this later to change the api version
-  String baseUrl = "https://storyconnect.app/api/";
+  String baseUrl = "http://localhost:8000/api/";
 
   Uri build(String path) {
     final Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
@@ -29,10 +29,8 @@ class PageUrls {
 class UrlContants {
   static final _urlBuilder = _UrlBuilder();
 
-  static Uri getComments(int chapterId) {
-    return _urlBuilder
-        .build('comments/by_chapter/')
-        .replace(queryParameters: {'chapter_id': chapterId.toString()});
+  static Uri getWriterFeedback(int chapterId) {
+    return _urlBuilder.build('feedback/by_chapter/$chapterId');
   }
 
   static Uri getChapters(int bookId) {
@@ -45,10 +43,6 @@ class UrlContants {
 
   static Uri updateChapter(int chapterId) {
     return _urlBuilder.build('chapters/$chapterId/');
-  }
-
-  static Uri getFeedback(int chapterId) {
-    return _urlBuilder.build('get_feedback/$chapterId/');
   }
 
   static Uri books = _urlBuilder.build('books/');

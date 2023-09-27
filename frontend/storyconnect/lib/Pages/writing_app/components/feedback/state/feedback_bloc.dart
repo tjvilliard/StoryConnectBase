@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
@@ -22,13 +20,14 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
         (event, emit) => toggleGhostFeedback(event, emit));
   }
 
-  Stream<void> loadChapterFeedback(
-      LoadChapterFeedback event, FeedbackEmitter emit) async* {
+  void loadChapterFeedback(
+      LoadChapterFeedback event, FeedbackEmitter emit) async {
     emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(true),
     ));
 
-    final currentFeedbacks = state.feedbacks;
+    final currentFeedbacks =
+        Map<int, List<WriterFeedback>>.from(state.feedbacks);
 
     final List<WriterFeedback> newFeedbacks =
         await _repo.getChapterFeedback(event.chapterId);

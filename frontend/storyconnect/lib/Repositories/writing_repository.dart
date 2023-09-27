@@ -3,14 +3,11 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import 'package:storyconnect/Constants/feedback_sentiment.dart';
 
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
-import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
-import 'package:uuid/uuid.dart';
 
 class WritingApiProvider {
   Future<String> getAuthToken() async {
@@ -55,74 +52,17 @@ class WritingApiProvider {
     }
   }
 
-  int _numericalUUid() {
-    //  a regex that removes all non numeric characters
-    final uuid = Uuid().v8();
-    RegExp regExp = RegExp(r'[^0-9]');
-    return int.parse(uuid.replaceAll(regExp, ''));
-  }
-
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
-    final List<WriterFeedback> mockedFeedbacks = [
-      WriterFeedback(
-          id: _numericalUUid(),
-          userId: _numericalUUid(),
-          chapterId: chapterId,
-          selection: AnnotatedTextSelection(
-              chapterId: chapterId,
-              offset: 0,
-              offsetEnd: 10,
-              text: 'Jolly old saint nick',
-              floating: false),
-          sentiment: FeedbackSentiment.bad,
-          isSuggestion: false,
-          dismissed: false),
-      WriterFeedback(
-          id: _numericalUUid(),
-          userId: _numericalUUid(),
-          chapterId: chapterId,
-          selection: AnnotatedTextSelection(
-              chapterId: chapterId,
-              offset: 0,
-              offsetEnd: 10,
-              text: 'Jolly old saint nick',
-              floating: false),
-          sentiment: FeedbackSentiment.good,
-          isSuggestion: true,
-          comment: "Jolly old saint nicholas",
-          dismissed: false),
-      WriterFeedback(
-          id: _numericalUUid(),
-          userId: _numericalUUid(),
-          chapterId: chapterId,
-          selection: AnnotatedTextSelection(
-              chapterId: chapterId,
-              offset: 15,
-              offsetEnd: 40,
-              text: 'Ho ho ho',
-              floating: false),
-          sentiment: FeedbackSentiment.good,
-          isSuggestion: false,
-          comment: "Jolly old saint nicholas",
-          dismissed: true),
-    ];
-
-    // final url = UrlContants.getFeedback(chapterId);
-    // final result = await http.get(
-    //   url,
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //     'Authorization': 'Token ${await getAuthToken()}'
-    //   },
-    // );
-    // for (var feedback in jsonDecode(result.body)) {
-    //   yield WriterFeedback.fromJson(feedback);
-    // }
-
-    for (var feedback in mockedFeedbacks) {
-      yield await Future.delayed(Duration(milliseconds: 100), () {
-        return feedback;
-      });
+    final url = UrlContants.getWriterFeedback(chapterId);
+    final result = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token ${await getAuthToken()}'
+      },
+    );
+    for (var feedback in jsonDecode(result.body)) {
+      yield WriterFeedback.fromJson(feedback);
     }
   }
 }

@@ -18,13 +18,11 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
 
   @override
   void initState() {
-    if (firstLoaded == false) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        firstLoaded = true;
-        BlocProvider.of<FeedbackBloc>(context).add(LoadChapterFeedback(
-            BlocProvider.of<ChapterBloc>(context).state.currentIndex));
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      firstLoaded = true;
+      BlocProvider.of<FeedbackBloc>(context).add(LoadChapterFeedback(
+          BlocProvider.of<ChapterBloc>(context).state.currentIndex));
+    });
 
     super.initState();
   }
@@ -79,10 +77,10 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                                           FeedbackType.comment
                                       ? FeedbackList(
                                           key: UniqueKey(),
-                                          feedbacks: state.suggestions)
+                                          feedbacks: state.comments)
                                       : FeedbackList(
                                           key: UniqueKey(),
-                                          feedbacks: state.comments),
+                                          feedbacks: state.suggestions),
                                 ),
                               )),
                         ],

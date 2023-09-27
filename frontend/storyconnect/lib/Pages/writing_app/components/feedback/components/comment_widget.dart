@@ -40,7 +40,7 @@ class CommentWidget extends StatelessWidget {
                     Container(
                       alignment: Alignment.center,
                       constraints:
-                          BoxConstraints(minHeight: 50, maxHeight: 100),
+                          BoxConstraints(minHeight: 10, maxHeight: 100),
                       child: Text(comment.sentiment.description,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),

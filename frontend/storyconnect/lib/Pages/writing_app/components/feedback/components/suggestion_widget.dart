@@ -8,7 +8,6 @@ class SuggestionWidget extends StatelessWidget {
   final WriterFeedback suggestion;
 
   SuggestionWidget({required this.suggestion});
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +41,7 @@ class SuggestionWidget extends StatelessWidget {
                       constraints:
                           BoxConstraints(minHeight: 50, maxHeight: 100),
                       alignment: Alignment.center,
-                      child: Text(suggestion.suggestion!,
+                      child: Text(suggestion.comment!,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Align(

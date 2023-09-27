@@ -49,7 +49,7 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
     
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
