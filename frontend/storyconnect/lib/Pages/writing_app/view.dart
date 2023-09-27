@@ -54,10 +54,8 @@ class _WritingAppViewState extends State<WritingAppView> {
             IconButton(
               icon: Icon(Icons.home_filled),
               onPressed: () {
-                BeamerDelegate beamer = Beamer.of(context);
-                if (beamer.canBeamBack) {
-                  Beamer.of(context).beamBack();
-                } else {
+                final beamed = Beamer.of(context).beamBack();
+                if (!beamed) {
                   Beamer.of(context).beamToNamed(PageUrls.writerHome);
                 }
               },

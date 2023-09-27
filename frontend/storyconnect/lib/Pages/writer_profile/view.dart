@@ -4,6 +4,7 @@ import 'package:storyconnect/Pages/writer_profile/components/annoucements/announ
 import 'package:storyconnect/Pages/writer_profile/components/current_works_card.dart';
 import 'package:storyconnect/Pages/writer_profile/components/profile_card.dart';
 import 'package:storyconnect/Pages/writer_profile/components/activity/recent_activity_card.dart';
+import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
 import 'package:storyconnect/Widgets/custom_scaffold.dart';
 import 'package:storyconnect/Widgets/header.dart';
@@ -16,7 +17,10 @@ class WriterProfileWidget extends StatelessWidget {
     return CustomScaffold(
         appBar: AppBar(),
         navigateBackFunction: () {
-          Beamer.of(context).beamBack();
+          final beamed = Beamer.of(context).beamBack();
+          if (!beamed) {
+            Beamer.of(context).beamToNamed(PageUrls.writerHome);
+          }
         },
         body: LayoutBuilder(
           builder: (context, constraints) {
