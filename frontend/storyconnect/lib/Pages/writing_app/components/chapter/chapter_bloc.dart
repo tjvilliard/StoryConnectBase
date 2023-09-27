@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
 
 abstract class ChapterEvent extends ReplayEvent {
@@ -34,7 +35,10 @@ class UpdateChapterEvent extends ChapterEvent {
 }
 
 class LoadEvent extends ChapterEvent {
-  LoadEvent();
+  FeedbackBloc feedbackBloc;
+  LoadEvent(
+    this.feedbackBloc,
+  );
 }
 
 class AddChapter extends ChapterEvent {
@@ -208,6 +212,10 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     emit(state.copyWith(
         chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
     clearHistory();
+
+    final chapterId = chapterNumToID[state.currentIndex]!;
+
+    event.feedbackBloc.add(LoadChapterFeedback(chapterId));
   }
 
   /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,

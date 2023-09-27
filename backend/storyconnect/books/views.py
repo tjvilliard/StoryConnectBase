@@ -18,16 +18,19 @@ import pdb
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
     # search_fields = ['title', 'author', 'language']
-    queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Book.objects.all()
 
+    def get_queryset(self):
+        return Book.objects.filter(owner=self.request.user)
     
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            # serializer['owner'] = request.user
+            # add the owner 
+            serializer.save(owner=request.user)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
@@ -39,9 +42,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
         # Commit the transaction
         transaction.set_autocommit(True)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
 
     def put(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -49,6 +50,7 @@ class BookViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
         return Response(serializer.data)
     
     def partial_update(self, request, *args, **kwargs):
@@ -80,6 +82,9 @@ class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Chapter.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

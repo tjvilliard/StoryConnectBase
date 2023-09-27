@@ -20,21 +20,6 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
   final commentsListKey = GlobalKey();
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      firstLoaded = true;
-      final chapterBloc = context.read<ChapterBloc>();
-
-      final int chapterId =
-          chapterBloc.chapterNumToID[chapterBloc.state.currentIndex] ?? 0;
-
-      context.read<FeedbackBloc>().add(LoadChapterFeedback(chapterId));
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<WritingUIBloc, WritingUIState>(
         buildWhen: (previous, current) {
