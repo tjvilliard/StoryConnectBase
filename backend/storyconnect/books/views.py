@@ -76,9 +76,6 @@ class BookViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data)
     
-
-<<<<<<< HEAD
-=======
     @action(detail=False, methods=['get'])
     def filter(self, request, filter, *args, **kwargs):
         # filter_query = Book.objects.filter()
@@ -93,7 +90,6 @@ class BookViewSet(viewsets.ModelViewSet):
         # serializer = self.get_serializer(data=request.data)
         return self.filter_backends.get_search_fields(BookViewSet, request)
 
->>>>>>> feature/Creating_models
 class ChapterViewSet(viewsets.ModelViewSet):
     queryset = Chapter.objects.all()
     serializer_class = ChapterSerializer
@@ -194,32 +190,10 @@ class SceneViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return JsonResponse(serializer.data)
 
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comments.objects.all()
-    serializer_class = CommentSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return JsonResponse(serializer.data)
 
 
 
     
-<<<<<<< HEAD
-
-
-=======
 
 def writer_page(request, book_id):
     book = Book.objects.get(id=book_id)
@@ -274,4 +248,3 @@ def writer_page(request, book_id):
 #         location.save()
 #     return render(request, 'books/create_location.html')
 
->>>>>>> feature/Creating_models
