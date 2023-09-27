@@ -164,8 +164,7 @@ class RoadUnblockerRequest with _$RoadUnblockerRequest {
 class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
   factory RoadUnblockerSuggestion({
     // This field stores a locally generated UUID and is not serialized to JSON
-    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
-    required String localId, // <- Local only UUID
+    required String uid, // <- Local only UUID
     @JsonKey(name: 'offset_start') required int offsetStart,
     @JsonKey(name: 'offset_end') required int offsetEnd,
     required String suggestion,
@@ -185,8 +184,7 @@ class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
 @freezed
 class RoadUnblockerResponse with _$RoadUnblockerResponse {
   factory RoadUnblockerResponse({
-    @JsonKey(fromJson: localUuidFromJson, includeToJson: false)
-    required String localId, // <- Local only UUID
+    required String uid,
     required String message,
     required List<RoadUnblockerSuggestion> suggestions,
   }) = _RoadUnblockerResponse;

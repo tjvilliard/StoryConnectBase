@@ -11,6 +11,8 @@ from .models import *
 from .serializers import *
 from django.db import transaction
 import pdb
+from rest_framework.views import APIView
+
 
 
 # Create your views here.
@@ -196,4 +198,36 @@ class SceneViewSet(viewsets.ModelViewSet):
         return JsonResponse(serializer.data)
     
 
-
+class RoadUnblockerView(APIView):
+    def post(self, request, format=None, *args, **kwargs):
+        hardcoded_roadunblock = {
+            "uid": "1234",
+            "message": "Ok, got it. So it looks like you're stuck on Chapter 1. Lets take a look at what we can do:",
+            "suggestions": [
+                {
+                    "uid": "12345",
+                    "offset_start": 50,
+                    "offset_end": 100,
+                    "suggestion": "You could talk more about the character's motivations here.",
+                    "original": "",
+                    "suggested_change": "Jonathan isn't sure why he's doing this. He's just following orders."
+                },
+                {
+                    "uid": "123456",
+                    "offset_start": 150,
+                    "offset_end": 200,
+                    "suggestion": "It looks like you're heading to planet Earth. Perhaps your character is banned from Earth?",
+                    "original": "",
+                    "suggested_change": "Jonathan, although banned from Earth, needed to go home, if only to this one last time."
+                },
+                {
+                    "uid": "1234567",
+                    "offset_start": 50,
+                    "offset_end": 80,
+                    "suggestion": "You set your character up as a rebel, but he's not acting like one.",
+                    "original": "Jonathan isn't sure why he's doing this. He's just following orders.",
+                    "suggested_change": "Jonathan spits in the face of his commanding officer and defiantly says, 'Sir, yes sir'"
+                }
+            ]
+        }
+        return Response(hardcoded_roadunblock, status=status.HTTP_200_OK)

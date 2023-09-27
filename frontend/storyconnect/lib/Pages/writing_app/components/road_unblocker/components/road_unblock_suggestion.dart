@@ -68,7 +68,7 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
                   onPressed: () {
                     context.read<RoadUnblockerBloc>().add(RejectSuggestionEvent(
                         responseLocalId: responseLocalId,
-                        localId: suggestion.localId));
+                        localId: suggestion.uid));
                   },
                   icon: Icon(
                     FontAwesomeIcons.x,
@@ -84,7 +84,7 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
                   onPressed: () {
                     context.read<RoadUnblockerBloc>().add(AcceptSuggestionEvent(
                         responseLocalId: responseLocalId,
-                        localId: suggestion.localId));
+                        localId: suggestion.uid));
                   },
                   icon: Icon(FontAwesomeIcons.check),
                   label: Text(

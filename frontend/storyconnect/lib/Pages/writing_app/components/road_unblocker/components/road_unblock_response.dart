@@ -20,7 +20,7 @@ class RoadUnblockResponseWidget extends StatelessWidget {
           for (final RoadUnblockerSuggestion suggestion in response.suggestions)
             Column(children: [
               RoadUnblockerSuggestionWidget(
-                  responseLocalId: response.localId, suggestion: suggestion),
+                  responseLocalId: response.uid, suggestion: suggestion),
               // don't add if it's the last suggestion
               if (suggestion != response.suggestions.last)
                 Padding(

@@ -5,42 +5,16 @@ class RoadUnblockerApi {
   const RoadUnblockerApi();
   Future<RoadUnblockerResponse> submitUnblock(
       RoadUnblockerRequest request) async {
-    return Future.delayed(
-        Duration(milliseconds: 200),
-        () => RoadUnblockerResponse(
-                localId: Uuid().v8(),
-                message:
-                    "Ok, got it. So it looks like you're stuck on Chapter 1. Lets take a look at what we can do:",
-                suggestions: [
-                  RoadUnblockerSuggestion(
-                      localId: Uuid().v8(),
-                      offsetStart: 50,
-                      offsetEnd: 100,
-                      suggestion:
-                          "You could talk more about the character's motivations here.",
-                      suggestedChange:
-                          "Jonathan isn't sure why he's doing this. He's just following orders.",
-                      original: ""),
-                  RoadUnblockerSuggestion(
-                      localId: Uuid().v8(),
-                      offsetStart: 150,
-                      offsetEnd: 200,
-                      suggestion:
-                          "It looks like you're heading to planet Earth. Perhaps your character is banned from Earth?",
-                      suggestedChange:
-                          "Jonathan, although banned from Earth, needed to go home, if only to this one last time.",
-                      original: ""),
-                  RoadUnblockerSuggestion(
-                      localId: Uuid().v8(),
-                      offsetStart: 50,
-                      offsetEnd: 80,
-                      suggestion:
-                          "You set your character up as a rebel, but he's not acting like one.",
-                      original:
-                          "Jonathan isn't sure why he's doing this. He's just following orders.",
-                      suggestedChange:
-                          "Jonathan spits in the face of his commanding officer and defiantly says, 'Sir, yes sir'"),
-                ]));
+    final url = UrlContants.roadUnblock();
+    String authToken =
+        (await FirebaseAuth.instance.currentUser!.getIdToken(true)) as String;
+    final result = await http.post(url,
+        body: jsonEncode(request.toJson()),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token $authToken'
+        });
+    return RoadUnblockerResponse.fromJson(jsonDecode(result.body));
   }
 }
 

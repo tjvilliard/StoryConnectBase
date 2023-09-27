@@ -30,4 +30,5 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path('api/admin/', admin.site.urls),
+    path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
 ]

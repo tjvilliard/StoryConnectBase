@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:uuid/uuid.dart';
+import 'package:storyconnect/Services/url_service.dart';
+import 'package:http/http.dart' as http;
 
 part 'road_unblocker_events.dart';
 part 'road_unblocker_state.dart';
@@ -76,26 +80,24 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   // for now, just remove them from the responses
   acceptSuggestion(AcceptSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response = responses
-        .firstWhere((element) => element.localId == event.responseLocalId);
+    final response =
+        responses.firstWhere((element) => element.uid == event.responseLocalId);
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
-    suggestions.removeWhere((element) => element.localId == event.localId);
-    responses
-        .removeWhere((element) => element.localId == event.responseLocalId);
+    suggestions.removeWhere((element) => element.uid == event.localId);
+    responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));
     emit(state.copyWith(responses: _removeEmptyResponses(responses)));
   }
 
   rejectSuggestion(RejectSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response = responses
-        .firstWhere((element) => element.localId == event.responseLocalId);
+    final response =
+        responses.firstWhere((element) => element.uid == event.responseLocalId);
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
-    suggestions.removeWhere((element) => element.localId == event.localId);
-    responses
-        .removeWhere((element) => element.localId == event.responseLocalId);
+    suggestions.removeWhere((element) => element.uid == event.localId);
+    responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));
     emit(state.copyWith(responses: _removeEmptyResponses(responses)));
   }
