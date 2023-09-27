@@ -17,7 +17,6 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
     queryset = WriterFeedback.objects.all()
     serializer_class = WriterFeedbackSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-
     @action(detail=True, methods=['post'])
     def dismiss(self, request, pk=None):
         '''
@@ -27,44 +26,14 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         comment.dismissed = True
         comment.save()
         return Response(status=status.HTTP_200_OK)
-    
-    @action(detail=False, methods=['get'])
-    def get_comments_include_ghost(self, request, pk=None):
-        '''
-        Returns all comments including floating. If chapter_pk is provided, only comments from that chapter are returned.
-        '''
-        comments = WriterFeedback.objects.all_comments(include_ghost=True, chapter_pk=pk)
-        serializer = WriterFeedbackSerializer(comments, many=True)
-        return JsonResponse(serializer.data)
-    
-    @action(detail=False, methods=['get'])
-    def get_comments_exclude_ghost(self, request, pk=None):
+    @action(detail=True, methods=['get'])
+    def by_chapter(self, request, pk=None):
         '''
         Returns all comments excluding floating. If chapter_pk is provided, only comments from that chapter are returned.
         '''
         comments = WriterFeedback.objects.all_comments(chapter_pk=pk)
         serializer = WriterFeedbackSerializer(comments, many=True)
         return JsonResponse(serializer.data)
-    
-    @action(detail=False, methods=['get'])
-    def get_suggestions_include_ghost(self, request, pk=None):
-        ''' 
-        Returns all suggestions including floating. If chapter_pk is provided, only comments from that chapter are returned.
-        '''
-        comments = WriterFeedback.objects.all_suggestions(include_ghost=True, chapter_pk=pk)
-        serializer = WriterFeedbackSerializer(comments, many=True)
-        return JsonResponse(serializer.data)
-    
-    @action(detail=False, methods=['get'])
-    def get_suggestions_exclude_ghost(self, request, pk=None):
-        '''
-        Returns all suggestions excluding floating. If chapter_pk is provided, only comments from that chapter are returned.
-        '''
-        comments = WriterFeedback.objects.all_suggestions(chapter_pk=pk)
-        serializer = WriterFeedbackSerializer(comments, many=True)
-        return JsonResponse(serializer.data)
-
-
 
 class HighlightViewSet(viewsets.ModelViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson ):
     queryset = Highlight.objects.all()
