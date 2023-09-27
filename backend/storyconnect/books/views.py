@@ -2,7 +2,7 @@ from json import JSONDecodeError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -28,17 +28,16 @@ class BookViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            # serializer['owner'] = request.user # test
-
-            # self.perform_create(serializer)
-            # headers = self.get_success_headers(serializer.data)
-
-            book = serializer.save(owner=request.user)
+            self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
             # Use the instance directly instead of querying it again
-            # book = serializer.instance
+            book = serializer.instance
+            book.owner = request.user
 
+            print(request.user)
+
+            book.save()
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 

@@ -36,5 +36,5 @@ urlpatterns += [
     path('api/', include('ai_features.urls')),
     
     path('api/admin/', admin.site.urls),
-    path("debug/", include(debug_toolbar.urls)),
+    # path("debug/", include(debug_toolbar.urls)),
 ]
