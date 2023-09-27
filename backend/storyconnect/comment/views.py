@@ -10,6 +10,7 @@ from storyconnect.mixins import *
 from .models import *
 from .serializers import *
 from django.db import transaction
+import logging
 
 
 
@@ -17,6 +18,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
     queryset = WriterFeedback.objects.all()
     serializer_class = WriterFeedbackSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    logger = logging.getLogger(__name__)
 
     @action(detail=True, methods=['post'])
     def dismiss(self, request, pk=None):

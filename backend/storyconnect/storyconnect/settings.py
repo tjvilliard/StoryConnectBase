@@ -32,6 +32,20 @@ SECRET_KEY = 'django-insecure-h0*oug9uh#y053hd0ij67=)fr@sytr5=fs_h5)dr_ft562%_8b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
 ALLOWED_HOSTS = ["storyconnect", "localhost", "127.0.0.1", "storyconnect.app"]
 
 CSRF_TRUSTED_ORIGINS = [
