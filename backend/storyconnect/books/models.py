@@ -1,15 +1,12 @@
 from django.db import models
 # from django import forms
 from django.contrib.auth.models import User
-<<<<<<< HEAD
 from django_extensions.db.models import TimeStampedModel
 from firebase_admin import storage
 from storyconnect.settings import FIREBASE_BUCKET
 import os
-=======
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
->>>>>>> feature/Creating_models
 
 # Create your models here.
 
@@ -40,13 +37,9 @@ class Book(models.Model):
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
-<<<<<<< HEAD
-    
-=======
     book_status = models.IntegerField(choices=STATUS, null=True, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
     cover = models.ImageField(upload_to='covers/', null=True, blank=True)
->>>>>>> feature/Creating_models
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000, null=True, blank=True)
@@ -129,9 +122,7 @@ class Chapter(models.Model):
     
     def get_scenes(self):
         return Scene.objects.filter(chapter=self)
-    
-    def get_comments(self):
-        return Comments.objects.filter(chapter=self)
+
     
 class Character(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -167,17 +158,3 @@ class Scene(models.Model):
 
     def __str__(self):
         return self.scene_title
-
-<<<<<<< HEAD
-
-=======
-class Comments(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-    content = models.TextField(blank=False)
-
-    def __str__(self):
-        return self.content
->>>>>>> feature/Creating_models
-
