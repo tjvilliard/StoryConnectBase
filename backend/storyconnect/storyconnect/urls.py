@@ -20,7 +20,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from books import views as books_views
 from comment import views as comment_views
 
-from pages import views as pages_views
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
@@ -28,13 +27,9 @@ router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 
+
 urlpatterns = router.urls
 
 urlpatterns += [
     path('api/admin/', admin.site.urls),
-    path('api/browser/', pages_views.BrowserPage.as_view(), name='browser-page'),
-    path('api/library/<int:user_id>/', pages_views.LibraryPage.as_view(), name='library-page'),
-    path('api/account/<int:user_id>/', pages_views.MyPage.as_view(), name='my-page'),
-    path('api/feedback/<int:user_id>/<int:book_id>/', pages_views.WriterFeedbackPage.as_view(), name='writer-feedback'),
-    path('api/details/<int:book_id>/',pages_views.BookDetailPage.as_view(), name='book-details-page')
 ]
