@@ -1,21 +1,20 @@
-from json import JSONDecodeError
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import viewsets, status, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from storyconnect.mixins import *
 from .models import *
 from .serializers import *
+from django.http import JsonResponse
 from django.db import transaction
+from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 
 
-
-class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
+class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin):
     queryset = WriterFeedback.objects.all()
     serializer_class = WriterFeedbackSerializer
+    queryset = Highlight.objects.all()
+    serializer_class = HighlightSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     permission_classes = [IsAuthenticatedOrReadOnly]
     @action(detail=True, methods=['post'])
     def dismiss(self, request, pk=None):
@@ -35,7 +34,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         serializer = WriterFeedbackSerializer(comments, many=True)
         return JsonResponse(serializer.data)
 
-class HighlightViewSet(viewsets.ModelViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson ):
+class HighlightViewSet(viewsets.GenericViewSet, CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = Highlight.objects.all()
     serializer_class = HighlightSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]    
