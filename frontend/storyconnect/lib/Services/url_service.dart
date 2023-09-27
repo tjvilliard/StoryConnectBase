@@ -30,7 +30,9 @@ class UrlContants {
   static final _urlBuilder = _UrlBuilder();
 
   static Uri getWriterFeedback(int chapterId) {
-    return _urlBuilder.build('feedback/by_chapter/$chapterId');
+    return _urlBuilder
+        .build('feedback/by_chapter/')
+        .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
   static Uri getChapters(int bookId) {

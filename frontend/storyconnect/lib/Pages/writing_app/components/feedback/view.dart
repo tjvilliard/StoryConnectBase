@@ -7,6 +7,7 @@ import 'package:storyconnect/Pages/writing_app/components/feedback/components/gh
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/side_popup_header.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class FeedbackWidget extends StatefulWidget {
   @override
@@ -15,13 +16,19 @@ class FeedbackWidget extends StatefulWidget {
 
 class FeedbackWidgetState extends State<FeedbackWidget> {
   bool firstLoaded = false;
+  final suggestionListKey = GlobalKey();
+  final commentsListKey = GlobalKey();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       firstLoaded = true;
-      BlocProvider.of<FeedbackBloc>(context).add(LoadChapterFeedback(
-          BlocProvider.of<ChapterBloc>(context).state.currentIndex));
+      final chapterBloc = context.read<ChapterBloc>();
+
+      final int chapterId =
+          chapterBloc.chapterNumToID[chapterBloc.state.currentIndex] ?? 0;
+
+      context.read<FeedbackBloc>().add(LoadChapterFeedback(chapterId));
     });
 
     super.initState();
@@ -66,23 +73,31 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                           ),
                           BlocListener<ChapterBloc, ChapterBlocStruct>(
                               listener: (context, chapterState) {
-                                context.read<FeedbackBloc>().add(
-                                    LoadChapterFeedback(
-                                        chapterState.currentIndex));
+                                final chapterBloc = context.read<ChapterBloc>();
+                                final int chapterId = chapterBloc
+                                    .chapterNumToID[chapterState.currentIndex]!;
+
+                                context
+                                    .read<FeedbackBloc>()
+                                    .add(LoadChapterFeedback(chapterId));
                               },
                               child: Expanded(
                                 child: AnimatedSwitcher(
                                   duration: Duration(milliseconds: 200),
-                                  child: state.selectedFeedbackType ==
-                                          FeedbackType.comment
-                                      ? FeedbackList(
-                                          key: UniqueKey(),
-                                          feedbacks: state.comments)
-                                      : FeedbackList(
-                                          key: UniqueKey(),
-                                          feedbacks: state.suggestions),
+                                  child: state.loadingStruct.isLoading
+                                      ? LoadingWidget(
+                                          loadingStruct: state
+                                              .loadingStruct) // This will show when loading.
+                                      : (state.selectedFeedbackType ==
+                                              FeedbackType.comment
+                                          ? FeedbackList(
+                                              key: commentsListKey,
+                                              feedbacks: state.comments)
+                                          : FeedbackList(
+                                              key: suggestionListKey,
+                                              feedbacks: state.suggestions)),
                                 ),
-                              )),
+                              ))
                         ],
                       ),
                     ),

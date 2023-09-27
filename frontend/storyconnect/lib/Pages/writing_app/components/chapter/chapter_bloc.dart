@@ -91,7 +91,7 @@ class ChapterBlocStruct {
     return ChapterBlocStruct(
         currentIndex: 0,
         chapters: {0: ""},
-        loadingStruct: LoadingStruct.loading(false));
+        loadingStruct: LoadingStruct.loading(true));
   }
 }
 

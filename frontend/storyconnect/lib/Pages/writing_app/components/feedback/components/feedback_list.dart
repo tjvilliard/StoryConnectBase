@@ -15,6 +15,20 @@ class FeedbackList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FeedbackBloc, FeedbackState>(builder: (context, state) {
+      // if our feedbacks are empty, return a Card with a message
+      if (feedbacks.isEmpty) {
+        return Column(children: [
+          Card(
+            elevation: 4,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              child: Text("No feedback has been provived yet"),
+            ),
+          ),
+          Spacer()
+        ]);
+      }
+
       return ListView.separated(
         itemCount: feedbacks.length,
         itemBuilder: (context, index) {

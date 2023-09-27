@@ -88,9 +88,9 @@ class WritingRepository {
   }
 
   Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
-    final List<WriterFeedback> feedback = [];
+    List<WriterFeedback> feedback = [];
 
-    await for (var item in _api.getFeedback(chapterId)) {
+    await for (WriterFeedback item in _api.getFeedback(chapterId)) {
       feedback.add(item);
     }
 

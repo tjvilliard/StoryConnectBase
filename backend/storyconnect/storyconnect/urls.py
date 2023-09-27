@@ -20,13 +20,11 @@ from rest_framework.authtoken.views import obtain_auth_token
 from books import views as books_views
 from comment import views as comment_views
 
-
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
-
 
 urlpatterns = router.urls
 

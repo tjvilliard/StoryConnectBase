@@ -23,7 +23,7 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   void loadChapterFeedback(
       LoadChapterFeedback event, FeedbackEmitter emit) async {
     emit(state.copyWith(
-      loadingStruct: LoadingStruct.loading(true),
+      loadingStruct: LoadingStruct.message("Loading Feedback"),
     ));
 
     final currentFeedbacks =
