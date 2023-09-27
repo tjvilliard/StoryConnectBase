@@ -29,6 +29,8 @@ router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
+    path('api/', include('ai_features.urls')),
+    
     path('api/admin/', admin.site.urls),
     path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
 ]
