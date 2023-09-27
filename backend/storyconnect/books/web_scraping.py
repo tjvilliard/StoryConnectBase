@@ -2,16 +2,27 @@ import pandas as pd
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup
+<<<<<<< HEAD
 from .models import *
+=======
+from models import *
+from typing import List, Dict
+>>>>>>> feature/Creating_models
 
 def data_collection():
     book = {}
     months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
     # counter = 0
     # for i in range(1):
+<<<<<<< HEAD
     url = "https://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index=0"
     r = requests.get(url)
     soup = BeautifulSoup(r.text, features="html.parser")
+=======
+    # url = "https://www.gutenberg.org/ebooks/search/?sort_order=downloads&start_index=0"
+    # r = requests.get(url)
+    # soup = BeautifulSoup(r.text, features="html.parser")
+>>>>>>> feature/Creating_models
 
     # links = []
     # for line in soup.findAll('a', {'class': 'link'}):
@@ -119,4 +130,8 @@ def create_book_chapters(book):
                 content = ch
             )
 
+<<<<<<< HEAD
 book = data_collection()
+=======
+book = data_collection()
+>>>>>>> feature/Creating_models

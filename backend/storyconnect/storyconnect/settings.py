@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'books',
     'comment',
     'core',
+<<<<<<< HEAD
 
 
 ]
@@ -81,6 +82,9 @@ DEBUG_TOOLBAR_CONFIG = {
 INTERNAL_IPS = [
     '127.0.0.1'
     'localhost',
+=======
+    'management',
+>>>>>>> feature/Creating_models
 ]
 
 MIDDLEWARE = [
@@ -135,6 +139,7 @@ DATABASES = {
         'OPTIONS': {'sslmode': os.getenv('SSLMODE')},
     }
 }
+
 
 
 # Password validation
