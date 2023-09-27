@@ -83,23 +83,36 @@ class ChapterViewSet(viewsets.ModelViewSet):
     serializer_class = ChapterSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get_queryset(self):
-        return Chapter.objects.filter(user=self.request.user)
-
     def create(self, request, *args, **kwargs):
+        # Assuming the book reference in your request data is named "book_id"
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        # Get the book instance
+        book = serializer.validated_data['book']
+        
+        # Check if the owner of the book is the current user
+        if book.owner != request.user:
+            return Response({'detail': 'You do not have permission to create a chapter for this book.'}, status=status.HTTP_403_FORBIDDEN)
+
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     def update(self, request, *args, **kwargs):
+        instance = self.get_object() # type: Chapter
+        
+        # Check if the owner of the book linked to this chapter is the current user
+        if instance.book.owner != request.user:
+            return Response({'detail': 'You do not have permission to update this chapter.'}, status=403)
+
         partial = kwargs.pop('partial', False)
-        instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        return JsonResponse(serializer.data)
+        return Response(serializer.data)
+
 
     def partial_update(self, request, *args, **kwargs):
         # get the book instance that we want to update
