@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Widgets/book_widget.dart';
 
-class CurrentWorksCard extends StatelessWidget {
+class CurrentWorksCard extends StatefulWidget {
   const CurrentWorksCard({super.key});
 
+  @override
+  CurrentWorksCardState createState() => CurrentWorksCardState();
+}
+
+class CurrentWorksCardState extends State<CurrentWorksCard> {
   @override
   Widget build(BuildContext context) {
     return Container(

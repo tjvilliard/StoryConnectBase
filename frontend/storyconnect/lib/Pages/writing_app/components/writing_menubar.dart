@@ -58,7 +58,7 @@ class WritingMenuBar extends StatelessWidget {
                   MenuBar(children: [
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.comment),
-                        child: Text("Comments"),
+                        child: Text("Feedback"),
                         onPressed: () {
                           BlocProvider.of<WritingUIBloc>(context)
                               .add(ToggleFeedbackUIEvent());

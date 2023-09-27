@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/navigate_button.dart';
 import 'package:storyconnect/Widgets/horizontal_divider.dart';
 
 class SuggestionWidget extends StatelessWidget {
-  final Comment comment;
+  final WriterFeedback suggestion;
 
-  SuggestionWidget({required this.comment});
-
+  SuggestionWidget({required this.suggestion});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,14 +26,14 @@ class SuggestionWidget extends StatelessWidget {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Chapter ${comment.chapterId}",
+                            Text("Chapter ${suggestion.chapterId}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
                                     .apply(fontStyle: FontStyle.italic)),
-                            if (comment.isGhost() == false)
+                            if (suggestion.isGhost == false)
                               NavigateToFeedbackButton(
-                                suggestion: comment,
+                                feedback: suggestion,
                               )
                           ]),
                     ),
@@ -42,7 +41,7 @@ class SuggestionWidget extends StatelessWidget {
                       constraints:
                           BoxConstraints(minHeight: 50, maxHeight: 100),
                       alignment: Alignment.center,
-                      child: Text(comment.comment ?? "No comment",
+                      child: Text(suggestion.comment!,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Align(

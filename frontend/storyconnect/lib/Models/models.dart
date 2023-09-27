@@ -121,27 +121,6 @@ class Scene with _$Scene {
 }
 
 @freezed
-class Comment with _$Comment {
-  const factory Comment({
-    required int id,
-    @JsonKey(name: 'user_id') int? userId,
-    @JsonKey(name: 'chapter_id') int? chapterId,
-    int? offset,
-    @JsonKey(name: 'offset_end') int? offsetEnd,
-    String? comment,
-  }) = _Comment;
-
-  const Comment._();
-
-  bool isGhost() {
-    return false; // TODO: implement
-  }
-
-  factory Comment.fromJson(Map<String, dynamic> json) =>
-      _$CommentFromJson(json);
-}
-
-@freezed
 class Annotation with _$Annotation {
   const factory Annotation({
     required int id,

@@ -4,9 +4,9 @@ abstract class FeedbackEvent {
   const FeedbackEvent();
 }
 
-class LoadChapterComments extends FeedbackEvent {
+class LoadChapterFeedback extends FeedbackEvent {
   final int chapterId;
-  const LoadChapterComments(this.chapterId);
+  const LoadChapterFeedback(this.chapterId);
 }
 
 class FeedbackTypeChanged extends FeedbackEvent {

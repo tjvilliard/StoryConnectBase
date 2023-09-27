@@ -48,7 +48,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
-    'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -64,19 +63,7 @@ INSTALLED_APPS = [
     'books',
     'comment',
     'core',
-
-
 ]
-
-DEBUG_TOOLBAR_ENABLED = True
-
-def show_toolbar(request):
-    return True
-
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
-}
 
 INTERNAL_IPS = [
     '127.0.0.1'
@@ -85,7 +72,6 @@ INTERNAL_IPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
