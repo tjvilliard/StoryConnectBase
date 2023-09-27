@@ -36,11 +36,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
             # Use the instance directly instead of querying it again
             book = serializer.instance
-            book.owner = request.user
+            # book.owner = request.user
 
-            print(request.user)
+            # print(request.user)
 
-            book.save()
+            # book.save()
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 
@@ -61,8 +61,8 @@ class BookViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
     
-    @action(detail=True, methods=['get'])
-    def get_user_books(self, request):
+    @action(detail=False, methods=['get'])
+    def by_writer(self, request):
 
         # TODO: Test this
         
@@ -71,7 +71,7 @@ class BookViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
-    def get_chapters(self, request, pk=None):
+    def get_chapters(self, request,pk=None):
         book = self.get_object() # type: Book
         chapters = book.get_chapters()
         

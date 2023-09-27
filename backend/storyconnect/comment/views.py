@@ -17,6 +17,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
     queryset = WriterFeedback.objects.all()
     serializer_class = WriterFeedbackSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
     @action(detail=True, methods=['post'])
     def dismiss(self, request, pk=None):
         '''
@@ -26,6 +27,14 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         comment.dismissed = True
         comment.save()
         return Response(status=status.HTTP_200_OK)
+    
+
+    @action(detail=False, methods=['get'])
+    def by_chapter(self, request):
+        chapter_id = request.query_params.get('chapter')
+        comments = WriterFeedback.objects.filter(selection__chapter__id=chapter_id)
+        serializer = WriterFeedbackSerializer(comments, many=True)
+        return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
     def get_comments_include_ghost(self, request, pk=None):

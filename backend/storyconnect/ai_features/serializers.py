@@ -10,6 +10,7 @@ class RoadUnblockerSuggestionSerializer(serializers.Serializer):
     offset_start = serializers.IntegerField()
     offset_end = serializers.IntegerField()
 
+    suggestion = serializers.CharField()
     original = serializers.CharField(required=False)
     suggested_change = serializers.CharField()
 
