@@ -22,7 +22,10 @@ class WritingCreationView extends StatelessWidget {
         child: CustomScaffold(
             appBar: AppBar(),
             navigateBackFunction: () {
-              Beamer.of(context).beamBack();
+              final beamed = Beamer.of(context).beamBack();
+              if (!beamed) {
+                Beamer.of(context).beamToNamed(PageUrls.writerHome);
+              }
             },
             body: SingleChildScrollView(
                 child: Column(
