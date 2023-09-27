@@ -84,7 +84,7 @@ class WritingPageViewState extends State<WritingPageView> {
                       onChanged: (value) {
                         context.read<ChapterBloc>().add(UpdateChapterEvent(
                               text: value,
-                              selection: textController.selection,
+                              // selection: textController.selection,
                             ));
                       },
                       maxLines: null,

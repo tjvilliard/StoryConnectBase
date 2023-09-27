@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,7 +23,8 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
       {required RoadUnblockerRepo repo, required String chapterContent})
       : super(RoadUnblockerState.initial(currentChapterText: chapterContent)) {
     _repo = repo;
-    on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit));
+    on<UnblockerUpdateChapterEvent>(
+        (event, emit) => updateChapter(event, emit));
     on<OnGuidingQuestionChangedEvent>(
         (event, emit) => onGuidingQuestionChanged(event, emit));
     on<LoadSelectionEvent>((event, emit) => loadSelection(event, emit));
@@ -33,7 +35,7 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     on<RejectSuggestionEvent>((event, emit) => rejectSuggestion(event, emit));
   }
 
-  updateChapter(UpdateChapterEvent event, RoadUnblockerEmitter emit) {
+  updateChapter(UnblockerUpdateChapterEvent event, RoadUnblockerEmitter emit) {
     emit(state.copyWith(chapter: event.chapter));
   }
 
@@ -84,6 +86,18 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
         responses.firstWhere((element) => element.uid == event.responseLocalId);
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
+
+    final suggestion =
+        suggestions.firstWhere((element) => element.uid == event.localId);
+
+    // add a chapter change to the chapter bloc with the new suggestion
+    String currentChapterText = event.chapterBloc.state.currentChapterText;
+
+    final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
+        suggestion.offsetEnd, suggestion.suggestedChange);
+
+    event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
+
     suggestions.removeWhere((element) => element.uid == event.localId);
     responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));

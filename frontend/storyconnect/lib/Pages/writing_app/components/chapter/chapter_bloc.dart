@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:flutter/material.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
@@ -25,11 +24,9 @@ class SwitchChapter extends ChapterEvent {
 
 class UpdateChapterEvent extends ChapterEvent {
   String text;
-  TextSelection selection;
   bool storeCommand;
   UpdateChapterEvent({
     required this.text,
-    required this.selection,
     this.storeCommand = true,
   });
 }
@@ -75,6 +72,8 @@ class ChapterBlocStruct {
     required this.loadingStruct,
     this.caretOffset,
   });
+
+  String get currentChapterText => chapters[currentIndex]!;
 
   ChapterBlocStruct copyWith({
     int? currentIndex,
