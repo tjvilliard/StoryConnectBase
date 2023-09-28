@@ -1,8 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/profile_locations.dart';
+import 'package:storyconnect/Services/Beamer/reader_locations.dart';
 import 'package:storyconnect/Services/Beamer/writer_locations.dart';
 import 'package:storyconnect/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +15,7 @@ final routerDelegate = BeamerDelegate(
     beamLocations: [
       WriterLocations(),
       ProfileLocations(),
+      ReaderLocations(),
     ],
   ),
 );
@@ -37,7 +40,11 @@ class MainApp extends StatelessWidget {
           RepositoryProvider(
             lazy: false,
             create: (_) => WritingRepository(),
-          )
+          ),
+          RepositoryProvider(
+            lazy: false,
+            create: (_) => ReadingRepository(),
+          ),
         ],
         child: MaterialApp.router(
           theme: lightTheme,
