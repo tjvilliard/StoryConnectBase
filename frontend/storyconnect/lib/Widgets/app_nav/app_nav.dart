@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Services/url_service.dart';
+import 'package:storyconnect/Widgets/app_nav/app_menu.dart';
 import 'package:storyconnect/Widgets/app_nav/appbar_button.dart';
 
 class CustomAppBar extends AppBar {
@@ -11,24 +12,21 @@ class CustomAppBar extends AppBar {
   CustomAppBar({Key? key, required this.context})
       : super(
             key: key,
-            title: Text("Title"),
+            title: Text("StoryConnect"),
             centerTitle: true,
             elevation: 5,
             toolbarHeight: CustomAppBar.height,
             actions: [
-              AppBarButton(
+              AppBarTextButton(
                   text: "Writing",
                   onPressed: () {
                     Beamer.of(context).beamToNamed(PageUrls.writerHome);
                   }),
-              AppBarButton(
+              AppBarTextButton(
                   text: "Reading",
                   onPressed: () {
                     Beamer.of(context).beamToNamed(PageUrls.readerHome);
                   }),
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {},
-              )
+              CustomAppBarMenu(context: context)
             ]);
 }
