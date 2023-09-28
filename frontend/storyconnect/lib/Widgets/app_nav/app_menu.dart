@@ -1,4 +1,6 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Services/Authentication/sign_out_service.dart';
 import 'package:storyconnect/Widgets/app_nav/appbar_button.dart';
 
 class CustomAppBarMenu extends MenuAnchor {
@@ -7,18 +9,13 @@ class CustomAppBarMenu extends MenuAnchor {
   CustomAppBarMenu({Key? key, required this.context})
       : super(
             menuChildren: [
-              MenuItemButton(
-                onPressed: () {},
-                child: Text("Item 1"),
-              ),
-              MenuItemButton(
-                onPressed: () {},
-                child: Text("Item 2"),
-              ),
-              MenuItemButton(
-                onPressed: () {},
-                child: Text("Item 3"),
-              ),
+              AppBarMenuButton(
+                  context: context,
+                  onPressed: () {
+                    SignOutService().signOut();
+                    Beamer.of(context).beamToNamed("/");
+                  },
+                  child: Text("Sign Out"))
             ],
             builder: (BuildContext context, MenuController controller,
                 Widget? child) {

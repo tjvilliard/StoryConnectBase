@@ -48,3 +48,31 @@ class AppBarIconButton extends StatelessWidget {
     );
   }
 }
+
+class AppBarMenuButton extends StatelessWidget {
+  final BuildContext context;
+  final void Function() onPressed;
+  final Widget child;
+
+  AppBarMenuButton(
+      {Key? key,
+      required this.context,
+      required this.onPressed,
+      required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      width: 150,
+      child: MenuItemButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0.0)))),
+        child: this.child,
+        onPressed: this.onPressed,
+      ),
+    );
+  }
+}
