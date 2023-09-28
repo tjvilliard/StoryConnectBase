@@ -4,7 +4,7 @@ import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
 import 'package:storyconnect/Pages/reading_home/components/tagged_books_widget.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
-import 'package:storyconnect/Widgets/app_nav.dart';
+import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -25,8 +25,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialLoad) {
         initialLoad = false;
-        final readingHomeBloc = context.read<ReadingHomeBloc>();
-        readingHomeBloc.add(GetBooksEvent());
+        //final readingHomeBloc = context.read<ReadingHomeBloc>();
+        //readingHomeBloc.add(GetBooksEvent());
       }
     });
   }
@@ -44,7 +44,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                     Header(
                       title: "Reading Home",
                       subtitle: "",
-                      leading: ViewProfileButton(),
                     ),
                     Flexible(
                       child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
@@ -54,16 +53,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           toReturn =
                               LoadingWidget(loadingStruct: state.loadingStruct);
                         } else {
-                          toReturn = Column(
-                              /*
-                            children: [
-                              TaggedBooksListWidget(
-                                  taggedBooks:
-                                      // Retrieve tags and associated books from the backend.
-                                      sampleBooksData.buildSampleBooks())
-                            ],
-                            */
-                              );
+                          toReturn = Column();
                         }
                         return AnimatedSwitcher(
                             duration: Duration(milliseconds: 500),

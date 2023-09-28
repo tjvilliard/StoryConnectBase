@@ -5,7 +5,7 @@ import 'package:storyconnect/Pages/writing_home/bool_list_widget.dart';
 import 'package:storyconnect/Pages/writing_home/components/create_button.dart';
 import 'package:storyconnect/Pages/writing_home/components/view_profile_button.dart';
 import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
-import 'package:storyconnect/Widgets/app_nav.dart';
+import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
