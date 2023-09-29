@@ -50,17 +50,23 @@ class TaggedBookListWidget extends StatelessWidget {
         child: Column(children: [
           Header(title: tag),
           SizedBox(
-            height: 200,
+            height: 220,
             child: ListView(
+              itemExtent: 170.0,
+              shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               children: this
                   .books
-                  .map((book) => Container(
-                      width: 150,
-                      height: 200,
-                      child: Clickable(
-                          onPressed: () {},
-                          child: BookWidget(title: book.title, coverCDN: ""))))
+                  .map((book) => Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 10.0),
+                      child: Container(
+                          width: 150,
+                          height: 200,
+                          child: Clickable(
+                              onPressed: () {},
+                              child: BookWidget(
+                                  title: book.title, coverCDN: "")))))
                   .toList(),
             ),
           )

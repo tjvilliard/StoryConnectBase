@@ -1,14 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
 import 'package:storyconnect/Pages/reading_home/components/tagged_books_widget.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
-import 'package:storyconnect/Widgets/book_widget.dart';
-import 'package:storyconnect/Widgets/clickable.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
