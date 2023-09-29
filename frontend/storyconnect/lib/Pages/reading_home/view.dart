@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
@@ -43,10 +45,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Header(
-                      title: "Reading Home",
-                      subtitle: "",
-                    ),
+                    Header(title: "Reading Home"),
                     Flexible(
                       child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
                           builder: (context, state) {
@@ -55,22 +54,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           toReturn =
                               LoadingWidget(loadingStruct: state.loadingStruct);
                         } else {
-                          toReturn = SizedBox(
-                            height: 250,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 10,
-                                itemBuilder:
-                                    (BuildContext context, int index) =>
-                                        Container(
-                                            width: 150,
-                                            height: 200,
-                                            child: Clickable(
-                                                onPressed: () {},
-                                                child: BookWidget(
-                                                    title: "Book Title $index",
-                                                    coverCDN: "")))),
-                          );
+                          toReturn = TaggedBooksListWidget(
+                              taggedBooks: sampleBooksData.build());
                         }
                         return AnimatedSwitcher(
                             duration: Duration(milliseconds: 500),

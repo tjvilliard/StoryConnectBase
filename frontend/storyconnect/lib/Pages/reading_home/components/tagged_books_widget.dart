@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
@@ -14,20 +16,23 @@ class TaggedBooksListWidget extends StatelessWidget {
   TaggedBooksListWidget({required this.taggedBooks});
 
   /// Builds a list of tagged book widgets.
-  List<Widget> _buildSlivers() {
-    List<Widget> slivers = [];
+  List<Widget> _buildLists() {
+    List<Widget> lists = [];
 
     for (MapEntry<String, List<Book>> entry in this.taggedBooks.entries) {
-      slivers.add(new TaggedBookListWidget(tag: entry.key, books: entry.value));
+      lists.add(new TaggedBookListWidget(tag: entry.key, books: entry.value));
     }
-    return slivers;
+    return lists;
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      scrollDirection: Axis.vertical,
-      slivers: this._buildSlivers(),
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse}),
+      child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(children: this._buildLists())),
     );
   }
 }
@@ -41,46 +46,24 @@ class TaggedBookListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: CustomScrollView(
-          scrollDirection: Axis.vertical,
-          slivers: [
-            SliverList.list(
-                children: books
-                    .map((book) => Container(
-                        width: 150,
-                        height: 200,
-                        child: Clickable(
-                            onPressed: () {
-                              //final url = PageUrls.book(book.id);
-                              //Beamer.of(context)
-                              //    .beamToNamed(url, data: {"book": book});
-                            },
-                            child:
-                                BookWidget(title: book.title, coverCDN: ""))))
-                    .toList())
-          ],
-        ));
-
-    /** Column(
-          children: [
-            Header(title: tag),
-            SliverList.list(
-              children: books
+        padding: EdgeInsets.all(10.0),
+        child: Column(children: [
+          Header(title: tag),
+          SizedBox(
+            height: 200,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: this
+                  .books
                   .map((book) => Container(
                       width: 150,
                       height: 200,
                       child: Clickable(
-                          onPressed: () {
-                            //final url = PageUrls.book(book.id);
-                            //Beamer.of(context)
-                            //    .beamToNamed(url, data: {"book": book});
-                          },
+                          onPressed: () {},
                           child: BookWidget(title: book.title, coverCDN: ""))))
                   .toList(),
-            )
-          ],
-        )
-        **/
+            ),
+          )
+        ]));
   }
 }
