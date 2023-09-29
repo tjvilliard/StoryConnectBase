@@ -96,4 +96,16 @@ class WritingRepository {
 
     return feedback;
   }
+
+  Future<bool> dismissFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> rejectFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> acceptFeedback(int id) async {
+    return true;
+  }
 }

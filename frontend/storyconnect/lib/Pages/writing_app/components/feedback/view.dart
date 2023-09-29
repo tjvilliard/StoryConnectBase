@@ -58,9 +58,8 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                           ),
                           BlocListener<ChapterBloc, ChapterBlocStruct>(
                               listener: (context, chapterState) {
-                                final chapterBloc = context.read<ChapterBloc>();
-                                final int chapterId = chapterBloc
-                                    .chapterNumToID[chapterState.currentIndex]!;
+                                final int chapterId =
+                                    chapterState.currentChapterId;
 
                                 context
                                     .read<FeedbackBloc>()
