@@ -2,7 +2,7 @@ from json import JSONDecodeError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -36,7 +36,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
             # Use the instance directly instead of querying it again
             book = serializer.instance
+            # book.owner = request.user
 
+            # print(request.user)
+
+            # book.save()
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 
@@ -56,16 +60,18 @@ class BookViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-
+    
     @action(detail=False, methods=['get'])
     def by_writer(self, request):
-        # TODO: Unit test this
-        books = self.get_queryset().filter(owner=request.user)
+
+        # TODO: Test this
+        
+        books = Book.objects.filter(owner=request.user)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
-    def get_chapters(self, request, pk=None):
+    def get_chapters(self, request,pk=None):
         book = self.get_object() # type: Book
         chapters = book.get_chapters()
         

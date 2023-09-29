@@ -19,6 +19,7 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from books import views as books_views
 from comment import views as comment_views
+from ai_features import views as ai_features
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
@@ -29,6 +30,8 @@ router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
+    # path('api/road_unblock/', ai_features.RoadUnblockerRequestView.as_view()),
+    
     path('api/admin/', admin.site.urls),
     path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
 ]

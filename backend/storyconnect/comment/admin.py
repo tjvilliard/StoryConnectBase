@@ -7,7 +7,7 @@ class TextSelectionAdmin(admin.ModelAdmin):
     list_display = ('chapter', 'offset', 'offset_end', 'text', 'floating')
     
 @admin.register(WriterFeedback)
-class CommentAdmin(admin.ModelAdmin):
+class WriterFeedbackAdmin(admin.ModelAdmin):
     list_display = ('user', 'selection', 'comment', 'parent')
 
 @admin.register(Highlight)
