@@ -42,7 +42,27 @@ class TaggedBookListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
+        child: CustomScrollView(
+          scrollDirection: Axis.vertical,
+          slivers: [
+            SliverList.list(
+                children: books
+                    .map((book) => Container(
+                        width: 150,
+                        height: 200,
+                        child: Clickable(
+                            onPressed: () {
+                              //final url = PageUrls.book(book.id);
+                              //Beamer.of(context)
+                              //    .beamToNamed(url, data: {"book": book});
+                            },
+                            child:
+                                BookWidget(title: book.title, coverCDN: ""))))
+                    .toList())
+          ],
+        ));
+
+    /** Column(
           children: [
             Header(title: tag),
             SliverList.list(
@@ -60,6 +80,7 @@ class TaggedBookListWidget extends StatelessWidget {
                   .toList(),
             )
           ],
-        ));
+        )
+        **/
   }
 }
