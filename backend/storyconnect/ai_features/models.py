@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from books.models import Chapter
 from comment.models import TextSelection
@@ -22,16 +23,19 @@ class StatementSheet(models.Model):
 
     document = models.TextField(default="<Statements></Statements>")
 
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.s_tree = etree.fromstring(self.document)
+
     def get_characters(self):
-        s_tree = etree.fromstring(self.document)
-        characters = [x.tag for x in list(s_tree[0])]
+        # selfs_tree = etree.fromstring(self.document)
+        characters = [x.tag for x in list(self.s_tree[0])]
         return characters
     
     def get_character_statements(self, character):
-        s_tree = etree.fromstring(self.document)
         statements = ""
 
-        for child in s_tree[0]:
+        for child in self.s_tree[0]:
             if child.tag == character:
                 statements = child.text
                 break
@@ -39,15 +43,13 @@ class StatementSheet(models.Model):
         return statements
 
     def get_locations(self):
-        s_tree = etree.fromstring(self.document)
-        places = [x.tag for x in list(s_tree[1])]
+        places = [x.tag for x in list(self.s_tree[1])]
         return places
     
     def get_location_statements(self, location):
-        s_tree = etree.fromstring(self.document)
         statements = ""
 
-        for child in s_tree[1]:
+        for child in self.s_tree[1]:
             if child.tag == location:
                 statements = child.text
                 break
@@ -55,7 +57,6 @@ class StatementSheet(models.Model):
         return statements
     
     def merge_sheets(self, new_sheet):
-        s_tree = etree.fromstring(self.document)
         n_tree = etree.fromstring(new_sheet)
 
         existing_characters = self.get_characters()
@@ -63,24 +64,28 @@ class StatementSheet(models.Model):
 
         for child in n_tree[0]:
             if child.tag not in existing_characters:
-                s_tree[0].append(child)
+                self.s_tree[0].append(child)
             else:
                 s_statements = self.get_character_statements(child.tag).split("\n")
                 n_statements = child.text.split("\n")
                 for n_statement in n_statements:
                     if n_statement not in s_statements:
                         s_statements.append(n_statement)
-                s_tree[0].find(child.tag).text = "".join(s_statements)
+                
+                join_statements = [x + "\n" for x in s_statements]
+                self.s_tree[0].find(child.tag).text = "".join(join_statements)
         
         for child in n_tree[1]:
             if child.tag not in existing_locations:
-                s_tree[1].append(child)
+                self.s_tree[1].append(child)
             else:
                 s_statements = self.get_location_statements(child.tag).split("\n")
                 n_statements = child.text.split("\n")
                 for n_statement in n_statements:
                     if n_statement not in s_statements:
                         s_statements.append(n_statement)
-                s_tree[1].find(child.tag).text = "".join(s_statements)
+                
+                join_statements = [x + "\n" for x in s_statements]
+                self.s_tree[1].find(child.tag).text = "".join(join_statements)
         
-        self.document = etree.tostring(s_tree).decode('utf-8')
+        self.document = etree.tostring(self.s_tree).decode('utf-8')
