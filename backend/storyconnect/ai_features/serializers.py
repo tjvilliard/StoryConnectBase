@@ -19,4 +19,10 @@ class RoadUnblockerResponseSerializer(serializers.Serializer):
     message = serializers.CharField()
 
 
-    
+# class GptCompletionSerializer(serializers.Serializer):
+#     id = serializers.CharField()
+#     object = serializers.CharField()
+#     created = serializers.IntegerField()
+#     model = serializers.CharField()
+#     choices = serializers.ListField(child=serializers.DictField())
+#     usage = serializers.DictField()
