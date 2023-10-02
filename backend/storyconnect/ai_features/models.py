@@ -3,6 +3,7 @@ from django.db import models
 from books.models import Chapter
 from comment.models import TextSelection
 from lxml import etree
+import logging
 # Create your models here.
 
 class RoadUnblockerSuggestion(models.Model):
@@ -26,6 +27,7 @@ class StatementSheet(models.Model):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.s_tree = etree.fromstring(self.document)
+        # self.logger = logging.getLogger(__name__)
 
     def get_characters(self):
         # selfs_tree = etree.fromstring(self.document)
@@ -72,7 +74,8 @@ class StatementSheet(models.Model):
                     if n_statement not in s_statements:
                         s_statements.append(n_statement)
                 
-                join_statements = [x + "\n" for x in s_statements]
+                join_statements = [x.strip() + "\n" for x in s_statements if x != "" and x != "\n" and x != " "]
+
                 self.s_tree[0].find(child.tag).text = "".join(join_statements)
         
         for child in n_tree[1]:
@@ -85,7 +88,7 @@ class StatementSheet(models.Model):
                     if n_statement not in s_statements:
                         s_statements.append(n_statement)
                 
-                join_statements = [x + "\n" for x in s_statements]
+                join_statements = [x.strip() + "\n" for x in s_statements if x != "" and x != "\n" and x != " "]
                 self.s_tree[1].find(child.tag).text = "".join(join_statements)
         
-        self.document = etree.tostring(self.s_tree).decode('utf-8')
+        self.document = etree.tostring(self.s_tree, pretty_print=True).decode('utf-8')
