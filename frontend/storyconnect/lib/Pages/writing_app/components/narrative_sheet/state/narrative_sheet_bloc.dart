@@ -18,11 +18,12 @@ class NarrativeSheetBloc
           bookId: bookId,
         )) {
     _repo = repo;
-    on<LoadNarrativeElements>((event, emit) => loadCharacters(event, emit));
+    on<LoadNarrativeElements>(
+        (event, emit) => loadNarrativeElements(event, emit));
     add(LoadNarrativeElements());
   }
 
-  loadCharacters(
+  loadNarrativeElements(
       LoadNarrativeElements event, NarrativeSheetEmitter emit) async {
     emit(state.copyWith(
       loading: LoadingStruct.message("Loading Characters"),

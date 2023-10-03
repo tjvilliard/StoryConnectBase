@@ -44,7 +44,10 @@ class NarrativeSheetPopup extends PopupRoute<void> {
                         )),
                     Align(
                         alignment: Alignment.topCenter,
-                        child: NarrativeSheetView()),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: NarrativeSheetView(),
+                        )),
                   ],
                 ))));
   }

@@ -5,7 +5,9 @@ import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/state/
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class NarrativeSheetView extends StatelessWidget {
-  const NarrativeSheetView({super.key});
+  const NarrativeSheetView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,9 @@ class NarrativeSheetView extends StatelessWidget {
             toReturn = NarrativeElementsList(
                 narrativeElements: state.sortedNarrativeElements);
           }
-          return AnimatedSwitcher(
-              duration: Duration(milliseconds: 200), child: toReturn);
+          return Expanded(
+              child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200), child: toReturn));
         })
       ],
     );
