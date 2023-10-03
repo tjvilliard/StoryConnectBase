@@ -108,4 +108,6 @@ class WritingRepository {
   Future<bool> acceptFeedback(int id) async {
     return true;
   }
+
+  getNarrativeElements(int bookId) {}
 }
