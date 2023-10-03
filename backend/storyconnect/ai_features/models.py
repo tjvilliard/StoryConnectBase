@@ -3,6 +3,7 @@ from django.db import models
 from books.models import Chapter
 from comment.models import TextSelection
 from lxml import etree
+from .exceptions import StatementSheetInvalidDocumentError
 import logging
 # Create your models here.
 
@@ -26,47 +27,76 @@ class StatementSheet(models.Model):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.s_tree = etree.fromstring(self.document)
+        try:
+            self.s_tree = etree.fromstring(self.document)
+            self.s_tree = StatementSheet._validate(self.s_tree)
+        except etree.XMLSyntaxError:
+            raise StatementSheetInvalidDocumentError()
         # self.logger = logging.getLogger(__name__)
+
+    @staticmethod
+    def _validate(tree):
+        if tree.find("Characters") is None:
+            etree.SubElement(tree, "Characters")
+        if tree.find("Locations") is None:
+            etree.SubElement(tree, "Locations")
+        
+        return tree
 
     def get_characters(self):
         # selfs_tree = etree.fromstring(self.document)
-        characters = [x.tag for x in list(self.s_tree[0])]
+        characters = [x.tag for x in self.s_tree.find("Characters")]
         return characters
     
     def get_character_statements(self, character):
         statements = ""
 
-        for child in self.s_tree[0]:
-            if child.tag == character:
-                statements = child.text
-                break
+        characters = self.s_tree.find("Characters")
+        statements = characters.find(character).text
 
         return statements
 
     def get_locations(self):
-        places = [x.tag for x in list(self.s_tree[1])]
+        places = [x.tag for x in self.s_tree.find("Locations")]
         return places
     
     def get_location_statements(self, location):
         statements = ""
 
-        for child in self.s_tree[1]:
-            if child.tag == location:
-                statements = child.text
-                break
+        locations = self.s_tree.find("Locations")
+        statements = locations.find(location).text
 
         return statements
     
+    def get_statements(self, tag=None, entity=None):
+        if tag is None:
+            # return all statements
+            statements = ""
+            for x in self.s_tree:
+                for child in x:
+                    statements += child.text
+            return statements
+        else:
+            # return statements for tag
+            tag_root = self.s_tree.find(tag)
+            if entity:
+                return tag_root.find(entity).text
+            
+            tag_statements = ""
+            for x in tag_root:
+                tag_statements += x.text
+            return tag_statements
+    
     def merge_sheets(self, new_sheet):
         n_tree = etree.fromstring(new_sheet)
+        n_tree = StatementSheet._validate(n_tree)
 
         existing_characters = self.get_characters()
         existing_locations = self.get_locations()
 
-        for child in n_tree[0]:
+        for child in n_tree.find("Characters"):
             if child.tag not in existing_characters:
-                self.s_tree[0].append(child)
+                self.s_tree.find("Characters").append(child)
             else:
                 s_statements = self.get_character_statements(child.tag).split("\n")
                 n_statements = child.text.split("\n")
@@ -76,11 +106,11 @@ class StatementSheet(models.Model):
                 
                 join_statements = [x.strip() + "\n" for x in s_statements if x != "" and x != "\n" and x != " "]
 
-                self.s_tree[0].find(child.tag).text = "".join(join_statements)
+                self.s_tree.find("Characters").find(child.tag).text = "".join(join_statements)
         
-        for child in n_tree[1]:
+        for child in n_tree.find("Locations"):
             if child.tag not in existing_locations:
-                self.s_tree[1].append(child)
+                self.s_tree.find("Locations").append(child)
             else:
                 s_statements = self.get_location_statements(child.tag).split("\n")
                 n_statements = child.text.split("\n")
@@ -89,6 +119,6 @@ class StatementSheet(models.Model):
                         s_statements.append(n_statement)
                 
                 join_statements = [x.strip() + "\n" for x in s_statements if x != "" and x != "\n" and x != " "]
-                self.s_tree[1].find(child.tag).text = "".join(join_statements)
+                self.s_tree.find("Locations").find(child.tag).text = "".join(join_statements)
         
         self.document = etree.tostring(self.s_tree, pretty_print=True).decode('utf-8')

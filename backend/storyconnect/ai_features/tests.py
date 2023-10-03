@@ -1,6 +1,8 @@
 from django.test import TestCase
 from .models import *
 from books.models import Book
+from .continuity_checker import ContinuityChecker
+import logging
 # Create your tests here.
 class StatementSheetTests(TestCase):
     def setUp(self):
@@ -33,3 +35,63 @@ class StatementSheetTests(TestCase):
 
         statements = self.sheet.get_character_statements('John-Doe')
         self.assertEqual(statements, 'John Doe has blue eyes.\nJohn Doe is tall.\nJohn Doe has the upper hand.\n')
+
+class ContinuityCheckerTests(TestCase):
+    def setUp(self):
+        self.logger = logging.getLogger(__name__)
+
+        self.cc = ContinuityChecker()
+        self.text1 = """They met in The Kings Square, a quiet and peaceful spot at this time of night. Alexander and Isobel sat under the grand fountain, a statue of a forgotten ruler looking over them. Alexander looked longingly into Isobels dark sea-colored eyes, her dark auburn hair glistening as the sun falls behind her. He loved her
+                        and she him. He let his hand fall against her burnished olive skin. It was warm to the touch. She received him well and 
+                        looked back into his stark icy eyes. Isobel grabbed Alexander by his scruffy blonde curls and told him,
+                        "never let me go". """
+        self.text2 = """Isobel looked over at alexander, his eyes fixed on the sword in his hand, the brown of his eyes reflecting of the blade
+                        and back at her. He was a man meant to hold a weapon. He wielded it delicately and yet commanded it ferociously. He 
+                        raised the sword in his hand and as grabbed his ragged ponytail. In one motion the blade was through. He held out the 
+                        clump of brown hair and let it drop to the floor. """
+        
+        self.sheet1 = """<Statements>
+                            <Characters>
+                            <Alexander>
+                            Alexander has scruffy blonde curls.
+                            Alexander has stark icy eyes.
+                            </Alexander>
+                            <Isobel>
+                            Isobel has dark sea-colored eyes.
+                            Isobel has dark auburn hair.
+                            Isobel has burnished olive skin.
+                            </Isobel>
+                            </Characters>
+                            <Locations>
+                            <Kings-Square>
+                            The Kings Square is a quiet and peaceful spot.
+                            The Kings Square has a grand fountain.
+                            The Kings Square has a statue of a forgotten ruler.
+                            </Kings-Square>
+                            </Locations>
+                            </Statements>"""
+
+        self.sheet2 = """<Statements>
+                            <Characters>
+                            <Alexander>
+                            Alexander has brown eyes.
+                            Alexander has a ragged ponytail.
+                            </Alexander>
+                            <Isobel>
+                            Isobel has pail skin.
+                            </Isobel>
+                            </Characters>
+                            </Statements>
+                            """
+ 
+    def test_api_call(self):
+        cc_response = self.cc.create_statementsheet(self.text1)
+        
+        print('\n' + cc_response + '\n')
+        print(self.cc.last_response)
+
+    def test_comparison(self):
+        cc_response = self.cc.compare_statementsheets(self.sheet1, self.sheet2)
+        print(cc_response)
+        # print("\n")
+        # print(self.cc.last_response)
