@@ -53,7 +53,9 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   Future<void> loadEvent(WritingLoadEvent event, WritingUIEmiter emit) async {
-    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
+    emit(state.copyWith(
+        loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
+
     event.chapterBloc.add(LoadEvent(
       event.feedbackBloc,
     ));
@@ -61,7 +63,9 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     final title = await _getBookTitle(event.bookId);
 
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.loading(false), title: title));
+      loadingStruct: LoadingStruct.loading(false),
+      title: title,
+    ));
   }
 
   void toggleChapterOutline(WritingUIEvent event, WritingUIEmiter emit) {
