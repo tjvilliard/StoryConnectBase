@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
@@ -14,36 +13,11 @@ class ReadingPageView extends StatefulWidget {
 
 class ReadingPageViewState extends State<ReadingPageView> {
   final textController = TextEditingController();
-  //final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    //focusNode.addListener(_handleFocusChange);
   }
-
-/*
-  void _handleFocusChange() {
-    if (focusNode.hasFocus) {
-      RawKeyboard.instance.addListener(_handleKeyEvent);
-    } else {
-      RawKeyboard.instance.removeListener(_handleKeyEvent);
-    }
-  }
-
-  void _handleKeyEvent(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      final isCmdPressed = event.isMetaPressed;
-      final isCtrlPressed = event.isControlPressed;
-      final isZPressed = event.logicalKey == LogicalKeyboardKey.keyZ;
-
-      if ((isCmdPressed || isCtrlPressed) && isZPressed) {
-        print("Undo Pressed!");
-        // Implement undo logic
-      }
-    }
-  }
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -79,21 +53,6 @@ class ReadingPageViewState extends State<ReadingPageView> {
                           .bodyMedium!
                           .copyWith(color: Colors.black, fontSize: 16),
                       controller: textController,
-                      //focusNode: focusNode,
-                      /*
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter your text here',
-                      ),
-                      onChanged: (value) {
-                        context.read<ChapterBloc>().add(UpdateChapterEvent(
-                              text: value,
-                              selection: textController.selection,
-                            ));
-                      },
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      */
                     )));
           }
           return AnimatedSwitcher(
