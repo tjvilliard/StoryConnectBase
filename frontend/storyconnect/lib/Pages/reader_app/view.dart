@@ -2,7 +2,9 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/page_view.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading_menubar.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -80,13 +82,16 @@ class _ReadingAppViewState extends State<ReadingAppView> {
           children: [
             Flexible(
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                  Flexible(child: ReadingPageView()),
-                  Row(
-                    children: [],
-                  ),
-                ])),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ChapterNavigation(),
+                Center(child: ReadingPageView()),
+                Row(
+                  children: [],
+                ),
+              ],
+            )),
+            ReadingMenuBar(),
           ],
         ));
   }

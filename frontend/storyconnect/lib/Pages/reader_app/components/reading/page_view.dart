@@ -55,7 +55,6 @@ class ReadingPageViewState extends State<ReadingPageView> {
                       controller: textController,
                       readOnly: true,
                       maxLines: null,
-                      keyboardType: TextInputType.multiline,
                     )));
           }
           return AnimatedSwitcher(
