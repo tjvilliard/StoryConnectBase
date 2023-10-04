@@ -29,11 +29,16 @@ class ReadingHomeStruct {
   */
 
   final List<Book> books;
+  final Map<String, List<Book>> taggedBooks;
   final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
 
-  ReadingHomeStruct(
-      {required this.books, required this.loadingStruct, this.bookToNavigate});
+  ReadingHomeStruct({
+    required this.books,
+    required this.loadingStruct,
+    this.bookToNavigate,
+    required this.taggedBooks,
+  });
 }
 
 typedef ReadingHomeEmitter = Emitter<ReadingHomeStruct>;
@@ -42,16 +47,26 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   late final ReadingRepository repository;
   ReadingHomeBloc(this.repository)
       : super(ReadingHomeStruct(
-            books: [], loadingStruct: LoadingStruct(isLoading: false))) {
+          books: [],
+          taggedBooks: {},
+          loadingStruct: LoadingStruct(isLoading: false),
+        )) {
     on<GetBooksEvent>((event, emit) => updateBooksList(event, emit));
   }
 
   void updateBooksList(ReadingHomeEvent event, ReadingHomeEmitter emit) async {
     emit(ReadingHomeStruct(
-        books: state.books,
-        loadingStruct: LoadingStruct.loading((event.isLoading))));
+      books: state.books,
+      taggedBooks: state.taggedBooks,
+      loadingStruct: LoadingStruct.loading((event.isLoading)),
+    ));
     List<Book> books = await this.repository.getBooks();
+    Map<String, List<Book>> taggedBooks =
+        await this.repository.getTaggedBooks();
     emit(ReadingHomeStruct(
-        books: books, loadingStruct: LoadingStruct.loading(false)));
+      books: books,
+      taggedBooks: taggedBooks,
+      loadingStruct: LoadingStruct.loading(false),
+    ));
   }
 }

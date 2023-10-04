@@ -4,7 +4,6 @@ import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reader_app/components/pages_repository.dart';
 
 part 'chapter_event.dart';
-
 part 'chapter_bloc_struct.dart';
 
 typedef ChapterEmitter = Emitter<ChapterBlocStruct>;

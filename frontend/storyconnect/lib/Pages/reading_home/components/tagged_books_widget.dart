@@ -64,7 +64,11 @@ class TaggedBookListWidget extends StatelessWidget {
                           width: 150,
                           height: 200,
                           child: Clickable(
-                              onPressed: () {},
+                              onPressed: () {
+                                final url = PageUrls.readBook(book.id);
+                                Beamer.of(context)
+                                    .beamToNamed(url, data: {"book": book});
+                              },
                               child: BookWidget(
                                   title: book.title, coverCDN: "")))))
                   .toList(),

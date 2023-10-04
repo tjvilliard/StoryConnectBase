@@ -36,6 +36,7 @@ class ReadingApiProvider {
 }
 
 class ReadingRepository {
+  Map<String, List<Book>> taggedBooks = {};
   List<Book> books = [];
   ReadingApiProvider _api = ReadingApiProvider();
 
@@ -43,5 +44,11 @@ class ReadingRepository {
     final result = await this._api.getBooks();
 
     return result.toList();
+  }
+
+  Future<Map<String, List<Book>>> getTaggedBooks() async {
+    final result = await this._api.getBooks();
+
+    return {"Library": await result.toList()};
   }
 }

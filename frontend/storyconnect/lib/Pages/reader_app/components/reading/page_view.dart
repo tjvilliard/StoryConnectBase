@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/page_sliver.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ReadingPageView extends StatefulWidget {
@@ -25,9 +25,9 @@ class ReadingPageViewState extends State<ReadingPageView> {
         constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
         child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
             listener: (context, state) {
-          textController.text = state.chapters[state.currentIndex] ?? "";
+          textController.text = state.chapters[state.chapterIndex] ?? "";
         }, buildWhen: (previous, current) {
-          return previous.currentIndex != current.currentIndex ||
+          return previous.chapterIndex != current.chapterIndex ||
               previous.loadingStruct != current.loadingStruct;
         }, builder: (context, state) {
           Widget toReturn;
@@ -47,12 +47,15 @@ class ReadingPageViewState extends State<ReadingPageView> {
                     constraints:
                         BoxConstraints(minHeight: RenderPageSliver.pageHeight),
                     child: TextField(
-                      readOnly: true,
+                      decoration: null,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
                           .copyWith(color: Colors.black, fontSize: 16),
                       controller: textController,
+                      readOnly: true,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
                     )));
           }
           return AnimatedSwitcher(

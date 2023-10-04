@@ -22,6 +22,10 @@ class PageUrls {
     return "/writer/book/$bookID";
   }
 
+  static String readBook(int bookID) {
+    return "/reader/book/$bookID";
+  }
+
   static String writerProfile(int userID) {
     return "/profile/writer/$userID";
   }
