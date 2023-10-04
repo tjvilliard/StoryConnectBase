@@ -4,7 +4,7 @@ part of 'narrative_element_models.dart';
 abstract class NarrativeElementAttributeType
     with _$NarrativeElementAttributeType {
   const factory NarrativeElementAttributeType({
-    required int userId,
+    @JsonKey(name: 'user_id') required int userId,
     required String name,
     @JsonKey(name: 'applicable_to') required NarrativeElementType applicableTo,
   }) = _NarrativeElementAttributeType;
