@@ -199,7 +199,7 @@ class Chapter(models.Model):
 
 
 
-
+#  Example: Character, Location, Item, etc.
 class NarrativeElementType(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link each NarrativeElementType to a user
     name = models.CharField(max_length=50)
@@ -207,6 +207,7 @@ class NarrativeElementType(models.Model):
     def __str__(self):
         return self.name
 
+# Tying all the elements together 
 class NarrativeElement(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -223,6 +224,7 @@ class NarrativeElement(models.Model):
     def attributes(self):
         return NarrativeElementAttribute.objects.filter(element=self)
 
+# Example: Character Attribute Types: Physical, Personality, Background
 class NarrativeElementAttributeType(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -230,7 +232,8 @@ class NarrativeElementAttributeType(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+# Example Character Attributes: Hair Color, Eye Color, Height, Weight, Kind, etc.
 class NarrativeElementAttribute(models.Model):
     element = models.ForeignKey(NarrativeElement, on_delete=models.CASCADE)
     attribute = models.CharField(max_length=100, blank=True)
