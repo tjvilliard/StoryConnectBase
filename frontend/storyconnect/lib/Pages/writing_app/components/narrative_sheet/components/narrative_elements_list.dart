@@ -9,25 +9,44 @@ class NarrativeElementsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (narrativeElements.isEmpty) {
-      return Center(child: Text('No narrative elements available.'));
+      return Center(
+          child: Card(
+              margin: EdgeInsets.all(16),
+              child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('No narrative elements available.'))));
     }
 
     return ListView.separated(
-        itemCount: narrativeElements.length,
-        separatorBuilder: (context, index) => Divider(),
-        itemBuilder: (context, index) {
-          final element = narrativeElements[index];
-          if (index == 0 ||
-              narrativeElements[index - 1].elementType != element.elementType) {
-            return Column(
-              children: [
-                Text(element.elementType.name),
-                NarrativeElementCard(narrativeElement: element)
-              ],
-            );
-          } else {
-            return NarrativeElementCard(narrativeElement: element);
-          }
-        });
+      itemCount: narrativeElements.length,
+      separatorBuilder: (context, index) {
+        final element = narrativeElements[index];
+
+        if (index == narrativeElements.length - 1) {
+          return SizedBox.shrink();
+        } else if (narrativeElements[index + 1].elementType !=
+            element.elementType) {
+          return Divider();
+        } else {
+          return SizedBox.shrink();
+        }
+      },
+      itemBuilder: (context, index) {
+        final element = narrativeElements[index];
+
+        if (index == 0 ||
+            narrativeElements[index - 1].elementType != element.elementType) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(element.elementType.name + "s"),
+              NarrativeElementCard(narrativeElement: element)
+            ],
+          );
+        } else {
+          return NarrativeElementCard(narrativeElement: element);
+        }
+      },
+    );
   }
 }

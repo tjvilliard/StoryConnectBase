@@ -7,11 +7,20 @@ abstract class NarrativeElement with _$NarrativeElement {
     required NarrativeElementType elementType,
     required List<NarrativeElementAttribute> attributes,
     required int userId,
-    String? name,
+    required String name,
     String? description,
     String? imageUrl,
     int? chapterId,
   }) = _NarrativeElement;
+  const NarrativeElement._();
+
+  // return sorted list of attributes by type name
+  List<NarrativeElementAttribute> get sortedAttributes {
+    final List<NarrativeElementAttribute> tempAttributes =
+        List.from(attributes);
+    return tempAttributes
+      ..sort((a, b) => a.attributeType.name.compareTo(b.attributeType.name));
+  }
 
   factory NarrativeElement.fromJson(Map<String, dynamic> json) =>
       _$NarrativeElementFromJson(json);

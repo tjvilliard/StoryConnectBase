@@ -4,9 +4,9 @@ part of 'narrative_element_models.dart';
 abstract class NarrativeElementAttribute with _$NarrativeElementAttribute {
   const factory NarrativeElementAttribute({
     required int elementId,
-    String? attribute,
+    required String attribute,
     required NarrativeElementAttributeType attributeType,
-    required int confidence,
+    required double confidence,
     required bool generated,
   }) = _NarrativeElementAttribute;
 
