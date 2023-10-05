@@ -25,12 +25,12 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
-                width: 300,
+                width: 250,
                 child: Card(
                     elevation: 3,
                     child: uiState.chapterOutlineShown
                         ? Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: EdgeInsets.all(8),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [

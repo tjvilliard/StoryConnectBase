@@ -81,8 +81,9 @@ class _ReadingAppViewState extends State<ReadingAppView> {
         body: Column(
           children: [
             Flexible(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
+              alignment: Alignment.center,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ChapterNavigation(),
                 Center(child: ReadingPageView()),

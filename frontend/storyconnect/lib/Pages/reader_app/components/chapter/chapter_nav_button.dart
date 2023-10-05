@@ -17,7 +17,7 @@ class ChapterNavButton extends StatelessWidget {
       final selectedColor = Theme.of(context).primaryColor;
       final selectedTextColor = Colors.white;
       return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 4),
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
                 backgroundColor: chapterState.chapterIndex == index
@@ -29,7 +29,7 @@ class ChapterNavButton extends StatelessWidget {
                   chapterToSwitchFrom: chapterState.chapterIndex));
             },
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: 4),
                 child: Text("Chapter ${index + 1}",
                     style: Theme.of(context).textTheme.labelLarge?.apply(
                         fontSizeDelta: 4,
