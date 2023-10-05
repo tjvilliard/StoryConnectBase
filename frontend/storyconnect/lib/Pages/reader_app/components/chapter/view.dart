@@ -23,6 +23,8 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (context, chapterState) {
         return AnimatedCrossFade(
+            alignment: Alignment.centerLeft,
+            //secondCurve: Curves.linear,
             firstChild: Container(),
             secondChild: Container(
                 width: 250,

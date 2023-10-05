@@ -85,11 +85,16 @@ class _ReadingAppViewState extends State<ReadingAppView> {
               alignment: Alignment.center,
               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ChapterNavigation(),
-                Center(child: ReadingPageView()),
-                Row(
-                  children: [],
-                ),
+                Positioned.fill(
+                    child: Align(
+                  alignment: Alignment.topLeft,
+                  child: ChapterNavigation(),
+                )),
+                Positioned.fill(
+                    child: Align(
+                  alignment: Alignment.center,
+                  child: ReadingPageView(),
+                )),
               ],
             )),
             ReadingMenuBar(),
