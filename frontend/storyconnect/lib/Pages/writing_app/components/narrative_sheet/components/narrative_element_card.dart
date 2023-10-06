@@ -15,31 +15,41 @@ class NarrativeElementCard extends StatelessWidget {
     return Card(
         margin: EdgeInsets.all(16),
         child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            padding: EdgeInsets.all(8),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        Placeholder(
-                          fallbackHeight: 50,
-                          fallbackWidth: 50,
-                        ),
-                        SizedBox(width: 10),
-                        Text(narrativeElement.name,
-                            style: Theme.of(context).textTheme.titleMedium),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text(narrativeElement.description ??
-                        "No description provided."),
-                  ],
-                ),
-                SizedBox(height: 10),
-                AttributesWidget(attributes: narrativeElement.sortedAttributes)
+                Flexible(
+                    flex: 2,
+                    child: Container(
+                        constraints: BoxConstraints(maxWidth: 300),
+                        child: Card(
+                            elevation: .5,
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    Placeholder(
+                                      fallbackHeight: 100,
+                                      fallbackWidth: 100,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(narrativeElement.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    Text(narrativeElement.description ??
+                                        "No description provided.")
+                                  ],
+                                ))))),
+                SizedBox(width: 10),
+                Flexible(
+                    flex: 3,
+                    child: AttributesWidget(
+                        attributes: narrativeElement.sortedAttributes))
               ],
             )));
   }

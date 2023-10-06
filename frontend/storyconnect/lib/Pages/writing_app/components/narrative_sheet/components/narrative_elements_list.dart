@@ -26,7 +26,9 @@ class NarrativeElementsList extends StatelessWidget {
           return SizedBox.shrink();
         } else if (narrativeElements[index + 1].elementType !=
             element.elementType) {
-          return Divider();
+          return SizedBox(
+            height: 20,
+          );
         } else {
           return SizedBox.shrink();
         }
@@ -39,7 +41,15 @@ class NarrativeElementsList extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(element.elementType.name + "s"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "${element.elementType.name}s",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
               NarrativeElementCard(narrativeElement: element)
             ],
           );

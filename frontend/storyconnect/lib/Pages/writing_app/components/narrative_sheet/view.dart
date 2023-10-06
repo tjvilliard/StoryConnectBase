@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/components/confidence_scale_widget.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/components/narrative_elements_list.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/state/narrative_sheet_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -15,6 +16,9 @@ class NarrativeSheetView extends StatelessWidget {
       children: [
         Text('Narrative Element Sheet',
             style: Theme.of(context).textTheme.displayMedium),
+        SizedBox(height: 20),
+        ConfidenceScale(),
+        SizedBox(height: 20),
         BlocBuilder<NarrativeSheetBloc, NarrativeSheetState>(
             builder: (context, state) {
           Widget toReturn;

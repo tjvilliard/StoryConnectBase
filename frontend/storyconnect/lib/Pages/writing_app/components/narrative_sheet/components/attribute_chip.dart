@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Constants/confidence_scale.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 
 class AttributeChip extends StatelessWidget {
@@ -10,15 +11,22 @@ class AttributeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Convert confidence to alpha value (0 to 255).
-    int alpha = (attribute.confidence * 255).toInt().clamp(0, 255);
+    final Color chipColor = confidenceColors[
+        ConfidenceChecker.getConfidence(attribute.confidence)]!;
+    final Color textColor = Colors.white;
 
-    // Use a different base color. For example, a shade of blue.
-    Color chipColor = Theme.of(context).colorScheme.primary.withAlpha(alpha);
-
-    // Modify text color based on the alpha of the chip.
-    // Here, if alpha is low (less confident), text is darker for better contrast.
-    Color textColor = alpha < 127 ? Colors.black : Colors.white;
+    final TextStyle textStyle =
+        Theme.of(context).textTheme.labelLarge!.copyWith(
+      color: textColor,
+      fontStyle: FontStyle.italic,
+      shadows: <Shadow>[
+        Shadow(
+          offset: Offset(1, 1),
+          blurRadius: 2,
+          color: const Color.fromARGB(255, 111, 111, 111),
+        ),
+      ],
+    );
 
     return Chip(
       backgroundColor: chipColor,
@@ -27,18 +35,12 @@ class AttributeChip extends StatelessWidget {
         children: [
           Text(
             attribute.attribute,
-            style: TextStyle(color: textColor),
+            style: textStyle,
           ),
           if (attribute.generated) ...[
             SizedBox(width: 8.0),
-            Text(
-              '${(attribute.confidence * 100).toStringAsFixed(0)}%',
-              style: TextStyle(
-                color: textColor,
-                fontSize: 12.0,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
+            Text('${(attribute.confidence * 100).toStringAsFixed(0)}%',
+                style: textStyle),
           ],
         ],
       ),

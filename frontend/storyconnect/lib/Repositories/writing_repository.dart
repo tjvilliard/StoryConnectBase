@@ -98,6 +98,17 @@ class WritingApiProvider {
           generated: true,
         ),
         NarrativeElementAttribute(
+          attribute: "Fool-hardy",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Personality",
+            applicableTo: characterType,
+          ),
+          elementId: 2,
+          confidence: .50,
+          generated: true,
+        ),
+        NarrativeElementAttribute(
           attribute: "Blonde Hair",
           attributeType: NarrativeElementAttributeType(
             userId: 1,
