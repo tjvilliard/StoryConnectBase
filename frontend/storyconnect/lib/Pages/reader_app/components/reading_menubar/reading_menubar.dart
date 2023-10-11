@@ -8,6 +8,9 @@ import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_blo
 class ReadingMenuBar extends StatelessWidget {
   const ReadingMenuBar({super.key});
 
+  //height for items in bar
+  static const double height = 40;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
@@ -15,6 +18,9 @@ class ReadingMenuBar extends StatelessWidget {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (context, chapterState) {
         return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
             margin: EdgeInsets.all(8),
             child: Padding(
                 padding: EdgeInsets.all(4),
@@ -30,11 +36,11 @@ class ReadingMenuBar extends StatelessWidget {
                                   textDirection: TextDirection.ltr,
                                   overflowAlignment: OverflowBarAlignment.start,
                                   children: [
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
                                       icon: Icon(Icons.arrow_left),
                                       onPressed: () {},
                                     ),
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
                                         icon: Icon(FontAwesomeIcons.list),
                                         label: "Chapter ${chapterState.chapterIndex + 1}" +
                                             "/ ${chapterState.chapters.length} ",
@@ -50,29 +56,30 @@ class ReadingMenuBar extends StatelessWidget {
                               child: OverflowBar(
                                   clipBehavior: Clip.hardEdge,
                                   overflowDirection: VerticalDirection.up,
-                                  textDirection: TextDirection.rtl,
+                                  textDirection: TextDirection.ltr,
                                   overflowAlignment: OverflowBarAlignment.start,
                                   children: [
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
                                       icon: Icon(Icons.person),
                                       onPressed: () {},
                                     ),
 
                                     // Add / Remove Story from Library
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
                                       icon: Icon(Icons.add),
                                       onPressed: () {},
                                     ),
 
                                     // Chapter Feedback
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
                                       icon: Icon(Icons.comment),
                                       label: "Feedback",
                                       onPressed: () {},
                                     ),
 
                                     // Navigate Chapter Forward
-                                    ReadingMenuButton(
+                                    ReadingIconButton(
+                                      square: true,
                                       icon: Icon(Icons.arrow_right),
                                       onPressed: () {},
                                     ),
