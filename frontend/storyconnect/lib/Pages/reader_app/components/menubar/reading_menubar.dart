@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/reading_menubar/reading_menu_button.dart';
+import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menu_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 
 class ReadingMenuBar extends StatelessWidget {
@@ -10,6 +10,8 @@ class ReadingMenuBar extends StatelessWidget {
 
   //height for items in bar
   static const double height = 40;
+  static ShapeBorder widget_radius =
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0));
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,7 @@ class ReadingMenuBar extends StatelessWidget {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (context, chapterState) {
         return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4.0),
-            ),
+            shape: widget_radius,
             margin: EdgeInsets.all(8),
             child: Padding(
                 padding: EdgeInsets.all(4),

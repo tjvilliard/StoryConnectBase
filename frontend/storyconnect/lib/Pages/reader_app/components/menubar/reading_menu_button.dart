@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/reader_app/components/reading_menubar/reading_menubar.dart';
+import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menubar.dart';
 
 /// A button for a menu on the Reading App Page.
 /// Requires an alignment direction for the button,

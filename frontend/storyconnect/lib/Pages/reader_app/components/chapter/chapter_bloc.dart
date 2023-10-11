@@ -1,7 +1,7 @@
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reader_app/components/pages_repository.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
 
 part 'chapter_event.dart';
 part 'chapter_bloc_struct.dart';

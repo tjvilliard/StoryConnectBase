@@ -3,7 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/sign_in/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/pages_repository.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/view.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
