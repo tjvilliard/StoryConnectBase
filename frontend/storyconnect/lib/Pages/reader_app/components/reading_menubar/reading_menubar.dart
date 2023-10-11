@@ -19,80 +19,65 @@ class ReadingMenuBar extends StatelessWidget {
             child: Padding(
                 padding: EdgeInsets.all(4),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MenuBar(
-                      style: MenuStyle(
-                        alignment: Alignment.centerLeft,
-                        maximumSize: MaterialStatePropertyAll(Size(800, 200)),
-                      ),
-                      children: [
-                        // Navigate Chapter Left
-                        ReadingMenuButton(
-                          leadingIcon: Icon(Icons.arrow_left),
-                          onPressed: () {},
-                          alignment: Alignment.centerLeft,
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: OverflowBar(
+                                  clipBehavior: Clip.hardEdge,
+                                  overflowDirection: VerticalDirection.up,
+                                  textDirection: TextDirection.ltr,
+                                  overflowAlignment: OverflowBarAlignment.start,
+                                  children: [
+                                    ReadingMenuButton(
+                                      icon: Icon(Icons.arrow_left),
+                                      onPressed: () {},
+                                    ),
+                                    ReadingMenuButton(
+                                        icon: Icon(FontAwesomeIcons.list),
+                                        label: "Chapter ${chapterState.chapterIndex + 1}" +
+                                            "/ ${chapterState.chapters.length} ",
+                                        onPressed: () {
+                                          BlocProvider.of<ReadingUIBloc>(
+                                                  context)
+                                              .add(ToggleChapterOutlineEvent());
+                                        }),
+                                  ]))),
+                      Expanded(
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: OverflowBar(
+                                  clipBehavior: Clip.hardEdge,
+                                  overflowDirection: VerticalDirection.up,
+                                  textDirection: TextDirection.rtl,
+                                  overflowAlignment: OverflowBarAlignment.start,
+                                  children: [
+                                    ReadingMenuButton(
+                                      icon: Icon(Icons.person),
+                                      onPressed: () {},
+                                    ),
 
-                        ReadingMenuButton(
-                          leadingIcon: Icon(FontAwesomeIcons.list),
-                          content:
-                              "Chapter ${chapterState.chapterIndex + 1} / ${chapterState.chapters.length} ",
-                          onPressed: () {
-                            BlocProvider.of<ReadingUIBloc>(context)
-                                .add(ToggleChapterOutlineEvent());
-                          },
-                          alignment: Alignment.centerLeft,
-                        ),
+                                    // Add / Remove Story from Library
+                                    ReadingMenuButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {},
+                                    ),
 
-                        // Author Profile Button
+                                    // Chapter Feedback
+                                    ReadingMenuButton(
+                                      icon: Icon(Icons.comment),
+                                      label: "Feedback",
+                                      onPressed: () {},
+                                    ),
 
-                        // Add / Remove Story from Library
-
-                        // Chapter Feedback
-                      ],
-                    ),
-
-                    //Right Aligned menu items
-                    MenuBar(
-                      style: MenuStyle(
-                        alignment: Alignment.centerRight,
-                        maximumSize: MaterialStatePropertyAll(
-                            Size(double.infinity, 200)),
-                      ),
-                      children: [
-                        // Author Profile Button
-                        ReadingMenuButton(
-                          leadingIcon: Icon(Icons.person),
-                          onPressed: () {},
-                          alignment: Alignment.centerRight,
-                        ),
-
-                        // Add / Remove Story from Library
-                        ReadingMenuButton(
-                          leadingIcon: Icon(Icons.add),
-                          onPressed: () {},
-                          alignment: Alignment.centerRight,
-                        ),
-
-                        // Chapter Feedback
-                        ReadingMenuButton(
-                          leadingIcon: Icon(Icons.comment),
-                          content: "Feedback",
-                          onPressed: () {},
-                          alignment: Alignment.centerRight,
-                        ),
-
-                        // Navigate Chapter Forward
-                        ReadingMenuButton(
-                          leadingIcon: Icon(Icons.arrow_right),
-                          onPressed: () {},
-                          alignment: Alignment.centerRight,
-                        ),
-                      ],
-                    )
-                  ],
-                )));
+                                    // Navigate Chapter Forward
+                                    ReadingMenuButton(
+                                      icon: Icon(Icons.arrow_right),
+                                      onPressed: () {},
+                                    ),
+                                  ])))
+                    ])));
       });
     });
   }

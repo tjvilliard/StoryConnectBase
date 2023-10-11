@@ -4,29 +4,44 @@ import 'package:flutter/material.dart';
 /// Requires an alignment direction for the button,
 /// possible alongside content.
 class ReadingMenuButton extends StatelessWidget {
-  final Icon? leadingIcon;
-  final String? content;
+  final Icon? icon;
+  final String? label;
   final VoidCallback onPressed;
-  final Alignment alignment;
+
+  static ButtonStyle ReadingMenuButtonStyle = ButtonStyle(
+      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(2.0),
+  )));
 
   /// A Reading Menu Button requires a direction and an action
   const ReadingMenuButton({
     super.key,
-    this.leadingIcon,
-    this.content,
+    this.icon,
+    this.label,
     required this.onPressed,
-    required this.alignment,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: this.alignment,
-      child: MenuItemButton(
-        leadingIcon: leadingIcon == null ? null : this.leadingIcon,
-        child: Text(this.content == null ? "" : this.content!),
+    if (this.label == null) {
+      return ElevatedButton(
+        style: ReadingMenuButtonStyle,
         onPressed: this.onPressed,
-      ),
-    );
+        child: this.icon!,
+      );
+    } else if (this.icon == null) {
+      return ElevatedButton(
+        style: ReadingMenuButtonStyle,
+        onPressed: this.onPressed,
+        child: Text(this.label!),
+      );
+    } else {
+      return ElevatedButton.icon(
+        style: ReadingMenuButtonStyle,
+        onPressed: this.onPressed,
+        icon: this.icon!,
+        label: Text(this.label!),
+      );
+    }
   }
 }
