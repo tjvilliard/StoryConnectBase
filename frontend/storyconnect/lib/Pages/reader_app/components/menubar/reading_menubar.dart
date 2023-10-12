@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menu_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 
@@ -60,7 +60,7 @@ class ReadingMenuBar extends StatelessWidget {
                                     ReadingIconButton(
                                         icon: Icon(FontAwesomeIcons.list),
                                         label: "Chapter ${chapterState.chapterIndex + 1}" +
-                                            "/ ${chapterState.chapters.length} ",
+                                            "/${chapterState.chapters.length} ",
                                         onPressed: () {
                                           BlocProvider.of<ReadingUIBloc>(
                                                   context)
@@ -76,6 +76,7 @@ class ReadingMenuBar extends StatelessWidget {
                                   textDirection: TextDirection.ltr,
                                   overflowAlignment: OverflowBarAlignment.start,
                                   children: [
+                                    // Author profile button
                                     ReadingIconButton(
                                       icon: Icon(Icons.person),
                                       onPressed: () {},
@@ -91,7 +92,10 @@ class ReadingMenuBar extends StatelessWidget {
                                     ReadingIconButton(
                                       icon: Icon(Icons.comment),
                                       label: "Feedback",
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        BlocProvider.of<ReadingUIBloc>(context)
+                                            .add(ToggleFeedbackBarEvent());
+                                      },
                                     ),
 
                                     // Navigate Chapter Forward

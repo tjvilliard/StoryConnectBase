@@ -1,11 +1,12 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/page_view/page_view.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menubar.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/view.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -83,7 +84,6 @@ class _ReadingAppViewState extends State<ReadingAppView> {
             Flexible(
                 child: Stack(
               alignment: Alignment.center,
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Positioned.fill(
                     child: Align(
@@ -95,6 +95,11 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                   alignment: Alignment.center,
                   child: ReadingPageView(),
                 )),
+                Positioned.fill(
+                    child: Align(
+                  alignment: Alignment.topRight,
+                  child: FeedbackWidget(),
+                ))
               ],
             )),
             ReadingMenuBar(),

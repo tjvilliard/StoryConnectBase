@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/chapter_nav_button.dart';
-import 'package:storyconnect/Pages/reader_app/components/side_popup_header.dart';
+import 'package:storyconnect/Pages/reader_app/components/panel_header.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 
 /// The Widget for the Reading View's Chapter Navigation.
@@ -24,7 +24,6 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
           builder: (context, chapterState) {
         return AnimatedCrossFade(
             alignment: Alignment.centerLeft,
-            //secondCurve: Curves.linear,
             firstChild: Container(),
             secondChild: Container(
                 width: 250,

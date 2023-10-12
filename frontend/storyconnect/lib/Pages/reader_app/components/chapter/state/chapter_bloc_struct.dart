@@ -1,4 +1,4 @@
-part of "chapter_bloc.dart";
+part of 'chapter_bloc.dart';
 
 class ChapterBlocStruct {
   final int chapterIndex;

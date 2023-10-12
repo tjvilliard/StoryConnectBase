@@ -1,4 +1,4 @@
-part of "chapter_bloc.dart";
+part of 'chapter_bloc.dart';
 
 abstract class ChapterEvent extends ReplayEvent {
   ChapterEvent();
