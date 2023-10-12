@@ -25,6 +25,8 @@ class ReadingIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ButtonStyle defaultStyle = ButtonStyle(
+      overlayColor: MaterialStatePropertyAll(
+          Theme.of(context).colorScheme.primary.withOpacity(.1)),
       iconColor: this.onPressed == null
           ? MaterialStatePropertyAll(Colors.grey)
           : MaterialStatePropertyAll(Theme.of(context).colorScheme.primary),
