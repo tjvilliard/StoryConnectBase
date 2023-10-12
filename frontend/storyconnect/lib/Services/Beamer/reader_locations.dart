@@ -12,6 +12,7 @@ import 'package:storyconnect/Pages/reading_home/view.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
+/// Handles the beamer locations for Reader Functions.
 class ReaderLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
@@ -26,7 +27,9 @@ class ReaderLocations extends BeamLocation<BeamState> {
     final pages = <CustomBeamPage>[];
     final url = state.uri.pathSegments;
 
+    // If the url contains 'reader' as a primary segment.
     if (url.contains('reader')) {
+      // If the url contains home, send the reader home.
       if (url.contains('home')) {
         pages.add(CustomBeamPage(
             key: ValueKey('reader'),
@@ -35,7 +38,9 @@ class ReaderLocations extends BeamLocation<BeamState> {
                   ReadingHomeBloc(context.read<ReadingRepository>()),
               child: ReadingHomeView(),
             )));
-      } else if (state.pathParameters.containsKey('bookId')) {
+      }
+      // If the url contains a path parameter 'bookId'
+      else if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
         pages.add(CustomBeamPage(
             key: ValueKey('book-$bookId'),
@@ -66,10 +71,15 @@ class ReaderLocations extends BeamLocation<BeamState> {
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
       }
-    } else if (state.uri.pathSegments.isEmpty) {
+    }
+    // If the segments are empty, send the reader to the login page.
+    else if (state.uri.pathSegments.isEmpty) {
       pages.add(
           CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
     }
+
+    // else send the reader to the reader's not found page.
+    // TODO: add Reader's 404-'Not Found' page to the reader functions. Make it cute.
 
     return pages;
   }

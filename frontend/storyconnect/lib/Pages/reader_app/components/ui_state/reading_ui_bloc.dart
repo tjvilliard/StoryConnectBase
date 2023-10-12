@@ -14,8 +14,14 @@ typedef ReadingUIEmitter = Emitter<ReadingUIState>;
 /// Transforms Events related to the book reading UI and transforms the
 /// state of the book reading UI Accordingly.
 class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
-  ReadingRepository repository = ReadingRepository();
-  ReadingUIBloc({required this.repository}) : super(ReadingUIState.initial()) {
+  /// The current state of our reading resository, which contains all
+  /// the data relevant to the reading UI.
+  ReadingRepository _repository = ReadingRepository();
+
+  ///
+  ReadingUIBloc({required ReadingRepository repository})
+      : this._repository = repository,
+        super(ReadingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => this.updateUI(event, emit));
     on<ReadingLoadEvent>((event, emit) => this.loadEvent(event, emit));
     on<ToggleChapterOutlineEvent>(
@@ -29,17 +35,22 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// Gets the title of the book currently loaded by the reading UI.
   Future<String> _getBookTitle(int bookID) async {
-    for (final book in repository.books) {
+    // Search the current state of our repository for our book.
+    for (final book in this._repository.books) {
       if (book.id == bookID) {
         return book.title;
       }
     }
-    final List<Book> books = await repository.getBooks();
+
+    // Call the api again, and search the result for books.
+    final List<Book> books = await this._repository.getBooks();
     for (final book in books) {
       if (book.id == bookID) {
         return book.title;
       }
     }
+
+    // If the book wasn't found, return Book not found Error.
     return "Error: Title not found";
   }
 
@@ -74,7 +85,7 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     emit(state.copyWith(annotationBarShown: !state.annotationBarShown));
   }
 
-  ///
+  /// Updates the toggled state of the Toolbar Widget in the reading UI.
   void toggleToolbar(ReadingUIEvent event, ReadingUIEmitter emit) {
     emit(state.copyWith(toolbarShown: !state.toolbarShown));
   }

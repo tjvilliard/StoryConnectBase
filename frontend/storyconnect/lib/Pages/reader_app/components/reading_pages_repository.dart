@@ -5,7 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
+/// Book Api Provider for the reading app.
+/// Contains all the API calls related to getting books.
 class BookApiProvider {
+  /// Gets the Chapters for a the book-reading UI.
   Future<List<Chapter>> getChapters(int bookId) async {
     String authToken =
         await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
@@ -26,6 +29,7 @@ class BookApiProvider {
   }
 }
 
+/// Repository for book chapters.
 class BookProviderRepository {
   BookApiProvider _api = BookApiProvider();
   final int bookID;
