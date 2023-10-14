@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
 import 'package:storyconnect/Pages/reading_home/components/tagged_books_widget.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
@@ -49,7 +50,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               LoadingWidget(loadingStruct: state.loadingStruct);
                         } else {
                           toReturn = TaggedBooksListWidget(
-                              taggedBooks: state.taggedBooks);
+                              taggedBooks: sampleBooksData.build());
                         }
                         return AnimatedSwitcher(
                             duration: Duration(milliseconds: 500),

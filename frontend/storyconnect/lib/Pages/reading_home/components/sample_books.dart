@@ -6,6 +6,8 @@ class sampleBooksData {
   static Map<String, List<Book>> build() {
     Map<String, List<Book>> taggedBooks = new HashMap<String, List<Book>>();
 
+    List<Book> sampleSciFiBooks = <Book>[];
+
     List<Book> sampleRomanceBooks = <Book>[
       new Book(
           id: 1000,
@@ -47,7 +49,27 @@ class sampleBooksData {
     MapEntry<String, List<Book>> romanceEntries =
         new MapEntry(SampleBookTags.Romance.name, sampleRomanceBooks);
 
-    taggedBooks.addEntries([romanceEntries]);
+    MapEntry<String, List<Book>> sciFiEntries =
+        new MapEntry<String, List<Book>>(SampleBookTags.Sci_fi.name, <Book>[]);
+
+    MapEntry<String, List<Book>> historicalFiction =
+        new MapEntry<String, List<Book>>(
+            SampleBookTags.Historical_Fiction.name, <Book>[]);
+
+    MapEntry<String, List<Book>> fantasyEntries =
+        new MapEntry<String, List<Book>>(SampleBookTags.Fantasy.name, <Book>[]);
+
+    MapEntry<String, List<Book>> nonFictionEntries =
+        new MapEntry<String, List<Book>>(
+            SampleBookTags.Non_Fiction.name, <Book>[]);
+
+    taggedBooks.addEntries([
+      romanceEntries,
+      sciFiEntries,
+      historicalFiction,
+      fantasyEntries,
+      nonFictionEntries
+    ]);
 
     return taggedBooks;
   }
@@ -57,9 +79,8 @@ enum SampleBookTags {
   Romance("Romance"),
   Sci_fi("Sci-Fi"),
   Historical_Fiction("Historical Fiction"),
-  Fantasy(""),
-  Non_Fiction(""),
-  ;
+  Fantasy("Fantasy"),
+  Non_Fiction("Non-Fiction");
 
   const SampleBookTags(this.name);
   final String name;
