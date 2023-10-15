@@ -81,7 +81,7 @@ class BookCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(4.0),
+        padding: EdgeInsets.all(0.0),
         child: Container(
             height: CardHeight,
             width: CardWidth,

@@ -5,6 +5,7 @@ import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_b
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menu_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 
+/// Custom Menu Bar for the Reading UI Page.
 class ReadingMenuBar extends StatelessWidget {
   const ReadingMenuBar({super.key});
 
