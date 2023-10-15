@@ -6,6 +6,28 @@ abstract class ContentPanel extends StatelessWidget {
   const ContentPanel();
 }
 
+/// A material horizontal divider to be used between content panels.
+class ContentDivider extends ContentPanel {
+  /// The color of this divider.
+  final Color color;
+
+  /// The thickness of the line drawn by the divider.
+  final double? thickness;
+
+  ContentDivider({required this.color, this.thickness = null});
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      color: this.color,
+      thickness: this.thickness,
+      height: 0.0,
+      indent: 0,
+      endIndent: 0,
+    );
+  }
+}
+
 /// A panel of a set of book content on the reader view.
 /// Header panels optionally contain a subject.
 class FadedContentPanel extends ContentPanel {
@@ -23,6 +45,8 @@ class FadedContentPanel extends ContentPanel {
   static FadedContentPanel taggedBookPanel(Map<String, List<Book>> children,
       Color primary, Color fade, String Title) {
     List<PanelItem> panelItems = <PanelItem>[];
+
+    panelItems.add(PanelHeader(Title));
 
     for (MapEntry<String, List<Book>> tag in children.entries) {
       panelItems.add(PanelSubtitle(tag.key));
@@ -42,7 +66,7 @@ class FadedContentPanel extends ContentPanel {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [this.primary, this.fade],
-          stops: [0.0, 1.0],
+          stops: [0.0, .99],
         )),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

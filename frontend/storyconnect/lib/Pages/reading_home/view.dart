@@ -38,57 +38,47 @@ class ReadingHomeState extends State<ReadingHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(
-          child: Container(
-              //constraints: BoxConstraints(maxWidth: 800.0),
-              child: Column(children: [
-            Header(title: "Reading Home"),
-            Flexible(child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+        body: Center(child: Container(child:
+            BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
                 builder: (context, state) {
-              List<FadedContentPanel> toReturn;
-              if (state.loadingStruct.isLoading) {
-                Map<String, List<Book>> sample = sampleBooksData.build();
+          List<ContentPanel> toReturn;
+          if (state.loadingStruct.isLoading) {
+            Map<String, List<Book>> sample = sampleBooksData.build();
 
-                toReturn = <FadedContentPanel>[
-                  FadedContentPanel(
-                      primary: Colors.green.withOpacity(
-                          0.3), //TODO: fit color to set of app color scheme.
-                      fade: Colors.transparent,
-                      children: [
-                        PanelDivider(
-                          color: Colors.blue.withOpacity(0.6),
-                          thickness: 5.0,
-                        ),
-                        LoadingItem(),
-                        PanelDivider(
-                          color: Colors.blue.withOpacity(0.6),
-                          thickness: 5.0,
-                        ),
-                      ]),
-                  FadedContentPanel.taggedBookPanel(
-                    sampleBooksData.build(),
-                    Colors.green.withOpacity(0.3),
-                    Colors.transparent,
-                    "Title String Sample",
-                  )
-                ];
-              } else {
-                toReturn = <FadedContentPanel>[
-                  FadedContentPanel(
-                      primary: Colors.green,
-                      fade: Colors.blue,
-                      children: [LoadingItem()])
-                ];
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            }))
-          ])),
-        ));
+            toReturn = <ContentPanel>[
+              FadedContentPanel(
+                  primary: Colors.green.withOpacity(
+                      0.3), //TODO: fit color to set of app color scheme.
+                  fade: Colors.transparent,
+                  children: [
+                    LoadingItem(),
+                  ]),
+              ContentDivider(
+                color: Colors.blue.withOpacity(0.6),
+                thickness: 5.0,
+              ),
+              FadedContentPanel.taggedBookPanel(
+                sampleBooksData.build(),
+                Colors.green.withOpacity(0.3),
+                Colors.transparent,
+                "Categories recomended for you",
+              )
+            ];
+          } else {
+            toReturn = <FadedContentPanel>[
+              FadedContentPanel(
+                  primary: Colors.green,
+                  fade: Colors.blue,
+                  children: [LoadingItem()])
+            ];
+          }
+          return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                reverse: false,
+                child: Column(children: toReturn),
+              ));
+        }))));
   }
 }

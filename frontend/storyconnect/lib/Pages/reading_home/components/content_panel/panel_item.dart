@@ -11,10 +11,19 @@ abstract class PanelItem extends StatelessWidget {}
 
 /// The Header for a set of panel items.
 class PanelHeader extends PanelItem {
+  late final String _text;
+  PanelHeader(String text) {
+    this._text = text;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return SizedBox(
+        width: 800,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8.0, bottom: 4.0, left: 8.0),
+          child: Text(this._text, style: TextStyle(fontSize: 28)),
+        ));
   }
 }
 
@@ -26,29 +35,13 @@ class PanelSubtitle extends PanelItem {
 
   @override
   Widget build(BuildContext context) {
-    return Text(this._text);
-  }
-}
-
-/// A material horizontal divider to be used between panels.
-class PanelDivider extends PanelItem {
-  /// The color of this divider.
-  final Color color;
-
-  /// The thickness of the line drawn by the divider.
-  final double? thickness;
-
-  PanelDivider({required this.color, this.thickness = null});
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      color: this.color,
-      thickness: this.thickness,
-      height: 0.0,
-      indent: 0,
-      endIndent: 0,
-    );
+    return SizedBox(
+        width: 800,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
+          child: Text("Popular Books In ${this._text}",
+              style: TextStyle(fontSize: 20)),
+        ));
   }
 }
 
@@ -57,7 +50,7 @@ class LoadingItem extends PanelItem {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(32.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: LoadingWidget(loadingStruct: LoadingStruct(isLoading: true)));
   }
 }
@@ -74,7 +67,7 @@ class BookList extends PanelItem {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(32.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
         child: SizedBox(
             width: 800,
             child: ScrollConfiguration(
@@ -84,28 +77,23 @@ class BookList extends PanelItem {
                       PointerDeviceKind.mouse
                     }),
                 child: Padding(
-                    padding: EdgeInsets.all(0.0),
+                    padding: EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 200,
-                      child: ListView(
-                        itemExtent: 400.0,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        children: this
-                            ._books
-                            .map((e) => Padding(
-                                padding: EdgeInsets.all(0.0),
-                                child: Container(
-                                    width: 400,
-                                    height: 200,
-                                    child: Clickable(
-                                      onPressed: () {},
-                                      child: Card(
-                                        color: Colors.black,
-                                      ),
-                                    ))))
-                            .toList(),
-                      ),
-                    )))));
+                        height: 270,
+                        child: ListView(
+                            itemExtent: 400.0,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            children: this
+                                ._books
+                                .map((book) => Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Container(
+                                        color: Colors.grey,
+                                        width: 600,
+                                        child: Clickable(
+                                            onPressed: () {},
+                                            child: DescriptBookItem(book)))))
+                                .toList()))))));
   }
 }
