@@ -11,30 +11,50 @@ class CustomAppBar extends AppBar {
 
   CustomAppBar({Key? key, required this.context})
       : super(
-          key: key,
-          shape: Border(
-              bottom: BorderSide(color: Colors.grey.shade200, width: 1.5)),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                  child: Center(
-                      child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: 800,
-                            maxHeight: 40,
-                            minHeight: 40,
-                          ),
-                          child: SearchBar(
-                            leading: Icon(Icons.search),
-                            hintText: "Search",
-                          )))),
-              CustomAppBarMenu(context: context)
-            ],
-          ),
-          surfaceTintColor: Colors.white70,
-          centerTitle: false,
-          elevation: 5,
-          toolbarHeight: CustomAppBar.height,
-        );
+            key: key,
+            surfaceTintColor: Colors.white70,
+            centerTitle: true,
+            elevation: 5,
+            toolbarHeight: CustomAppBar.height,
+            shape: Border(
+                bottom: BorderSide(color: Colors.grey.shade200, width: 1.5)),
+
+            // The Leftmost set of Appbar widgets
+
+            // The Central set of AppBar widgets
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: TextButton.icon(
+                            icon: Icon(Icons.create),
+                            label: Text("Create"),
+                            onPressed: () {},
+                          )),
+                    ),
+                  ),
+                  Flexible(
+                      child: Align(
+                    alignment: Alignment.center,
+                    child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: 800,
+                          maxHeight: 40,
+                          minHeight: 40,
+                        ),
+                        child: SearchBar(
+                          leading: Icon(Icons.search),
+                          hintText: "Search",
+                        )),
+                  )),
+                  Flexible(
+                      child: Align(
+                    alignment: Alignment.centerRight,
+                    child: CustomAppBarMenu(context: context),
+                  )),
+                ]));
 }

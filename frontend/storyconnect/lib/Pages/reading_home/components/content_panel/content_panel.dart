@@ -42,16 +42,25 @@ class FadedContentPanel extends ContentPanel {
     required this.fade,
   });
 
+  static FadedContentPanel tabTagBookPanel(Map<String, List<Book>> taggedBooks,
+      Color primary, Color fade, String title, bool descript) {
+    return FadedContentPanel(
+      children: [BookTabSet(taggedBooks: taggedBooks, descript: false)],
+      primary: primary,
+      fade: fade,
+    );
+  }
+
   /// Builds a panel of tagged Books.
   static FadedContentPanel taggedBookPanel(Map<String, List<Book>> children,
-      Color primary, Color fade, String title) {
+      Color primary, Color fade, String title, bool descript) {
     List<PanelItem> panelItems = <PanelItem>[];
 
     panelItems.add(PanelHeader(title));
 
     for (MapEntry<String, List<Book>> tag in children.entries) {
       panelItems.add(PanelSubtitle("Popular Books in ${tag.key}"));
-      panelItems.add(BookList(books: tag.value));
+      panelItems.add(BookList(books: tag.value, descript: descript));
       panelItems.add(DividerPanel(color: Colors.black, thickness: 1.0));
     }
 
@@ -61,12 +70,12 @@ class FadedContentPanel extends ContentPanel {
 
   /// Builds a panel with a single list of books, with a title and subtitle.
   static FadedContentPanel titledBookPanel(List<Book> books, Color primary,
-      Color fade, String title, String subtitle) {
+      Color fade, String title, String subtitle, bool descript) {
     List<PanelItem> panelItems = <PanelItem>[];
 
     panelItems.add(PanelHeader(title));
     panelItems.add(PanelSubtitle(subtitle));
-    panelItems.add(BookList(books: books));
+    panelItems.add(BookList(books: books, descript: descript));
 
     return FadedContentPanel(
         children: panelItems, primary: primary, fade: fade);

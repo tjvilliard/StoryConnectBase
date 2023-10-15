@@ -9,8 +9,10 @@ import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
+import 'package:storyconnect/theme.dart';
 
-/// Encapulates all of the functionality required by the reading home view.
+/// The Reading Home View: Displays a curated set of book content for the readers.
+///
 class ReadingHomeView extends StatefulWidget {
   const ReadingHomeView({Key? key}) : super(key: key);
 
@@ -43,30 +45,39 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 builder: (context, state) {
           List<ContentPanel> toReturn;
           if (state.loadingStruct.isLoading) {
-            Map<String, List<Book>> sample = sampleBooksData.build();
+            Map<String, List<Book>> sample = sampleBooksData.tagged();
 
             toReturn = <ContentPanel>[
               SolidContentPanel(
                   children: [BlankPanel()], primary: Colors.transparent),
               ContentDivider(
-                color: Colors.black87,
+                color: myColorScheme.secondary,
                 thickness: 2.0,
               ),
-              FadedContentPanel.titledBookPanel([],
-                  Colors.white,
+              FadedContentPanel.titledBookPanel(
+                  sampleBooksData.sample(),
+                  myColorScheme.secondary.withOpacity(0.45),
                   Colors.grey.shade200,
                   "Continue Reading",
-                  "Pick up where you left off"),
+                  "Pick up where you left off",
+                  false),
               ContentDivider(
-                color: Colors.black87,
+                color: myColorScheme.secondary,
                 thickness: 2.0,
               ),
               FadedContentPanel.taggedBookPanel(
-                sampleBooksData.build(),
-                Colors.white,
-                Colors.grey.shade200,
-                "Categories recomended for you",
-              )
+                  sampleBooksData.tagged(),
+                  Colors.white,
+                  Colors.grey.shade200,
+                  "Categories recomended for you",
+                  true),
+              FadedContentPanel.titledBookPanel(
+                  sampleBooksData.sample(),
+                  Colors.white,
+                  Colors.grey.shade200,
+                  "Book Category 2",
+                  "",
+                  true)
             ];
           } else {
             toReturn = [];

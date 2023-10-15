@@ -84,14 +84,49 @@ class LoadingItem extends PanelItem {
   }
 }
 
+///
+class BookTabSet extends PanelItem {
+  ///
+  final Map<String, List<Book>> taggedBooks;
+
+  final bool descript;
+
+  BookTabSet({required this.taggedBooks, bool this.descript = false});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> tabs = <Widget>[];
+
+    List<Widget> bookSets = <Widget>[];
+
+    for (MapEntry<String, List<Book>> bookEntry in this.taggedBooks.entries) {
+      tabs.add(Text(bookEntry.key));
+      bookSets.add(BookList(books: bookEntry.value, descript: this.descript));
+    }
+
+    return SizedBox(
+        width: 800,
+        height: 600,
+        child: DefaultTabController(
+            length: taggedBooks.length,
+            child: Column(children: [
+              TabBar(tabs: tabs),
+              TabBarView(children: bookSets),
+            ])));
+  }
+}
+
 /// A list of Books to be displayed as a panel item.
 class BookList extends PanelItem {
   /// The set of books we are displaying in this panel item.
-  late final List<Book> _books;
+  final List<Book> books;
 
-  BookList({required List<Book> books}) {
-    this._books = books;
-  }
+  final bool descript;
+
+  BookList({
+    required List<Book> this.books,
+    required bool this.descript,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -110,23 +145,24 @@ class BookList extends PanelItem {
                     child: SizedBox(
                         height: 270,
                         child: ListView(
-                            itemExtent: 400.0,
+                            itemExtent: descript ? 400.0 : (270 / 1.618) + 25,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             children: this
-                                ._books
+                                .books
                                 .map((book) => Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Container(
                                         decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
+                                            color: Colors.grey.shade300,
                                             borderRadius:
                                                 BorderRadius.circular(10.0)),
-                                        width: 400,
+                                        width: descript ? 400.0 : 270.0 / 1.618,
                                         child: Clickable(
                                             onPressed: () {},
-                                            child:
-                                                DescriptBookItem(book: book)))))
+                                            child: this.descript
+                                                ? DescriptBookItem(book: book)
+                                                : CoverBookItem(book: book)))))
                                 .toList()))))));
   }
 }
