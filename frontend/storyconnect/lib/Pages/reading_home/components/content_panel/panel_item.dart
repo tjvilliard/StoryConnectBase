@@ -9,6 +9,36 @@ import 'package:storyconnect/Widgets/loading_widget.dart';
 /// A set of panel items. Could be a list of tagged Books.
 abstract class PanelItem extends StatelessWidget {}
 
+class BlankPanel extends PanelItem {
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 200);
+  }
+}
+
+class DividerPanel extends PanelItem {
+  /// The color of this divider.
+  final Color color;
+
+  /// The thickness of the line drawn by the divider.
+  final double? thickness;
+
+  DividerPanel({required this.color, this.thickness = null});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: 850,
+        child: Divider(
+          color: this.color,
+          thickness: this.thickness,
+          height: 0.0,
+          indent: 0,
+          endIndent: 0,
+        ));
+  }
+}
+
 /// The Header for a set of panel items.
 class PanelHeader extends PanelItem {
   late final String _text;
@@ -39,8 +69,7 @@ class PanelSubtitle extends PanelItem {
         width: 800,
         child: Padding(
           padding: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
-          child: Text("Popular Books In ${this._text}",
-              style: TextStyle(fontSize: 20)),
+          child: Text(this._text, style: TextStyle(fontSize: 20)),
         ));
   }
 }
@@ -89,11 +118,15 @@ class BookList extends PanelItem {
                                 .map((book) => Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Container(
-                                        color: Colors.grey,
-                                        width: 600,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        width: 400,
                                         child: Clickable(
                                             onPressed: () {},
-                                            child: DescriptBookItem(book)))))
+                                            child:
+                                                DescriptBookItem(book: book)))))
                                 .toList()))))));
   }
 }

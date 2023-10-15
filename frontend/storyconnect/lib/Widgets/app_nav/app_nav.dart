@@ -11,22 +11,30 @@ class CustomAppBar extends AppBar {
 
   CustomAppBar({Key? key, required this.context})
       : super(
-            key: key,
-            title: Text("StoryConnect"),
-            centerTitle: true,
-            elevation: 5,
-            toolbarHeight: CustomAppBar.height,
-            actions: [
-              AppBarTextButton(
-                  text: "Writing",
-                  onPressed: () {
-                    Beamer.of(context).beamToNamed(PageUrls.writerHome);
-                  }),
-              AppBarTextButton(
-                  text: "Reading",
-                  onPressed: () {
-                    Beamer.of(context).beamToNamed(PageUrls.readerHome);
-                  }),
+          key: key,
+          shape: Border(
+              bottom: BorderSide(color: Colors.grey.shade200, width: 1.5)),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                  child: Center(
+                      child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 800,
+                            maxHeight: 40,
+                            minHeight: 40,
+                          ),
+                          child: SearchBar(
+                            leading: Icon(Icons.search),
+                            hintText: "Search",
+                          )))),
               CustomAppBarMenu(context: context)
-            ]);
+            ],
+          ),
+          surfaceTintColor: Colors.white70,
+          centerTitle: false,
+          elevation: 5,
+          toolbarHeight: CustomAppBar.height,
+        );
 }

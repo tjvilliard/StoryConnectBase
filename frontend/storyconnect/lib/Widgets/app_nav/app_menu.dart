@@ -10,12 +10,21 @@ class CustomAppBarMenu extends MenuAnchor {
       : super(
             menuChildren: [
               AppBarMenuButton(
+                  context: context, onPressed: () {}, child: Text("Inbox")),
+              AppBarMenuButton(
+                  context: context,
+                  onPressed: () {},
+                  child: Text("Notifications")),
+              AppBarMenuButton(
+                  context: context, onPressed: () {}, child: Text("Settings")),
+              Divider(),
+              AppBarMenuButton(
                   context: context,
                   onPressed: () {
                     SignOutService().signOut();
                     Beamer.of(context).beamToNamed("/");
                   },
-                  child: Text("Sign Out"))
+                  child: Text("Sign Out")),
             ],
             builder: (BuildContext context, MenuController controller,
                 Widget? child) {

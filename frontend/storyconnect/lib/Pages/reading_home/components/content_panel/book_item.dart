@@ -6,7 +6,9 @@ abstract class BookItem extends StatelessWidget {}
 
 /// Clickable Book Item, has sample text synopsis, book author and title, and descript set of tags.
 class DescriptBookItem extends BookItem {
-  DescriptBookItem(Book book);
+  final Book book;
+
+  DescriptBookItem({required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,6 @@ class DescriptBookItem extends BookItem {
             Icon(
               Icons.book,
               size: 175,
-              color: Colors.red,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +28,7 @@ class DescriptBookItem extends BookItem {
                 Padding(
                     padding: EdgeInsets.only(top: 16.0, bottom: 4.0),
                     child: Text(
-                      "Book Title",
+                      this.book.title,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     )),
                 Padding(
@@ -36,7 +37,7 @@ class DescriptBookItem extends BookItem {
                         text: TextSpan(children: [
                       WidgetSpan(child: Icon(Icons.person_outline, size: 16)),
                       TextSpan(
-                          text: " Book Author",
+                          text: "Author",
                           style: TextStyle(
                               fontFamily: GoogleFonts.ramabhadra().fontFamily))
                     ]))),
@@ -46,7 +47,7 @@ class DescriptBookItem extends BookItem {
                         constraints:
                             BoxConstraints(maxWidth: 200, maxHeight: 200),
                         child: Text(
-                          "Nam quis nulla. Integer malesuada. In in enim a arcu imperdiet malesuada. Sed vel lectus. Donec odio urna, tempus molestie, porttitor ut, iaculis quis, sem. Phasellus rhoncus. Aenean id metus id velit ullamcorper pulvinar. Vestibulum fermentum tortor",
+                          "Synopsis",
                           maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                         ))),

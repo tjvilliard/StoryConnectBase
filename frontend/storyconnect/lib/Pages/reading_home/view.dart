@@ -46,31 +46,30 @@ class ReadingHomeState extends State<ReadingHomeView> {
             Map<String, List<Book>> sample = sampleBooksData.build();
 
             toReturn = <ContentPanel>[
-              FadedContentPanel(
-                  primary: Colors.green.withOpacity(
-                      0.3), //TODO: fit color to set of app color scheme.
-                  fade: Colors.transparent,
-                  children: [
-                    LoadingItem(),
-                  ]),
+              SolidContentPanel(
+                  children: [BlankPanel()], primary: Colors.transparent),
               ContentDivider(
-                color: Colors.blue.withOpacity(0.6),
-                thickness: 5.0,
+                color: Colors.black87,
+                thickness: 2.0,
+              ),
+              FadedContentPanel.titledBookPanel([],
+                  Colors.white,
+                  Colors.grey.shade200,
+                  "Continue Reading",
+                  "Pick up where you left off"),
+              ContentDivider(
+                color: Colors.black87,
+                thickness: 2.0,
               ),
               FadedContentPanel.taggedBookPanel(
                 sampleBooksData.build(),
-                Colors.green.withOpacity(0.3),
-                Colors.transparent,
+                Colors.white,
+                Colors.grey.shade200,
                 "Categories recomended for you",
               )
             ];
           } else {
-            toReturn = <FadedContentPanel>[
-              FadedContentPanel(
-                  primary: Colors.green,
-                  fade: Colors.blue,
-                  children: [LoadingItem()])
-            ];
+            toReturn = [];
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500),

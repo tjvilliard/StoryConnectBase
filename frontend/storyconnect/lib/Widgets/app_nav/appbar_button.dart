@@ -65,14 +65,16 @@ class AppBarMenuButton extends StatelessWidget {
     return Container(
       height: 50,
       width: 150,
-      child: MenuItemButton(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0)))),
-        child: this.child,
-        onPressed: this.onPressed,
-      ),
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: MenuItemButton(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0)))),
+            child: this.child,
+            onPressed: this.onPressed,
+          )),
     );
   }
 }
