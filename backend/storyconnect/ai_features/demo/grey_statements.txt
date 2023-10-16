@@ -1,0 +1,26 @@
+<Statements>
+<Characters>
+<Lord-Henry-Wotton>
+Lord Henry Wotton is a smoker.
+Lord Henry Wotton is friends with Basil Hallward.
+</Lord-Henry-Wotton>
+<Basil-Hallward>
+Basil Hallward is an artist.
+Basil Hallward is friends with Lord Henry Wotton.
+</Basil-Hallward>
+<Dorian-Gray>
+Dorian Gray is described as an Adonis.
+Dorian Gray is described as being made of ivory and rose-leaves.
+</Dorian-Gray>
+</Characters>
+<Locations>
+<London>
+London is described as having a dim roar.
+London is described as being like the bourdon note of a distant organ.
+</London>
+<Tokyo>
+Tokyo is described as having pallid, jade-faced painters.
+Tokyo is described as having an art that is necessarily immobile.
+</Tokyo>
+</Locations>
+</Statements>

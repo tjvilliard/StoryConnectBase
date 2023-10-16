@@ -1,0 +1,57 @@
+{
+  "id": "cmpl-85jEz9DBFlSsiBTT4szXPjNNAf95H",
+  "object": "text_completion",
+  "created": 1696376237,
+  "model": "gpt-3.5-turbo-instruct",
+  "choices": [
+    {
+      "text": "\n\n<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is a smoker.\nLord Henry Wotton is friends with Basil Hallward.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is an artist.\nBasil Hallward is friends with Lord Henry Wotton.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is described as an Adonis.\nDorian Gray is described as being made of ivory and rose-leaves.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<London>\nLondon is described as having a dim roar.\nLondon is described as being like the bourdon note of a distant organ.\n</London>\n<Tokyo>\nTokyo is described as having pallid, jade-faced painters.\nTokyo is described as having an art that is necessarily immobile.\n</Tokyo>\n</Locations>",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2493,
+    "completion_tokens": 182,
+    "total_tokens": 2675
+  }
+}
+
+{
+  "id": "cmpl-85jF1AHWi3iq6CkKgQduGkUEyoJfK",
+  "object": "text_completion",
+  "created": 1696376239,
+  "model": "gpt-3.5-turbo-instruct",
+  "choices": [
+    {
+      "text": "\n\n<Statements>\n<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is a smoker.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is an artist.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is described as an Adonis.\nDorian Gray is described as being made of ivory and rose-leaves.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<London>\nLondon is described as having a dim roar.\nLondon is described as being like the bourdon note of a distant organ.\n</London>\n<Tokyo>\nTokyo is described as having pallid, jade-faced painters.\nTokyo is described as having an art that is necessarily immobile.\n</Tokyo>\n</Locations>\n</Statements>",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 249,
+    "completion_tokens": 165,
+    "total_tokens": 414
+  }
+}{
+  "id": "cmpl-85jF2cXyaWI1MA9VbTB1q8Dj2Rl1N",
+  "object": "text_completion",
+  "created": 1696376240,
+  "model": "gpt-3.5-turbo-instruct",
+  "choices": [
+    {
+      "text": "\n\nThere is a contradiction regarding Lord Henry Wotton's smoking habits - in the old text, he is described as a smoker, but in the new text, it is stated that he has never smoked. Additionally, there is a contradiction in the description of Dorian Gray - in the old text, he is described as an Adonis made of ivory and rose-leaves, but in the new text, he is described as old and decrepit. Finally, there is a contradiction in the description of the garden - in the old text, it is described as having a dim roar and being like the bourdon note of a distant organ, but in the new text, it is stated that the garden is barren and only has rose bushes.",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 208,
+    "completion_tokens": 148,
+    "total_tokens": 356
+  }
+}
