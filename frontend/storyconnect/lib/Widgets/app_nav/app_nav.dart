@@ -26,32 +26,40 @@ class CustomAppBar extends AppBar {
                 children: [
                   Flexible(
                       child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextButton.icon(
-                          icon: Icon(Icons.create),
-                          label: Text("Writing Hub"),
-                          onPressed: () {
-                            final url = PageUrls.writerHome;
-                            Beamer.of(context).beamToNamed(url);
-                          },
-                        )),
-                  )),
-                  Flexible(
-                      child: Align(
-                    alignment: Alignment.center,
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: 800,
-                          maxHeight: 40,
-                          minHeight: 40,
-                        ),
-                        child: SearchBar(
-                          leading: Icon(Icons.search),
-                          hintText: "Search",
-                        )),
-                  )),
+                          alignment: Alignment.centerLeft,
+                          child: Row(children: [
+                            Flexible(
+                                child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            minWidth: 200, minHeight: 40),
+                                        child: TextButton.icon(
+                                          icon: Icon(Icons
+                                              .chrome_reader_mode_outlined),
+                                          label: Text("Reading Hub"),
+                                          onPressed: () {
+                                            final url = PageUrls.readerHome;
+                                            Beamer.of(context).beamToNamed(url);
+                                          },
+                                        )))),
+                            Flexible(
+                                child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            minWidth: 200, minHeight: 40),
+                                        child: TextButton.icon(
+                                          icon: Icon(Icons.create),
+                                          label: Text("Writing Hub"),
+                                          onPressed: () {
+                                            final url = PageUrls.writerHome;
+                                            Beamer.of(context).beamToNamed(url);
+                                          },
+                                        )))),
+                          ]))),
                   Flexible(
                       child: Align(
                           alignment: Alignment.centerRight,
@@ -59,14 +67,17 @@ class CustomAppBar extends AppBar {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Flexible(
-                                  child: TextButton.icon(
-                                icon: Icon(Icons.chrome_reader_mode_outlined),
-                                label: Text("Reading Hub"),
-                                onPressed: () {
-                                  final url = PageUrls.readerHome;
-                                  Beamer.of(context).beamToNamed(url);
-                                },
-                              )),
+                                  child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 800,
+                                        minWidth: 100,
+                                        maxHeight: 40,
+                                        minHeight: 40,
+                                      ),
+                                      child: SearchBar(
+                                        leading: Icon(Icons.search),
+                                        hintText: "Search",
+                                      ))),
                               Flexible(
                                 child: CustomAppBarMenu(context: context),
                               ),

@@ -26,13 +26,27 @@ class DescriptBookItem extends BookItem {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(top: 16.0, bottom: 4.0),
+                    padding: EdgeInsets.only(top: 16.0, bottom: 2.0),
                     child: Text(
                       this.book.title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18.0),
                     )),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    padding: EdgeInsets.symmetric(vertical: 2.0),
+                    child: RichText(
+                      text: TextSpan(children: [
+                        WidgetSpan(child: Icon(Icons.list, size: 16)),
+                        TextSpan(
+                            text: " ${5} Chapters",
+                            style: TextStyle(
+                                fontFamily:
+                                    GoogleFonts.ramabhadra().fontFamily)),
+                      ]),
+                    )),
+                Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.0),
                     child: RichText(
                         text: TextSpan(children: [
                       WidgetSpan(child: Icon(Icons.person_outline, size: 16)),
@@ -42,15 +56,14 @@ class DescriptBookItem extends BookItem {
                               fontFamily: GoogleFonts.ramabhadra().fontFamily))
                     ]))),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    padding: EdgeInsets.symmetric(vertical: 2.0),
                     child: ConstrainedBox(
                         constraints:
                             BoxConstraints(maxWidth: 200, maxHeight: 200),
-                        child: Text(
-                          "Synopsis",
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ))),
+                        child: Text("Synopsis",
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12)))),
               ],
             )
           ],

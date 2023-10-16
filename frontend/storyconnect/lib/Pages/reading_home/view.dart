@@ -49,7 +49,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
 
             toReturn = <ContentPanel>[
               SolidContentPanel(
-                  children: [BlankPanel()], primary: Colors.transparent),
+                  children: [BlankPanel(height: 1.5)],
+                  primary: Colors.transparent),
               ContentDivider(
                 color: myColorScheme.secondary,
                 thickness: 2.0,
@@ -67,13 +68,13 @@ class ReadingHomeState extends State<ReadingHomeView> {
               ),
               FadedContentPanel.taggedBookPanel(
                   sampleBooksData.tagged(),
-                  Colors.white,
+                  myColorScheme.surface,
                   Colors.grey.shade200,
                   "Categories recomended for you",
                   true),
               FadedContentPanel.titledBookPanel(
                   sampleBooksData.sample(),
-                  Colors.white,
+                  myColorScheme.surface,
                   Colors.grey.shade200,
                   "Book Category 2",
                   "",

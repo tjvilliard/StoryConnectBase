@@ -10,9 +10,11 @@ import 'package:storyconnect/Widgets/loading_widget.dart';
 abstract class PanelItem extends StatelessWidget {}
 
 class BlankPanel extends PanelItem {
+  final double height;
+  BlankPanel({this.height = 50.0});
   @override
   Widget build(BuildContext context) {
-    return Container(height: 200);
+    return Container(height: this.height);
   }
 }
 
@@ -103,34 +105,34 @@ class BookList extends PanelItem {
         child: SizedBox(
             width: 800,
             child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse
-                    }),
+                behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse
+                }),
                 child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: SizedBox(
                         height: 270,
                         child: ListView(
-                            itemExtent: descript ? 400.0 : (270 / 1.618) + 25,
+                            itemExtent: descript ? 400.0 : (270 / 1.618) + 30,
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             children: this
                                 .books
                                 .map((book) => Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade300,
-                                            borderRadius:
-                                                BorderRadius.circular(10.0)),
-                                        width: descript ? 400.0 : 270.0 / 1.618,
-                                        child: Clickable(
-                                            onPressed: () {},
-                                            child: this.descript
-                                                ? DescriptBookItem(book: book)
-                                                : CoverBookItem(book: book)))))
+                                    child: Card(
+                                        elevation: 3,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10.0)),
+                                            width: descript
+                                                ? 400.0
+                                                : (270.0 / 1.618) + 25,
+                                            child: Clickable(onPressed: () {}, child: this.descript ? DescriptBookItem(book: book) : CoverBookItem(book: book))))))
                                 .toList()))))));
   }
 }
