@@ -42,15 +42,6 @@ class FadedContentPanel extends ContentPanel {
     required this.fade,
   });
 
-  static FadedContentPanel tabTagBookPanel(Map<String, List<Book>> taggedBooks,
-      Color primary, Color fade, String title, bool descript) {
-    return FadedContentPanel(
-      children: [BookTabSet(taggedBooks: taggedBooks, descript: false)],
-      primary: primary,
-      fade: fade,
-    );
-  }
-
   /// Builds a panel of tagged Books.
   static FadedContentPanel taggedBookPanel(Map<String, List<Book>> children,
       Color primary, Color fade, String title, bool descript) {

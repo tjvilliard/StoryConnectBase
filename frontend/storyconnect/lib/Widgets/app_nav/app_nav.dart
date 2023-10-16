@@ -2,7 +2,6 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/app_nav/app_menu.dart';
-import 'package:storyconnect/Widgets/app_nav/appbar_button.dart';
 
 class CustomAppBar extends AppBar {
   final BuildContext context;
@@ -26,17 +25,19 @@ class CustomAppBar extends AppBar {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: TextButton.icon(
-                            icon: Icon(Icons.create),
-                            label: Text("Create"),
-                            onPressed: () {},
-                          )),
-                    ),
-                  ),
+                      child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextButton.icon(
+                          icon: Icon(Icons.create),
+                          label: Text("Writing Hub"),
+                          onPressed: () {
+                            final url = PageUrls.writerHome;
+                            Beamer.of(context).beamToNamed(url);
+                          },
+                        )),
+                  )),
                   Flexible(
                       child: Align(
                     alignment: Alignment.center,
@@ -53,8 +54,23 @@ class CustomAppBar extends AppBar {
                   )),
                   Flexible(
                       child: Align(
-                    alignment: Alignment.centerRight,
-                    child: CustomAppBarMenu(context: context),
-                  )),
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Flexible(
+                                  child: TextButton.icon(
+                                icon: Icon(Icons.chrome_reader_mode_outlined),
+                                label: Text("Reading Hub"),
+                                onPressed: () {
+                                  final url = PageUrls.readerHome;
+                                  Beamer.of(context).beamToNamed(url);
+                                },
+                              )),
+                              Flexible(
+                                child: CustomAppBarMenu(context: context),
+                              ),
+                            ],
+                          ))),
                 ]));
 }

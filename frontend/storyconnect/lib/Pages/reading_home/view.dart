@@ -57,7 +57,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
               FadedContentPanel.titledBookPanel(
                   sampleBooksData.sample(),
                   myColorScheme.secondary.withOpacity(0.45),
-                  Colors.grey.shade200,
+                  Colors.grey.shade100,
                   "Continue Reading",
                   "Pick up where you left off",
                   false),

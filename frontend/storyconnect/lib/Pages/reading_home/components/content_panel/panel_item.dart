@@ -84,38 +84,6 @@ class LoadingItem extends PanelItem {
   }
 }
 
-///
-class BookTabSet extends PanelItem {
-  ///
-  final Map<String, List<Book>> taggedBooks;
-
-  final bool descript;
-
-  BookTabSet({required this.taggedBooks, bool this.descript = false});
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> tabs = <Widget>[];
-
-    List<Widget> bookSets = <Widget>[];
-
-    for (MapEntry<String, List<Book>> bookEntry in this.taggedBooks.entries) {
-      tabs.add(Text(bookEntry.key));
-      bookSets.add(BookList(books: bookEntry.value, descript: this.descript));
-    }
-
-    return SizedBox(
-        width: 800,
-        height: 600,
-        child: DefaultTabController(
-            length: taggedBooks.length,
-            child: Column(children: [
-              TabBar(tabs: tabs),
-              TabBarView(children: bookSets),
-            ])));
-  }
-}
-
 /// A list of Books to be displayed as a panel item.
 class BookList extends PanelItem {
   /// The set of books we are displaying in this panel item.
