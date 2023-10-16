@@ -26,15 +26,15 @@ class ContinuityWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 SidePopupHeader(
-                                    title: "Road Unblocker",
-                                    dismiss: () =>
-                                        BlocProvider.of<WritingUIBloc>(context)
-                                            .add(ToggleRoadUnblockerEvent())),
+                                    title: "Continuity Checker",
+                                    dismiss: () => BlocProvider.of<
+                                            WritingUIBloc>(context)
+                                        .add(ToggleContinuityCheckerEvent())),
                                 SizedBox(height: 10),
                                 Text(
                                     "This tool will help you find continuity errors in your story. It will also help you find plot holes and other issues that may arise from your story.",
                                     style:
-                                        Theme.of(context).textTheme.bodyText1),
+                                        Theme.of(context).textTheme.bodyMedium),
                                 LayoutBuilder(
                                   builder: (context, constraints) {
                                     return Row(
