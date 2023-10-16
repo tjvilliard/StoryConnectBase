@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {
@@ -52,6 +53,116 @@ class WritingApiProvider {
     }
   }
 
+  Stream<NarrativeElement> getNarrativeElements(int bookId) async* {
+    // try {
+    //   final url = UrlContants.getNarrativeElements(bookId);
+    //   final result = await http.get(
+    //     url,
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //       'Authorization': 'Token ${await getAuthToken()}'
+    //     },
+    //   );
+
+    //   for (var element in jsonDecode(result.body)) {
+    //     yield NarrativeElement.fromJson(element);
+    //   }
+    // } catch (e) {
+    //   print(e);
+    // }
+
+// Mock the data in a stream paradigm
+    final NarrativeElementType characterType = NarrativeElementType(
+      name: "Character",
+      userId: 1,
+    );
+
+    final NarrativeElementType locationType = NarrativeElementType(
+      name: "Location",
+      userId: 1,
+    );
+
+    yield NarrativeElement(
+      bookId: bookId,
+      elementType: characterType,
+      attributes: [
+        NarrativeElementAttribute(
+          attribute: "Brave",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Personality",
+            applicableTo: characterType,
+          ),
+          elementId: 1,
+          confidence: .90,
+          generated: true,
+        ),
+        NarrativeElementAttribute(
+          attribute: "Fool-hardy",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Personality",
+            applicableTo: characterType,
+          ),
+          elementId: 2,
+          confidence: .50,
+          generated: true,
+        ),
+        NarrativeElementAttribute(
+          attribute: "Blonde Hair",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Physical Appearance",
+            applicableTo: characterType,
+          ),
+          elementId: 1,
+          confidence: .85,
+          generated: true,
+        ),
+      ],
+      userId: 1,
+      name: "Elena",
+      description: "Elena is a brave warrior from the northern tribes.",
+      imageUrl: "https://example.com/images/elena.jpg",
+      chapterId: 1,
+    );
+
+    yield NarrativeElement(
+      bookId: bookId,
+      elementType: locationType,
+      attributes: [
+        NarrativeElementAttribute(
+          attribute: "Mystical",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Feature",
+            applicableTo: locationType,
+          ),
+          elementId: 2,
+          confidence: .25,
+          generated: true,
+        ),
+        NarrativeElementAttribute(
+          attribute: "Dimly Lit",
+          attributeType: NarrativeElementAttributeType(
+            userId: 1,
+            name: "Lighting",
+            applicableTo: locationType,
+          ),
+          elementId: 2,
+          confidence: .92,
+          generated: true,
+        ),
+      ],
+      userId: 1,
+      name: "Whispering Woods",
+      description:
+          "A dense forest known for its ancient mysteries and dim lighting.",
+      imageUrl: "https://example.com/images/whispering_woods.jpg",
+      chapterId: 1,
+    );
+  }
+
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
     final url = UrlContants.getWriterFeedback(chapterId);
     final result = await http.get(
@@ -95,5 +206,27 @@ class WritingRepository {
     }
 
     return feedback;
+  }
+
+  Future<bool> dismissFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> rejectFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> acceptFeedback(int id) async {
+    return true;
+  }
+
+  Future<List<NarrativeElement>> getNarrativeElements(int bookId) async {
+    List<NarrativeElement> elements = [];
+
+    await for (NarrativeElement item in _api.getNarrativeElements(bookId)) {
+      elements.add(item);
+    }
+
+    return elements;
   }
 }
