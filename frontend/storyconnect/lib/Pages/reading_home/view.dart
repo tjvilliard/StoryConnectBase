@@ -47,6 +47,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
               builder: (BuildContext context, ChapterBlocStruct state) {
             List<ContentPanel> toReturn;
             if (homeState.loadingStruct.isLoading) {
+              //TODO: remove mock data and replace with proper loading state.
               Map<String, List<Book>> sample = sampleBooksData.tagged();
 
               toReturn = <ContentPanel>[
@@ -83,6 +84,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                     true)
               ];
             } else {
+              // TODO: replace with dynamically built panels based on backend input.
               toReturn = [];
             }
             return AnimatedSwitcher(
