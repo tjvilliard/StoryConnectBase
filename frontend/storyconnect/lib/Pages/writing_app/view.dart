@@ -30,7 +30,6 @@ class _WritingAppViewState extends State<WritingAppView> {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (widget.bookId == null) {
           Beamer.of(context).beamToNamed(PageUrls.writerHome);
-
           return;
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
