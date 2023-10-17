@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'feedback_event.dart';
@@ -13,6 +12,8 @@ part 'feedback_bloc.freezed.dart';
 typedef FeedbackEmitter = Emitter<FeedbackState>;
 
 class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
+  // TODO: implement repo
+  // ignore: unused_field
   late final ReadingRepository _repo;
 
   /// Maps Events

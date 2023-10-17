@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reading_home/components/content_panel/panel_item.dart';
 import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
 import 'package:storyconnect/Pages/reading_home/components/content_panel/content_panel.dart';
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
-import 'package:storyconnect/Widgets/loading_widget.dart';
 import 'package:storyconnect/theme.dart';
 
 /// The Reading Home View: Displays a curated set of book content for the readers.
@@ -46,7 +42,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
           List<ContentPanel> toReturn;
           if (homeState.loadingStruct.isLoading) {
             //TODO: remove mock data and replace with proper loading state.
-            Map<String, List<Book>> sample = sampleBooksData.tagged();
+            // Map<String, List<Book>> sample = sampleBooksData.tagged();
 
             toReturn = <ContentPanel>[
               SolidContentPanel(
