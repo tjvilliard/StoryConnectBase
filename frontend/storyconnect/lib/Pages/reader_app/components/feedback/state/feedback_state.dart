@@ -7,7 +7,7 @@ class FeedbackState with _$FeedbackState {
   const factory FeedbackState({
     required LoadingStruct loadingStruct,
     String? message,
-    @Default({}) Map<int, List<Comment>> comments,
+    @Default({}) Map<int, List<dynamic>> comments,
     required FeedbackType selectedFeedbackType,
   }) = _FeedbackState;
   const FeedbackState._();
