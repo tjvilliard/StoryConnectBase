@@ -49,8 +49,6 @@ class sampleBooksData {
   static Map<String, List<Book>> tagged() {
     Map<String, List<Book>> taggedBooks = new HashMap<String, List<Book>>();
 
-    List<Book> sampleSciFiBooks = <Book>[];
-
     List<Book> sampleRomanceBooks = <Book>[
       new Book(
           id: 1000,
