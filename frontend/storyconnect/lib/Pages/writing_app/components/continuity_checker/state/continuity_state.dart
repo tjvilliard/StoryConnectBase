@@ -4,6 +4,7 @@ part of 'continuity_bloc.dart';
 class ContinuityState with _$ContinuityState {
   const factory ContinuityState({
     required LoadingStruct loadingStruct,
+    required List<ContinuitySuggestion> continuities,
   }) = _ContinuityState;
   const ContinuityState._();
 
@@ -11,6 +12,7 @@ class ContinuityState with _$ContinuityState {
   factory ContinuityState.initial() {
     return ContinuityState(
       loadingStruct: LoadingStruct.loading(false),
+      continuities: [],
     );
   }
 }
