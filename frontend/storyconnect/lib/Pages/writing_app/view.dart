@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/view.dart.dart';
+import 'package:storyconnect/Pages/writing_app/components/continuity_checker/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/view.dart';
@@ -91,7 +92,11 @@ class _WritingAppViewState extends State<WritingAppView> {
               Flexible(child: WritingPageView()),
 
               Row(
-                children: [FeedbackWidget(), RoadUnblockerWidget()],
+                children: [
+                  FeedbackWidget(),
+                  RoadUnblockerWidget(),
+                  ContinuityWidget()
+                ],
               )
             ],
           ))
