@@ -80,6 +80,13 @@ class WritingMenuBar extends StatelessWidget {
                           Navigator.of(context)
                               .push(NarrativeSheetPopup(bookId));
                         }),
+                    MenuItemButton(
+                        leadingIcon: Icon(FontAwesomeIcons.book),
+                        child: Text("Continuity Checker"),
+                        onPressed: () {
+                          BlocProvider.of<WritingUIBloc>(context)
+                              .add(ToggleContinuityCheckerEvent());
+                        }),
                   ]),
                 ])));
   }

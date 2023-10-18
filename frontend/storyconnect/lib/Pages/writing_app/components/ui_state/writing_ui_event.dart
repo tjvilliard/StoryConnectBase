@@ -25,3 +25,7 @@ class SwitchChapterEvent extends WritingUIEvent {
   final int chapterId;
   SwitchChapterEvent({required this.chapterId});
 }
+
+class ToggleContinuityCheckerEvent extends WritingUIEvent {
+  ToggleContinuityCheckerEvent();
+}

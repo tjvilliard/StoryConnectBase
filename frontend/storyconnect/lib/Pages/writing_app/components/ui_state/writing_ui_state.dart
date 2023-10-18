@@ -7,6 +7,7 @@ class WritingUIState with _$WritingUIState {
     required bool chapterOutlineShown,
     required bool feedbackUIshown,
     required bool roadUnblockerShown,
+    required bool continuityCheckerShown,
     String? title,
     required LoadingStruct loadingStruct,
   }) = _WritingUIState;
@@ -18,6 +19,7 @@ class WritingUIState with _$WritingUIState {
       chapterOutlineShown: false,
       feedbackUIshown: false,
       roadUnblockerShown: false,
+      continuityCheckerShown: false,
       loadingStruct: LoadingStruct.loading(true),
     );
   }
