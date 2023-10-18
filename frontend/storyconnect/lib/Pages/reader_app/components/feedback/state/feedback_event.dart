@@ -10,12 +10,34 @@ class LoadChapterComments extends FeedbackEvent {
   const LoadChapterComments(this.chapterId);
 }
 
-///
-class FeedbackTypeChanged extends FeedbackEvent {
-  final FeedbackType feedbackType;
-  const FeedbackTypeChanged(this.feedbackType);
+class SuggestionEditedEvent extends FeedbackEvent {
+  final String? suggestion;
+  const SuggestionEditedEvent({required String? this.suggestion});
 }
 
+class CommentEditedEvent extends FeedbackEvent {
+  final String? comment;
+  const CommentEditedEvent({required String? this.comment});
+}
+
+class SentimentChangedEvent extends FeedbackEvent {
+  final int sentiment;
+  SentimentChangedEvent({required FeedbackSentiment sentiment})
+      : this.sentiment = sentiment.index;
+}
+
+/// Change the type of feedback we are giving the writer.
+class FeedbackTypeChanged extends FeedbackEvent {
+  final bool isSuggestion;
+  const FeedbackTypeChanged({required bool this.isSuggestion});
+}
+
+/// Submits a new feedback item
 class SubmitFeedbackEvent extends FeedbackEvent {
-  //submit feedback item.
+  final WriterFeedback feedbackItem;
+  final ChapterBloc chapterBloc;
+  const SubmitFeedbackEvent({
+    required this.feedbackItem,
+    required this.chapterBloc,
+  });
 }

@@ -59,5 +59,9 @@ class UrlContants {
     return _urlBuilder.build('road_unblock/');
   }
 
+  static Uri createFeedback() {
+    return _urlBuilder.build('feedback/');
+  }
+
   static getNarrativeElements(int bookId) {}
 }
