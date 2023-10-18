@@ -89,7 +89,8 @@ class Book(models.Model):
 class Library(models.Model):
     BOOK_STATUS = [
         (1, "Reading"), 
-        (2, "Archived")
+        (2, "Completed"),
+        (3, "To Read"),
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.IntegerField(choices=BOOK_STATUS)
