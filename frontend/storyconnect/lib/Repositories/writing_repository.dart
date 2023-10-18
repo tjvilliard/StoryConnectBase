@@ -7,10 +7,45 @@ import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Pages/writing_app/components/continuity_checker/models/continuity_models.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {
+  Future<ContinuityResponse> getContinuities(int chapterId) async {
+    // final url = UrlContants.continuities();
+    // String authToken =
+    //     (await FirebaseAuth.instance.currentUser!.getIdToken(true)) as String;
+    // final result = await http.get(url, headers: <String, String>{
+    //   'Content-Type': 'application/json; charset=UTF-8',
+    //   'Authorization': 'Token $authToken'
+    // });
+    // return ContinuityResponse.fromJson(jsonDecode(result.body));
+
+    return ContinuityResponse(
+      suggestions: [
+        ContinuitySuggestion(
+          description: 'This is a suggestion',
+          chapterId: chapterId,
+          uuid: '1234',
+          suggestionType: 'suggestion',
+        ),
+        ContinuitySuggestion(
+          description: 'This is a warning',
+          uuid: '1234',
+          suggestionType: 'warning',
+          chapterId: chapterId,
+        ),
+        ContinuitySuggestion(
+          description: 'This is an error',
+          uuid: '1234',
+          suggestionType: 'error',
+          chapterId: chapterId,
+        ),
+      ],
+    );
+  }
+
   Future<String> getAuthToken() async {
     return (await FirebaseAuth.instance.currentUser!.getIdToken(true))
         as String;
@@ -228,5 +263,9 @@ class WritingRepository {
     }
 
     return elements;
+  }
+
+  Future<ContinuityResponse?> getContinuities(int chapterId) async {
+    return _api.getContinuities(chapterId);
   }
 }

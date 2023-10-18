@@ -77,8 +77,8 @@ class WriterLocations extends BeamLocation<BeamState> {
                               repo: context.read<RoadUnblockerRepo>(),
                               chapterContent: "")),
                       BlocProvider(
-                          create: (context) =>
-                              ContinuityBloc(repo: ContinuityRepo()))
+                          create: (context) => ContinuityBloc(
+                              repo: context.read<WritingRepository>()))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),
