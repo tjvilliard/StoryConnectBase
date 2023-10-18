@@ -45,9 +45,13 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 builder: (BuildContext context, ReadingHomeStruct homeState) {
           List<ContentPanel> toReturn;
           if (homeState.loadingStruct.isLoading) {
-            //TODO: remove mock data and replace with proper loading state.
             Map<String, List<Book>> sample = sampleBooksData.tagged();
-
+            toReturn = <ContentPanel>[
+              SolidContentPanel(
+                  children: [LoadingItem()], primary: Colors.white)
+            ];
+          } else {
+            // TODO: replace with dynamically built panels based on backend input.
             toReturn = <ContentPanel>[
               SolidContentPanel(
                   children: [BlankPanel(height: 1.5)],
@@ -81,9 +85,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                   "",
                   true)
             ];
-          } else {
-            // TODO: replace with dynamically built panels based on backend input.
-            toReturn = [];
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500),

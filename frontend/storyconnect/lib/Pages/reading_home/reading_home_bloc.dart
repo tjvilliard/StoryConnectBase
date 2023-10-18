@@ -25,7 +25,6 @@ class ReadingHomeStruct {
   // request based on user's interest.
   /*
   * Map of categories to books
-  * List of books in library.
   */
 
   final List<Book> books;
