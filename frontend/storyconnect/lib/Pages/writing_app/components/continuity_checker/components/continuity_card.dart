@@ -38,7 +38,7 @@ class ContinuityCard extends StatelessWidget {
                         alignment: Alignment.center,
                         constraints:
                             BoxConstraints(minHeight: 10, maxHeight: 100),
-                        child: Text(continuity.description,
+                        child: Text(continuity.content,
                             style: Theme.of(context).textTheme.titleSmall),
                       ),
                       Align(
