@@ -21,30 +21,6 @@ class WritingApiProvider {
       'Authorization': 'Token $authToken'
     });
     return ContinuityResponse.fromJson(jsonDecode(result.body));
-
-    // return ContinuityResponse(
-    //   message: 'This is a message',
-    //   items: [
-    //     ContinuitySuggestion(
-    //       content: 'This is a suggestion',
-    //       chapterId: chapterId,
-    //       uuid: '1234',
-    //       suggestionType: 'suggestion',
-    //     ),
-    //     ContinuitySuggestion(
-    //       content: 'This is a warning',
-    //       uuid: '12345',
-    //       suggestionType: 'warning',
-    //       chapterId: chapterId,
-    //     ),
-    //     ContinuitySuggestion(
-    //       content: 'This is an error',
-    //       uuid: '12346',
-    //       suggestionType: 'error',
-    //       chapterId: chapterId,
-    //     ),
-    //   ],
-    // );
   }
 
   Future<String> getAuthToken() async {
@@ -106,97 +82,6 @@ class WritingApiProvider {
     } catch (e) {
       print(e);
     }
-
-// // Mock the data in a stream paradigm
-//     final NarrativeElementType characterType = NarrativeElementType(
-//       name: "Character",
-//       userId: 1,
-//     );
-
-//     final NarrativeElementType locationType = NarrativeElementType(
-//       name: "Location",
-//       userId: 1,
-//     );
-
-//     yield NarrativeElement(
-//       bookId: bookId,
-//       elementType: characterType,
-//       attributes: [
-//         NarrativeElementAttribute(
-//           attribute: "Brave",
-//           attributeType: NarrativeElementAttributeType(
-//             userId: 1,
-//             name: "Personality",
-//             applicableTo: characterType,
-//           ),
-//           elementId: 1,
-//           confidence: .90,
-//           generated: true,
-//         ),
-//         NarrativeElementAttribute(
-//           attribute: "Fool-hardy",
-//           attributeType: NarrativeElementAttributeType(
-//             userId: 1,
-//             name: "Personality",
-//             applicableTo: characterType,
-//           ),
-//           elementId: 2,
-//           confidence: .50,
-//           generated: true,
-//         ),
-//         NarrativeElementAttribute(
-//           attribute: "Blonde Hair",
-//           attributeType: NarrativeElementAttributeType(
-//             userId: 1,
-//             name: "Physical Appearance",
-//             applicableTo: characterType,
-//           ),
-//           elementId: 1,
-//           confidence: .85,
-//           generated: true,
-//         ),
-//       ],
-//       userId: 1,
-//       name: "Elena",
-//       description: "Elena is a brave warrior from the northern tribes.",
-//       imageUrl: "https://example.com/images/elena.jpg",
-//       chapterId: 1,
-//     );
-
-//     yield NarrativeElement(
-//       bookId: bookId,
-//       elementType: locationType,
-//       attributes: [
-//         NarrativeElementAttribute(
-//           attribute: "Mystical",
-//           attributeType: NarrativeElementAttributeType(
-//             userId: 1,
-//             name: "Feature",
-//             applicableTo: locationType,
-//           ),
-//           elementId: 2,
-//           confidence: .25,
-//           generated: true,
-//         ),
-//         NarrativeElementAttribute(
-//           attribute: "Dimly Lit",
-//           attributeType: NarrativeElementAttributeType(
-//             userId: 1,
-//             name: "Lighting",
-//             applicableTo: locationType,
-//           ),
-//           elementId: 2,
-//           confidence: .92,
-//           generated: true,
-//         ),
-//       ],
-//       userId: 1,
-//       name: "Whispering Woods",
-//       description:
-//           "A dense forest known for its ancient mysteries and dim lighting.",
-//       imageUrl: "https://example.com/images/whispering_woods.jpg",
-//       chapterId: 1,
-//     );
   }
 
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
