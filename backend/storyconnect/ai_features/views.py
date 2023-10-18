@@ -15,6 +15,7 @@ from .models import StatementSheet
 from .continuity_checker import ContinuityChecker
 from books import models as books_models
 from .serializers import *
+from uuid import uuid4
 
 class RoadUnblockerRequestView(APIView):
     def post(self, request, format=None):
@@ -79,16 +80,47 @@ class RoadUnblockerSuggestionView(APIView):
 
 class ContinuityCheckerView(APIView):
     
-    def post(self, request, format=None):
+    # def post(self, request, format=None):
+    #     cc = ContinuityChecker()
+
+    #     book = request.query_params.get('book')
+    #     ch_num = request.query_params.get('chapter') # chapter id
+
+    #     s_sheet = StatementSheet.objects.filter(book=book).first()
+
+    #     if s_sheet is None:
+    #         text = books_models.Chapter.objects.filter(book=book, chapter_number=0).content
+    #         document = cc.create_statementsheet(text)
+    #         StatementSheet.object.create(book=book, document=document, last_run_chapter = 0, last_run_offset = len(text))
+    #         return Response(status=status.HTTP_200_OK)
+        
+    #     # Make a document for the new text and compare 
+
+    #     # Chapter = last run chapter
+        
+    #     if ch_num == s_sheet.last_run_chapter:
+    #         chapter_offset = s_sheet.last_run_offset
+    #         return continuity_checker_helper(book, ch_num, s_sheet, chapter_offset, cc)
+    #     else:
+    #         ch_curr = books_models.Chapter.objects.filter(book=book, chapter_number=ch_num).first()
+    #         s_sheet.last_run_chapter = ch_num
+    #         s_sheet.last_run_offset = len(ch_curr.content)
+    #         return continuity_checker_helper(book, ch_num, s_sheet, 0, cc)
+    
+    def get(self, request, *args, **kwargs):
         cc = ContinuityChecker()
 
-        book = request.query_params.get('book')
-        ch_num = request.query_params.get('chapter') # chapter number
+        ch_id = kwargs.get('id') # chapter id
+        chapter = books_models.Chapter.objects.get(id=ch_id)
+        ch_num = chapter.chapter_number
+
+        book = chapter.book
+
 
         s_sheet = StatementSheet.objects.filter(book=book).first()
 
         if s_sheet is None:
-            text = books_models.Chapter.objects.filter(book=book, chapter_number=0).content
+            text = chapter.content
             document = cc.create_statementsheet(text)
             StatementSheet.object.create(book=book, document=document, last_run_chapter = 0, last_run_offset = len(text))
             return Response(status=status.HTTP_200_OK)
@@ -114,10 +146,17 @@ def continuity_checker_helper(book, chapter, statementsheet, offset, cc):
     comparison = cc.compare_statementsheets(statementsheet.document, new_sheet)
 
     if comparison == 'NONE':
-        response_data = {'message': "Everything looks good. Greate job!",
-                'contradictions': []}
+        response_data = {
+            'message': "Everything looks good. Greate job!",
+            'contradictions': []}
     else:
-        response_data = {'message': "It looks there are some continuity errors in your story.",
-                'contradictions': comparison.split('\n')}
-        
-    return Response(data=ContinuityCheckerResponseSerializer(data=response_data), status=status.HTTP_200_OK)
+        items = None
+        for item in comparison.split('\n'):
+            items.append({'content': item, 'chapterId': chapter, 'uuid': uuid4()})
+
+        response_data = {
+            'message': "It looks there are some continuity errors in your story.",
+            'contradictions': items}
+    
+    serializer = ContinuityCheckerResponseSerializer(response_data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
