@@ -59,9 +59,11 @@ class UrlContants {
     return _urlBuilder.build('road_unblock/');
   }
 
-  static Uri continuities() {
-    return _urlBuilder.build('continuity/');
+  static Uri continuities(int chapterId) {
+    return _urlBuilder.build('continuities/$chapterId');
   }
 
-  static getNarrativeElements(int bookId) {}
+  static getNarrativeElements(int bookId) {
+    return _urlBuilder.build('narrative_elements/$bookId');
+  }
 }
