@@ -59,6 +59,18 @@ class UrlContants {
     return _urlBuilder.build('road_unblock/');
   }
 
+  static Uri getLibrary() {
+    return _urlBuilder.build('library');
+  }
+
+  static Uri addLibraryBook() {
+    return _urlBuilder.build('library');
+  }
+
+  static Uri removeLibraryBook() {
+    return _urlBuilder.build('library');
+  }
+
   static Uri createFeedback() {
     return _urlBuilder.build('feedback/');
   }

@@ -75,9 +75,27 @@ class ReadingApiProvider {
       print(e);
     }
   }
+
+  Stream<Book> getLibrary() async* {
+    try {
+      final url = UrlContants.getLibrary();
+
+      final result = await http.get(url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token ${getAuthToken()}'
+      });
+
+      for (var book in jsonDecode(result.body)) {
+        yield Book.fromJson(book);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 class ReadingRepository {
+  List<Book> libraryBooks = [];
   Map<String, List<Book>> taggedBooks = {};
   List<Book> books = [];
   ReadingApiProvider _api = ReadingApiProvider();
@@ -108,6 +126,12 @@ class ReadingRepository {
 
   Future<List<Book>> getBooks() async {
     final result = await this._api.getBooks();
+
+    return result.toList();
+  }
+
+  Future<List<Book>> getLibraryBooks() async {
+    final result = await this._api.getLibrary();
 
     return result.toList();
   }

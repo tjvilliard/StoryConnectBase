@@ -86,6 +86,23 @@ class LoadingItem extends PanelItem {
   }
 }
 
+/*
+class BookGrid extends PanelItem {
+  final List<Book> books;
+  BookGrid({
+    required List<Book> this.books,
+  })
+
+  @override 
+  Widget build(BuildContext context)
+  {
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+        child: Container());
+  }
+}
+*/
+
 /// A list of Books to be displayed as a panel item.
 class BookList extends PanelItem {
   /// The set of books we are displaying in this panel item.
