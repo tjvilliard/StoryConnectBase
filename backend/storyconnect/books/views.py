@@ -231,3 +231,36 @@ class RoadUnblockerView(APIView):
             ]
         }
         return Response(hardcoded_roadunblock, status=status.HTTP_200_OK)
+    
+#TODO: Add a view for library queries
+
+class LibraryViewSet(viewsets.ModelViewSet):
+    queryset = Library.objects.all()
+    serializer_class = LibrarySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=['get'])
+    def get_user_library(self, request):
+        library = Library.objects.filter(reader=request.user)
+        serializer = LibrarySerializer(library, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'])
+    def change_entry_status(self, request, pk=None):
+        library = self.get_object()
+        book = library.book
+        book_id = book.id
+        status = request.data['status']
+        library.save()
+        serializer = LibrarySerializer(library)
+        return Response(serializer.data)
+
+
+
+
+#TODO: Add a view for narrative element queries
+class NarrativeElementViewset:
+    pass
+
+class NarrativeElementTypeViewset:
+    pass
