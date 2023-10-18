@@ -32,6 +32,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     on<ToggleFeedbackUIEvent>((event, emit) => toggleFeedback(event, emit));
     on<ToggleRoadUnblockerEvent>(
         (event, emit) => toggleRoadUnblocker(event, emit));
+    on<ToggleContinuityCheckerEvent>(
+        (event, emit) => toggleContinuityChecker(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -74,12 +76,24 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
   void toggleFeedback(WritingUIEvent event, WritingUIEmiter emit) {
     emit(state.copyWith(
-        feedbackUIshown: !state.feedbackUIshown, roadUnblockerShown: false));
+        feedbackUIshown: !state.feedbackUIshown,
+        roadUnblockerShown: false,
+        continuityCheckerShown: false));
   }
 
   void toggleRoadUnblocker(
       ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
     emit(state.copyWith(
-        roadUnblockerShown: !state.roadUnblockerShown, feedbackUIshown: false));
+        roadUnblockerShown: !state.roadUnblockerShown,
+        feedbackUIshown: false,
+        continuityCheckerShown: false));
+  }
+
+  void toggleContinuityChecker(
+      ToggleContinuityCheckerEvent event, Emitter<WritingUIState> emit) {
+    emit(state.copyWith(
+        continuityCheckerShown: !state.continuityCheckerShown,
+        feedbackUIshown: false,
+        roadUnblockerShown: false));
   }
 }

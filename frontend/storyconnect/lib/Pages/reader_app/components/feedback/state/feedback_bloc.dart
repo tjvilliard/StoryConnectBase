@@ -17,6 +17,8 @@ part 'feedback_bloc.freezed.dart';
 typedef FeedbackEmitter = Emitter<FeedbackState>;
 
 class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
+  // TODO: implement repo
+  // ignore: unused_field
   late final ReadingRepository _repo;
 
   /// Maps Events

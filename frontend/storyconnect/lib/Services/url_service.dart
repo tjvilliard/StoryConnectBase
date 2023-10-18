@@ -63,5 +63,11 @@ class UrlContants {
     return _urlBuilder.build('feedback/');
   }
 
-  static getNarrativeElements(int bookId) {}
+  static Uri continuities(int chapterId) {
+    return _urlBuilder.build('continuities/$chapterId');
+  }
+
+  static getNarrativeElements(int bookId) {
+    return _urlBuilder.build('narrative_elements/$bookId');
+  }
 }
