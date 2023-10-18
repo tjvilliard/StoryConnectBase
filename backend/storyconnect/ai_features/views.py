@@ -114,10 +114,10 @@ def continuity_checker_helper(book, chapter, statementsheet, offset, cc):
     comparison = cc.compare_statementsheets(statementsheet.document, new_sheet)
 
     if comparison == 'NONE':
-        data = {'message': "Everything looks good. Greate job!",
+        response_data = {'message': "Everything looks good. Greate job!",
                 'contradictions': []}
     else:
-        data = {'message': "It looks there are some continuity errors in your story.",
+        response_data = {'message': "It looks there are some continuity errors in your story.",
                 'contradictions': comparison.split('\n')}
         
-    return ContinuityCheckerResponseSerializer(data=data)
+    return Response(data=ContinuityCheckerResponseSerializer(data=response_data), status=status.HTTP_200_OK)
