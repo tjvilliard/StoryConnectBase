@@ -3,7 +3,8 @@ part of 'continuity_models.dart';
 @freezed
 class ContinuityResponse with _$ContinuityResponse {
   const factory ContinuityResponse({
-    required List<ContinuitySuggestion> suggestions,
+    required String message,
+    required List<ContinuitySuggestion> items,
   }) = _ContinuityResponse;
   const ContinuityResponse._();
 

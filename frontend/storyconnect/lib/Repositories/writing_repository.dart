@@ -23,7 +23,8 @@ class WritingApiProvider {
     // return ContinuityResponse.fromJson(jsonDecode(result.body));
 
     return ContinuityResponse(
-      suggestions: [
+      message: 'This is a message',
+      items: [
         ContinuitySuggestion(
           content: 'This is a suggestion',
           chapterId: chapterId,
