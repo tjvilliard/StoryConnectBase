@@ -4,6 +4,7 @@ from .exceptions import *
 from .models import StatementSheet
 import logging
 import lxml.etree as etree
+import re 
 
 openai.api_key = OPENAI_API_KEY
 
@@ -87,7 +88,8 @@ class ContinuityChecker:
         # print(s_new)
         comp_input = f"The following statements are about previously written text: \n {s_old} \n The next statements are about new text: \n {s_new}\n"
         comp_instructions = "Identify any contradictions between the old text and the new text. Briefly summarize the contradicitons. Do not say anything about changes that dont contain contradictions. Do not use complicated formatting. Be brief. Stop when appropriate."
-        prompt = comp_input + comp_instructions
+        comp_instructions_list = "List any contradictions between the old text and the new text."
+        prompt = comp_input + comp_instructions_list
         
         self.last_response = openai.Completion.create(model = self.BASE_MODEL,
                                                       prompt = prompt,
@@ -95,5 +97,6 @@ class ContinuityChecker:
                                                         temperature = self.TEMPERATURE * 2,
         )
         
-        return self.last_response['choices'][0]['text'].strip()
-
+        response = self.last_response['choices'][0]['text'].strip()
+        pattern = re.compile(r'(\d+\. )')
+        return re.sub(pattern, '', response)
