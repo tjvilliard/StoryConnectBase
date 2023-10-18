@@ -18,11 +18,13 @@ class RoadUnblockerResponseSerializer(serializers.Serializer):
     suggestions = RoadUnblockerSuggestionSerializer(many=True)
     message = serializers.CharField()
 
+class ContinuityItemSerializer(serializers.Serializer):
+    content = serializers.CharField()
 
-# class GptCompletionSerializer(serializers.Serializer):
-#     id = serializers.CharField()
-#     object = serializers.CharField()
-#     created = serializers.IntegerField()
-#     model = serializers.CharField()
-#     choices = serializers.ListField(child=serializers.DictField())
-#     usage = serializers.DictField()
+
+class ContinuityCheckerResponseSerializer(serializers.Serializer):
+    # contradictions = serializers.ListField(child=ContinuityItemSerializer())
+    contradicions = serializers.ListField(child=serializers.CharField())
+    
+    message = serializers.CharField()
+
