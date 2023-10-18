@@ -25,19 +25,19 @@ class WritingApiProvider {
     return ContinuityResponse(
       suggestions: [
         ContinuitySuggestion(
-          description: 'This is a suggestion',
+          content: 'This is a suggestion',
           chapterId: chapterId,
           uuid: '1234',
           suggestionType: 'suggestion',
         ),
         ContinuitySuggestion(
-          description: 'This is a warning',
+          content: 'This is a warning',
           uuid: '1234',
           suggestionType: 'warning',
           chapterId: chapterId,
         ),
         ContinuitySuggestion(
-          description: 'This is an error',
+          content: 'This is an error',
           uuid: '1234',
           suggestionType: 'error',
           chapterId: chapterId,
