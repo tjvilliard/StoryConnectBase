@@ -5,7 +5,7 @@ class ContinuitySuggestion with _$ContinuitySuggestion {
   const factory ContinuitySuggestion({
     required String content,
     required String uuid,
-    required int chapterId,
+    @JsonKey(name: "chapter_id") required int chapterId,
     int? startChar,
     String? suggestionType,
   }) = _ContinuitySuggestion;

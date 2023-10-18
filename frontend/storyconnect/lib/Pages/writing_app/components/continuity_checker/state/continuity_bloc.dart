@@ -34,7 +34,7 @@ class ContinuityBloc extends Bloc<ContinuityEvent, ContinuityState> {
 
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(false),
-        continuities: continuityResponse?.suggestions ?? []));
+        continuities: continuityResponse?.items ?? []));
   }
 
   dismissContinuity(
