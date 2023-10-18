@@ -21,3 +21,28 @@ class LibrarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Library
         fields = "__all__"
+
+
+class NarrativeElementSerializer(serializers.ModelSerializer):
+    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+    class Meta:
+        model = NarrativeElement
+        fields = "__all__"
+
+class NarrativeElementTypeSerializer(serializers.ModelSerializer):
+    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+    class Meta:
+        model = NarrativeElementType
+        fields = "__all__"
+    
+class NarrativeElementAttributeSerializer(serializers.ModelSerializer):
+    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+    class Meta:
+        model = NarrativeElementAttribute
+        fields = "__all__"
+
+class NarrativeElementAttributeTypeSerializer(serializers.ModelSerializer):
+    # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
+    class Meta:
+        model = NarrativeElementAttributeType
+        fields = "__all__"
