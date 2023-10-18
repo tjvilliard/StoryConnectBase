@@ -11,10 +11,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RoadUnblockerRequestSerializer, RoadUnblockerResponseSerializer, RoadUnblockerSuggestionSerializer
-from models import StatementSheet
+from .models import StatementSheet
 from .continuity_checker import ContinuityChecker
 from books import models as books_models
-from serializers import *
+from .serializers import *
 
 class RoadUnblockerRequestView(APIView):
     def post(self, request, format=None):
@@ -77,7 +77,7 @@ class RoadUnblockerSuggestionView(APIView):
         serializer = RoadUnblockerSuggestionSerializer(mock_suggestions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class ContinuityChecker(APIView):
+class ContinuityCheckerView(APIView):
     
     def post(self, request, format=None):
         cc = ContinuityChecker()

@@ -1,10 +1,11 @@
 from django.urls import path, include
-from .views import RoadUnblockerRequestView, RoadUnblockerSuggestionView
+from .views import *
 
 
 app_name = "ai_features"
 
 urlpatterns = [
-    path('request/', RoadUnblockerRequestView.as_view(), name="roadunblocker_request"),
-    path('suggestion/', RoadUnblockerSuggestionView.as_view(), name="roadunblocker_suggestion"),
+    path('ru_request/', RoadUnblockerRequestView.as_view(), name="roadunblocker_request"),
+    path('ru_suggestion/', RoadUnblockerSuggestionView.as_view(), name="roadunblocker_suggestion"),
+    path('continuity_checker/', ContinuityCheckerView.as_view(), name="continuity_checker"),
 ]
