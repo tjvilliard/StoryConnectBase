@@ -88,7 +88,7 @@ class ContinuityChecker:
         # print(s_new)
         comp_input = f"The following statements are about previously written text: \n {s_old} \n The next statements are about new text: \n {s_new}\n"
         comp_instructions = "Identify any contradictions between the old text and the new text. Briefly summarize the contradicitons. Do not say anything about changes that dont contain contradictions. Do not use complicated formatting. Be brief. Stop when appropriate."
-        comp_instructions_list = "List any contradictions between the old text and the new text."
+        comp_instructions_list = "List any contradictions between the old text and the new text. If no contradicions exist, say 'NONE'."
         prompt = comp_input + comp_instructions_list
         
         self.last_response = openai.Completion.create(model = self.BASE_MODEL,
