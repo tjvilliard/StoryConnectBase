@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_home/components/content_panel/book_item.dart';
+import 'package:storyconnect/Pages/browsing/components/content_panel/book_item.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 

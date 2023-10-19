@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_home/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/browsing/components/content_panel/panel_item.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'library_event.dart';

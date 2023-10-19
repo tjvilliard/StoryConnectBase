@@ -28,8 +28,8 @@ class SentimentChangedEvent extends FeedbackEvent {
 
 /// Change the type of feedback we are giving the writer.
 class FeedbackTypeChanged extends FeedbackEvent {
-  final bool isSuggestion;
-  const FeedbackTypeChanged({required bool this.isSuggestion});
+  final FeedbackType feedbackType;
+  const FeedbackTypeChanged(this.feedbackType);
 }
 
 /// Submits a new feedback item

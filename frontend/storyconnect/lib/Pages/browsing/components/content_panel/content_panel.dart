@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_home/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/browsing/components/content_panel/panel_item.dart';
 
 /// Panel of widgets with set behaviours and backgrounds.
 abstract class ContentPanel extends StatelessWidget {

@@ -43,17 +43,17 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
   /// Changes the type of feedback and emits the changed state.
   feedbackTypeChanged(FeedbackTypeChanged event, FeedbackEmitter emit) {
-    if (event.isSuggestion) {
+    if (event.feedbackType != FeedbackType.suggestion) {
       emit(state.copyWith(
           serializer: state.serializer.copyWith(
-        isSuggestion: event.isSuggestion,
+        isSuggestion: false,
         suggestion: state.serializer.comment,
         comment: "",
       )));
     } else {
       emit(state.copyWith(
           serializer: state.serializer.copyWith(
-        isSuggestion: event.isSuggestion,
+        isSuggestion: true,
         suggestion: state.serializer.comment,
         comment: state.serializer.suggestion,
       )));
