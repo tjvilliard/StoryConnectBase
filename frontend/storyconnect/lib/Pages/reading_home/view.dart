@@ -5,6 +5,7 @@ import 'package:storyconnect/Pages/reading_home/components/content_panel/content
 import 'package:storyconnect/Pages/reading_home/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/theme.dart';
+import 'package:storyconnect/Pages/reading_home/components/sample_books.dart';
 
 /// The Reading Home View: Displays a curated set of book content for the readers.
 ///
