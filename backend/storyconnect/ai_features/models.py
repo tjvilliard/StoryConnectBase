@@ -5,6 +5,7 @@ from comment.models import TextSelection
 from lxml import etree
 from .exceptions import StatementSheetInvalidDocumentError
 import logging
+logger = logging.getLogger(__name__)
 # Create your models here.
 
 class RoadUnblockerSuggestion(models.Model):
@@ -32,7 +33,8 @@ class StatementSheet(models.Model):
         try:
             self.s_tree = etree.fromstring(self.document)
             self.s_tree = StatementSheet._validate(self.s_tree)
-        except etree.XMLSyntaxError:
+        except etree.XMLSyntaxError as e:
+            logger.info(e)
             raise StatementSheetInvalidDocumentError()
         # self.logger = logging.getLogger(__name__)
 

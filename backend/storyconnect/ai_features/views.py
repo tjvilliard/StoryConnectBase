@@ -16,6 +16,9 @@ from .continuity_checker import ContinuityChecker
 from books import models as books_models
 from .serializers import *
 from uuid import uuid4
+import logging
+
+logger = logging.getLogger(__name__)
 
 class RoadUnblockerRequestView(APIView):
     def post(self, request, format=None):
@@ -107,7 +110,7 @@ class ContinuityView(APIView):
         return Response(hardcoded_continuities)
 
 class ContinuityCheckerView(APIView):
-    
+    DEFAULT_RESPONSE = {'message': "Everything looks good. Greate job!", 'items': []}
     # def post(self, request, format=None):
     #     cc = ContinuityChecker()
 
@@ -137,8 +140,10 @@ class ContinuityCheckerView(APIView):
     
     def get(self, request, *args, **kwargs):
         cc = ContinuityChecker()
+        
 
-        ch_id = kwargs.get('id') # chapter id
+        ch_id = kwargs.get('chapter_id') # chapter id
+        logger.info(ch_id)
         chapter = books_models.Chapter.objects.get(id=ch_id)
         ch_num = chapter.chapter_number
 
@@ -148,43 +153,79 @@ class ContinuityCheckerView(APIView):
         s_sheet = StatementSheet.objects.filter(book=book).first()
 
         if s_sheet is None:
-            text = chapter.content
-            document = cc.create_statementsheet(text)
-            StatementSheet.object.create(book=book, document=document, last_run_chapter = 0, last_run_offset = len(text))
-            return Response(status=status.HTTP_200_OK)
+            #TODO: Handle this situation properly, for now run on first chapter and check with second
+            logger.info("Creating new statement sheet")
+            ch_one = books_models.Chapter.objects.get(book=book, chapter_number=0)
+            document = cc.create_statementsheet(ch_one.content)
+            logger.info(document)
+            s_sheet = StatementSheet.objects.create(book=book, document=document, last_run_chapter = 0, last_run_offset = len(ch_one.content))
+            
         
         # Make a document for the new text and compare 
 
         # Chapter = last run chapter
+        # if ch_num == 0:
+        #     response_data = ContinuityCheckerView.DEFAULT_RESPONSE
+        #     serializer = ContinuityCheckerResponseSerializer(response_data)
+        #     return Response(serializer.data, status=status.HTTP_200_OK)
         
-        if ch_num == s_sheet.last_run_chapter:
+        if ch_num == s_sheet.last_run_chapter: 
+            logger.info("Ch_num == last_run_chapter ")
+            logger.info(ch_num)
             chapter_offset = s_sheet.last_run_offset
-            return continuity_checker_helper(book, ch_num, s_sheet, chapter_offset, cc)
+
+            #TODO: DEBUG ONLY JESUS --------------------------------
+            if s_sheet.last_run_offset == len(chapter.content):
+                chapter_offset = 0
+            #------------------------------------------------------
+            return ContinuityCheckerView.cc_helper(book, ch_num, s_sheet, chapter_offset, cc)
         else:
+            logger.info("Ch_num != last_run_chapter ")
+            logger.info("ch_num = " + str(ch_num) + "   " + "last run = " + str(s_sheet.last_run_chapter))
             ch_curr = books_models.Chapter.objects.filter(book=book, chapter_number=ch_num).first()
             s_sheet.last_run_chapter = ch_num
             s_sheet.last_run_offset = len(ch_curr.content)
-            return continuity_checker_helper(book, ch_num, s_sheet, 0, cc)
+            return ContinuityCheckerView.cc_helper(book, ch_num, s_sheet, 0, cc)
+        
+    @staticmethod
+    def cc_helper(book, chapter, statementsheet, offset, cc):
+        new_text = books_models.Chapter.objects.filter(book=book, chapter_number=chapter).first().content[offset:]
+        new_sheet = cc.create_statementsheet(new_text)
+        comparison = cc.compare_statementsheets(statementsheet.document, new_sheet)
 
+        logger.info(comparison)
 
-# Helper function for ContinuityChecker -- should i put this inside the class? or will that fuck with the api view? 
-def continuity_checker_helper(book, chapter, statementsheet, offset, cc):
-    new_text = books_models.Chapter.objects.filter(book=book, chapter_number=chapter).content[offset:]
-    new_sheet = cc.create_statementsheet(new_text)
-    comparison = cc.compare_statementsheets(statementsheet.document, new_sheet)
+        if comparison == 'NONE':
+            response_data = ContinuityCheckerView.DEFAULT_RESPONSE
+        else:
+            items = []
+            for item in comparison.split('\n'):
+                items.append({'content': item, 'chapter_id': chapter, 'uuid': uuid4()})
 
-    if comparison == 'NONE':
-        response_data = {
-            'message': "Everything looks good. Greate job!",
-            'contradictions': []}
-    else:
-        items = None
-        for item in comparison.split('\n'):
-            items.append({'content': item, 'chapterId': chapter, 'uuid': uuid4()})
+            response_data = {
+                'message': "It looks there are some continuity errors in your story.",
+                'items': items}
+        
+        serializer = ContinuityCheckerResponseSerializer(response_data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        response_data = {
-            'message': "It looks there are some continuity errors in your story.",
-            'contradictions': items}
+# # Helper function for ContinuityChecker -- should i put this inside the class? or will that fuck with the api view? 
+# def continuity_checker_helper(book, chapter, statementsheet, offset, cc):
+#     new_text = books_models.Chapter.objects.filter(book=book, chapter_number=chapter).first().content[offset:]
+#     new_sheet = cc.create_statementsheet(new_text)
+#     comparison = cc.compare_statementsheets(statementsheet.document, new_sheet)
+
+#     if comparison == 'NONE':
+#         response_data = default_response
+#     else:
+#         items = []
+#         for item in comparison.split('\n'):
+#             items.append({'content': item, 'chapter_id': chapter, 'uuid': uuid4()})
+
+#         response_data = {
+#             'message': "It looks there are some continuity errors in your story.",
+#             'items': items}
     
-    serializer = ContinuityCheckerResponseSerializer(response_data)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+#     serializer = ContinuityCheckerResponseSerializer(response_data)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
+

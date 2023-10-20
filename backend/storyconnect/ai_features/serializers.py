@@ -20,12 +20,13 @@ class RoadUnblockerResponseSerializer(serializers.Serializer):
 
 class ContinuityItemSerializer(serializers.Serializer):
     content = serializers.CharField()
-    chapterId = serializers.IntegerField()
+    chapter_id = serializers.IntegerField()
     uuid = serializers.CharField()
 
 
 class ContinuityCheckerResponseSerializer(serializers.Serializer):
     # contradictions = serializers.ListField(child=ContinuityItemSerializer())
-    items = serializers.ListField(child=ContinuityItemSerializer(), allow_empty=True)
+    # items = serializers.ListField(child=ContinuityItemSerializer(), allow_empty=True)
+    items = ContinuityItemSerializer(many=True, allow_empty=True)
     message = serializers.CharField()
 
