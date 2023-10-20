@@ -9,8 +9,10 @@ environment:
 dependencies:
   beamer: ^1.5.3
   bloc_concurrency: ^0.2.2
+  file_picker: ^6.0.0
   firebase_auth: ^4.10.0
   firebase_core: ^2.16.0
+  firebase_storage: ^11.3.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3

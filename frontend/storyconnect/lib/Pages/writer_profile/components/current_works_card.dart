@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Widgets/book_widget.dart';
 
 class CurrentWorksCard extends StatefulWidget {
@@ -36,9 +37,13 @@ class CurrentWorksCardState extends State<CurrentWorksCard> {
                                 width: 150,
                                 height: 200,
                                 child: BookWidget(
+                                    book: Book(
+                                  id: 1,
                                   title: "The Book of the New Sun",
-                                  coverCDN: "",
-                                ));
+                                  cover: "",
+                                  created: DateTime.now(),
+                                  modified: DateTime.now(),
+                                )));
                           }))
                 ]))));
   }

@@ -29,7 +29,9 @@ class BookListWidget extends StatelessWidget {
                             Beamer.of(context)
                                 .beamToNamed(url, data: {"book": book});
                           },
-                          child: BookWidget(title: book.title, coverCDN: ""))))
+                          child: BookWidget(
+                            book: book,
+                          ))))
                   .toList(),
             )));
   }
