@@ -18,5 +18,15 @@ class RoadUnblockerResponseSerializer(serializers.Serializer):
     suggestions = RoadUnblockerSuggestionSerializer(many=True)
     message = serializers.CharField()
 
+class ContinuityItemSerializer(serializers.Serializer):
+    content = serializers.CharField()
+    chapter_id = serializers.IntegerField()
+    uuid = serializers.CharField()
 
-    
+
+class ContinuityCheckerResponseSerializer(serializers.Serializer):
+    # contradictions = serializers.ListField(child=ContinuityItemSerializer())
+    # items = serializers.ListField(child=ContinuityItemSerializer(), allow_empty=True)
+    items = ContinuityItemSerializer(many=True, allow_empty=True)
+    message = serializers.CharField()
+

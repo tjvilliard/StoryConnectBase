@@ -39,7 +39,7 @@ class Book(models.Model):
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
     book_status = models.IntegerField(choices=STATUS, null=True, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+    cover = models.CharField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000, null=True, blank=True)
@@ -48,24 +48,7 @@ class Book(models.Model):
     # rating = models.FloatField(null=True, blank=True, max_value = 5.0)
 
 
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.cover:
-            # uses local covers/ temporarily for image upload to bucket
-            image_path = str(self.cover)
-            bucket = FIREBASE_BUCKET
-            blob = bucket.blob(image_path)
-            blob.upload_from_filename(self.cover.path)
-
-            # delete local covers/ after upload
-            os.remove(image_path)
-
-            # make the image public and save the public url to the image field
-            blob.make_public()
-            self.cover = blob.public_url  # Save the public URL to the image field
-            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -89,7 +72,8 @@ class Book(models.Model):
 class Library(models.Model):
     BOOK_STATUS = [
         (1, "Reading"), 
-        (2, "Archived")
+        (2, "Completed"),
+        (3, "To Read"),
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.IntegerField(choices=BOOK_STATUS)

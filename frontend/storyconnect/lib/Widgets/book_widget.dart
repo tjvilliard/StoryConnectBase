@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Models/models.dart';
 
 class BookWidget extends StatelessWidget {
-  final String title;
-  final String? author; // if we're the author, we don't need to show this
-  final String coverCDN;
+  final Book book;
 
-  BookWidget({required this.title, this.author, required this.coverCDN});
+  BookWidget({required this.book});
 
   // build a rectangular placeholder for the book cover
   Widget _imagePlaceHolder() {
@@ -26,18 +25,21 @@ class BookWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Image.network(coverCDN),
-          _imagePlaceHolder(),
+          if (book.cover != null && book.cover!.isNotEmpty)
+            Image.network(book.cover!),
+          if (book.cover == null || book.cover?.isEmpty == true)
+            _imagePlaceHolder(),
           Flexible(
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    title,
+                    book.title,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ))),
-          if (author != null)
-            Text(author!, style: Theme.of(context).textTheme.labelSmall),
+          if (book.author != null)
+            Text(book.author!, style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
     );

@@ -25,6 +25,10 @@ class TargetAudienceChangedEvent extends BookCreateEvent {
       : this.targetAudience = targetAudience.index;
 }
 
+class UploadImageEvent extends BookCreateEvent {
+  const UploadImageEvent();
+}
+
 class SynopsisChangedEvent extends BookCreateEvent {
   final String? Synopsis;
   SynopsisChangedEvent({required String? this.Synopsis});

@@ -1,3 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
@@ -46,6 +51,7 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
     });
 
     on<SaveBookEvent>((event, emit) => saveBook(event, emit));
+    on<UploadImageEvent>((event, emit) => uploadImage(event, emit));
 
     on<ResetEvent>((event, emit) {
       emit(state.copyWith(
@@ -53,6 +59,46 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
           serializer: BookCreationSerializer.initial(),
           loadingStruct: LoadingStruct.loading(false)));
     });
+  }
+
+  Future<void> uploadImage(
+      UploadImageEvent event, BookCreateEmitter emit) async {
+    FilePicker platformFilePicker = FilePicker.platform;
+    FilePickerResult? result = await platformFilePicker.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    // convert the image to base 64
+    if (result != null) {
+      // get file from bytes since web doesn't support path
+
+      emit(state.copyWith(
+          imageTitle: result.files.single.name,
+          imageFile: result.files.single.bytes));
+    }
+  }
+
+  static Future<String> _uploadImage(Uint8List imageBytes) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    // handle auth here
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      throw Exception("User is not logged in.");
+    }
+
+    Reference ref = storage
+        .ref()
+        .child("images/${user.uid}/${DateTime.now().toIso8601String()}.png");
+    // upload the file as public
+    UploadTask uploadTask = ref.putData(imageBytes);
+    await uploadTask;
+
+    final url = await ref.getDownloadURL();
+    print(url);
+    return url;
   }
 
   Future<void> saveBook(SaveBookEvent event, BookCreateEmitter emit) async {
@@ -66,6 +112,13 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
           loadingStruct: LoadingStruct.errorMessage(
               "Please fill out all fields before saving.")));
       return;
+    }
+
+    // if the image is not null, upload it
+    if (state.imageFile != null) {
+      emit(state.copyWith(
+          serializer: state.serializer
+              .copyWith(cover: await _uploadImage(state.imageFile!))));
     }
 
     final bookID = await repository.createBook(serializer: state.serializer);

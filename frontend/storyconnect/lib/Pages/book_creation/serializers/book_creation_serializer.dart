@@ -14,6 +14,7 @@ class BookCreationSerializer with _$BookCreationSerializer {
     @JsonKey(name: 'target_audience') int? targetAudience,
     String? synopsis,
     int? copyright,
+    String? cover,
   }) = _BookCreationSerializer;
   const BookCreationSerializer._();
   factory BookCreationSerializer.fromJson(Map<String, dynamic> json) =>
@@ -26,6 +27,7 @@ class BookCreationSerializer with _$BookCreationSerializer {
         // author: "",
         language: LanguageConstant.english.label,
         synopsis: "",
+        cover: "",
         copyright: CopyrightOption.allRightsReserved.index);
   }
 

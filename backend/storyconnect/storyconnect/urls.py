@@ -27,6 +27,7 @@ router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
+router.register(r'api/library', books_views.LibraryViewSet)
 
 urlpatterns = router.urls
 

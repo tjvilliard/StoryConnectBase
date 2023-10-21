@@ -1,0 +1,16 @@
+<Statements>
+<Characters>
+<Lord-Henry-Wotton>
+Lord Henry Wotton has never smoked.
+</Lord-Henry-Wotton>
+<Dorian-Gray>
+Dorian Gray is described as old and decrepit.
+</Dorian-Gray>
+</Characters>
+<Locations>
+<Garden>
+The garden is barren. 
+The garden has only rose bushes. 
+</Garden>
+</Locations>
+</Statements>
