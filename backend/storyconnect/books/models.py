@@ -52,6 +52,8 @@ class Book(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
+        #TODO:
         if self.cover:
             # uses local covers/ temporarily for image upload to bucket
             image_path = str(self.cover)
@@ -80,7 +82,7 @@ class Book(models.Model):
             return Book.objects.filter(author=self.language)
         
     def get_chapters(self):
-        return Chapter.objects.filter(book=self)
+        return Chapter.objects.filter(book=self).order_by('chapter_number')
     
     def get_narrative_elements(self):
         return NarrativeElement.objects.filter(book=self)
