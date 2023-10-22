@@ -129,74 +129,6 @@ class ChapterViewSet(viewsets.ModelViewSet):
 
         return JsonResponse(serializer.data)
 
-# class CharacterViewSet(viewsets.ModelViewSet):
-#     queryset = Character.objects.all()
-#     serializer_class = CharacterSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-#     # def perform_create(self, serializer):
-#     #     serializer.save(owner=self.request.user)
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-#         return JsonResponse(serializer.data)
-    
-# class LocationViewSet(viewsets.ModelViewSet):
-#     queryset = Location.objects.all()
-#     serializer_class = LocationSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-#     # def perform_create(self, serializer):
-#     #     serializer.save(owner=self.request.user)
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-#         return JsonResponse(serializer.data)
-    
-
-# class SceneViewSet(viewsets.ModelViewSet):
-#     queryset = Scene.objects.all()
-#     serializer_class = SceneSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-#         return JsonResponse(serializer.data)
-    
 
 class RoadUnblockerView(APIView):
     def post(self, request, format=None, *args, **kwargs):
@@ -232,9 +164,10 @@ class RoadUnblockerView(APIView):
         }
         return Response(hardcoded_roadunblock, status=status.HTTP_200_OK)
     
-#TODO: Add a view for library queries
+
 
 class LibraryViewSet(viewsets.ModelViewSet):
+    #TODO: Potentialy change the default queryset and get rid of the get_user_library action
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -247,6 +180,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post'])
     def change_entry_status(self, request, pk=None):
+        #TODO: Test this
         library = self.get_object()
         book = library.book
         book_id = book.id
