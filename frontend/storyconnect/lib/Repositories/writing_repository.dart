@@ -57,6 +57,8 @@ class WritingApiProvider {
         },
       );
 
+      print(result.body);
+
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);
       }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/browsing/components/content_panel/panel_item.dart';
-import 'package:storyconnect/Pages/browsing/components/content_panel/content_panel.dart';
-import 'package:storyconnect/Pages/browsing/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/content_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/theme.dart';
-import 'package:storyconnect/Pages/browsing/components/sample_books.dart';
 
 /// The Reading Home View: Displays a curated set of book content for the readers.
 class ReadingHomeView extends StatefulWidget {
@@ -45,7 +44,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                   children: [LoadingItem()], primary: Colors.white)
             ];
           } else {
-            // TODO: replace with dynamically built panels based on backend input.
             toReturn = <ContentPanel>[
               SolidContentPanel(
                   children: [BlankPanel(height: 1.5)],
@@ -55,7 +53,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 thickness: 2.0,
               ),
               FadedContentPanel.titledBookPanel(
-                  sampleBooksData.sample(),
+                  homeState.libraryBooks,
                   myColorScheme.secondary.withOpacity(0.45),
                   Colors.grey.shade100,
                   "Continue Reading",
@@ -66,7 +64,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 thickness: 2.0,
               ),
               FadedContentPanel.titledBookPanel(
-                  sampleBooksData.sample(),
+                  homeState.books,
                   myColorScheme.surface.withOpacity(.6),
                   Colors.grey.shade200,
                   "Browse some Books",

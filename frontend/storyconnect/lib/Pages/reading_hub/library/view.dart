@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/browsing/components/content_panel/content_panel.dart';
-import 'package:storyconnect/Pages/browsing/components/content_panel/panel_item.dart';
-import 'package:storyconnect/Pages/browsing/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/content_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
 class LibraryView extends StatefulWidget {

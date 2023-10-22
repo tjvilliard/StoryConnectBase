@@ -23,6 +23,7 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
       : this._repository = repository,
         super(ReadingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => this.updateUI(event, emit));
+    on<LibraryToggleEvent>((event, emit) => this.libraryToggle(event, emit));
     on<ReadingLoadEvent>((event, emit) => this.loadEvent(event, emit));
     on<ToggleChapterOutlineEvent>(
         (event, emit) => toggleChapterOutline(event, emit));
@@ -52,6 +53,11 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
     // If the book wasn't found, return Book not found Error.
     return "Error: Title not found";
+  }
+
+  Future<void> libraryToggle(
+      LibraryToggleEvent event, ReadingUIEmitter emit) async {
+    this._repository.addLibraryBook(event.bookId);
   }
 
   /// Completes all tasks related to loading a book into the reading UI.

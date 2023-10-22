@@ -87,13 +87,13 @@ class _ReadingAppViewState extends State<ReadingAppView> {
               children: [
                 Positioned.fill(
                     child: Align(
-                  alignment: Alignment.topLeft,
-                  child: ChapterNavigation(),
+                  alignment: Alignment.center,
+                  child: ReadingPageView(),
                 )),
                 Positioned.fill(
                     child: Align(
-                  alignment: Alignment.center,
-                  child: ReadingPageView(),
+                  alignment: Alignment.topLeft,
+                  child: ChapterNavigation(),
                 )),
                 Positioned.fill(
                     child: Align(
@@ -102,7 +102,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                 ))
               ],
             )),
-            ReadingMenuBar(),
+            ReadingMenuBar(bookId: widget.bookId!),
           ],
         ));
   }

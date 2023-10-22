@@ -1,14 +1,16 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/browsing/home/state/reading_home_bloc.dart';
-import 'package:storyconnect/Pages/browsing/view.dart';
+import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/home/view.dart';
 import 'package:storyconnect/Pages/login/sign_in/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/view.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/view.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
@@ -18,6 +20,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
   List<Pattern> get pathPatterns => [
         '/',
         '/reader/home',
+        '/reader/library',
         '/reader/book/:bookId',
         '/reader/book/:bookId/:chapterId'
       ];
@@ -37,6 +40,17 @@ class ReaderLocations extends BeamLocation<BeamState> {
               create: (context) =>
                   ReadingHomeBloc(context.read<ReadingRepository>()),
               child: ReadingHomeView(),
+            )));
+      }
+      // If the url contains library, send the reader to the library.
+      else if (url.contains('library')) {
+        print("Added library page");
+        pages.add(CustomBeamPage(
+            key: ValueKey('library'),
+            child: BlocProvider(
+              create: (context) =>
+                  LibraryBloc(context.read<ReadingRepository>()),
+              child: LibraryView(),
             )));
       }
       // If the url contains a path parameter 'bookId'
@@ -70,12 +84,16 @@ class ReaderLocations extends BeamLocation<BeamState> {
                     child: ReadingAppView(
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
+      } else {
+        print("Didn't find page 1:");
       }
     }
     // If the segments are empty, send the reader to the login page.
     else if (state.uri.pathSegments.isEmpty) {
       pages.add(
           CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
+    } else {
+      print("Didn't find page");
     }
 
     // else send the reader to the reader's not found page.

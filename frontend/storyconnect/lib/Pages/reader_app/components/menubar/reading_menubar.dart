@@ -7,7 +7,8 @@ import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_blo
 
 /// Custom Menu Bar for the Reading UI Page.
 class ReadingMenuBar extends StatelessWidget {
-  const ReadingMenuBar({super.key});
+  final int bookId;
+  const ReadingMenuBar({required this.bookId, super.key});
 
   //height for items in bar
   static const double height = 40;
@@ -86,7 +87,11 @@ class ReadingMenuBar extends StatelessWidget {
                                     // Add / Remove Story from Library
                                     ReadingIconButton(
                                       icon: Icon(Icons.add),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        BlocProvider.of<ReadingUIBloc>(context)
+                                            .add(LibraryToggleEvent(
+                                                bookId: this.bookId));
+                                      },
                                     ),
 
                                     // Chapter Feedback

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/browsing/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'library_event.dart';
@@ -26,7 +26,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
       libraryBooks: state.libraryBooks,
       loadingStruct: LoadingStruct.loading(true),
     ));
-    List<Book> libBooks = await this._repo.getBooks();
+    List<Book> libBooks = await this._repo.getLibraryBooks();
 
     emit(LibraryStruct(
       libraryBooks: libBooks,
@@ -42,23 +42,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
 
     event.bookId;
 
-    //add book by book ID to library.
-    List<Book> libBooks = await this._repo.getBooks();
-    emit(LibraryStruct(
-      libraryBooks: libBooks,
-      loadingStruct: LoadingStruct.loading(false),
-    ));
-  }
-
-  addBook(AddBookEvent event, LibraryEmitter emit) async {
-    emit(LibraryStruct(
-      libraryBooks: state.libraryBooks,
-      loadingStruct: LoadingStruct.loading(true),
-    ));
-
-    event.bookId;
-
-    //add book by book ID to library.
+    //remove book by book ID to library.
     List<Book> libBooks = await this._repo.getBooks();
     emit(LibraryStruct(
       libraryBooks: libBooks,
