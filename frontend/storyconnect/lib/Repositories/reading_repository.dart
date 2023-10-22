@@ -77,7 +77,7 @@ class ReadingApiProvider {
     }
   }
 
-  Stream<Book> getLibrary() async* {
+  Stream<Library> getLibrary() async* {
     try {
       final url = UrlContants.getUserLibrary();
 
@@ -85,30 +85,30 @@ class ReadingApiProvider {
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token ${await getAuthToken()}'
       });
-
+      print("Getting Library Books");
       print(result.body);
-      for (var book in jsonDecode(result.body)) {
-        yield Book.fromJson(book);
+      for (var libraryEntry in jsonDecode(result.body)) {
+        print(libraryEntry);
+        yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  void addBooktoLibrary(int bookId) async {
+  /// Completes the action of adding a book to the library.
+  Future<void> addBooktoLibrary(int bookId) async {
     try {
       final url = UrlContants.addLibraryBook();
 
       print(jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson()));
 
-      final result = await http.post(url,
+      await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token ${await getAuthToken()}'
           },
           body: (jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson())));
-
-      print(result.body);
     } catch (e) {
       print(e);
     }
@@ -192,14 +192,26 @@ class ReadingRepository {
     return result;
   }
 
+  /// Provided with a list of library entries, gets a list of books based
+  /// on those entries.
   Future<List<Book>> getLibraryBooks() async {
     final result = await this._api.getLibrary();
+    List<Library> entries = await result.toList();
 
-    return result.toList();
+    List<Book> books = await this.getBooks();
+
+    print(books);
+
+    List<Book> libraryBooks = [];
+    for (Library entry in entries) {
+      libraryBooks.addAll(books.where((book) => book.id == entry.book));
+    }
+
+    return libraryBooks;
   }
 
   Future<void> addLibraryBook(int bookId) async {
-    this._api.addBooktoLibrary(bookId);
+    await this._api.addBooktoLibrary(bookId);
   }
 
   Future<Map<String, List<Book>>> getTaggedBooks() async {

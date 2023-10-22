@@ -44,7 +44,6 @@ class ReaderLocations extends BeamLocation<BeamState> {
       }
       // If the url contains library, send the reader to the library.
       else if (url.contains('library')) {
-        print("Added library page");
         pages.add(CustomBeamPage(
             key: ValueKey('library'),
             child: BlocProvider(

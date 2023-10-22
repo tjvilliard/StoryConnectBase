@@ -26,7 +26,10 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
       libraryBooks: state.libraryBooks,
       loadingStruct: LoadingStruct.loading(true),
     ));
+
     List<Book> libBooks = await this._repo.getLibraryBooks();
+
+    print(libBooks);
 
     emit(LibraryStruct(
       libraryBooks: libBooks,

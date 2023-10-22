@@ -74,14 +74,17 @@ class UrlContants {
     return _urlBuilder.build('road_unblock/');
   }
 
+  /// library/get_user/library/ for getting user library.
   static Uri getUserLibrary() {
     return _urlBuilder.build('library/get_user_library/');
   }
 
+  /// library/ url for adding entries to library
   static Uri addLibraryBook() {
     return _urlBuilder.build('library/');
   }
 
+  /// library/change_entry_status for removing library entry.
   static Uri removeLibraryBook() {
     return _urlBuilder.build('library/change_entry_status/');
   }
