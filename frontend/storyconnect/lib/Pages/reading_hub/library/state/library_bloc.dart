@@ -1,11 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'library_event.dart';
 part 'library_struct.dart';
+
+/// Different Status Types of a library book.
+enum LibraryBookStatus {
+  Reading("Reading"),
+  Completed("Completed"),
+  ToBeRead("To Be Read");
+
+  const LibraryBookStatus(this.description);
+  final String description;
+}
 
 typedef LibraryEmitter = Emitter<LibraryStruct>;
 
@@ -28,8 +37,6 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
     ));
 
     List<Book> libBooks = await this._repo.getLibraryBooks();
-
-    print(libBooks);
 
     emit(LibraryStruct(
       libraryBooks: libBooks,

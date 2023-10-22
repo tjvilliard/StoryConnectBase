@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/components/book_item/detailed_book_item.dart';
@@ -87,6 +86,66 @@ class LoadingItem extends PanelItem {
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: LoadingWidget(loadingStruct: LoadingStruct(isLoading: true)));
+  }
+}
+
+class BookGrid extends PanelItem {
+  /// The set of books we are displaying in this panel item.
+  final List<Book> books;
+
+  final bool descript = false;
+
+  BookGrid({required List<Book> this.books});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+        child: SizedBox(
+            width: 800,
+            child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse
+                    }),
+                child: SizedBox(
+                    height: 270,
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverGrid.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            mainAxisExtent: 270,
+                            maxCrossAxisExtent: (270.0 / 1.618) + 35,
+                            crossAxisSpacing: 8.0,
+                            childAspectRatio: 1.0,
+                          ),
+                          itemCount: this.books.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                                elevation: 3,
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    width: (270.0 / 1.618) + 35,
+                                    child: Clickable(
+                                        onPressed: () {
+                                          final uri = PageUrls.readBook(
+                                              this.books[index].id);
+                                          Beamer.of(context).beamToNamed(uri,
+                                              data: {
+                                                "book": this.books[index]
+                                              });
+                                        },
+                                        child: CoverBookItem(
+                                            book: this.books[index]))));
+                          },
+                        )
+                      ],
+                    )))));
   }
 }
 

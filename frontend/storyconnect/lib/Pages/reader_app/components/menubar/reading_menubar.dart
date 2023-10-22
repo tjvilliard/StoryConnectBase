@@ -58,6 +58,27 @@ class ReadingMenuBar extends StatelessWidget {
                                             },
                                     ),
 
+                                    // Navigate Chapter Forward
+                                    ReadingIconButton(
+                                      icon: Icon(Icons.arrow_right),
+
+                                      // Disable the next chapter button if we are on the first chapter.
+                                      onPressed: chapterState.chapterIndex ==
+                                              chapterState.chapters.length - 1
+                                          ? null
+                                          : () {
+                                              context.read<ChapterBloc>().add(
+                                                  SwitchChapter(
+                                                      chapterToSwitchFrom:
+                                                          chapterState
+                                                              .chapterIndex,
+                                                      chapterToSwitchTo:
+                                                          chapterState
+                                                                  .chapterIndex +
+                                                              1));
+                                            },
+                                    ),
+
                                     // Bring Up the Chapter Navigation Bar
                                     ReadingIconButton(
                                         icon: Icon(FontAwesomeIcons.list),
@@ -86,7 +107,10 @@ class ReadingMenuBar extends StatelessWidget {
 
                                     // Add / Remove Story from Library
                                     ReadingIconButton(
-                                      icon: Icon(Icons.add),
+                                      icon: Icon(uiState.libBookIds
+                                              .contains(this.bookId)
+                                          ? Icons.bookmark_added
+                                          : Icons.bookmark_add),
                                       onPressed: () {
                                         BlocProvider.of<ReadingUIBloc>(context)
                                             .add(LibraryToggleEvent(
@@ -102,27 +126,6 @@ class ReadingMenuBar extends StatelessWidget {
                                         BlocProvider.of<ReadingUIBloc>(context)
                                             .add(ToggleFeedbackBarEvent());
                                       },
-                                    ),
-
-                                    // Navigate Chapter Forward
-                                    ReadingIconButton(
-                                      icon: Icon(Icons.arrow_right),
-
-                                      // Disable the next chapter button if we are on the first chapter.
-                                      onPressed: chapterState.chapterIndex ==
-                                              chapterState.chapters.length - 1
-                                          ? null
-                                          : () {
-                                              context.read<ChapterBloc>().add(
-                                                  SwitchChapter(
-                                                      chapterToSwitchFrom:
-                                                          chapterState
-                                                              .chapterIndex,
-                                                      chapterToSwitchTo:
-                                                          chapterState
-                                                                  .chapterIndex +
-                                                              1));
-                                            },
                                     ),
                                   ])))
                     ])));

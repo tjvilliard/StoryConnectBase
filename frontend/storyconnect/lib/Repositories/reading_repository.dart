@@ -11,13 +11,6 @@ import 'package:storyconnect/Pages/reading_hub/components/serializers/library_en
 import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
-  //TODO: add differing kinds of book requests
-  // some to be added with a search function, some by category.
-  // Category based searches should not be hardcoded, but should be dynamic.
-
-  //TODO: replace this generic getBooks request with more
-  // sophisticated and dynamic requests.
-
   Future<String> getAuthToken() async {
     return (await FirebaseAuth.instance.currentUser!.getIdToken(true))
         as String;
@@ -77,18 +70,20 @@ class ReadingApiProvider {
     }
   }
 
+  /// Gets the full set of user library entries, the book id, the reader, the book reading state, etc...
   Stream<Library> getLibrary() async* {
     try {
+      // get url for user library api call.
       final url = UrlContants.getUserLibrary();
 
+      // get result for HTTP GET request
       final result = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Token ${await getAuthToken()}'
       });
-      print("Getting Library Books");
-      print(result.body);
+
+      // yield each library entry from the result body.
       for (var libraryEntry in jsonDecode(result.body)) {
-        print(libraryEntry);
         yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
@@ -96,13 +91,13 @@ class ReadingApiProvider {
     }
   }
 
-  /// Completes the action of adding a book to the library.
+  /// Completes API action of adding a book to user library.
   Future<void> addBooktoLibrary(int bookId) async {
     try {
+      // get url for adding entry to user library api call.
       final url = UrlContants.addLibraryBook();
 
-      print(jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson()));
-
+      // send off HTTP POST request
       await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
@@ -114,18 +109,26 @@ class ReadingApiProvider {
     }
   }
 
-  Stream<void> removeBookfromLibrary(int bookId) async* {
+  /// Completes API action of removing a book from user library.
+  Future<void> removeBookfromLibrary(int bookId) async {
     try {
+      print("Getting url for delete request");
+      // get url for removing entry from user library api call.
       final url = UrlContants.removeLibraryBook();
 
+      String requestBody =
+          jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson());
+      print(requestBody);
+      print("Sending Delete Request");
+      // send off HTTP DELETE request
       final result = await http.delete(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token ${await getAuthToken()}'
           },
-          body: (jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson())));
+          body: (requestBody));
 
-      print(result);
+      print(result.body);
     } catch (e) {
       print(e);
     }
@@ -200,8 +203,6 @@ class ReadingRepository {
 
     List<Book> books = await this.getBooks();
 
-    print(books);
-
     List<Book> libraryBooks = [];
     for (Library entry in entries) {
       libraryBooks.addAll(books.where((book) => book.id == entry.book));
@@ -210,13 +211,29 @@ class ReadingRepository {
     return libraryBooks;
   }
 
+  Future<List<Library>> getLibraryEntries() async {
+    final result = await this._api.getLibrary();
+    List<Library> entries = await result.toList();
+    return entries;
+  }
+
+  Future<List<int>> getLibraryBookIds() async {
+    final result = await this._api.getLibrary();
+    List<Library> entries = await result.toList();
+
+    List<int> bookIds = [];
+
+    for (Library entry in entries) {
+      bookIds.add(entry.book);
+    }
+    return bookIds;
+  }
+
   Future<void> addLibraryBook(int bookId) async {
     await this._api.addBooktoLibrary(bookId);
   }
 
-  Future<Map<String, List<Book>>> getTaggedBooks() async {
-    final result = await this._api.getBooks();
-
-    return {"Library": await result.toList()};
+  Future<void> removeLibraryBook(int bookId) async {
+    await this._api.removeBookfromLibrary(bookId);
   }
 }

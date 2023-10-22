@@ -38,7 +38,7 @@ class CustomAppBar extends AppBar {
                             // My Library Button
                             AppBarTextButton(
                               text: "My Library",
-                              icon: Icon(Icons.create),
+                              icon: Icon(Icons.bookmark),
                               uri: PageUrls.readerLibrary,
                             ),
 

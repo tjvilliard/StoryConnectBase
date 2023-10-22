@@ -55,20 +55,33 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     return "Error: Title not found";
   }
 
+  /// Toggle whether the book should be in the library anymore or not.
   Future<void> libraryToggle(
       LibraryToggleEvent event, ReadingUIEmitter emit) async {
-    this._repository.addLibraryBook(event.bookId);
+    if (state.libBookIds.contains(event.bookId)) {
+      print("Calling lib book removal");
+      this._repository.removeLibraryBook(event.bookId);
+    } else {
+      this._repository.addLibraryBook(event.bookId);
+    }
+
+    emit(
+        state.copyWith(libBookIds: await this._repository.getLibraryBookIds()));
   }
 
   /// Completes all tasks related to loading a book into the reading UI.
   Future<void> loadEvent(ReadingLoadEvent event, ReadingUIEmitter emit) async {
-    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
+    emit(state
+        .copyWith(loadingStruct: LoadingStruct.loading(true), libBookIds: []));
     event.chapterBloc.add(LoadEvent());
 
     final title = await _getBookTitle(event.bookId);
+    final List<int> bookIds = await this._repository.getLibraryBookIds();
 
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.loading(false), title: title));
+        loadingStruct: LoadingStruct.loading(false),
+        title: title,
+        libBookIds: bookIds));
   }
 
   /// Completes the task of updating the whole state of the reading UI.

@@ -12,19 +12,35 @@ class CoverBookItem extends BookItem {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      Icon(
-        Icons.book,
-        size: 175,
-      ),
-      Text(this.book.title),
-      RichText(
-          text: TextSpan(children: [
-        WidgetSpan(child: Icon(Icons.person_outline, size: 16)),
-        TextSpan(
-            text: "Author",
-            style: TextStyle(fontFamily: GoogleFonts.ramabhadra().fontFamily))
-      ])),
-    ]);
+    return Padding(
+        padding: EdgeInsets.all(4.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.book,
+                size: 175,
+              ),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: (270.0 / 1.618) + 35),
+                child: Text(
+                  this.book.title,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              RichText(
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      WidgetSpan(child: Icon(Icons.person_outline, size: 16)),
+                      TextSpan(
+                          text: "Author",
+                          style: TextStyle(
+                              fontFamily: GoogleFonts.ramabhadra().fontFamily))
+                    ],
+                  )),
+            ]));
   }
 }

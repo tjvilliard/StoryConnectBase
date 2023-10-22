@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/components/content_panel/content_panel.dart';
 import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/content_panel/tabbed_item.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
@@ -43,10 +44,24 @@ class LibraryState extends State<LibraryView> {
               } else {
                 toReturn = <ContentPanel>[
                   SolidContentPanel(children: [
-                    BookList(
-                      books: libState.libraryBooks,
-                      descript: false,
-                    )
+                    BlankPanel(height: 25),
+                    PanelHeader("My Library"),
+                    BlankPanel(height: 25),
+                    TabbedPanel(
+                      tabs: [
+                        Tab(text: "Currently Reading"),
+                        Tab(text: "Completed"),
+                        Tab(text: "To Be Read")
+                      ],
+                      children: [
+                        BookGrid(
+                          books: libState.libraryBooks,
+                        ),
+                        Container(),
+                        Container(),
+                      ],
+                    ),
+                    DividerPanel(color: Colors.black),
                   ], primary: Colors.white)
                 ];
               }
