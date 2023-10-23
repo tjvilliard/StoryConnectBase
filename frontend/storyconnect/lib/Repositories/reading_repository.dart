@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -80,19 +81,15 @@ class ReadingApiProvider {
       // get url for user library api call.
       final url = UrlContants.getUserLibrary();
 
+      String token = await getAuthToken();
+
       // get result for HTTP GET request
       final result = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token ${await getAuthToken()}'
+        'Authorization': 'Token ${token}'
       });
 
-      print("Got Library Result");
-      print(result.body);
-      dynamic decode = jsonDecode(result.body);
-      // yield each library entry from the result body.
-      for (var libraryEntry in decode) {
-        print("Yielding Entry");
-        print(Library.fromJson(libraryEntry));
+      for (var libraryEntry in jsonDecode(result.body)) {
         yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
@@ -107,14 +104,12 @@ class ReadingApiProvider {
       final url = UrlContants.addLibraryBook();
 
       // send off HTTP POST request
-      final response = await http.post(url,
+      await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token ${await getAuthToken()}'
           },
           body: (jsonEncode(serializer.toJson())));
-      print("Printing Body");
-      print(response.body);
     } catch (e) {
       print(e);
     }
