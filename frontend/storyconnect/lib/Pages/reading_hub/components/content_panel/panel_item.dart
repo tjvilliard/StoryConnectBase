@@ -3,7 +3,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_hub/components/book_item/detailed_book_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/detailed_book_item.dart';
 import 'package:storyconnect/Pages/reading_hub/components/content_panel/book_item.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
@@ -109,42 +109,27 @@ class BookGrid extends PanelItem {
                       PointerDeviceKind.touch,
                       PointerDeviceKind.mouse
                     }),
-                child: SizedBox(
-                    height: 270,
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverGrid.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            mainAxisExtent: 270,
-                            maxCrossAxisExtent: (270.0 / 1.618) + 35,
-                            crossAxisSpacing: 8.0,
-                            childAspectRatio: 1.0,
-                          ),
-                          itemCount: this.books.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                                elevation: 3,
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    width: (270.0 / 1.618) + 35,
-                                    child: Clickable(
-                                        onPressed: () {
-                                          final uri = PageUrls.readBook(
-                                              this.books[index].id);
-                                          Beamer.of(context).beamToNamed(uri,
-                                              data: {
-                                                "book": this.books[index]
-                                              });
-                                        },
-                                        child: CoverBookItem(
-                                            book: this.books[index]))));
-                          },
-                        )
-                      ],
+                child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Wrap(
+                      spacing: 20,
+                      runSpacing: 20,
+                      alignment: WrapAlignment.center,
+                      children: this
+                          .books
+                          .map((book) => Container(
+                              height: 270,
+                              width: (270.0 / 1.618) + 25,
+                              child: Card(
+                                  elevation: 4,
+                                  child: Clickable(
+                                      onPressed: () {
+                                        final uri = PageUrls.readBook(book.id);
+                                        Beamer.of(context).beamToNamed(uri,
+                                            data: {"book": book});
+                                      },
+                                      child: CoverBookItem(book: book)))))
+                          .toList(),
                     )))));
   }
 }
@@ -173,42 +158,26 @@ class BookList extends PanelItem {
                       PointerDeviceKind.touch,
                       PointerDeviceKind.mouse
                     }),
-                child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: SizedBox(
-                        height: 270,
-                        child: ListView(
-                            itemExtent: descript ? 400.0 : (270 / 1.618) + 30,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            children: this
-                                .books
-                                .map((book) => Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Card(
-                                        elevation: 3,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            width: descript
-                                                ? 400.0
-                                                : (270.0 / 1.618) + 25,
-                                            child: Clickable(
-                                                onPressed: () {
-                                                  final uri = PageUrls.readBook(
-                                                      book.id);
-                                                  Beamer.of(context)
-                                                      .beamToNamed(uri,
-                                                          data: {"book": book});
-                                                },
-                                                child: this.descript
-                                                    ? newDescriptBookItem(
-                                                        book: book)
-                                                    : CoverBookItem(
-                                                        book: book))))))
-                                .toList()))))));
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: this
+                          .books
+                          .map((book) => Container(
+                              height: 270,
+                              width: descript ? 400.0 : (270.0 / 1.618) + 25,
+                              child: Card(
+                                  elevation: 3,
+                                  child: Clickable(
+                                      onPressed: () {
+                                        final uri = PageUrls.readBook(book.id);
+                                        Beamer.of(context).beamToNamed(uri,
+                                            data: {"book": book});
+                                      },
+                                      child: this.descript
+                                          ? newDescriptBookItem(book: book)
+                                          : CoverBookItem(book: book)))))
+                          .toList()),
+                ))));
   }
 }

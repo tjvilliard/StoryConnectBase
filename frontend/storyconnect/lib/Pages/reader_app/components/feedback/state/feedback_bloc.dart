@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
@@ -30,6 +29,7 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     on<FeedbackTypeChanged>((event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
     on<SuggestionEditedEvent>((event, emit) => suggestionEdited(event, emit));
+    on<CommentEditedEvent>((event, emit) => commentEdited(event, emit));
 
     on<SubmitFeedbackEvent>((event, emit) => submitFeedback(event, emit));
     on<LoadChapterComments>((event, emit) => loadChapterFeedback(event, emit));
@@ -78,6 +78,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
         serializer: state.serializer.copyWith(
             chapterId: event.chapterBloc
                 .chapterNumToID[event.chapterBloc.state.chapterIndex]!)));
+
+    print("Submitting Feedback");
 
     final result =
         this._repo.createChapterFeedback(serializer: state.serializer);

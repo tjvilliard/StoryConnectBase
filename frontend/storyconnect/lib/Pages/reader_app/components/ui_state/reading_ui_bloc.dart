@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'reading_ui_event.dart';
@@ -58,15 +59,25 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
   /// Toggle whether the book should be in the library anymore or not.
   Future<void> libraryToggle(
       LibraryToggleEvent event, ReadingUIEmitter emit) async {
-    if (state.libBookIds.contains(event.bookId)) {
-      print("Calling lib book removal");
-      this._repository.removeLibraryBook(event.bookId);
+    Iterable<Library> entries =
+        state.libBookIds.where((entry) => entry.book == event.bookId);
+
+    if (entries.isEmpty) {
+      this
+          ._repository
+          .addLibraryBook(LibraryEntrySerialzier.initial(event.bookId));
     } else {
-      this._repository.addLibraryBook(event.bookId);
+      Library entry = entries.first;
+      this._repository.removeLibraryBook(LibraryEntrySerialzier(
+            id: entry.id,
+            book: entry.book,
+            status: entry.status,
+            reader: entry.reader,
+          ));
     }
 
     emit(
-        state.copyWith(libBookIds: await this._repository.getLibraryBookIds()));
+        state.copyWith(libBookIds: await this._repository.getLibraryEntries()));
   }
 
   /// Completes all tasks related to loading a book into the reading UI.
@@ -76,12 +87,12 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     event.chapterBloc.add(LoadEvent());
 
     final title = await _getBookTitle(event.bookId);
-    final List<int> bookIds = await this._repository.getLibraryBookIds();
+    final List<Library> libEntries = await this._repository.getLibraryEntries();
 
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(false),
         title: title,
-        libBookIds: bookIds));
+        libBookIds: libEntries));
   }
 
   /// Completes the task of updating the whole state of the reading UI.

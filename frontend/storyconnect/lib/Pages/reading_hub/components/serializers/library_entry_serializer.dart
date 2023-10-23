@@ -6,6 +6,7 @@ part 'library_entry_serializer.g.dart';
 @freezed
 class LibraryEntrySerialzier with _$LibraryEntrySerialzier {
   const factory LibraryEntrySerialzier({
+    int? id,
     required int book,
     required int status,
     required int reader,

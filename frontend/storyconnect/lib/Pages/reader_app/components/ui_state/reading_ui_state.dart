@@ -3,7 +3,7 @@ part of 'reading_ui_bloc.dart';
 @freezed
 class ReadingUIState with _$ReadingUIState {
   const factory ReadingUIState({
-    required List<int> libBookIds,
+    required List<Library> libBookIds,
     required bool chapterOutlineShown,
     required bool feedbackBarShown,
     required bool annotationBarShown,

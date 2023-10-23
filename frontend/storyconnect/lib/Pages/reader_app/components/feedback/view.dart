@@ -32,7 +32,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                               children: [
                                 FeedbackTypeSelector(),
                                 Expanded(child: FeedbackWidgetList()),
-                                FeedbackInput(),
+                                FeedbackInputWidget(),
                               ],
                             ))
                         : Container())),

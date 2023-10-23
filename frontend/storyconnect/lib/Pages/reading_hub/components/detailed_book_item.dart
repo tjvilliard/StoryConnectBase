@@ -62,16 +62,6 @@ class newDescriptBookItem extends StatelessWidget {
                 )),
                 this._rightHandDetail(
                     textItem: RichText(
-                  text: TextSpan(children: [
-                    WidgetSpan(child: Icon(Icons.list, size: 16)),
-                    TextSpan(
-                        text: " ${5} Chapters",
-                        style: TextStyle(
-                            fontFamily: GoogleFonts.ramabhadra().fontFamily)),
-                  ]),
-                )),
-                this._rightHandDetail(
-                    textItem: RichText(
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(children: [
                           WidgetSpan(

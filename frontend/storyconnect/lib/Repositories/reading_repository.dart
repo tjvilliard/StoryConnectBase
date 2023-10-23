@@ -16,12 +16,13 @@ class ReadingApiProvider {
         as String;
   }
 
-  /// Generates HTTP: POST request for
-  /// creating a new feedback item and reports the results.
+  /// Generates HTTP: POST request for new feedback item.
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
+      print("getting feedback url");
       final url = UrlContants.createFeedback();
+      print("getting result from post call");
 
       final result = await http.post(
         url,
@@ -31,6 +32,9 @@ class ReadingApiProvider {
         },
         body: jsonEncode(serializer.toJson()),
       );
+
+      print(result.body);
+
       return WriterFeedback.fromJson(jsonDecode(result.body));
     } catch (e) {
       print(e);
@@ -92,7 +96,7 @@ class ReadingApiProvider {
   }
 
   /// Completes API action of adding a book to user library.
-  Future<void> addBooktoLibrary(int bookId) async {
+  Future<void> addBooktoLibrary(LibraryEntrySerialzier serializer) async {
     try {
       // get url for adding entry to user library api call.
       final url = UrlContants.addLibraryBook();
@@ -103,21 +107,20 @@ class ReadingApiProvider {
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token ${await getAuthToken()}'
           },
-          body: (jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson())));
+          body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       print(e);
     }
   }
 
   /// Completes API action of removing a book from user library.
-  Future<void> removeBookfromLibrary(int bookId) async {
+  Future<void> removeBookfromLibrary(LibraryEntrySerialzier serializer) async {
     try {
       print("Getting url for delete request");
       // get url for removing entry from user library api call.
       final url = UrlContants.removeLibraryBook();
 
-      String requestBody =
-          jsonEncode(LibraryEntrySerialzier.initial(bookId).toJson());
+      String requestBody = jsonEncode(serializer.toJson());
       print(requestBody);
       print("Sending Delete Request");
       // send off HTTP DELETE request
@@ -133,25 +136,6 @@ class ReadingApiProvider {
       print(e);
     }
   }
-
-  Future<int> getNumChapters(int bookId) async {
-    try {
-      final url = UrlContants.getChapters(bookId);
-
-      final result = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token ${await getAuthToken()}'
-      });
-
-      final undecodedChapterList =
-          jsonDecode(utf8.decode(result.bodyBytes)) as List;
-
-      return undecodedChapterList.length;
-    } catch (e) {
-      print(e);
-      return 0;
-    }
-  }
 }
 
 class ReadingRepository {
@@ -160,11 +144,16 @@ class ReadingRepository {
   List<Book> books = [];
   ReadingApiProvider _api = ReadingApiProvider();
 
+  /// Creates a new feedback item for chapter.
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
+    print("Repo Call for chapter ID");
+
     final WriterFeedback? output =
         await this._api.createFeedbackItem(serializer: serializer);
+
+    print("Got Output");
 
     if (output == null) {
       return null;
@@ -187,12 +176,6 @@ class ReadingRepository {
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = await this._api.getBooks();
     return result.toList();
-  }
-
-  /// Gets the number of chapters associated with a book.
-  Future<int> getNumChapters(int bookId) async {
-    final int result = await this._api.getNumChapters(bookId);
-    return result;
   }
 
   /// Provided with a list of library entries, gets a list of books based
@@ -229,11 +212,11 @@ class ReadingRepository {
     return bookIds;
   }
 
-  Future<void> addLibraryBook(int bookId) async {
-    await this._api.addBooktoLibrary(bookId);
+  Future<void> addLibraryBook(LibraryEntrySerialzier serialzier) async {
+    await this._api.addBooktoLibrary(serialzier);
   }
 
-  Future<void> removeLibraryBook(int bookId) async {
-    await this._api.removeBookfromLibrary(bookId);
+  Future<void> removeLibraryBook(LibraryEntrySerialzier serialzier) async {
+    await this._api.removeBookfromLibrary(serialzier);
   }
 }
