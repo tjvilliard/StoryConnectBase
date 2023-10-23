@@ -41,3 +41,7 @@ class HighlightEvent extends WritingUIEvent {
     required this.textStyle,
   });
 }
+
+class RemoveHighlightEvent extends WritingUIEvent {
+  const RemoveHighlightEvent();
+}

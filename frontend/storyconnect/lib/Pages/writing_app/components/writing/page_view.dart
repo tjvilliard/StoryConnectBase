@@ -22,6 +22,13 @@ class WritingPageViewState extends State<WritingPageView> {
   void initState() {
     super.initState();
     focusNode.addListener(_handleFocusChange);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final uiBloc = context.read<WritingUIBloc>();
+      uiBloc.state.textScrollController.addListener(() {
+        uiBloc.add(RemoveHighlightEvent());
+      });
+    });
   }
 
   void _handleFocusChange() {
