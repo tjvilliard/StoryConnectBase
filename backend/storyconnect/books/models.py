@@ -1,6 +1,7 @@
 from django.db import models
 # from django import forms
 from django.contrib.auth.models import User
+from django_extensions.db.models import TimeStampedModel
 from firebase_admin import storage
 from storyconnect.settings import FIREBASE_BUCKET
 import os
@@ -38,7 +39,7 @@ class Book(models.Model):
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
     book_status = models.IntegerField(choices=STATUS, null=True, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+    cover = models.CharField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000, null=True, blank=True)
@@ -47,24 +48,7 @@ class Book(models.Model):
     # rating = models.FloatField(null=True, blank=True, max_value = 5.0)
 
 
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.cover:
-            # uses local covers/ temporarily for image upload to bucket
-            image_path = str(self.cover)
-            bucket = FIREBASE_BUCKET
-            blob = bucket.blob(image_path)
-            blob.upload_from_filename(self.cover.path)
-
-            # delete local covers/ after upload
-            os.remove(image_path)
-
-            # make the image public and save the public url to the image field
-            blob.make_public()
-            self.cover = blob.public_url  # Save the public URL to the image field
-            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -81,16 +65,15 @@ class Book(models.Model):
     def get_chapters(self):
         return Chapter.objects.filter(book=self)
     
-    def get_locations(self):
-        return Location.objects.filter(book=self)
+    def get_narrative_elements(self):
+        return NarrativeElement.objects.filter(book=self)
     
-    def get_characters(self):
-        return Character.objects.filter(book=self)
-
+    
 class Library(models.Model):
     BOOK_STATUS = [
         (1, "Reading"), 
-        (2, "Archived")
+        (2, "Completed"),
+        (3, "To Read"),
     ]
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     status = models.IntegerField(choices=BOOK_STATUS)
@@ -119,54 +102,128 @@ class Chapter(models.Model):
     def __str__(self):
         return f'{self.book.title}: {self.chapter_number}'
     
-    def get_scenes(self):
-        return Scene.objects.filter(chapter=self)
+    # def get_scenes(self):
+    #     return Scene.objects.filter(chapter=self)
+
     
-    def get_comments(self):
-        return Comments.objects.filter(chapter=self)
-    
-class Character(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
-    nickname = models.CharField(max_length=100, blank=True)
-
-    # Whats the difference between bio and description?
-    bio = models.CharField(max_length=50, blank=True)
-    description = models.TextField(blank=True)
-
-    image = models.ImageField(upload_to='characters/', blank=True)
-    attributes = models.CharField(max_length=200, blank=True)
-
-    # add more fields here
-
-    def __str__(self):
-        return self.name
-
-class Location(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
-    description = models.TextField(blank=True)
-
-    # add more fields here
-
-    def __str__(self):
-        return self.name
-
-class Scene(models.Model):
-    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    scene_title = models.CharField(max_length=100, blank=True)
-    scene_content = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.scene_title
-
-
-# class Comments(models.Model):
+# class Character(models.Model):
 #     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-#     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-#     commenter = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-#     content = models.TextField(blank=False)
+#     name = models.CharField(max_length=100, blank=True)
+#     nickname = models.CharField(max_length=100, blank=True)
+#     description = models.TextField(blank=True)
+#     image = models.ImageField(upload_to='characters/', blank=True)
+#     def __str__(self):
+#         return self.name
+    
+#     @property
+#     def attributes(self):
+#         return CharacterAttributes.objects.filter(character=self)
+
+# class CharacterAttributes(models.Model):
+#     ATTRIBUTE_TYPES = [
+#         (0, "Physical"),
+#         (1, "Personality"),
+#         (2, "Background")
+#     ]
+#     character = models.ForeignKey(Character, on_delete=models.CASCADE)
+#     attribute = models.CharField(max_length=100, blank=True)
+#     confidence = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+#     type = models.IntegerField(choices=ATTRIBUTE_TYPES, null=True, blank=True)
+#     generated = models.BooleanField(default=False)
 
 #     def __str__(self):
-#         return self.content
+#         return self.attribute
 
+# class Location(models.Model):
+#     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=100, blank=True)
+#     description = models.TextField(blank=True)
+#     image = models.ImageField(upload_to='locations/', blank=True)
+
+#     @property
+#     def attributes(self):
+#         return LocationAttributes.objects.filter(location=self)
+
+#     def __str__(self):
+#         return self.name
+
+# class LocationAttributes(models.Model):
+#     ATTRIBUTE_TYPES = [
+#         (0, "Re-occurring"),
+#         (1, "Temporary"),
+#     ]
+#     location = models.ForeignKey(Location, on_delete=models.CASCADE)
+#     attribute = models.CharField(max_length=100, blank=True)
+#     confidence = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+#     type = models.IntegerField(choices=ATTRIBUTE_TYPES, null=True, blank=True)
+#     generated = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return self.attribute
+
+
+# User
+#   |
+#   |---< NarrativeElementType   (One User can have many NarrativeElementTypes)
+#   |       |
+#   |       |---< NarrativeElementAttributeType (One NarrativeElementType can be applicable to many NarrativeElementAttributeTypes)
+#   |       |       |
+#   |       |       |---< NarrativeElementAttributes (One NarrativeElementAttributeType can be associated with many NarrativeElementAttributes)
+#   |
+#   |---< NarrativeElement       (One User can have many NarrativeElements)
+#           |
+#           |---< Book            (One Book can be associated with many NarrativeElements)
+#           |
+#           |---< Chapter         (One Chapter can be associated with many NarrativeElements)
+#           |
+#           |---< NarrativeElementType (NarrativeElement has one NarrativeElementType)
+#           |
+#           |---< NarrativeElementAttributes (One NarrativeElement can have many NarrativeElementAttributes)
+
+
+
+
+#  Example: Character, Location, Item, etc.
+class NarrativeElementType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link each NarrativeElementType to a user
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+# Tying all the elements together 
+class NarrativeElement(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True)
+    description = models.TextField(default="",)
+    image = models.ImageField(upload_to='elements/', blank=True)
+    element_type = models.ForeignKey(NarrativeElementType, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
+    @property
+    def attributes(self):
+        return NarrativeElementAttribute.objects.filter(element=self)
+
+# Example: Character Attribute Types: Physical, Personality, Background
+class NarrativeElementAttributeType(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    applicable_to = models.ForeignKey(NarrativeElementType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+# Example Character Attributes: Hair Color, Eye Color, Height, Weight, Kind, etc.
+class NarrativeElementAttribute(models.Model):
+    element = models.ForeignKey(NarrativeElement, on_delete=models.CASCADE)
+    attribute = models.CharField(max_length=100, blank=True)
+    attribute_type = models.ForeignKey(NarrativeElementAttributeType, on_delete=models.CASCADE)
+    confidence = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    generated = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.attribute

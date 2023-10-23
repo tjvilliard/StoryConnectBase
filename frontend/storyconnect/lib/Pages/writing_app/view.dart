@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/view.dart.dart';
+import 'package:storyconnect/Pages/writing_app/components/continuity_checker/view.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/page_view.dart';
@@ -29,12 +31,12 @@ class _WritingAppViewState extends State<WritingAppView> {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (widget.bookId == null) {
           Beamer.of(context).beamToNamed(PageUrls.writerHome);
-
           return;
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
           bookId: widget.bookId!,
           chapterBloc: context.read<ChapterBloc>(),
+          feedbackBloc: context.read<FeedbackBloc>(),
         ));
       });
     }
@@ -52,10 +54,8 @@ class _WritingAppViewState extends State<WritingAppView> {
             IconButton(
               icon: Icon(Icons.home_filled),
               onPressed: () {
-                BeamerDelegate beamer = Beamer.of(context);
-                if (beamer.canBeamBack) {
-                  Beamer.of(context).beamBack();
-                } else {
+                final beamed = Beamer.of(context).beamBack();
+                if (!beamed) {
                   Beamer.of(context).beamToNamed(PageUrls.writerHome);
                 }
               },
@@ -92,7 +92,11 @@ class _WritingAppViewState extends State<WritingAppView> {
               Flexible(child: WritingPageView()),
 
               Row(
-                children: [FeedbackWidget(), RoadUnblockerWidget()],
+                children: [
+                  FeedbackWidget(),
+                  RoadUnblockerWidget(),
+                  ContinuityWidget()
+                ],
               )
             ],
           ))

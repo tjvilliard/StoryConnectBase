@@ -5,21 +5,37 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Pages/writing_app/components/continuity_checker/models/continuity_models.dart';
+import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class WritingApiProvider {
+  Future<ContinuityResponse> getContinuities(int chapterId) async {
+    final url = UrlContants.continuities(chapterId);
+    String authToken =
+        (await FirebaseAuth.instance.currentUser!.getIdToken(true)) as String;
+    final result = await http.get(url, headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': 'Token $authToken'
+    });
+    return ContinuityResponse.fromJson(jsonDecode(result.body));
+  }
+
+  Future<String> getAuthToken() async {
+    return (await FirebaseAuth.instance.currentUser!.getIdToken(true))
+        as String;
+  }
+
   Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
-      String authToken =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
       final url = UrlContants.books;
       final result = await http.post(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $authToken'
+          'Authorization': 'Token ${await getAuthToken()}'
         },
         body: jsonEncode(serialzer.toJson()),
       );
@@ -32,20 +48,53 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      String authToken =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
-      final url = UrlContants.books;
-      final result = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token $authToken'
-      });
+      final url = UrlContants.writerBooks;
+      final result = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token ${await getAuthToken()}'
+        },
+      );
 
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Stream<NarrativeElement> getNarrativeElements(int bookId) async* {
+    try {
+      final url = UrlContants.getNarrativeElements(bookId);
+      final result = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token ${await getAuthToken()}'
+        },
+      );
+
+      for (var element in jsonDecode(result.body)) {
+        yield NarrativeElement.fromJson(element);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Stream<WriterFeedback> getFeedback(int chapterId) async* {
+    final url = UrlContants.getWriterFeedback(chapterId);
+    final result = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token ${await getAuthToken()}'
+      },
+    );
+    for (var feedback in jsonDecode(result.body)) {
+      yield WriterFeedback.fromJson(feedback);
     }
   }
 }
@@ -70,5 +119,40 @@ class WritingRepository {
     return result.toList();
   }
 
-  getChapterComments(int chapterId) {}
+  Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
+    List<WriterFeedback> feedback = [];
+
+    await for (WriterFeedback item in _api.getFeedback(chapterId)) {
+      feedback.add(item);
+    }
+
+    return feedback;
+  }
+
+  Future<bool> dismissFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> rejectFeedback(int id) async {
+    return true;
+  }
+
+  Future<bool> acceptFeedback(int id) async {
+    return true;
+  }
+
+  Future<List<NarrativeElement>> getNarrativeElements(int bookId) async {
+    List<NarrativeElement> elements = [];
+
+    await for (NarrativeElement item in _api.getNarrativeElements(bookId)) {
+      elements.add(item);
+    }
+
+    return elements;
+  }
+
+  Future<ContinuityResponse?> getContinuities(int chapterId) async {
+    final continuitiyResponse = await _api.getContinuities(chapterId);
+    return continuitiyResponse;
+  }
 }

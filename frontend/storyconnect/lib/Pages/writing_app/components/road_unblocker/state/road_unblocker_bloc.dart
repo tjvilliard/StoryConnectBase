@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:uuid/uuid.dart';
+import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Services/url_service.dart';
+import 'package:http/http.dart' as http;
 
 part 'road_unblocker_events.dart';
 part 'road_unblocker_state.dart';
@@ -18,7 +23,8 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
       {required RoadUnblockerRepo repo, required String chapterContent})
       : super(RoadUnblockerState.initial(currentChapterText: chapterContent)) {
     _repo = repo;
-    on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit));
+    on<UnblockerUpdateChapterEvent>(
+        (event, emit) => updateChapter(event, emit));
     on<OnGuidingQuestionChangedEvent>(
         (event, emit) => onGuidingQuestionChanged(event, emit));
     on<LoadSelectionEvent>((event, emit) => loadSelection(event, emit));
@@ -29,7 +35,7 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     on<RejectSuggestionEvent>((event, emit) => rejectSuggestion(event, emit));
   }
 
-  updateChapter(UpdateChapterEvent event, RoadUnblockerEmitter emit) {
+  updateChapter(UnblockerUpdateChapterEvent event, RoadUnblockerEmitter emit) {
     emit(state.copyWith(chapter: event.chapter));
   }
 
@@ -76,26 +82,36 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   // for now, just remove them from the responses
   acceptSuggestion(AcceptSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response = responses
-        .firstWhere((element) => element.localId == event.responseLocalId);
+    final response =
+        responses.firstWhere((element) => element.uid == event.responseLocalId);
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
-    suggestions.removeWhere((element) => element.localId == event.localId);
-    responses
-        .removeWhere((element) => element.localId == event.responseLocalId);
+
+    final suggestion =
+        suggestions.firstWhere((element) => element.uid == event.localId);
+
+    // add a chapter change to the chapter bloc with the new suggestion
+    String currentChapterText = event.chapterBloc.state.currentChapterText;
+
+    final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
+        suggestion.offsetEnd, suggestion.suggestedChange);
+
+    event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
+
+    suggestions.removeWhere((element) => element.uid == event.localId);
+    responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));
     emit(state.copyWith(responses: _removeEmptyResponses(responses)));
   }
 
   rejectSuggestion(RejectSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response = responses
-        .firstWhere((element) => element.localId == event.responseLocalId);
+    final response =
+        responses.firstWhere((element) => element.uid == event.responseLocalId);
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
-    suggestions.removeWhere((element) => element.localId == event.localId);
-    responses
-        .removeWhere((element) => element.localId == event.responseLocalId);
+    suggestions.removeWhere((element) => element.uid == event.localId);
+    responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));
     emit(state.copyWith(responses: _removeEmptyResponses(responses)));
   }

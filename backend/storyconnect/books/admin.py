@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Chapter, Character, Location
+from .models import Book, Chapter, NarrativeElementType, NarrativeElementAttributeType, NarrativeElement, NarrativeElementAttribute
 
 # Register your models here.
 @admin.register(Book)
@@ -10,10 +10,19 @@ class BookAdmin(admin.ModelAdmin):
 class ChapterAdmin(admin.ModelAdmin):  
     list_display = ('book', 'chapter_title', 'chapter_number', 'content')
 
-@admin.register(Character)
-class CharacterAdmin(admin.ModelAdmin):
-    list_display = ('book', 'name', 'description', 'image')
+@admin.register(NarrativeElementType)
+class NarrativeElementTypeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name')
 
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ('book', 'name', 'description')  
+@admin.register(NarrativeElementAttributeType)
+class NarrativeElementAttributeTypeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'applicable_to')
+
+@admin.register(NarrativeElement)
+class NarrativeElementAdmin(admin.ModelAdmin):
+    list_display = ('book', 'user', 'name', 'description', 'image', 'element_type', 'chapter')
+
+@admin.register(NarrativeElementAttribute)
+class NarrativeElementAttributeAdmin(admin.ModelAdmin):
+    list_display = ('element', 'attribute_type', 'attribute')
+    

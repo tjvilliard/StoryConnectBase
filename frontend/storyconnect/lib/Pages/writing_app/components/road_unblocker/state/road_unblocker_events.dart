@@ -4,9 +4,9 @@ abstract class RoadUnblockerEvent {
   const RoadUnblockerEvent();
 }
 
-class UpdateChapterEvent extends RoadUnblockerEvent {
+class UnblockerUpdateChapterEvent extends RoadUnblockerEvent {
   final String chapter;
-  const UpdateChapterEvent({required this.chapter});
+  const UnblockerUpdateChapterEvent({required this.chapter});
 }
 
 class OnGuidingQuestionChangedEvent extends RoadUnblockerEvent {
@@ -33,8 +33,11 @@ class RecieveUnblockEvent extends RoadUnblockerEvent {
 class AcceptSuggestionEvent extends RoadUnblockerEvent {
   final String responseLocalId;
   final String localId;
+  final ChapterBloc chapterBloc;
   const AcceptSuggestionEvent(
-      {required this.responseLocalId, required this.localId});
+      {required this.responseLocalId,
+      required this.localId,
+      required this.chapterBloc});
 }
 
 class RejectSuggestionEvent extends RoadUnblockerEvent {

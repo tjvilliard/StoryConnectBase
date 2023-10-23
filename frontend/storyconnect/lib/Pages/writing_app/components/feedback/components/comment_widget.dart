@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Models/text_annotation/feedback.dart';
+// import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/navigate_button.dart';
 
 class CommentWidget extends StatelessWidget {
-  final Comment comment;
+  final WriterFeedback comment;
 
   CommentWidget({required this.comment});
   @override
@@ -30,17 +31,17 @@ class CommentWidget extends StatelessWidget {
                                     .textTheme
                                     .titleSmall!
                                     .apply(fontStyle: FontStyle.italic)),
-                            if (comment.isGhost() == false)
+                            if (comment.isGhost == false)
                               NavigateToFeedbackButton(
-                                comment: comment,
+                                feedback: comment,
                               )
                           ]),
                     ),
                     Container(
                       alignment: Alignment.center,
                       constraints:
-                          BoxConstraints(minHeight: 50, maxHeight: 100),
-                      child: Text(comment.comment ?? "No comment",
+                          BoxConstraints(minHeight: 10, maxHeight: 100),
+                      child: Text(comment.sentiment.description,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Align(

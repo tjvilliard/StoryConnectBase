@@ -17,29 +17,25 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
-import debug_toolbar
 from books import views as books_views
 from comment import views as comment_views
-from features import views as features_views
-from pages import views as pages_views
+from ai_features import views as ai_features
+from ai_features import urls as ai_features_urls
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
+router.register(r'api/library', books_views.LibraryViewSet)
 
 urlpatterns = router.urls
 
 urlpatterns += [
+    # path('api/road_unblock/', ai_features.RoadUnblockerRequestView.as_view()),
+    
     path('api/admin/', admin.site.urls),
-    path("debug/", include(debug_toolbar.urls)),
-    path('api/browser/', pages_views.BrowserPage.as_view(), name='browser-page'),
-    path('api/library/<int:user_id>/', pages_views.LibraryPage.as_view(), name='library-page'),
-    path('api/account/<int:user_id>/', pages_views.MyPage.as_view(), name='my-page'),
-    path('api/feedback/<int:user_id>/<int:book_id>/', pages_views.WriterFeedbackPage.as_view(), name='writer-feedback'),
-    path('api/details/<int:book_id>/',pages_views.BookDetailPage.as_view(), name='book-details-page'),
-    path('api/demographics/<int:user_id>/<int:book_id>/', pages_views.DemographicsPage.as_view(), name='demographics-page'),
-    path('api/genretag/<int:book_id>/', features_views.GenreTagging.as_view(), name='genre-tagging'),
-    path('api/chaptertag/<int:book_id>/<int:chapter_num>/', features_views.ChapterTagging.as_view(), name='chapter-tagging')
+    path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
 ]
+
+urlpatterns += ai_features_urls.urlpatterns

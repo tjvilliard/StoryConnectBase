@@ -27,10 +27,10 @@ class WriterFeedback(models.Model): # writer feedback
     parent = models.ForeignKey('self', null=True,blank=True,  on_delete=models.CASCADE)
 
     SENTIMENT_CHOICES = [
-        (0, 'Great'),
-        (1, 'Good'),
-        (2, 'Mediocre'),
-        (3, 'Bad')
+        (0, 'great'),
+        (1, 'good'),
+        (2, 'mediocre'),
+        (3, 'bad')
     ]
     sentiment = models.IntegerField(choices=SENTIMENT_CHOICES, null=True, blank=True)
 

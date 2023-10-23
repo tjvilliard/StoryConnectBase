@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/popup.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Widgets/unimplemented_popup.dart';
 
@@ -58,7 +59,7 @@ class WritingMenuBar extends StatelessWidget {
                   MenuBar(children: [
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.comment),
-                        child: Text("Comments"),
+                        child: Text("Feedback"),
                         onPressed: () {
                           BlocProvider.of<WritingUIBloc>(context)
                               .add(ToggleFeedbackUIEvent());
@@ -72,9 +73,19 @@ class WritingMenuBar extends StatelessWidget {
                         }),
                     MenuItemButton(
                         leadingIcon: Icon(FontAwesomeIcons.check),
+                        child: Text("Narrative Elements Sheet"),
+                        onPressed: () {
+                          final bookId =
+                              context.read<WritingUIBloc>().state.bookId;
+                          Navigator.of(context)
+                              .push(NarrativeSheetPopup(bookId));
+                        }),
+                    MenuItemButton(
+                        leadingIcon: Icon(FontAwesomeIcons.book),
                         child: Text("Continuity Checker"),
                         onPressed: () {
-                          showPopup("Continuity Checker", context);
+                          BlocProvider.of<WritingUIBloc>(context)
+                              .add(ToggleContinuityCheckerEvent());
                         }),
                   ]),
                 ])));

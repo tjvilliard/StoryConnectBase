@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 
 class WritingUIStruct {
@@ -37,9 +38,11 @@ class UpdateAllEvent extends WritingUIEvent {
 class WritingLoadEvent extends WritingUIEvent {
   final int bookId;
   final ChapterBloc chapterBloc;
+  final FeedbackBloc feedbackBloc;
   WritingLoadEvent({
     required this.bookId,
     required this.chapterBloc,
+    required this.feedbackBloc,
   });
 }
 
@@ -75,7 +78,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIStruct> {
 
   Future<void> loadEvent(WritingLoadEvent event, WritingUIEmiter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
-    event.chapterBloc.add(LoadEvent());
+    event.chapterBloc.add(LoadEvent(event.feedbackBloc));
 
     final title = await _getBookTitle(event.bookId);
 

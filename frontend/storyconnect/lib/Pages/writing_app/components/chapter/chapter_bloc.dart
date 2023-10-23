@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:flutter/material.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
 
 abstract class ChapterEvent extends ReplayEvent {
@@ -24,17 +24,18 @@ class SwitchChapter extends ChapterEvent {
 
 class UpdateChapterEvent extends ChapterEvent {
   String text;
-  TextSelection selection;
   bool storeCommand;
   UpdateChapterEvent({
     required this.text,
-    required this.selection,
     this.storeCommand = true,
   });
 }
 
 class LoadEvent extends ChapterEvent {
-  LoadEvent();
+  FeedbackBloc feedbackBloc;
+  LoadEvent(
+    this.feedbackBloc,
+  );
 }
 
 class AddChapter extends ChapterEvent {
@@ -64,6 +65,7 @@ class ChapterBlocStruct {
   final Map<int, String> chapters;
   final LoadingStruct loadingStruct;
   final int? caretOffset;
+  Map<int, int> chapterNumToID = {};
 
   ChapterBlocStruct({
     required this.currentIndex,
@@ -72,18 +74,25 @@ class ChapterBlocStruct {
     this.caretOffset,
   });
 
+  String get currentChapterText => chapters[currentIndex]!;
+  int get currentChapterId => chapterNumToID[currentIndex]!;
+
   ChapterBlocStruct copyWith({
     int? currentIndex,
     Map<int, String>? chapters,
     LoadingStruct? loadingStruct,
     int? caretOffset,
+    Map<int, int>? chapterNumToID,
   }) {
-    return ChapterBlocStruct(
+    final struct = ChapterBlocStruct(
       currentIndex: currentIndex ?? this.currentIndex,
       chapters: chapters ?? this.chapters,
       loadingStruct: loadingStruct ?? this.loadingStruct,
       caretOffset: caretOffset ?? this.caretOffset,
     );
+
+    struct.chapterNumToID = chapterNumToID ?? this.chapterNumToID;
+    return struct;
   }
 
   // initial constructor
@@ -91,7 +100,7 @@ class ChapterBlocStruct {
     return ChapterBlocStruct(
         currentIndex: 0,
         chapters: {0: ""},
-        loadingStruct: LoadingStruct.loading(false));
+        loadingStruct: LoadingStruct.loading(true));
   }
 }
 
@@ -100,8 +109,6 @@ typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
 class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     with ReplayBlocMixin<ChapterEvent, ChapterBlocStruct> {
   Timer? debounceTimer;
-
-  final chapterNumToID = <int, int>{};
 
   late final BookProviderRepository _repo;
   ChapterBloc(BookProviderRepository repository)
@@ -129,6 +136,8 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
         (event, emit) => _updateChapterHelper(event.event, emit));
   }
 
+  int get currentChapterId => state.chapterNumToID[state.currentIndex]!;
+
   Future<void> addChapter(AddChapter event, ChapterEmitter emit) async {
     emit.call(state.copyWith(
         loadingStruct: LoadingStruct.message("Creating Chapter")));
@@ -141,7 +150,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     print(state.loadingStruct.isLoading);
     final result = await _repo.createChapter(newChapterNum);
     if (result != null) {
-      chapterNumToID[newChapterNum] = result.id;
+      state.chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
       emit.call(state.copyWith(
           chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
@@ -183,7 +192,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     emit(state.copyWith(chapters: chapters));
 
     _repo.updateChapter(
-      chapterId: chapterNumToID[state.currentIndex] ?? -1,
+      chapterId: state.chapterNumToID[state.currentIndex] ?? -1,
       number: state.currentIndex,
       text: chapters[state.currentIndex]!,
     );
@@ -193,7 +202,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
   Map<int, String> parseChapters(List<Chapter> chapters) {
     Map<int, String> parsedChapters = {};
     for (Chapter chapter in chapters) {
-      chapterNumToID[chapter.number] = chapter.id;
+      state.chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
     }
     return parsedChapters;
@@ -208,6 +217,10 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     emit(state.copyWith(
         chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
     clearHistory();
+
+    final chapterId = state.chapterNumToID[state.currentIndex]!;
+
+    event.feedbackBloc.add(LoadChapterFeedback(chapterId));
   }
 
   /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,
