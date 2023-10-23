@@ -12,6 +12,8 @@ from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
 from books import models as book_models
 from books import serializers as book_serializers
+from comment import models as comment_model
+from comment import serializers as comment_serializers
 
 class BrowserPage(APIView):
 
@@ -84,5 +86,18 @@ class BookDetailPage(APIView):
         content = {
             'book_details': book_details_serializer.data,
             'characters': characters_serializer.data
+        }
+        return JsonResponse(content)
+
+class DemographicsPage(APIView):
+
+    def get(self, request, user_id, book_id):
+        unique_readers = book_models.Library.objects.get(id=book_id)
+        chapter_comments = comment_model.WriterFeedback.objects.filter(user=user_id)
+        unique_readers_serializer = book_serializers.BookSerializer(unique_readers, many=False)
+        chapter_comments_serializer = comment_serializers.WriterFeedbackSerializer(chapter_comments, many=True)
+        content = {
+            'unique_readers': unique_readers_serializer.data,
+            'chapter_comments': chapter_comments_serializer.data
         }
         return JsonResponse(content)

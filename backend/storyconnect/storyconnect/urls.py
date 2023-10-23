@@ -20,7 +20,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 import debug_toolbar
 from books import views as books_views
 from comment import views as comment_views
-
+from features import views as features_views
 from pages import views as pages_views
 
 router = routers.DefaultRouter()
@@ -38,5 +38,8 @@ urlpatterns += [
     path('api/library/<int:user_id>/', pages_views.LibraryPage.as_view(), name='library-page'),
     path('api/account/<int:user_id>/', pages_views.MyPage.as_view(), name='my-page'),
     path('api/feedback/<int:user_id>/<int:book_id>/', pages_views.WriterFeedbackPage.as_view(), name='writer-feedback'),
-    path('api/details/<int:book_id>/',pages_views.BookDetailPage.as_view(), name='book-details-page')
+    path('api/details/<int:book_id>/',pages_views.BookDetailPage.as_view(), name='book-details-page'),
+    path('api/demographics/<int:user_id>/<int:book_id>/', pages_views.DemographicsPage.as_view(), name='demographics-page'),
+    path('api/genretag/<int:book_id>/', features_views.GenreTagging.as_view(), name='genre-tagging'),
+    path('api/chaptertag/<int:book_id>/<int:chapter_num>/', features_views.ChapterTagging.as_view(), name='chapter-tagging')
 ]
