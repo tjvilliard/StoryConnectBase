@@ -20,7 +20,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
     permission_classes = [IsAuthenticatedOrReadOnly]
     logger = logging.getLogger(__name__)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post']) #consider changing the action of this to put rather than post.
     def dismiss(self, request, pk=None):
         '''
         Dismisses the comment. This is done by setting the dismissed field to true.

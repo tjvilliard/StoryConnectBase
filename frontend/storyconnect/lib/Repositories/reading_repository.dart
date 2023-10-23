@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +23,8 @@ class ReadingApiProvider {
       print("getting feedback url");
       final url = UrlContants.createFeedback();
       print("getting result from post call");
+
+      print(jsonEncode(serializer.toJson()));
 
       final result = await http.post(
         url,
@@ -118,24 +119,17 @@ class ReadingApiProvider {
   /// Completes API action of removing a book from user library.
   Future<void> removeBookfromLibrary(LibraryEntrySerialzier serializer) async {
     try {
-      print("Getting url for delete request");
       // get url for removing entry from user library api call.
       final url = UrlContants.removeLibraryBook(serializer.id!);
 
-      //String requestBody = jsonEncode(serializer.toJson());
-      //print(requestBody);
-      print("Sending Delete Request");
       // send off HTTP DELETE request
-      final result = await http.delete(
+      await http.delete(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Token ${await getAuthToken()}'
         },
-        //body: (requestBody)
       );
-
-      print(result.body);
     } catch (e) {
       print(e);
     }
@@ -152,12 +146,8 @@ class ReadingRepository {
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
-    print("Repo Call for chapter ID");
-
     final WriterFeedback? output =
         await this._api.createFeedbackItem(serializer: serializer);
-
-    print("Got Output");
 
     if (output == null) {
       return null;

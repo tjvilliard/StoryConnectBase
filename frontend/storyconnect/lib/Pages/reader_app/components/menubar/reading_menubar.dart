@@ -108,9 +108,11 @@ class ReadingMenuBar extends StatelessWidget {
                                     // Add / Remove Story from Library
                                     ReadingIconButton(
                                       icon: Icon(uiState.libBookIds
-                                              .contains(this.bookId)
-                                          ? Icons.bookmark_added
-                                          : Icons.bookmark_add),
+                                              .where((element) =>
+                                                  element.book == this.bookId)
+                                              .isEmpty
+                                          ? Icons.bookmark_add
+                                          : Icons.bookmark_added),
                                       onPressed: () {
                                         BlocProvider.of<ReadingUIBloc>(context)
                                             .add(LibraryToggleEvent(

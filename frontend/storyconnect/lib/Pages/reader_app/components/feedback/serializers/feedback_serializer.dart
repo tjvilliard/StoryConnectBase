@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
+import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 
 part 'feedback_serializer.freezed.dart';
 part 'feedback_serializer.g.dart';
@@ -11,6 +12,7 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
     @JsonKey(name: 'sentiment') int? sentiment,
     required bool isSuggestion,
     required bool dismissed,
+    required AnnotatedTextSelection selection,
     String? comment,
     int? parentId,
     String? suggestion,
@@ -26,6 +28,8 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
       sentiment: FeedbackSentiment.good.index,
       isSuggestion: false,
       dismissed: false,
+      selection: AnnotatedTextSelection(
+          chapterId: 0, floating: false, offsetEnd: 0, offset: 0, text: ""),
       comment: "",
       parentId: null,
       suggestion: "",
