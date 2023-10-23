@@ -85,8 +85,8 @@ class UrlContants {
   }
 
   /// library/change_entry_status for removing library entry.
-  static Uri removeLibraryBook() {
-    return _urlBuilder.build('library/change_entry_status/');
+  static Uri removeLibraryBook(int entryId) {
+    return _urlBuilder.build('library/$entryId/change_entry_status/');
   }
 
   static Uri createFeedback() {

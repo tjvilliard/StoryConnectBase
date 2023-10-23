@@ -120,18 +120,20 @@ class ReadingApiProvider {
     try {
       print("Getting url for delete request");
       // get url for removing entry from user library api call.
-      final url = UrlContants.removeLibraryBook();
+      final url = UrlContants.removeLibraryBook(serializer.id!);
 
-      String requestBody = jsonEncode(serializer.toJson());
-      print(requestBody);
+      //String requestBody = jsonEncode(serializer.toJson());
+      //print(requestBody);
       print("Sending Delete Request");
       // send off HTTP DELETE request
-      final result = await http.delete(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'Token ${await getAuthToken()}'
-          },
-          body: (requestBody));
+      final result = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Token ${await getAuthToken()}'
+        },
+        //body: (requestBody)
+      );
 
       print(result.body);
     } catch (e) {

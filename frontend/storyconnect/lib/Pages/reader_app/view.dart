@@ -61,22 +61,27 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                 SizedBox(
                   width: 10,
                 ),
-                Expanded(child: BlocBuilder<ReadingUIBloc, ReadingUIState>(
-                  builder: (context, state) {
-                    Widget toReturn;
-                    if (state.title != null) {
-                      toReturn = Text(state.title!,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: Theme.of(context).textTheme.displaySmall);
-                    } else {
-                      toReturn =
-                          LoadingWidget(loadingStruct: state.loadingStruct);
-                    }
-                    return AnimatedSwitcher(
-                        duration: Duration(milliseconds: 500), child: toReturn);
-                  },
-                ))
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: BlocBuilder<ReadingUIBloc, ReadingUIState>(
+                          builder: (context, state) {
+                            Widget toReturn;
+                            if (state.title != null) {
+                              toReturn = Text(state.title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.fade,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall);
+                            } else {
+                              toReturn = LoadingWidget(
+                                  loadingStruct: state.loadingStruct);
+                            }
+                            return AnimatedSwitcher(
+                                duration: Duration(milliseconds: 500),
+                                child: toReturn);
+                          },
+                        )))
               ],
             )),
         body: Column(
