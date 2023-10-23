@@ -20,7 +20,7 @@ class LibrarySerializer(serializers.ModelSerializer):
     # reader = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     class Meta:
         model = Library
-        fields = "__all__"
+        exclude = ['reader']
 
 
 class NarrativeElementSerializer(serializers.ModelSerializer):

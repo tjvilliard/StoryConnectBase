@@ -7,9 +7,9 @@ part 'library_entry_serializer.g.dart';
 class LibraryEntrySerialzier with _$LibraryEntrySerialzier {
   const factory LibraryEntrySerialzier({
     int? id,
+    int? reader,
     required int book,
     required int status,
-    required int reader,
   }) = _LibraryEntrySerialzier;
   const LibraryEntrySerialzier._();
   factory LibraryEntrySerialzier.fromJson(Map<String, dynamic> json) =>
@@ -19,7 +19,6 @@ class LibraryEntrySerialzier with _$LibraryEntrySerialzier {
     return LibraryEntrySerialzier(
       book: bookId,
       status: 1,
-      reader: 6,
     );
   }
 

@@ -86,8 +86,13 @@ class ReadingApiProvider {
         'Authorization': 'Token ${await getAuthToken()}'
       });
 
+      print("Got Library Result");
+      print(result.body);
+      dynamic decode = jsonDecode(result.body);
       // yield each library entry from the result body.
-      for (var libraryEntry in jsonDecode(result.body)) {
+      for (var libraryEntry in decode) {
+        print("Yielding Entry");
+        print(Library.fromJson(libraryEntry));
         yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
@@ -102,12 +107,14 @@ class ReadingApiProvider {
       final url = UrlContants.addLibraryBook();
 
       // send off HTTP POST request
-      await http.post(url,
+      final response = await http.post(url,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Token ${await getAuthToken()}'
           },
           body: (jsonEncode(serializer.toJson())));
+      print("Printing Body");
+      print(response.body);
     } catch (e) {
       print(e);
     }
@@ -196,7 +203,9 @@ class ReadingRepository {
 
   Future<List<Library>> getLibraryEntries() async {
     final result = await this._api.getLibrary();
+
     List<Library> entries = await result.toList();
+
     return entries;
   }
 

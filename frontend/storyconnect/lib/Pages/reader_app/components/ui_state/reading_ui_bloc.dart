@@ -72,7 +72,6 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
             id: entry.id,
             book: entry.book,
             status: entry.status,
-            reader: entry.reader,
           ));
     }
 

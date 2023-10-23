@@ -62,6 +62,10 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
     ));
     List<Book> books = await this.repository.getBooks();
     List<Book> libBooks = await this.repository.getLibraryBooks();
+
+    print("Reading Bloc: Got library Books");
+    print(libBooks);
+
     emit(ReadingHomeStruct(
       books: books,
       libraryBooks: libBooks,
