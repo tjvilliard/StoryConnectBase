@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/text_highlight_widget.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingPageView extends StatefulWidget {
@@ -60,36 +62,37 @@ class WritingPageViewState extends State<WritingPageView> {
               loadingStruct: state.loadingStruct,
             );
           } else {
-            toReturn = SingleChildScrollView(
-                child: Container(
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[200]!, width: 1),
-                      color: Colors.white,
-                    ),
-                    constraints:
-                        BoxConstraints(minHeight: RenderPageSliver.pageHeight),
+            toReturn = Container(
+                margin: EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[200]!, width: 1),
+                  color: Colors.white,
+                ),
+                constraints:
+                    BoxConstraints(minHeight: RenderPageSliver.pageHeight),
+                child: TextHighlightWidget(
                     child: TextField(
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Colors.black, fontSize: 16),
-                      controller: textController,
-                      focusNode: focusNode,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter your text here',
-                      ),
-                      onChanged: (value) {
-                        context.read<ChapterBloc>().add(UpdateChapterEvent(
-                              text: value,
-                              // selection: textController.selection,
-                            ));
-                      },
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                    )));
+                  scrollController:
+                      context.read<WritingUIBloc>().state.textScrollController,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.black, fontSize: 16),
+                  controller: textController,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Enter your text here',
+                  ),
+                  onChanged: (value) {
+                    context.read<ChapterBloc>().add(UpdateChapterEvent(
+                          text: value,
+                        ));
+                  },
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                )));
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: toReturn);

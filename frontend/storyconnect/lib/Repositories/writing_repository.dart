@@ -3,9 +3,11 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Constants/feedback_sentiment.dart';
 
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
+import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/models/continuity_models.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
@@ -96,6 +98,20 @@ class WritingApiProvider {
     for (var feedback in jsonDecode(result.body)) {
       yield WriterFeedback.fromJson(feedback);
     }
+    // test object
+    yield WriterFeedback(
+        id: 1,
+        userId: 1,
+        chapterId: chapterId,
+        selection: AnnotatedTextSelection(
+            floating: false,
+            text: "This is a test",
+            chapterId: 1,
+            offset: 10,
+            offsetEnd: 20),
+        sentiment: FeedbackSentiment.good,
+        isSuggestion: false,
+        dismissed: false);
   }
 }
 

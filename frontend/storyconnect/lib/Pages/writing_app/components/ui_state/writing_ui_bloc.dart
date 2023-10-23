@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
+import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -34,6 +39,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
         (event, emit) => toggleRoadUnblocker(event, emit));
     on<ToggleContinuityCheckerEvent>(
         (event, emit) => toggleContinuityChecker(event, emit));
+
+    on<HighlightEvent>((event, emit) => highlight(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -95,5 +102,41 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
         continuityCheckerShown: !state.continuityCheckerShown,
         feedbackUIshown: false,
         roadUnblockerShown: false));
+  }
+
+  Future<void> highlight(
+      HighlightEvent event, Emitter<WritingUIState> emit) async {
+    final scrollController = state.textScrollController;
+    if (scrollController.hasClients) {
+      final chapterText = event.chapterText;
+      TextPainter painter = TextPainter(
+        text: TextSpan(text: chapterText, style: event.textStyle),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.left,
+      );
+
+      // calculate the offset of the feedback
+
+      painter.layout(maxWidth: RenderPageSliver.pageWidth);
+      final feedbackOffset = painter.getOffsetForCaret(
+          TextPosition(offset: event.selection.offset), Rect.zero);
+
+      await scrollController.animateTo(feedbackOffset.dy,
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+
+      // create a temporary highlight effect on the feedback
+      //get rectangles for the feedback
+      final List<TextBox> boxes = painter.getBoxesForSelection(TextSelection(
+          baseOffset: event.selection.offset,
+          extentOffset: event.selection.offsetEnd));
+
+      // map all the boxes to rects and update the state
+      emit(state.copyWith(
+          rectsToHighlight: boxes.map((e) => e.toRect()).toList()));
+
+      // remove the highlight after a second
+      await Future.delayed(Duration(milliseconds: 1000));
+      emit(state.copyWith(rectsToHighlight: null));
+    }
   }
 }

@@ -8,7 +8,9 @@ class WritingUIState with _$WritingUIState {
     required bool feedbackUIshown,
     required bool roadUnblockerShown,
     required bool continuityCheckerShown,
+    required ScrollController textScrollController,
     String? title,
+    List<Rect>? rectsToHighlight,
     required LoadingStruct loadingStruct,
   }) = _WritingUIState;
 
@@ -20,6 +22,7 @@ class WritingUIState with _$WritingUIState {
       feedbackUIshown: false,
       roadUnblockerShown: false,
       continuityCheckerShown: false,
+      textScrollController: ScrollController(),
       loadingStruct: LoadingStruct.loading(true),
     );
   }

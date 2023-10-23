@@ -1,7 +1,7 @@
 part of 'writing_ui_bloc.dart';
 
 abstract class WritingUIEvent {
-  WritingUIEvent();
+  const WritingUIEvent();
 }
 
 class UpdateAllEvent extends WritingUIEvent {
@@ -28,4 +28,16 @@ class SwitchChapterEvent extends WritingUIEvent {
 
 class ToggleContinuityCheckerEvent extends WritingUIEvent {
   ToggleContinuityCheckerEvent();
+}
+
+class HighlightEvent extends WritingUIEvent {
+  final AnnotatedTextSelection selection;
+  final String chapterText;
+  final TextStyle textStyle;
+
+  const HighlightEvent({
+    required this.selection,
+    required this.chapterText,
+    required this.textStyle,
+  });
 }

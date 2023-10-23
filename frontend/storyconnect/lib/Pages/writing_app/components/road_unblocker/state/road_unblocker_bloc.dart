@@ -87,16 +87,16 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
 
-    final suggestion =
-        suggestions.firstWhere((element) => element.uid == event.localId);
+    // final suggestion =
+    //     suggestions.firstWhere((element) => element.uid == event.localId);
 
-    // add a chapter change to the chapter bloc with the new suggestion
-    String currentChapterText = event.chapterBloc.state.currentChapterText;
+    // // add a chapter change to the chapter bloc with the new suggestion
+    // String currentChapterText = event.chapterBloc.state.currentChapterText;
 
-    final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
-        suggestion.offsetEnd, suggestion.suggestedChange);
+    // final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
+    //     suggestion.offsetEnd, suggestion.suggestedChange);
 
-    event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
+    // event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
 
     suggestions.removeWhere((element) => element.uid == event.localId);
     responses.removeWhere((element) => element.uid == event.responseLocalId);

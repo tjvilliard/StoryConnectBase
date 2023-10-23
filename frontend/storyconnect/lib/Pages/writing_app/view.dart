@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/chapter/view.dart.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/view.dart';
@@ -47,61 +48,65 @@ class _WritingAppViewState extends State<WritingAppView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        title: Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.home_filled),
-              onPressed: () {
-                final beamed = Beamer.of(context).beamBack();
-                if (!beamed) {
-                  Beamer.of(context).beamToNamed(PageUrls.writerHome);
-                }
-              },
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            BlocBuilder<WritingUIBloc, WritingUIState>(
-                builder: (context, state) {
-              Widget toReturn;
-              if (state.title != null) {
-                toReturn = Text(state.title!,
-                    style: Theme.of(context).textTheme.displaySmall);
-              } else {
-                toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500), child: toReturn);
-            }),
-          ],
-        ),
-        centerTitle: false,
-      ),
-      body: Column(
-        children: [
-          WritingMenuBar(),
-          Flexible(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          title: Row(
             children: [
-              // where chapter navigation is displayed
-              ChapterNavigation(),
-              // Where pages are displayed
-              Flexible(child: WritingPageView()),
-
-              Row(
-                children: [
-                  FeedbackWidget(),
-                  RoadUnblockerWidget(),
-                  ContinuityWidget()
-                ],
-              )
+              IconButton(
+                icon: Icon(Icons.home_filled),
+                onPressed: () {
+                  final beamed = Beamer.of(context).beamBack();
+                  if (!beamed) {
+                    Beamer.of(context).beamToNamed(PageUrls.writerHome);
+                  }
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              BlocBuilder<WritingUIBloc, WritingUIState>(
+                  builder: (context, state) {
+                Widget toReturn;
+                if (state.title != null) {
+                  toReturn = Text(state.title!,
+                      style: Theme.of(context).textTheme.displaySmall);
+                } else {
+                  toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                }
+                return AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500), child: toReturn);
+              }),
             ],
-          ))
-        ],
-      ),
-    );
+          ),
+          centerTitle: false,
+        ),
+        body: ChangeNotifierProvider<ScrollController>(
+          create: (context) {
+            return ScrollController();
+          },
+          child: Column(
+            children: [
+              WritingMenuBar(),
+              Flexible(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // where chapter navigation is displayed
+                  ChapterNavigation(),
+                  // Where pages are displayed
+                  Flexible(child: WritingPageView()),
+
+                  Row(
+                    children: [
+                      FeedbackWidget(),
+                      RoadUnblockerWidget(),
+                      ContinuityWidget()
+                    ],
+                  )
+                ],
+              ))
+            ],
+          ),
+        ));
   }
 }
