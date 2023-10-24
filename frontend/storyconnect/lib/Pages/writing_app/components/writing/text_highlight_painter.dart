@@ -14,7 +14,7 @@ class CustomHighlightPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     for (final rect in rects) {
-      final center = rect.center;
+      final center = rect.center.translate(0, 5);
 
       final scaledRect = Rect.fromCenter(
         center: center,

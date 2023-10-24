@@ -69,37 +69,38 @@ class WritingPageViewState extends State<WritingPageView> {
               loadingStruct: state.loadingStruct,
             );
           } else {
-            toReturn = Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[200]!, width: 1),
-                  color: Colors.white,
-                ),
-                constraints:
-                    BoxConstraints(minHeight: RenderPageSliver.pageHeight),
-                child: TextHighlightWidget(
-                    child: TextField(
-                  scrollController:
-                      context.read<WritingUIBloc>().state.textScrollController,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: Colors.black, fontSize: 16),
-                  controller: textController,
-                  focusNode: focusNode,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Enter your text here',
-                  ),
-                  onChanged: (value) {
-                    context.read<ChapterBloc>().add(UpdateChapterEvent(
-                          text: value,
-                        ));
-                  },
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                )));
+            toReturn = toReturn = SingleChildScrollView(
+                controller:
+                    context.read<WritingUIBloc>().state.textScrollController,
+                child: Container(
+                    margin: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[200]!, width: 1),
+                      color: Colors.white,
+                    ),
+                    constraints:
+                        BoxConstraints(minHeight: RenderPageSliver.pageHeight),
+                    child: TextHighlightWidget(
+                        child: TextField(
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Colors.black, fontSize: 16),
+                      controller: textController,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter your text here',
+                      ),
+                      onChanged: (value) {
+                        context.read<ChapterBloc>().add(UpdateChapterEvent(
+                              text: value,
+                            ));
+                      },
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                    ))));
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: toReturn);
