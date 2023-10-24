@@ -1,10 +1,26 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
 
-class BookWidget extends StatelessWidget {
+class BookWidget extends StatefulWidget {
   final Book book;
 
   BookWidget({required this.book});
+
+  @override
+  State<StatefulWidget> createState() {
+    return BookWidgetState();
+  }
+}
+
+class BookWidgetState extends State<BookWidget> {
+  String? url = null;
+
+  @override
+  void initState() {
+    get_image(widget.book.cover);
+    super.initState();
+  }
 
   // build a rectangular placeholder for the book cover
   Widget _imagePlaceHolder() {
@@ -13,6 +29,22 @@ class BookWidget extends StatelessWidget {
       width: 100,
       child: Icon(Icons.book, size: 100),
     );
+  }
+
+  Future<void> get_image(String? relativePath) async {
+    if (relativePath == null || relativePath.isEmpty) {
+      setState(() {
+        url = "";
+      });
+      return;
+    }
+    Reference ref = FirebaseStorage.instance.ref().child(relativePath);
+
+    final result = await ref.getDownloadURL();
+
+    setState(() {
+      url = result;
+    });
   }
 
   @override
@@ -25,21 +57,20 @@ class BookWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           // Image.network(coverCDN),
-          if (book.cover != null && book.cover!.isNotEmpty)
-            Image.network(book.cover!),
-          if (book.cover == null || book.cover?.isEmpty == true)
-            _imagePlaceHolder(),
+          if (url != null && url!.isNotEmpty) Image.network(url!),
+          if (url == null || url!.isEmpty) _imagePlaceHolder(),
           Flexible(
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    book.title,
+                    widget.book.title,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ))),
-          if (book.author != null)
-            Text(book.author!, style: Theme.of(context).textTheme.labelSmall),
+          if (widget.book.author != null)
+            Text(widget.book.author!,
+                style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
     );

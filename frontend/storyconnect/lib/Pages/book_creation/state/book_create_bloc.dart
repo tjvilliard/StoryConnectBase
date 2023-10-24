@@ -89,16 +89,15 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
       throw Exception("User is not logged in.");
     }
 
-    Reference ref = storage
-        .ref()
-        .child("images/${user.uid}/${DateTime.now().toIso8601String()}.png");
+    final relativeUrl =
+        "images/${user.uid}/${DateTime.now().toIso8601String()}.png";
+
+    Reference ref = storage.ref().child(relativeUrl);
     // upload the file as public
     UploadTask uploadTask = ref.putData(imageBytes);
     await uploadTask;
 
-    final url = await ref.getDownloadURL();
-    print(url);
-    return url;
+    return relativeUrl;
   }
 
   Future<void> saveBook(SaveBookEvent event, BookCreateEmitter emit) async {
