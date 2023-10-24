@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_card.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
 ///
@@ -66,15 +67,7 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
             controller: this._scrollController,
             scrollDirection: Axis.vertical,
             child: Column(
-              children: [
-                /*
-                Container(
-                    height: 200,
-                    width: 300,
-                    child: Card(
-                      elevation: 5,
-                    )),*/
-              ],
+              children: CommentCardWidget.sampleCards(5),
             ),
           )),
           Positioned(
