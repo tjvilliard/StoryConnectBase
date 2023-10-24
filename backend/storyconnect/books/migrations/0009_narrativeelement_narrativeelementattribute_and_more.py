@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('books', '0008_delete_comments'),
+        ('books', '0007_merge_20230927_0059'),
     ]
 
     operations = [

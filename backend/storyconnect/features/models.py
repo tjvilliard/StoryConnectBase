@@ -1,5 +1,6 @@
 from django.db import models
 from books.models import *
+from features.content_tagging import *
 
 # Create your models here.
 class Review(models.Model):
@@ -21,3 +22,14 @@ class Review(models.Model):
     def average_rating(self, book_id) -> float:
         thebook = Book.objects.get(pk=book_id)
         return Review.objects.filter(pk=thebook).aggregate(models.Avg("rating"))["rating__avg"] or 0
+
+class GenreTagging(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+
+class ChapterTagging(models.Model):
+    # book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    last_chapter_len = models.IntegerField(default=0)
+    genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+        
