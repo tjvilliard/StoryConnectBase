@@ -9,10 +9,10 @@ part 'feedback_serializer.g.dart';
 class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
   const factory FeedbackCreationSerializer({
     required int chapterId,
-    @JsonKey(name: 'sentiment') int? sentiment,
+    required AnnotatedTextSelection selection,
+    required FeedbackSentiment sentiment,
     required bool isSuggestion,
     required bool dismissed,
-    required AnnotatedTextSelection selection,
     String? comment,
     int? parentId,
     String? suggestion,
@@ -25,11 +25,11 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
   factory FeedbackCreationSerializer.initial() {
     return FeedbackCreationSerializer(
       chapterId: 0,
-      sentiment: FeedbackSentiment.good.index,
-      isSuggestion: false,
-      dismissed: false,
       selection: AnnotatedTextSelection(
           chapterId: 0, floating: false, offsetEnd: 0, offset: 0, text: ""),
+      sentiment: FeedbackSentiment.good,
+      isSuggestion: false,
+      dismissed: false,
       comment: "",
       parentId: null,
       suggestion: "",
@@ -38,10 +38,6 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
 
   /// Verifies the state of this Feedback is good.
   bool verify() {
-    if (sentiment == null) {
-      return false;
-    }
-
     return true;
   }
 }

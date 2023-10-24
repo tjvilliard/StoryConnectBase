@@ -21,9 +21,8 @@ class CommentEditedEvent extends FeedbackEvent {
 }
 
 class SentimentChangedEvent extends FeedbackEvent {
-  final int sentiment;
-  SentimentChangedEvent({required FeedbackSentiment sentiment})
-      : this.sentiment = sentiment.index;
+  final FeedbackSentiment sentiment;
+  SentimentChangedEvent({required this.sentiment});
 }
 
 /// Change the type of feedback we are giving the writer.

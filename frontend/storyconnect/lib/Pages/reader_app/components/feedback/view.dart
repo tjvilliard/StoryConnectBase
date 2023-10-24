@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_input.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_panel.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_type_selector.dart';
@@ -16,30 +17,44 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
         builder: (context, uiState) {
-      return BlocBuilder<FeedbackBloc, FeedbackState>(
-          builder: (context, state) {
-        return AnimatedCrossFade(
-            alignment: Alignment.centerRight,
-            firstChild: Container(),
-            secondChild: Container(
-                width: 300,
-                child: Card(
-                    elevation: 3,
-                    child: uiState.feedbackBarShown
-                        ? Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                FeedbackTypeSelector(),
-                                Expanded(child: FeedbackWidgetList()),
-                                FeedbackInputWidget(),
-                              ],
-                            ))
-                        : Container())),
-            crossFadeState: uiState.feedbackBarShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
+          builder: (context, chapterState) {
+        return BlocBuilder<FeedbackBloc, FeedbackState>(
+            builder: (context, feedbackState) {
+          return AnimatedCrossFade(
+              alignment: Alignment.centerRight,
+              firstChild: Container(),
+              secondChild: Container(
+                  width: 300,
+                  child: Card(
+                      elevation: 3,
+                      child: uiState.feedbackBarShown
+                          ? Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  FeedbackTypeSelector(),
+                                  Expanded(
+                                      child: FeedbackCardListWidget(
+                                          feedbackItems: feedbackState
+                                                  .feedbackSet.isEmpty
+                                              ? []
+                                              : feedbackState
+                                                  .feedbackSet.entries
+                                                  .where((element) =>
+                                                      element.key ==
+                                                      chapterState.chapterIndex)
+                                                  .first
+                                                  .value)),
+                                  FeedbackInputWidget(),
+                                ],
+                              ))
+                          : Container())),
+              crossFadeState: uiState.feedbackBarShown
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: Duration(milliseconds: 200));
+        });
       });
     });
   }

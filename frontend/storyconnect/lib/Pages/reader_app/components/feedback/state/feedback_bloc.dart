@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
+import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
@@ -16,16 +17,16 @@ part 'feedback_bloc.freezed.dart';
 typedef FeedbackEmitter = Emitter<FeedbackState>;
 
 class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
-  // TODO: implement repo
-  // ignore: unused_field
+  ///
   late final ReadingRepository _repo;
 
-  /// Maps Events
+  ///
   FeedbackBloc(ReadingRepository repo) : super(FeedbackState.initial()) {
     this._repo = repo;
     // load chapter comments
     // feedback type changed - make annotation, make comment, make suggestion
 
+    // Map Incoming Events to methods.
     on<FeedbackTypeChanged>((event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
     on<SuggestionEditedEvent>((event, emit) => suggestionEdited(event, emit));
@@ -76,13 +77,19 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
     emit(state.copyWith(
         serializer: state.serializer.copyWith(
+            selection: AnnotatedTextSelection(
+              chapterId: event.chapterBloc
+                  .chapterNumToID[event.chapterBloc.state.chapterIndex]!,
+              floating: false,
+              offset: 0,
+              offsetEnd: 0,
+              text: "",
+            ),
             chapterId: event.chapterBloc
                 .chapterNumToID[event.chapterBloc.state.chapterIndex]!)));
 
     print("Submitting Feedback");
-
-    final result =
-        this._repo.createChapterFeedback(serializer: state.serializer);
+    //this._repo.createChapterFeedback(serializer: state.serializer);
   }
 
   ///
