@@ -30,3 +30,4 @@ def user_logged_out_callback(sender, user, request):
         for genre in chapters_genres:
             if genre not in book_genre.genre:
                 book_genre.genre.append(genre)
+        print(book.title , "=", book_genre.genre)
