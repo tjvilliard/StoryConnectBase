@@ -28,7 +28,7 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
   void initState() {
     this.showScrollUpButton = false;
 
-    if (this.feedbackItems.isEmpty) {
+    if (this.feedbackItems.length < 2) {
       this.showScrollDownButton = false;
     } else {
       this.showScrollDownButton = true;
@@ -64,50 +64,51 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
         children: [
           Positioned.fill(
               child: SingleChildScrollView(
-            controller: this._scrollController,
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: CommentCardWidget.sampleCards(5),
-            ),
-          )),
+                  controller: this._scrollController,
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: CommentCardWidget.buildAll(
+                          feedbackSet: this.feedbackItems)))),
           Positioned(
               top: 1.0,
               left: 0.0,
               right: 0.0,
               child: Visibility(
-                visible: this.showScrollUpButton,
-                child: Container(
-                    alignment: Alignment.topCenter,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: CircleBorder()),
-                        onPressed: () {
-                          this._scrollController.animateTo(
-                              this._scrollController.offset - 200,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.easeIn);
-                        },
-                        child: Icon(Icons.arrow_upward))),
-                replacement: SizedBox.shrink(),
-              )),
+                  visible: this.showScrollUpButton,
+                  child: Container(
+                      alignment: Alignment.topCenter,
+                      child: ElevatedButton(
+                          style:
+                              ElevatedButton.styleFrom(shape: CircleBorder()),
+                          onPressed: () {
+                            this._scrollController.animateTo(
+                                this._scrollController.offset - 200,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
+                          },
+                          child: Icon(Icons.arrow_upward))),
+                  replacement: SizedBox.shrink())),
           Positioned(
               left: 0.0,
               right: 0.0,
               bottom: 0.0,
               child: Visibility(
-                visible: this.showScrollDownButton,
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: CircleBorder()),
-                        onPressed: () {
-                          this._scrollController.animateTo(
-                              this._scrollController.offset + 200,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.easeIn);
-                        },
-                        child: Icon(Icons.arrow_downward))),
-                replacement: SizedBox.shrink(),
-              ))
+                  visible: this.showScrollDownButton,
+                  child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: ElevatedButton(
+                          style:
+                              ElevatedButton.styleFrom(shape: CircleBorder()),
+                          onLongPress: () {},
+                          onPressed: () {
+                            this._scrollController.animateTo(
+                                this._scrollController.offset + 200,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.easeIn);
+                          },
+                          child: Icon(Icons.arrow_downward))),
+                  replacement: SizedBox.shrink()))
         ],
       );
     });

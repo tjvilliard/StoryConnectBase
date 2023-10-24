@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Models/text_annotation/text_selection.dart';
-import 'package:storyconnect/Pages/writing_app/components/feedback/components/navigate_button.dart';
 
 ///
 class CommentCardWidget extends StatelessWidget {
@@ -21,7 +19,7 @@ class CommentCardWidget extends StatelessWidget {
           child: Padding(
               padding: EdgeInsets.all(10),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Align(
@@ -34,17 +32,13 @@ class CommentCardWidget extends StatelessWidget {
                                   .textTheme
                                   .titleSmall!
                                   .apply(fontStyle: FontStyle.italic)),
-                          if (feedbackItem.isGhost == false)
-                            NavigateToFeedbackButton(
-                              feedback: feedbackItem,
-                            )
                         ]),
                   ),
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.topCenter,
                     constraints: BoxConstraints(minHeight: 10, maxHeight: 100),
-                    child: Text(feedbackItem.sentiment.description,
-                        style: Theme.of(context).textTheme.titleSmall),
+                    child: Text(feedbackItem.comment!,
+                        style: Theme.of(context).textTheme.bodySmall),
                   ),
                 ],
               ))),
@@ -52,7 +46,7 @@ class CommentCardWidget extends StatelessWidget {
   }
 
   /// Builds a list of sample feedback cards
-  static List<CommentCardWidget> sampleCards(int ChapterId) {
+  static List<WriterFeedback> sampleFeedbacks(int ChapterId) {
     AnnotatedTextSelection initialSelection = AnnotatedTextSelection(
         offset: 0,
         offsetEnd: 0,
@@ -90,13 +84,20 @@ class CommentCardWidget extends StatelessWidget {
         sentiment: FeedbackSentiment.bad,
         isSuggestion: false,
         dismissed: false,
-        comment: "This is a Comment",
+        comment:
+            "This is a Comment, a very large comment, a comment so large that it takes up very many lines and very well might require scrolling to view the whole thing. Pretty obnoxious right? If only there were a way to view a comment and all it's children in focus without having to scroll...",
       )
     ];
 
+    return commentList;
+  }
+
+  ///
+  static List<CommentCardWidget> buildAll(
+      {required List<WriterFeedback> feedbackSet}) {
     List<CommentCardWidget> cardList = [];
 
-    for (WriterFeedback comment in commentList) {
+    for (WriterFeedback comment in feedbackSet) {
       cardList.add(CommentCardWidget(feedbackItem: comment));
     }
 

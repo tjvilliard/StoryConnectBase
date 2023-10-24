@@ -46,18 +46,20 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   feedbackTypeChanged(FeedbackTypeChanged event, FeedbackEmitter emit) {
     if (event.feedbackType != FeedbackType.suggestion) {
       emit(state.copyWith(
+          selectedFeedbackType: event.feedbackType,
           serializer: state.serializer.copyWith(
-        isSuggestion: false,
-        suggestion: state.serializer.comment,
-        comment: "",
-      )));
+            isSuggestion: false,
+            suggestion: state.serializer.comment,
+            comment: "",
+          )));
     } else {
       emit(state.copyWith(
+          selectedFeedbackType: event.feedbackType,
           serializer: state.serializer.copyWith(
-        isSuggestion: true,
-        suggestion: state.serializer.comment,
-        comment: state.serializer.suggestion,
-      )));
+            isSuggestion: true,
+            suggestion: state.serializer.comment,
+            comment: state.serializer.suggestion,
+          )));
     }
   }
 

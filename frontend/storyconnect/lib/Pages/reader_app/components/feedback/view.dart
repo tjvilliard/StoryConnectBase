@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_card.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_input.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_panel.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_sentiment_selector.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_type_selector.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
@@ -34,11 +36,17 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                               child: Column(
                                 children: [
                                   FeedbackTypeSelector(),
+                                  Container(
+                                      constraints: BoxConstraints(),
+                                      child: SentimentSelectorWidget()),
                                   Expanded(
                                       child: FeedbackCardListWidget(
                                           feedbackItems: feedbackState
                                                   .feedbackSet.isEmpty
-                                              ? []
+                                              ? CommentCardWidget
+                                                  .sampleFeedbacks(chapterState
+                                                          .chapterIndex +
+                                                      1)
                                               : feedbackState
                                                   .feedbackSet.entries
                                                   .where((element) =>
