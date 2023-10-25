@@ -245,8 +245,17 @@ class LibraryViewSet(viewsets.ModelViewSet):
         serializer = LibrarySerializer(library, many=True)
         return Response(serializer.data)
     
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # add the owner 
+        serializer.save(reader=request.user)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
     @action(detail=True, methods=['post'])
-    def change_entry_status(self, request, pk=None):
+    def change_entry_status(self, request):
         library = self.get_object()
         book = library.book
         book_id = book.id
@@ -254,6 +263,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
         library.save()
         serializer = LibrarySerializer(library)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['delete'])
+    def change_entry_status(self, request, *args, **kwargs):
+        instance = self.get_object().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

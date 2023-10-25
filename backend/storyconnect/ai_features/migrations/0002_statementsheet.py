@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('books', '0008_delete_comments'),
+        ('books', '0007_merge_20230927_0059'),
         ('ai_features', '0001_initial'),
     ]
 

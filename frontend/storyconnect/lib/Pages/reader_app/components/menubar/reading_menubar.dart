@@ -7,7 +7,8 @@ import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_blo
 
 /// Custom Menu Bar for the Reading UI Page.
 class ReadingMenuBar extends StatelessWidget {
-  const ReadingMenuBar({super.key});
+  final int bookId;
+  const ReadingMenuBar({required this.bookId, super.key});
 
   //height for items in bar
   static const double height = 40;
@@ -57,6 +58,27 @@ class ReadingMenuBar extends StatelessWidget {
                                             },
                                     ),
 
+                                    // Navigate Chapter Forward
+                                    ReadingIconButton(
+                                      icon: Icon(Icons.arrow_right),
+
+                                      // Disable the next chapter button if we are on the first chapter.
+                                      onPressed: chapterState.chapterIndex ==
+                                              chapterState.chapters.length - 1
+                                          ? null
+                                          : () {
+                                              context.read<ChapterBloc>().add(
+                                                  SwitchChapter(
+                                                      chapterToSwitchFrom:
+                                                          chapterState
+                                                              .chapterIndex,
+                                                      chapterToSwitchTo:
+                                                          chapterState
+                                                                  .chapterIndex +
+                                                              1));
+                                            },
+                                    ),
+
                                     // Bring Up the Chapter Navigation Bar
                                     ReadingIconButton(
                                         icon: Icon(FontAwesomeIcons.list),
@@ -83,11 +105,17 @@ class ReadingMenuBar extends StatelessWidget {
                                       onPressed: () {},
                                     ),
 
-                                    // Add / Remove Story from Library
-                                    ReadingIconButton(
-                                      icon: Icon(Icons.add),
-                                      onPressed: () {},
-                                    ),
+                                    Checkbox.adaptive(
+                                        value: uiState.libBookIds
+                                            .where((element) =>
+                                                element.book == this.bookId)
+                                            .isNotEmpty,
+                                        onChanged: (_) {
+                                          BlocProvider.of<ReadingUIBloc>(
+                                                  context)
+                                              .add(LibraryToggleEvent(
+                                                  bookId: this.bookId));
+                                        }),
 
                                     // Chapter Feedback
                                     ReadingIconButton(
@@ -97,27 +125,6 @@ class ReadingMenuBar extends StatelessWidget {
                                         BlocProvider.of<ReadingUIBloc>(context)
                                             .add(ToggleFeedbackBarEvent());
                                       },
-                                    ),
-
-                                    // Navigate Chapter Forward
-                                    ReadingIconButton(
-                                      icon: Icon(Icons.arrow_right),
-
-                                      // Disable the next chapter button if we are on the first chapter.
-                                      onPressed: chapterState.chapterIndex ==
-                                              chapterState.chapters.length - 1
-                                          ? null
-                                          : () {
-                                              context.read<ChapterBloc>().add(
-                                                  SwitchChapter(
-                                                      chapterToSwitchFrom:
-                                                          chapterState
-                                                              .chapterIndex,
-                                                      chapterToSwitchTo:
-                                                          chapterState
-                                                                  .chapterIndex +
-                                                              1));
-                                            },
                                     ),
                                   ])))
                     ])));
