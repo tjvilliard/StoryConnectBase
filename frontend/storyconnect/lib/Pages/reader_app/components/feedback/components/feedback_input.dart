@@ -79,10 +79,13 @@ class _FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                                           width: 40,
                                           child: IconButton(
                                             onPressed: () {
+                                              /*
                                               context.read<FeedbackBloc>().add(
                                                   SubmitFeedbackEvent(
                                                       chapterBloc: context.read<
                                                           ChapterBloc>()));
+
+                                                          */
                                             },
                                             icon: Icon(Icons.send),
                                           )))
