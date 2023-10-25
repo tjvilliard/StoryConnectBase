@@ -23,8 +23,8 @@ class FeedbackTypeSelector extends StatelessWidget {
         ],
         selected: {feedbackState.selectedFeedbackType},
         onSelectionChanged: (Set<FeedbackType> newSelection) {
-          context.read<FeedbackBloc>().add(FeedbackTypeChanged(
-                newSelection.first,
+          context.read<FeedbackBloc>().add(FeedbackTypeChangedEvent(
+                feedbackType: newSelection.first,
               ));
         },
       );
