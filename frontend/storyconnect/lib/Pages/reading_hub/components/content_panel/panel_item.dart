@@ -135,16 +135,75 @@ class BookGrid extends PanelItem {
 }
 
 /// A list of Books to be displayed as a panel item.
-class BookList extends PanelItem {
+class BookListWidget extends StatefulWidget {
   /// The set of books we are displaying in this panel item.
   final List<Book> books;
 
   final bool descript;
 
-  BookList({
+  BookListWidget({
     required List<Book> this.books,
     required bool this.descript,
   });
+
+  @override
+  _BookListWidgetState createState() => _BookListWidgetState(
+        books: books,
+        descript: descript,
+      );
+}
+
+class _BookListWidgetState extends State<BookListWidget> {
+  final List<Book> books;
+  final bool descript;
+  final ScrollController _scrollController = ScrollController();
+  late bool showScrollLeftButton;
+  late bool showScrollRightButton;
+
+  _BookListWidgetState({
+    required List<Book> this.books,
+    required bool this.descript,
+  });
+
+  @override
+  void initState() {
+    this.showScrollLeftButton = false;
+
+    if (this.descript) {
+      if (this.books.length < 3) {
+        this.showScrollRightButton = false;
+      } else {
+        this.showScrollRightButton = true;
+      }
+    } else {
+      if (this.books.length < 5) {
+        this.showScrollRightButton = false;
+      } else {
+        this.showScrollRightButton = true;
+      }
+    }
+
+    // Check out
+    // https://stackoverflow.com/questions/46377779/how-to-check-if-scroll-position-is-at-top-or-bottom-in-listview
+    // for more
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge) {
+        bool isTop = _scrollController.position.pixels == 0;
+        if (isTop) {
+          this.showScrollLeftButton = false;
+        } else {
+          this.showScrollRightButton = false;
+        }
+      } else {
+        this.showScrollRightButton = true;
+        this.showScrollLeftButton = true;
+      }
+
+      setState(() {});
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,32 +211,75 @@ class BookList extends PanelItem {
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
         child: SizedBox(
             width: 800,
-            child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse
-                    }),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      children: this
-                          .books
-                          .map((book) => Container(
-                              height: 270,
-                              width: descript ? 400.0 : (270.0 / 1.618) + 25,
-                              child: Card(
-                                  elevation: 3,
-                                  child: Clickable(
-                                      onPressed: () {
-                                        final uri = PageUrls.readBook(book.id);
-                                        Beamer.of(context).beamToNamed(uri,
-                                            data: {"book": book});
-                                      },
-                                      child: this.descript
-                                          ? newDescriptBookItem(book: book)
-                                          : CoverBookItem(book: book)))))
-                          .toList()),
-                ))));
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse
+                        }),
+                    child: SingleChildScrollView(
+                      controller: this._scrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          children: this
+                              .books
+                              .map((book) => Container(
+                                  height: 270,
+                                  width:
+                                      descript ? 400.0 : (270.0 / 1.618) + 25,
+                                  child: Card(
+                                      elevation: 3,
+                                      child: Clickable(
+                                          onPressed: () {
+                                            final uri =
+                                                PageUrls.readBook(book.id);
+                                            Beamer.of(context).beamToNamed(uri,
+                                                data: {"book": book});
+                                          },
+                                          child: this.descript
+                                              ? newDescriptBookItem(book: book)
+                                              : CoverBookItem(book: book)))))
+                              .toList()),
+                    )),
+                Positioned(
+                    left: 1.0,
+                    child: Visibility(
+                        visible: this.showScrollLeftButton,
+                        child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: CircleBorder()),
+                                onPressed: () {
+                                  this._scrollController.animateTo(
+                                      this._scrollController.offset - 400,
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeIn);
+                                },
+                                child: Icon(Icons.arrow_left))),
+                        replacement: SizedBox.shrink())),
+                Positioned(
+                    right: 1.0,
+                    child: Visibility(
+                        visible: this.showScrollRightButton,
+                        child: Container(
+                            alignment: Alignment.centerRight,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: CircleBorder()),
+                                onLongPress: () {},
+                                onPressed: () {
+                                  this._scrollController.animateTo(
+                                      this._scrollController.offset + 400,
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeIn);
+                                },
+                                child: Icon(Icons.arrow_right))),
+                        replacement: SizedBox.shrink()))
+              ],
+            )));
   }
 }

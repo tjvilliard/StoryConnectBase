@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/theme.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class newDescriptBookItem extends StatelessWidget {
   final Book book;
