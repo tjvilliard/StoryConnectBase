@@ -1,6 +1,6 @@
 class _UrlBuilder {
   int version = 1; // use this later to change the api version
-  String baseUrl = "http://localhost:8000/api/";
+  String baseUrl = "https://storyconnect.app/api/";
 
   Uri build(String path) {
     final Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
