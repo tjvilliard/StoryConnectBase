@@ -85,7 +85,38 @@ class CommentCardWidget extends StatelessWidget {
         isSuggestion: false,
         dismissed: false,
         comment:
-            "This is a Comment, a very large comment, a comment so large that it takes up very many lines and very well might require scrolling to view the whole thing. Pretty obnoxious right? If only there were a way to view a comment and all it's children in focus without having to scroll...",
+            "This is a Comment, a very large comment, a comment so large that it takes up very many lines and very well might require scrolling to view the whole thing.",
+      ),
+      WriterFeedback(
+        chapterId: ChapterId,
+        id: 5003,
+        userId: 5003,
+        selection: initialSelection,
+        sentiment: FeedbackSentiment.bad,
+        isSuggestion: false,
+        dismissed: false,
+        comment:
+            "This book needs proper paragraphs and formatting. It is very hard to read.",
+      ),
+      WriterFeedback(
+        chapterId: ChapterId,
+        id: 5004,
+        userId: 5004,
+        selection: initialSelection,
+        sentiment: FeedbackSentiment.good,
+        isSuggestion: false,
+        dismissed: false,
+        comment: "Fun Read so far, can't wait to see what comes next!",
+      ),
+      WriterFeedback(
+        chapterId: ChapterId,
+        id: 5005,
+        userId: 5005,
+        selection: initialSelection,
+        sentiment: FeedbackSentiment.bad,
+        isSuggestion: false,
+        dismissed: false,
+        comment: "Generic Mean Comment...",
       )
     ];
 

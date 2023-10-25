@@ -105,20 +105,17 @@ class ReadingMenuBar extends StatelessWidget {
                                       onPressed: () {},
                                     ),
 
-                                    // Add / Remove Story from Library
-                                    ReadingIconButton(
-                                      icon: Icon(uiState.libBookIds
-                                              .where((element) =>
-                                                  element.book == this.bookId)
-                                              .isEmpty
-                                          ? Icons.bookmark_add
-                                          : Icons.bookmark_added),
-                                      onPressed: () {
-                                        BlocProvider.of<ReadingUIBloc>(context)
-                                            .add(LibraryToggleEvent(
-                                                bookId: this.bookId));
-                                      },
-                                    ),
+                                    Checkbox.adaptive(
+                                        value: uiState.libBookIds
+                                            .where((element) =>
+                                                element.book == this.bookId)
+                                            .isNotEmpty,
+                                        onChanged: (_) {
+                                          BlocProvider.of<ReadingUIBloc>(
+                                                  context)
+                                              .add(LibraryToggleEvent(
+                                                  bookId: this.bookId));
+                                        }),
 
                                     // Chapter Feedback
                                     ReadingIconButton(
