@@ -61,22 +61,27 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                 SizedBox(
                   width: 10,
                 ),
-                BlocBuilder<ReadingUIBloc, ReadingUIState>(
-                  builder: (context, state) {
-                    Widget toReturn;
-                    if (state.title != null) {
-                      toReturn = Text(
-                        state.title!,
-                        style: Theme.of(context).textTheme.displaySmall,
-                      );
-                    } else {
-                      toReturn =
-                          LoadingWidget(loadingStruct: state.loadingStruct);
-                    }
-                    return AnimatedSwitcher(
-                        duration: Duration(milliseconds: 500), child: toReturn);
-                  },
-                )
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: BlocBuilder<ReadingUIBloc, ReadingUIState>(
+                          builder: (context, state) {
+                            Widget toReturn;
+                            if (state.title != null) {
+                              toReturn = Text(state.title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.fade,
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall);
+                            } else {
+                              toReturn = LoadingWidget(
+                                  loadingStruct: state.loadingStruct);
+                            }
+                            return AnimatedSwitcher(
+                                duration: Duration(milliseconds: 500),
+                                child: toReturn);
+                          },
+                        )))
               ],
             )),
         body: Column(
@@ -87,13 +92,13 @@ class _ReadingAppViewState extends State<ReadingAppView> {
               children: [
                 Positioned.fill(
                     child: Align(
-                  alignment: Alignment.topLeft,
-                  child: ChapterNavigation(),
+                  alignment: Alignment.center,
+                  child: ReadingPageView(),
                 )),
                 Positioned.fill(
                     child: Align(
-                  alignment: Alignment.center,
-                  child: ReadingPageView(),
+                  alignment: Alignment.topLeft,
+                  child: ChapterNavigation(),
                 )),
                 Positioned.fill(
                     child: Align(
@@ -102,7 +107,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                 ))
               ],
             )),
-            ReadingMenuBar(),
+            ReadingMenuBar(bookId: widget.bookId!),
           ],
         ));
   }

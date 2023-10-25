@@ -44,7 +44,7 @@ class Library with _$Library {
     required int id,
     required int book,
     required int status,
-    required int reader,
+    int? reader,
   }) = _Library;
 
   factory Library.fromJson(Map<String, dynamic> json) =>
