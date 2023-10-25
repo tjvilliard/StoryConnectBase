@@ -19,9 +19,9 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
-        builder: (context, uiState) {
+        builder: (BuildContext context, ReadingUIState uiState) {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-          builder: (context, chapterState) {
+          builder: (BuildContext context, ChapterBlocStruct chapterState) {
         return AnimatedCrossFade(
             alignment: Alignment.centerLeft,
             firstChild: Container(),

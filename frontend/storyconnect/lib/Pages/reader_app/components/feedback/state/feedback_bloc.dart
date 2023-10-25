@@ -14,8 +14,10 @@ part 'feedback_event.dart';
 part 'feedback_state.dart';
 part 'feedback_bloc.freezed.dart';
 
+///
 typedef FeedbackEmitter = Emitter<FeedbackState>;
 
+///
 class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   ///
   late final ReadingRepository _repo;
@@ -23,10 +25,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   ///
   FeedbackBloc(ReadingRepository repo) : super(FeedbackState.initial()) {
     this._repo = repo;
-    // load chapter comments
-    // feedback type changed - make annotation, make comment, make suggestion
 
-    // Map Incoming Events to methods.
+    // Map incoming events to state transformations with methods.
     on<FeedbackTypeChangedEvent>(
         (event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
