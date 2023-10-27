@@ -1,5 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+enum FirebaseCodeDescriptors {
+  SUCCESS(message: "Success"),
+  EmailAlreadyInUse(message: "Email is Already in Use"),
+  UserDisabled(message: ""),
+  UserNotFound(message: "User Does Not Exist"),
+  WrongPassword(message: "The Password is Incorrect"),
+  UnmappedError(message: "Other Unmapped Error");
+
+  const FirebaseCodeDescriptors({required this.message});
+  final String message;
+}
+
 /// Singleton Class encapsulating firebase functions.
 class FirebaseRepository {
   late final FirebaseAuth _firebaseAuth;
@@ -26,7 +38,15 @@ class FirebaseRepository {
 
       return FirebaseRepository._SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
-      return firebaseError.message;
+      if (firebaseError.code == 'user-not-found') {
+        return FirebaseCodeDescriptors.UserNotFound.message;
+      } else if (firebaseError.code == 'wrong-password') {
+        return FirebaseCodeDescriptors.WrongPassword.message;
+      } else if (firebaseError.code == "email-already-in-use") {
+        return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
+      } else {
+        return FirebaseCodeDescriptors.UnmappedError.message;
+      }
     }
   }
 }
