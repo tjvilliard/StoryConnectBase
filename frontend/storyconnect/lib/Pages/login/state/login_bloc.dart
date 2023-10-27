@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Repositories/firebase_repository.dart';
@@ -16,16 +14,77 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(FirebaseRepository repo) : super(LoginState.initial()) {
     this._repo = repo;
 
-    on<EmailFieldChangedEvent>((event, emit) => emailFieldChanged(event, emit));
+    on<EmailFieldChangedEvent>(
+        (event, emit) => _emailFieldChanged(event, emit));
+    on<PasswordFieldChangedEvent>(
+        (event, emit) => _passwordFieldChanged(event, emit));
+    on<ShowPasswordClickedEvent>(
+        (event, emit) => _showPasswordClicked(event, emit));
+    on<LoginButtonPushedEvent>(
+        (event, emit) => _loginButtonPushed(event, emit));
+    on<StayLoggedInCheckedEvent>(
+        (event, emit) => _stayLoggedInChecked(event, emit));
   }
 
-  emailFieldChanged(EmailFieldChangedEvent event, LoginEmitter emit) {}
+  _emailFieldChanged(EmailFieldChangedEvent event, LoginEmitter emit) {
+    emit(state.copyWith(
+      email: event.email,
+      emailError: "",
+      showEmailError: false,
+    ));
+  }
 
-  passwordFieldChanged(PasswordFieldChangedEvent event, LoginEmitter emit) {}
+  _passwordFieldChanged(PasswordFieldChangedEvent event, LoginEmitter emit) {
+    emit(state.copyWith(
+      password: event.password,
+      passwordError: "",
+      showPasswordError: false,
+    ));
+  }
 
-  String _passwordVerify(String password) {
+  _showPasswordClicked(ShowPasswordClickedEvent event, LoginEmitter emit) {
+    emit(state.copyWith(
+      showPassword: !state.showPassword,
+    ));
+  }
+
+  _loginButtonPushed(LoginButtonPushedEvent event, LoginEmitter emit) async {
+    bool emailValid = !state.email.isEmpty;
+    bool passwordValid = !state.password.isEmpty;
+
+    if (!emailValid) {
+      emit(state.copyWith(
+        emailError: "Email must not be empty!",
+        showEmailError: true,
+      ));
+    }
+
+    if (!passwordValid) {
+      emit(state.copyWith(
+        passwordError: "Password must not be empty!",
+        showPasswordError: true,
+      ));
+    }
+
+    if (!emailValid || !passwordValid) {
+      return;
+    } else {
+      String? message = await this._repo.signIn(state.email, state.password);
+
+      if (message!.toLowerCase().contains("email")) {
+        emit(state.copyWith(
+          emailError: message,
+          showEmailError: true,
+        ));
+      }
+      print(message);
+      return;
+    }
+  }
+
+  String _validatePassword(String password) {
     if (password.isEmpty) {
-      return "Password must not be empty";
+      return "Password must not be empty!";
     }
 
     int passwordLength = password.length;
@@ -43,13 +102,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     return "";
   }
 
-  loginButtonPushed(LoginButtonPushedEvent event, LoginEmitter emit) {}
-
-  stayLoggedInChecked(StayLoggedInCheckedEvent event, LoginEmitter emit) {}
-
-  accountCreationButtonPushed(
-      AccountCreationButtonPushedEvent event, LoginEmitter emit) {}
-
-  forgotPasswordButtonPushed(
-      ForgotPasswordButtonPushedEvent event, LoginEmitter emit) {}
+  _stayLoggedInChecked(StayLoggedInCheckedEvent event, LoginEmitter emit) {
+    emit(state.copyWith(
+      staySignedIn: !state.staySignedIn,
+    ));
+  }
 }

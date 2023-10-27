@@ -3,9 +3,13 @@ part of 'login_bloc.dart';
 @freezed
 class LoginState with _$LoginState {
   const factory LoginState({
-    required String? email,
-    required String? password,
+    required String email,
+    required String emailError,
+    required bool showEmailError,
+    required String password,
+    required String passwordError,
     required bool showPassword,
+    required bool showPasswordError,
     required bool staySignedIn,
   }) = _LoginState;
   const LoginState._();
@@ -13,7 +17,11 @@ class LoginState with _$LoginState {
   factory LoginState.initial() {
     return LoginState(
       email: "",
+      emailError: "",
+      showEmailError: false,
       password: "",
+      passwordError: "",
+      showPasswordError: false,
       showPassword: false,
       staySignedIn: false,
     );
