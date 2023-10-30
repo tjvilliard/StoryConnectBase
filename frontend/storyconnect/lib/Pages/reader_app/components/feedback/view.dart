@@ -43,10 +43,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                                       child: FeedbackCardListWidget(
                                           feedbackItems: feedbackState
                                                   .feedbackSet.isEmpty
-                                              ? CommentCardWidget
-                                                  .sampleFeedbacks(chapterState
-                                                          .chapterIndex +
-                                                      1)
+                                              ? []
                                               : feedbackState
                                                   .feedbackSet.entries
                                                   .where((element) =>

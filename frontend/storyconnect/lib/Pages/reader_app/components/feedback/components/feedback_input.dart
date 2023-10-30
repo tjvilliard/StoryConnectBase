@@ -28,70 +28,67 @@ class _FeedbackInputWidgetState extends State<FeedbackInputWidget> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 constraints: BoxConstraints(minHeight: 100.0),
-                child: Card(
-                    margin: EdgeInsets.all(4.0),
-                    elevation: 6,
-                    child: Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Column(children: [
-                        // Sentiment Panel
-
-                        Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                child: Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Column(children: [
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                      constraints:
+                                          BoxConstraints(minHeight: 60.0),
+                                      child: TextField(
+                                        controller: this._controller,
+                                        onChanged: (value) {
+                                          if (state.selectedFeedbackType ==
+                                              FeedbackType.comment) {
+                                            context.read<FeedbackBloc>().add(
+                                                CommentEditedEvent(
+                                                    comment:
+                                                        this._controller.text));
+                                          } else {
+                                            context.read<FeedbackBloc>().add(
+                                                SuggestionEditedEvent(
+                                                    suggestion:
+                                                        this._controller.text));
+                                          }
+                                        },
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        maxLength: 1000,
+                                        decoration: InputDecoration(
+                                            hintText:
+                                                state.selectedFeedbackType ==
+                                                        FeedbackType.suggestion
+                                                    ? "Write a Suggestion..."
+                                                    : "Write a Comment..."),
+                                      ))),
+                              Container(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                      child: Container(
-                                          constraints:
-                                              BoxConstraints(minHeight: 60.0),
-                                          child: TextField(
-                                            controller: this._controller,
-                                            onChanged: (value) {
-                                              if (state.selectedFeedbackType ==
-                                                  FeedbackType.comment) {
-                                                context
-                                                    .read<FeedbackBloc>()
-                                                    .add(CommentEditedEvent(
-                                                        comment: this
-                                                            ._controller
-                                                            .text));
-                                              } else {
-                                                context
-                                                    .read<FeedbackBloc>()
-                                                    .add(SuggestionEditedEvent(
-                                                        suggestion: this
-                                                            ._controller
-                                                            .text));
-                                              }
-                                            },
-                                            minLines: 1,
-                                            maxLines: 5,
-                                            maxLength: 1000,
-                                            decoration: InputDecoration(
-                                                hintText: "Write a Comment..."),
-                                          ))),
-                                  Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                          height: 40,
-                                          width: 40,
-                                          child: IconButton(
-                                            onPressed: () {
-                                              /*
+                                  Container(
+                                      height: 40,
+                                      width: 40,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          /*
                                               context.read<FeedbackBloc>().add(
                                                   SubmitFeedbackEvent(
                                                       chapterBloc: context.read<
                                                           ChapterBloc>()));
-
-                                                          */
-                                            },
-                                            icon: Icon(Icons.send),
-                                          )))
-                                ]))
-                      ]),
-                    )),
+                                          */
+                                        },
+                                        icon: Icon(Icons.send),
+                                      ))
+                                ],
+                              )),
+                            ]))
+                  ]),
+                ),
               ));
         },
       );

@@ -18,6 +18,8 @@ class FirebaseRepository {
 
   Stream<User?> get authStateChanges => this._firebaseAuth.authStateChanges();
 
+  User? get currentUser => this._firebaseAuth.currentUser;
+
   static const String _SUCCESS = "Success";
 
   static final FirebaseRepository _instance = FirebaseRepository._internal();

@@ -60,57 +60,68 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<FeedbackBloc, FeedbackState>(
         builder: (BuildContext context, FeedbackState feedbackState) {
-      return Stack(
-        children: [
-          Positioned.fill(
-              child: SingleChildScrollView(
-                  controller: this._scrollController,
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: CommentCardWidget.buildAll(
-                          feedbackSet: this.feedbackItems)))),
-          Positioned(
-              top: 1.0,
-              left: 0.0,
-              right: 0.0,
-              child: Visibility(
-                  visible: this.showScrollUpButton,
-                  child: Container(
-                      alignment: Alignment.topCenter,
-                      child: ElevatedButton(
-                          style:
-                              ElevatedButton.styleFrom(shape: CircleBorder()),
-                          onPressed: () {
-                            this._scrollController.animateTo(
-                                this._scrollController.offset - 200,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.easeIn);
-                          },
-                          child: Icon(Icons.arrow_upward))),
-                  replacement: SizedBox.shrink())),
-          Positioned(
-              left: 0.0,
-              right: 0.0,
-              bottom: 0.0,
-              child: Visibility(
-                  visible: this.showScrollDownButton,
-                  child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: ElevatedButton(
-                          style:
-                              ElevatedButton.styleFrom(shape: CircleBorder()),
-                          onLongPress: () {},
-                          onPressed: () {
-                            this._scrollController.animateTo(
-                                this._scrollController.offset + 200,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.easeIn);
-                          },
-                          child: Icon(Icons.arrow_downward))),
-                  replacement: SizedBox.shrink()))
-        ],
-      );
+      if (this.feedbackItems.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Text(
+              style: Theme.of(context).textTheme.bodySmall,
+              feedbackState.selectedFeedbackType == FeedbackType.suggestion
+                  ? "Nobody has Suggested anything yet, be the first to suggest."
+                  : "Nobody has Commented anything yet, be the first to comment."),
+        );
+      } else {
+        return Stack(
+          children: [
+            Positioned.fill(
+                child: SingleChildScrollView(
+                    controller: this._scrollController,
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: CommentCardWidget.buildAll(
+                            feedbackSet: this.feedbackItems)))),
+            Positioned(
+                top: 1.0,
+                left: 0.0,
+                right: 0.0,
+                child: Visibility(
+                    visible: this.showScrollUpButton,
+                    child: Container(
+                        alignment: Alignment.topCenter,
+                        child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(shape: CircleBorder()),
+                            onPressed: () {
+                              this._scrollController.animateTo(
+                                  this._scrollController.offset - 200,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
+                            },
+                            child: Icon(Icons.arrow_upward))),
+                    replacement: SizedBox.shrink())),
+            Positioned(
+                left: 0.0,
+                right: 0.0,
+                bottom: 0.0,
+                child: Visibility(
+                    visible: this.showScrollDownButton,
+                    child: Container(
+                        alignment: Alignment.bottomCenter,
+                        child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(shape: CircleBorder()),
+                            onLongPress: () {},
+                            onPressed: () {
+                              this._scrollController.animateTo(
+                                  this._scrollController.offset + 200,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
+                            },
+                            child: Icon(Icons.arrow_downward))),
+                    replacement: SizedBox.shrink()))
+          ],
+        );
+      }
     });
   }
 }
