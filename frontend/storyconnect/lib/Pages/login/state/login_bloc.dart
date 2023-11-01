@@ -71,13 +71,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else {
       String? message = await this._repo.signIn(state.email, state.password);
 
-      if (message!.toLowerCase().contains("email")) {
+      if (message == FirebaseRepository.SUCCESS) {
+        print(message);
+
+        emit(state.copyWith(success: true));
+        print("State Success Set");
+        return;
+      } else if (message!.toLowerCase().contains("email")) {
+        print(message);
         emit(state.copyWith(
           emailError: message,
           showEmailError: true,
         ));
+      } else {
+        // password error.
+        print(message);
       }
-      print(message);
+
       return;
     }
   }

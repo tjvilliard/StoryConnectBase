@@ -52,6 +52,11 @@ class UrlContants {
         .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
+  /// URI for HTTP Put request for creating writer feedback.
+  static Uri createWriterFeedback() {
+    return _urlBuilder.build('feedback');
+  }
+
   ///
   static Uri getChapters(int bookId) {
     return _urlBuilder.build('books/$bookId/get_chapters');
@@ -87,10 +92,6 @@ class UrlContants {
   /// library/change_entry_status for removing library entry.
   static Uri removeLibraryBook(int entryId) {
     return _urlBuilder.build('library/$entryId/change_entry_status/');
-  }
-
-  static Uri createFeedback() {
-    return _urlBuilder.build('feedback/');
   }
 
   static Uri continuities(int chapterId) {

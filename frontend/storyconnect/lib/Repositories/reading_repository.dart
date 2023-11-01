@@ -21,7 +21,7 @@ class ReadingApiProvider {
       {required FeedbackCreationSerializer serializer}) async {
     try {
       print("getting feedback url");
-      final url = UrlContants.createFeedback();
+      final url = UrlContants.createWriterFeedback();
       print("getting result from post call");
 
       print(jsonEncode(serializer.toJson()));

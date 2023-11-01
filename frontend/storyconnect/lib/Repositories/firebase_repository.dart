@@ -20,7 +20,7 @@ class FirebaseRepository {
 
   User? get currentUser => this._firebaseAuth.currentUser;
 
-  static const String _SUCCESS = "Success";
+  static const String SUCCESS = "Success";
 
   static final FirebaseRepository _instance = FirebaseRepository._internal();
 
@@ -38,7 +38,7 @@ class FirebaseRepository {
           ._firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
-      return FirebaseRepository._SUCCESS;
+      return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
       if (firebaseError.code == 'user-not-found') {
         return FirebaseCodeDescriptors.UserNotFound.message;

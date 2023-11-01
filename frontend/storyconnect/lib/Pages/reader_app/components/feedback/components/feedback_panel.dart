@@ -62,11 +62,11 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
         builder: (BuildContext context, FeedbackState feedbackState) {
       if (this.feedbackItems.isEmpty) {
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Text(
               style: Theme.of(context).textTheme.bodySmall,
               feedbackState.selectedFeedbackType == FeedbackType.suggestion
-                  ? "Nobody has Suggested anything yet, be the first to suggest."
+                  ? "Nobody has Suggested anything yet, be the first to make a suggestion."
                   : "Nobody has Commented anything yet, be the first to comment."),
         );
       } else {

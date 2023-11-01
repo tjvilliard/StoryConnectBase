@@ -48,8 +48,8 @@ class FeedbackTypeChangedEvent extends FeedbackEvent {
 
 /// Submits a new feedback item.
 class SubmitFeedbackEvent extends FeedbackEvent {
-  final ChapterBloc chapterBloc;
+  final int chapterId;
   const SubmitFeedbackEvent({
-    required this.chapterBloc,
+    required this.chapterId,
   });
 }

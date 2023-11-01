@@ -11,6 +11,7 @@ class LoginState with _$LoginState {
     required bool showPassword,
     required bool showPasswordError,
     required bool staySignedIn,
+    required bool success,
   }) = _LoginState;
   const LoginState._();
 
@@ -24,6 +25,7 @@ class LoginState with _$LoginState {
       showPasswordError: false,
       showPassword: false,
       staySignedIn: false,
+      success: false,
     );
   }
 }
