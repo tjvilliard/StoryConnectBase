@@ -20,6 +20,5 @@ class RegisterLinkButton extends StatelessWidget {
               Beamer.of(context).beamToNamed(PageUrls.register);
             },
             child: Text("Create Account")));
-    ;
   }
 }
