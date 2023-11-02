@@ -1,5 +1,6 @@
 part of 'login_bloc.dart';
 
+/// Records the state of our login view.
 @freezed
 class LoginState with _$LoginState {
   const factory LoginState({

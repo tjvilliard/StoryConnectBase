@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
-import 'package:storyconnect/Pages/login/state/login_bloc.dart';
+import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
 class PasswordField extends StatefulWidget {
   const PasswordField();
@@ -28,8 +28,8 @@ class _passwordState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-        builder: (BuildContext context, LoginState state) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+        builder: (BuildContext context, RegistrationState state) {
       return Container(
           constraints: BoxConstraints(minHeight: 56),
           width: LoginPageConstants.maxWidth,
@@ -38,7 +38,7 @@ class _passwordState extends State<PasswordField> {
             controller: this._passwordController,
             obscureText: !state.showPassword,
             onChanged: (_) {
-              context.read<LoginBloc>().add(PasswordFieldChangedEvent(
+              context.read<RegistrationBloc>().add(PasswordFieldChangedEvent(
                   password: this._passwordController.text));
             },
             decoration: InputDecoration(
@@ -51,7 +51,9 @@ class _passwordState extends State<PasswordField> {
                       ? Icon(Icons.visibility)
                       : Icon(Icons.visibility_off),
                   onPressed: () {
-                    context.read<LoginBloc>().add(ShowPasswordClickedEvent());
+                    context
+                        .read<RegistrationBloc>()
+                        .add(ShowPasswordClickedEvent());
                   },
                 ),
                 labelText: 'Password',

@@ -92,26 +92,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  String _validatePassword(String password) {
-    if (password.isEmpty) {
-      return "Password must not be empty!";
-    }
-
-    int passwordLength = password.length;
-    if (passwordLength < 8 || passwordLength > 16) {
-      return "Password must be between 8 and 16 characters long";
-    }
-
-    List<String> special = ['!', '@', '#', '\$', '%', '^', '&', '*'];
-
-    if (!special.any((character) => password.contains(character))) {
-      return "Password must contain one of the following characters: " +
-          "!, @, #, \$, %, ^, &, *";
-    }
-
-    return "";
-  }
-
   _stayLoggedInChecked(StayLoggedInCheckedEvent event, LoginEmitter emit) {
     emit(state.copyWith(
       staySignedIn: !state.staySignedIn,

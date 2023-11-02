@@ -17,6 +17,7 @@ class PasswordFieldChangedEvent extends LoginEvent {
   const PasswordFieldChangedEvent({required this.password});
 }
 
+/// Action for when user wants to see the contents of password field.
 class ShowPasswordClickedEvent extends LoginEvent {
   const ShowPasswordClickedEvent();
 }

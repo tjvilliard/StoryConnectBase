@@ -32,11 +32,33 @@ class FirebaseRepository {
     return FirebaseRepository._instance;
   }
 
+  Future<String> register(String email, String password) async {
+    try {
+      await this._firebaseAuth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+      return FirebaseRepository.SUCCESS;
+    } on FirebaseAuthException catch (firebaseError) {
+      if (firebaseError.code == 'user-not-found') {
+        return FirebaseCodeDescriptors.UserNotFound.message;
+      } else if (firebaseError.code == 'wrong-password') {
+        return FirebaseCodeDescriptors.WrongPassword.message;
+      } else if (firebaseError.code == "email-already-in-use") {
+        return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
+      } else {
+        return FirebaseCodeDescriptors.UnmappedError.message;
+      }
+    }
+  }
+
   Future<String?> signIn(String email, String password) async {
     try {
-      await this
-          ._firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      await this._firebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
 
       return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
