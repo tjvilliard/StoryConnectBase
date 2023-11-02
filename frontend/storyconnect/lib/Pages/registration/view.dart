@@ -24,24 +24,24 @@ class RegistrationPageView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(),
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       style: TextStyle(fontSize: 42, color: charcoalBlue),
                       "StoryConnect",
                     ),
                   ),
                   Container(
-                      padding: EdgeInsets.only(),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                           style:
                               Theme.of(context).textTheme.titleMedium!.apply(),
                           "Get Started With A Free Account!")),
 
                   Container(
-                      padding: EdgeInsets.only(),
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                           style: Theme.of(context).textTheme.bodySmall!.apply(),
-                          "Start discovering new Stories or write some of your own.")),
+                          "Start discovering new stories or write some of your own.")),
                   // Options for registering with:
                   // Google, Facebook, Apple, etc...
 
