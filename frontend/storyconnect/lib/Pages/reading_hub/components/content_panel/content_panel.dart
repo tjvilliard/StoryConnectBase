@@ -32,7 +32,7 @@ class ContentDivider extends ContentPanel {
 /// A panel of a set of book content on the reader view.
 /// Header panels optionally contain a subject.
 class FadedContentPanel extends ContentPanel {
-  final List<PanelItem> children;
+  final List<Widget> children;
   final Color primary;
   final Color fade;
 
@@ -45,13 +45,13 @@ class FadedContentPanel extends ContentPanel {
   /// Builds a panel of tagged Books.
   static FadedContentPanel taggedBookPanel(Map<String, List<Book>> children,
       Color primary, Color fade, String title, bool descript) {
-    List<PanelItem> panelItems = <PanelItem>[];
+    List<Widget> panelItems = <Widget>[];
 
     panelItems.add(PanelHeader(title));
 
     for (MapEntry<String, List<Book>> tag in children.entries) {
       panelItems.add(PanelSubtitle("Popular Books in ${tag.key}"));
-      panelItems.add(BookList(books: tag.value, descript: descript));
+      panelItems.add(BookListWidget(books: tag.value, descript: descript));
       panelItems.add(DividerPanel(color: Colors.black, thickness: 1.0));
     }
 
@@ -62,11 +62,11 @@ class FadedContentPanel extends ContentPanel {
   /// Builds a panel with a single list of books, with a title and subtitle.
   static FadedContentPanel titledBookPanel(List<Book> books, Color primary,
       Color fade, String title, String subtitle, bool descript) {
-    List<PanelItem> panelItems = <PanelItem>[];
+    List<Widget> panelItems = <Widget>[];
 
     panelItems.add(PanelHeader(title));
     panelItems.add(PanelSubtitle(subtitle));
-    panelItems.add(BookList(books: books, descript: descript));
+    panelItems.add(BookListWidget(books: books, descript: descript));
 
     return FadedContentPanel(
         children: panelItems, primary: primary, fade: fade);
@@ -90,7 +90,7 @@ class FadedContentPanel extends ContentPanel {
 }
 
 class SolidContentPanel extends ContentPanel {
-  final List<PanelItem> children;
+  final List<Widget> children;
   final Color primary;
 
   const SolidContentPanel({

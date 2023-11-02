@@ -65,7 +65,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
               ),
               FadedContentPanel.titledBookPanel(
                   homeState.books,
-                  myColorScheme.surface.withOpacity(.6),
+                  Color.fromARGB(255, 243, 241, 240).withOpacity(.6),
                   Colors.grey.shade200,
                   "Browse some Books",
                   "",

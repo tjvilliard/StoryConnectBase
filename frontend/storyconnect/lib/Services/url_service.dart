@@ -16,6 +16,8 @@ class _UrlBuilder {
 
 /// URL constants and builders for app pages.
 class PageUrls {
+  static const String register = "/register";
+
   static const String writerHome = "/writer/home";
   static const String createBook = "/writer/create_book";
 
@@ -50,6 +52,11 @@ class UrlContants {
     return _urlBuilder
         .build('feedback/by_chapter/')
         .replace(queryParameters: {'chapter': chapterId.toString()});
+  }
+
+  /// URI for HTTP Put request for creating writer feedback.
+  static Uri createWriterFeedback() {
+    return _urlBuilder.build('feedback');
   }
 
   ///
@@ -87,10 +94,6 @@ class UrlContants {
   /// library/change_entry_status for removing library entry.
   static Uri removeLibraryBook(int entryId) {
     return _urlBuilder.build('library/$entryId/change_entry_status/');
-  }
-
-  static Uri createFeedback() {
-    return _urlBuilder.build('feedback/');
   }
 
   static Uri continuities(int chapterId) {

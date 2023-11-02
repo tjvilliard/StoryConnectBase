@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
+import 'package:storyconnect/Services/Beamer/login_locations.dart';
 import 'package:storyconnect/Services/Beamer/profile_locations.dart';
 import 'package:storyconnect/Services/Beamer/reader_locations.dart';
 import 'package:storyconnect/Services/Beamer/writer_locations.dart';
@@ -13,6 +14,7 @@ import 'firebase_options.dart';
 final routerDelegate = BeamerDelegate(
   locationBuilder: BeamerLocationBuilder(
     beamLocations: [
+      LoginLocations(),
       WriterLocations(),
       ProfileLocations(),
       ReaderLocations(),

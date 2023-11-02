@@ -18,7 +18,7 @@ class FeedbackState with _$FeedbackState {
     return FeedbackState(
       loadingStruct: LoadingStruct.loading(true),
       serializer: FeedbackCreationSerializer.initial(),
-      selectedFeedbackType: FeedbackType.comment,
+      selectedFeedbackType: FeedbackType.suggestion,
     );
   }
 }
