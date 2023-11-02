@@ -63,11 +63,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   ///
   void _showPasswordClicked(
-      ShowPasswordClickedEvent event, RegistrationEmitter emit) {}
+      ShowPasswordClickedEvent event, RegistrationEmitter emit) {
+    emit(state.copyWith(showPassword: !state.showPassword));
+  }
 
   ///
   void _showPasswordConfirmClicked(
-      ShowPasswordConfirmClickedEvent event, RegistrationEmitter emit) {}
+      ShowPasswordConfirmClickedEvent event, RegistrationEmitter emit) {
+    emit(state.copyWith(showConfirmPassword: !state.showConfirmPassword));
+  }
 
   ///
   void _registerButtonPushed(
@@ -85,7 +89,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(state.copyWith(success: true));
         return;
       } else {
-        print(response);
+        if (response.toLowerCase().contains("account") ||
+            response.toLowerCase().contains("email")) {
+          emit(state.copyWith(
+            emailError: response,
+            showEmailError: true,
+          ));
+        } else {
+          emit(state.copyWith(
+            passwordError: response,
+            showPasswordError: true,
+          ));
+        }
       }
     }
   }
@@ -125,12 +140,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
     if (this.state.password != this.state.confirmPassword) {
       emit(state.copyWith(
-        passwordError: "",
-        confirmPasswordError: "",
+        passwordError: "Password must be equal to confirmation password.",
+        confirmPasswordError:
+            "Confirmation password must be equal to password.",
         showPasswordError: true,
         showConfirmPasswordError: true,
       ));
-      //
       return false;
     }
 
@@ -171,8 +186,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       '10',
     ];
 
-    if (specialChars.any((char) => this.state.password.contains(char)) &&
-        digits.any((digit) => this.state.password.contains(digit))) {
+    if (!specialChars.any((char) => this.state.password.contains(char)) &&
+        !digits.any((digit) => this.state.password.contains(digit))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the digits 0 - 9 and " +
@@ -181,14 +196,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       ));
 
       return false;
-    } else if (digits.any((digit) => this.state.password.contains(digit))) {
+    } else if (!digits.any((digit) => this.state.password.contains(digit))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the digits 0 - 9.",
         showPasswordError: true,
       ));
       return false;
-    } else if (specialChars.any((char) => this.state.password.contains(char))) {
+    } else if (!specialChars
+        .any((char) => this.state.password.contains(char))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",

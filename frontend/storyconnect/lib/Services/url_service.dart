@@ -16,6 +16,8 @@ class _UrlBuilder {
 
 /// URL constants and builders for app pages.
 class PageUrls {
+  static const String register = "/register";
+
   static const String writerHome = "/writer/home";
   static const String createBook = "/writer/create_book";
 

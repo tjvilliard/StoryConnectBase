@@ -26,11 +26,12 @@ class _confirmPasswordState extends State<ConfirmPasswordField> {
             controller: this._confirmPasswordController,
             obscureText: !state.showConfirmPassword,
             onChanged: (_) {
-              context.read<RegistrationBloc>().add(PasswordFieldChangedEvent(
-                  password: this._confirmPasswordController.text));
+              context.read<RegistrationBloc>().add(
+                  PasswordConfirmFieldChangedEvent(
+                      confirmPassword: this._confirmPasswordController.text));
             },
             decoration: InputDecoration(
-                errorMaxLines: 2,
+                errorMaxLines: 3,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 prefixIcon: Icon(Icons.lock_rounded),

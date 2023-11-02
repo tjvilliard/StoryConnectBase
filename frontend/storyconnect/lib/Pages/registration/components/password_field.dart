@@ -42,7 +42,7 @@ class _passwordState extends State<PasswordField> {
                   password: this._passwordController.text));
             },
             decoration: InputDecoration(
-                errorMaxLines: 2,
+                errorMaxLines: 3,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 prefixIcon: Icon(Icons.lock_rounded),

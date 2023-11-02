@@ -3,6 +3,7 @@ import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/components/confirm_password_field.dart';
 import 'package:storyconnect/Pages/registration/components/email_field.dart';
 import 'package:storyconnect/Pages/registration/components/password_field.dart';
+import 'package:storyconnect/Pages/registration/components/register_button.dart';
 
 class RegistrationPageView extends StatelessWidget {
   static Color charcoalBlue = Color(0xFF28536B);
@@ -29,7 +30,6 @@ class RegistrationPageView extends StatelessWidget {
                       "StoryConnect",
                     ),
                   ),
-                  //TODO: examine the welcome text and change it.
                   Container(
                       padding: EdgeInsets.only(),
                       child: Text(
@@ -48,7 +48,7 @@ class RegistrationPageView extends StatelessWidget {
                   EmailField(),
                   PasswordField(),
                   ConfirmPasswordField(),
-                  // Account Creation Button()
+                  RegistrationButton(),
                 ],
               ),
             ))

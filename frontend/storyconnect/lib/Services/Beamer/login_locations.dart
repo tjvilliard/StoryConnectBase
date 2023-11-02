@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/state/login_bloc.dart';
 import 'package:storyconnect/Pages/login/view.dart';
+import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
+import 'package:storyconnect/Pages/registration/view.dart';
 import 'package:storyconnect/Repositories/firebase_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
@@ -33,7 +35,16 @@ class LoginLocations extends BeamLocation<BeamState> {
             ),
           )));
     } else if (url.contains('register')) {
-      //pages.add();
+      pages.add(CustomBeamPage(
+          key: const ValueKey('register'),
+          child: RepositoryProvider<FirebaseRepository>(
+            create: (_) => FirebaseRepository(),
+            child: BlocProvider<RegistrationBloc>(
+              create: (context) =>
+                  RegistrationBloc(context.read<FirebaseRepository>()),
+              child: RegistrationPageView(),
+            ),
+          )));
     } else if (url.contains('recover')) {
       //pages.add();
     } else {}

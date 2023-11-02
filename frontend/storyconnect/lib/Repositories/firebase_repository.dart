@@ -1,15 +1,38 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 enum FirebaseCodeDescriptors {
-  SUCCESS(message: "Success"),
-  EmailAlreadyInUse(message: "Email is Already in Use"),
-  UserDisabled(message: ""),
-  UserNotFound(message: "User Does Not Exist"),
-  WrongPassword(message: "The Password is Incorrect"),
-  UnmappedError(message: "Other Unmapped Error");
+  SUCCESS(
+    code: "Success",
+    message: "Success",
+  ),
+  InvalidEmail(
+    code: "invalid-email",
+    message: "Email format is invalid.",
+  ),
+  EmailAlreadyInUse(
+    code: "email-already-in-use",
+    message: "Email is Already in Use",
+  ),
+  UserDisabled(
+    code: "",
+    message: "",
+  ),
+  UserNotFound(
+    code: "user-not-found",
+    message: "User Does Not Exist",
+  ),
+  WrongPassword(
+    code: "wrong-password",
+    message: "The Password is Incorrect",
+  ),
+  UnmappedError(
+    code: "",
+    message: "Other Unmapped Error",
+  );
 
-  const FirebaseCodeDescriptors({required this.message});
+  const FirebaseCodeDescriptors({required this.message, required this.code});
   final String message;
+  final String code;
 }
 
 /// Singleton Class encapsulating firebase functions.
@@ -41,11 +64,18 @@ class FirebaseRepository {
 
       return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
-      if (firebaseError.code == 'user-not-found') {
+      print(firebaseError.code);
+
+      if (firebaseError.code == FirebaseCodeDescriptors.UserNotFound.code) {
         return FirebaseCodeDescriptors.UserNotFound.message;
-      } else if (firebaseError.code == 'wrong-password') {
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.InvalidEmail.code) {
+        return FirebaseCodeDescriptors.InvalidEmail.message;
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.WrongPassword.code) {
         return FirebaseCodeDescriptors.WrongPassword.message;
-      } else if (firebaseError.code == "email-already-in-use") {
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.EmailAlreadyInUse.code) {
         return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
       } else {
         return FirebaseCodeDescriptors.UnmappedError.message;

@@ -1,4 +1,6 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 class RegisterLinkButton extends StatelessWidget {
   @override
@@ -10,7 +12,9 @@ class RegisterLinkButton extends StatelessWidget {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)))),
-        onPressed: () {},
+        onPressed: () {
+          Beamer.of(context).beamToNamed(PageUrls.register);
+        },
         child: Text("Create Account"));
   }
 }
