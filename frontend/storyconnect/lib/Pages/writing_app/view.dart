@@ -86,7 +86,18 @@ class _WritingAppViewState extends State<WritingAppView> {
           },
           child: Column(
             children: [
-              WritingMenuBar(),
+              Row(
+                children: [
+                  WritingMenuBar(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Placeholder(
+                    fallbackHeight: 35,
+                    fallbackWidth: 500,
+                  )
+                ],
+              ),
               Flexible(
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
