@@ -1,32 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
 
 /// Panel of widgets with set behaviours and backgrounds.
 abstract class ContentPanel extends StatelessWidget {
   const ContentPanel();
-}
-
-/// A material horizontal divider to be used between content panels.
-class ContentDivider extends ContentPanel {
-  /// The color of this divider.
-  final Color color;
-
-  /// The thickness of the line drawn by the divider.
-  final double? thickness;
-
-  ContentDivider({required this.color, this.thickness = null});
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      color: this.color,
-      thickness: this.thickness,
-      height: 0.0,
-      indent: 0,
-      endIndent: 0,
-    );
-  }
 }
 
 /// A panel of a set of book content on the reader view.
@@ -41,6 +19,17 @@ class FadedContentPanel extends ContentPanel {
     required this.primary,
     required this.fade,
   });
+
+  static FadedContentPanel bigBookPanel(
+      {required List<Book> books,
+      required Color primary,
+      required Color fade,
+      required String title}) {
+    List<Widget> panelItems = <Widget>[];
+
+    return FadedContentPanel(
+        children: panelItems, primary: primary, fade: fade);
+  }
 
   /// Builds a panel of tagged Books.
   static FadedContentPanel taggedBookPanel(Map<String, List<Book>> children,
@@ -83,26 +72,6 @@ class FadedContentPanel extends ContentPanel {
           colors: [this.primary, this.fade],
           stops: [0.0, .99],
         )),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: this.children));
-  }
-}
-
-class SolidContentPanel extends ContentPanel {
-  final List<Widget> children;
-  final Color primary;
-
-  const SolidContentPanel({
-    required this.children,
-    required this.primary,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(color: this.primary),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: this.children));

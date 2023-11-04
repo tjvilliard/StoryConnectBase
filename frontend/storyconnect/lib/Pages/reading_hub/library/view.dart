@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/content_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/tabbed_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/background_panels/solid_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/components/background_panels/content_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/tabbed_item.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
@@ -39,7 +40,8 @@ class LibraryState extends State<LibraryView> {
               if (libState.loadingStruct.isLoading) {
                 toReturn = <ContentPanel>[
                   SolidContentPanel(
-                      children: [LoadingItem()], primary: Colors.white)
+                      children: [LoadingItem()],
+                      primary: Theme.of(context).canvasColor)
                 ];
               } else {
                 toReturn = <ContentPanel>[
@@ -61,8 +63,8 @@ class LibraryState extends State<LibraryView> {
                         Container(),
                       ],
                     ),
-                    DividerPanel(color: Colors.black),
-                  ], primary: Colors.white)
+                    DividerPanel(color: Theme.of(context).dividerColor),
+                  ], primary: Theme.of(context).canvasColor)
                 ];
               }
               return AnimatedSwitcher(

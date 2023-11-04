@@ -3,8 +3,9 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/reading_hub/components/book_items/library_book.dart';
 import 'package:storyconnect/Pages/reading_hub/components/detailed_book_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/book_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/book_items/book_cover.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -117,18 +118,13 @@ class BookGrid extends PanelItem {
                       alignment: WrapAlignment.center,
                       children: this
                           .books
-                          .map((book) => Container(
-                              height: 270,
-                              width: (270.0 / 1.618) + 25,
-                              child: Card(
-                                  elevation: 4,
-                                  child: Clickable(
-                                      onPressed: () {
-                                        final uri = PageUrls.readBook(book.id);
-                                        Beamer.of(context).beamToNamed(uri,
-                                            data: {"book": book});
-                                      },
-                                      child: CoverBookItem(book: book)))))
+                          .map((book) => LibraryBook(
+                              onPressed: () {
+                                final uri = PageUrls.readBook(book.id);
+                                Beamer.of(context)
+                                    .beamToNamed(uri, data: {"book": book});
+                              },
+                              child: BookCoverWidget(book: book)))
                           .toList(),
                     )))));
   }
@@ -241,7 +237,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                           },
                                           child: this.descript
                                               ? newDescriptBookItem(book: book)
-                                              : CoverBookItem(book: book)))))
+                                              : BookCoverWidget(book: book)))))
                               .toList()),
                     )),
                 Positioned(
@@ -256,7 +252,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                 onPressed: () {
                                   this._scrollController.animateTo(
                                       this._scrollController.offset - 400,
-                                      duration: Duration(milliseconds: 500),
+                                      duration: Duration(milliseconds: 350),
                                       curve: Curves.easeIn);
                                 },
                                 child: Icon(Icons.arrow_left))),
@@ -274,7 +270,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                 onPressed: () {
                                   this._scrollController.animateTo(
                                       this._scrollController.offset + 400,
-                                      duration: Duration(milliseconds: 500),
+                                      duration: Duration(milliseconds: 350),
                                       curve: Curves.easeIn);
                                 },
                                 child: Icon(Icons.arrow_right))),
