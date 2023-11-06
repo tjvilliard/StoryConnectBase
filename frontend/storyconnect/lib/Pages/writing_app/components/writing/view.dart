@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/text_highlight_widget.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 import 'package:visual_editor/visual-editor.dart';
@@ -59,7 +58,7 @@ class WritingPageViewState extends State<WritingPageView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
+        constraints: BoxConstraints(maxWidth: WritingUIBloc.pageWidth),
         child:
             BlocConsumer<WritingBloc, WritingState>(listener: (context, state) {
           // if what is stored in the state is not the same format, then we need to convert it
@@ -91,7 +90,7 @@ class WritingPageViewState extends State<WritingPageView> {
                   color: Colors.white,
                 ),
                 constraints:
-                    BoxConstraints(minHeight: RenderPageSliver.pageHeight),
+                    BoxConstraints(minHeight: WritingUIBloc.pageHeight),
                 child: TextHighlightWidget(
                     child: VisualEditor(
                   scrollController:

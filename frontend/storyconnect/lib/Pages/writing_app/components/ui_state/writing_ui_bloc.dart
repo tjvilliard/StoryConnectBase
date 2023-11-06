@@ -6,7 +6,6 @@ import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -14,22 +13,15 @@ part 'writing_ui_bloc.freezed.dart';
 part 'writing_ui_state.dart';
 part 'writing_ui_event.dart';
 
-class WritingLoadEvent extends WritingUIEvent {
-  final int bookId;
-  final WritingBloc writingBloc;
-  final FeedbackBloc feedbackBloc;
-  WritingLoadEvent({
-    required this.bookId,
-    required this.writingBloc,
-    required this.feedbackBloc,
-  });
-}
-
 typedef WritingUIEmiter = Emitter<WritingUIState>;
 
 class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   static Timer?
       timer; // Static variable to maintain state between calls to highlight
+
+  static double pageWidth = 800.0;
+  static double pageHeight = 800.0;
+
   WritingRepository repository = WritingRepository();
   WritingUIBloc({required this.repository}) : super(WritingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
@@ -120,7 +112,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       );
 
       // Calculate the offset of the feedback
-      painter.layout(maxWidth: RenderPageSliver.pageWidth);
+      painter.layout(maxWidth: pageWidth);
       final feedbackOffset = painter.getOffsetForCaret(
           TextPosition(offset: event.selection.offset), Rect.zero);
 

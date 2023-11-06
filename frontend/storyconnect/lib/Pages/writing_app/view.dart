@@ -8,7 +8,7 @@ import 'package:storyconnect/Pages/writing_app/components/continuity_checker/vie
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/view.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/page_view.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing_menubar.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';

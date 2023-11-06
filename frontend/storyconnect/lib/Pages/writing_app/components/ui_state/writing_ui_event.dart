@@ -45,3 +45,14 @@ class HighlightEvent extends WritingUIEvent {
 class RemoveHighlightEvent extends WritingUIEvent {
   const RemoveHighlightEvent();
 }
+
+class WritingLoadEvent extends WritingUIEvent {
+  final int bookId;
+  final WritingBloc writingBloc;
+  final FeedbackBloc feedbackBloc;
+  WritingLoadEvent({
+    required this.bookId,
+    required this.writingBloc,
+    required this.feedbackBloc,
+  });
+}
