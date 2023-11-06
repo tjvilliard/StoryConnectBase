@@ -23,6 +23,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
   static Lock writingLock = Lock();
   EditorController Function()? getEditorControllerCallback;
   Timer? debounceTimer;
+  StreamSubscription? editorSubscription;
 
   late final BookProviderRepository _repo;
   WritingBloc(BookProviderRepository repository)
@@ -94,15 +95,25 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
   }
 
   void switchChapter(SwitchChapterEvent event, WritingEmitter emit) async {
-    await writingLock.synchronized(() {
+    await writingLock.synchronized(() async {
       final doc = convertToDeltaDoc(state.chapters[event.chapterToSwitchTo]!);
 
       final editor = getEditorControllerCallback?.call();
+      editorSubscription?.cancel();
       emit(state.copyWith(
         currentIndex: event.chapterToSwitchTo,
       ));
       if (editor != null) {
+        await editorSubscription?.cancel();
         editor.update(doc.delta);
+        editorSubscription = editor.changes$.listen((docEvent) async {
+          await writingLock.synchronized(() {
+            add(UpdateChapterEvent(
+                chapterNum: event.chapterToSwitchTo,
+                text: jsonEncode(docEvent.docDelta.toJson()),
+                storeCommand: false));
+          });
+        });
       }
     });
   }
@@ -155,13 +166,13 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
       final unParsedChapters = await _repo.getChapters();
       final _ParsedChapterResult result = _parseChapters(unParsedChapters);
       print("we should only be calling this once");
-      final doc = convertToDeltaDoc(result.chapters[0]!);
       final editor = getEditorControllerCallback?.call();
       if (editor != null) {
-        editor.changes$.listen((event) async {
+        await editorSubscription?.cancel();
+        editorSubscription = editor.changes$.listen((event) async {
           await writingLock.synchronized(() {
             add(UpdateChapterEvent(
-                chapterNum: state.currentIndex,
+                chapterNum: 0,
                 text: jsonEncode(event.docDelta.toJson()),
                 storeCommand: false));
           });
