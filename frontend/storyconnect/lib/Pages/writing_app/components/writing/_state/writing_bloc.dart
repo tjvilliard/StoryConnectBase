@@ -1,136 +1,44 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:replay_bloc/replay_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
 
-abstract class ChapterEvent extends ReplayEvent {
-  ChapterEvent();
-}
+part 'writing_state.dart';
+part 'writing_bloc.freezed.dart';
+part 'writing_events.dart';
 
-class SwitchChapter extends ChapterEvent {
-  int chaptertoSwitchFrom;
-  int chapterToSwitchTo;
-  bool storeCommand;
-  SwitchChapter({
-    required this.chaptertoSwitchFrom,
-    required this.chapterToSwitchTo,
-    this.storeCommand = true,
-  });
-}
+typedef WritingEmitter = Emitter<WritingState>;
 
-class UpdateChapterEvent extends ChapterEvent {
-  String text;
-  bool storeCommand;
-  UpdateChapterEvent({
-    required this.text,
-    this.storeCommand = true,
-  });
-}
-
-class LoadEvent extends ChapterEvent {
-  FeedbackBloc feedbackBloc;
-  LoadEvent(
-    this.feedbackBloc,
-  );
-}
-
-class AddChapter extends ChapterEvent {
-  AddChapter();
-}
-
-class RemoveChapter extends ChapterEvent {
-  int chapterNum;
-  RemoveChapter({required this.chapterNum});
-}
-
-class UndoCommand extends ChapterEvent {
-  UndoCommand();
-}
-
-class RedoCommand extends ChapterEvent {
-  RedoCommand();
-}
-
-class _UpdateChapterHelperEvent extends ChapterEvent {
-  UpdateChapterEvent event;
-  _UpdateChapterHelperEvent({required this.event});
-}
-
-class ChapterBlocStruct {
-  final int currentIndex;
-  final Map<int, String> chapters;
-  final LoadingStruct loadingStruct;
-  final int? caretOffset;
-  Map<int, int> chapterNumToID = {};
-
-  ChapterBlocStruct({
-    required this.currentIndex,
-    required this.chapters,
-    required this.loadingStruct,
-    this.caretOffset,
-  });
-
-  String get currentChapterText => chapters[currentIndex]!;
-  int get currentChapterId => chapterNumToID[currentIndex]!;
-
-  ChapterBlocStruct copyWith({
-    int? currentIndex,
-    Map<int, String>? chapters,
-    LoadingStruct? loadingStruct,
-    int? caretOffset,
-    Map<int, int>? chapterNumToID,
-  }) {
-    final struct = ChapterBlocStruct(
-      currentIndex: currentIndex ?? this.currentIndex,
-      chapters: chapters ?? this.chapters,
-      loadingStruct: loadingStruct ?? this.loadingStruct,
-      caretOffset: caretOffset ?? this.caretOffset,
-    );
-
-    struct.chapterNumToID = chapterNumToID ?? this.chapterNumToID;
-    return struct;
-  }
-
-  // initial constructor
-  factory ChapterBlocStruct.initial() {
-    return ChapterBlocStruct(
-        currentIndex: 0,
-        chapters: {0: ""},
-        loadingStruct: LoadingStruct.loading(true));
-  }
-}
-
-typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
-
-class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
-    with ReplayBlocMixin<ChapterEvent, ChapterBlocStruct> {
+class WritingBloc extends Bloc<WritingEvent, WritingState>
+    with ReplayBlocMixin<WritingEvent, WritingState> {
   Timer? debounceTimer;
 
   late final BookProviderRepository _repo;
-  ChapterBloc(BookProviderRepository repository)
-      : super(ChapterBlocStruct.initial()) {
+  WritingBloc(BookProviderRepository repository)
+      : super(WritingState.initial()) {
     _repo = repository;
-    on<AddChapter>(
+    on<AddChapterEvent>(
       (event, emit) => addChapter(event, emit),
       transformer: sequential(),
     );
-    on<RemoveChapter>(
+    on<RemoveChapterEvent>(
       (event, emit) => removeChapter(event, emit),
     );
-    on<SwitchChapter>(
+    on<SwitchChapterEvent>(
       (event, emit) => switchChapter(event, emit),
     );
     on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit),
         transformer: sequential());
 
-    on<LoadEvent>((event, emit) => loadEvent(event, emit));
+    on<FeedbackLoadEvent>((event, emit) => loadEvent(event, emit));
 
-    on<UndoCommand>((event, emit) => undoCommand(event, emit));
-    on<RedoCommand>((event, emit) => redoCommand(event, emit));
+    on<WritingUndoCommandEvent>((event, emit) => undoCommand(event, emit));
+    on<WritingRedoCommandEvent>((event, emit) => redoCommand(event, emit));
 
     on<_UpdateChapterHelperEvent>(
         (event, emit) => _updateChapterHelper(event.event, emit));
@@ -138,7 +46,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
 
   int get currentChapterId => state.chapterNumToID[state.currentIndex]!;
 
-  Future<void> addChapter(AddChapter event, ChapterEmitter emit) async {
+  Future<void> addChapter(AddChapterEvent event, WritingEmitter emit) async {
     emit.call(state.copyWith(
         loadingStruct: LoadingStruct.message("Creating Chapter")));
 
@@ -159,7 +67,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     }
   }
 
-  void removeChapter(RemoveChapter event, ChapterEmitter emit) {
+  void removeChapter(RemoveChapterEvent event, WritingEmitter emit) {
     Map<int, String> chapters = Map.from(state.chapters);
     chapters.remove(event.chapterNum);
     emit(
@@ -168,14 +76,13 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     );
   }
 
-  void switchChapter(SwitchChapter event, ChapterEmitter emit) async {
+  void switchChapter(SwitchChapterEvent event, WritingEmitter emit) async {
     emit(state.copyWith(
       currentIndex: event.chapterToSwitchTo,
     ));
   }
 
-  void updateChapter(
-      UpdateChapterEvent event, Emitter<ChapterBlocStruct> emit) async {
+  void updateChapter(UpdateChapterEvent event, WritingEmitter emit) async {
     if (debounceTimer != null && debounceTimer!.isActive) {
       debounceTimer!.cancel();
     }
@@ -185,7 +92,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
   }
 
   void _updateChapterHelper(
-      UpdateChapterEvent event, Emitter<ChapterBlocStruct> emit) async {
+      UpdateChapterEvent event, WritingEmitter emit) async {
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[state.currentIndex] = event.text;
 
@@ -208,7 +115,7 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
     return parsedChapters;
   }
 
-  void loadEvent(LoadEvent event, Emitter<ChapterBlocStruct> emit) async {
+  void loadEvent(FeedbackLoadEvent event, WritingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
     final unParsedChapters = await _repo.getChapters();
 
@@ -225,11 +132,11 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct>
 
   /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,
   /// and then perform the undo command. Multiple chapter switches in a row will be undone in reverse order.
-  undoCommand(UndoCommand event, Emitter<ChapterBlocStruct> emit) {
+  undoCommand(WritingUndoCommandEvent event, WritingEmitter emit) {
     undo();
   }
 
-  redoCommand(RedoCommand event, Emitter<ChapterBlocStruct> emit) {
+  redoCommand(WritingRedoCommandEvent event, WritingEmitter emit) {
     redo();
   }
 }

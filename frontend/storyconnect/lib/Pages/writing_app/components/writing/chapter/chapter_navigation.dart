@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_create_button.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_nav_button.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_create_button.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_nav_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/side_popup_header.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 
@@ -19,8 +19,8 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
   Widget build(BuildContext context) {
     return BlocBuilder<WritingUIBloc, WritingUIState>(
         builder: (context, uiState) {
-      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-          builder: (context, chapterState) {
+      return BlocBuilder<WritingBloc, WritingState>(
+          builder: (context, writingState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
@@ -45,10 +45,10 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                                     child: ListView.builder(
                                         controller: _scrollController,
                                         itemCount:
-                                            chapterState.chapters.length + 1,
+                                            writingState.chapters.length + 1,
                                         itemBuilder: (context, index) {
                                           if (index ==
-                                              chapterState.chapters.length) {
+                                              writingState.chapters.length) {
                                             return ChapterCreateButton();
                                           }
                                           return ChapterNavigationButton(

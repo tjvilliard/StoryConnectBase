@@ -2,8 +2,8 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/view.dart.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_navigation.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/view.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/view.dart';
@@ -36,7 +36,7 @@ class _WritingAppViewState extends State<WritingAppView> {
         }
         BlocProvider.of<WritingUIBloc>(context).add(WritingLoadEvent(
           bookId: widget.bookId!,
-          chapterBloc: context.read<ChapterBloc>(),
+          writingBloc: context.read<WritingBloc>(),
           feedbackBloc: context.read<FeedbackBloc>(),
         ));
       });

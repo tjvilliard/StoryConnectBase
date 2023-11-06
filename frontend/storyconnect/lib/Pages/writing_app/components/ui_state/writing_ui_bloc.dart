@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/text_selection.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/page_sliver.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
@@ -16,11 +16,11 @@ part 'writing_ui_event.dart';
 
 class WritingLoadEvent extends WritingUIEvent {
   final int bookId;
-  final ChapterBloc chapterBloc;
+  final WritingBloc writingBloc;
   final FeedbackBloc feedbackBloc;
   WritingLoadEvent({
     required this.bookId,
-    required this.chapterBloc,
+    required this.writingBloc,
     required this.feedbackBloc,
   });
 }
@@ -69,7 +69,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
 
-    event.chapterBloc.add(LoadEvent(
+    event.writingBloc.add(FeedbackLoadEvent(
       event.feedbackBloc,
     ));
 
