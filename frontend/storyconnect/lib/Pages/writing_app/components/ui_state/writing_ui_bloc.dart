@@ -61,7 +61,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
 
-    event.writingBloc.add(FeedbackLoadEvent(
+    event.writingBloc.add(LoadWritingEvent(
       event.feedbackBloc,
     ));
 

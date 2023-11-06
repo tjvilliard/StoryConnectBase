@@ -71,6 +71,7 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     assert(feedback.isGhost == false);
 
     String chapterText = event.writingBloc.state.currentChapterText;
+    final chapterNum = event.writingBloc.state.currentIndex;
 
     chapterText = chapterText.replaceRange(feedback.selection.offset,
         feedback.selection.offsetEnd, feedback.suggestion!);
@@ -91,9 +92,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
     emit(state.copyWith(feedbacks: feedbacksState));
 
-    event.writingBloc.add(UpdateChapterEvent(
-      text: chapterText,
-    ));
+    event.writingBloc
+        .add(UpdateChapterEvent(text: chapterText, chapterNum: chapterNum));
   }
 
   rejectFeedback(RejectFeedbackEvent event, FeedbackEmitter emit) async {

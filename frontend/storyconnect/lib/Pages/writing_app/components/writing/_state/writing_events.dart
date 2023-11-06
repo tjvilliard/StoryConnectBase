@@ -18,18 +18,20 @@ class SwitchChapterEvent extends WritingEvent {
 
 class UpdateChapterEvent extends WritingEvent {
   final String text;
+  final int chapterNum;
   final bool storeCommand;
 
   UpdateChapterEvent({
     required this.text,
+    required this.chapterNum,
     this.storeCommand = true,
   });
 }
 
-class FeedbackLoadEvent extends WritingEvent {
+class LoadWritingEvent extends WritingEvent {
   final FeedbackBloc feedbackBloc;
 
-  FeedbackLoadEvent(this.feedbackBloc);
+  LoadWritingEvent(this.feedbackBloc);
 }
 
 class AddChapterEvent extends WritingEvent {
@@ -54,4 +56,9 @@ class _UpdateChapterHelperEvent extends WritingEvent {
   final UpdateChapterEvent event;
 
   _UpdateChapterHelperEvent({required this.event});
+}
+
+class SetEditorControllerCallbackEvent extends WritingEvent {
+  final EditorController Function()? callback;
+  SetEditorControllerCallbackEvent({required this.callback});
 }

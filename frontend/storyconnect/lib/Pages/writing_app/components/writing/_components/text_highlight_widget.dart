@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/text_highlight_painter.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_components/text_highlight_painter.dart';
 
 class TextHighlightWidget extends StatefulWidget {
   final Widget child;

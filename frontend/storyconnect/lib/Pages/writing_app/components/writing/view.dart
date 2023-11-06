@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/writing/text_highlight_widget.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_components/text_highlight_widget.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 import 'package:visual_editor/visual-editor.dart';
 
@@ -15,64 +13,43 @@ class WritingPageView extends StatefulWidget {
   WritingPageViewState createState() => WritingPageViewState();
 }
 
-class WritingPageViewState extends State<WritingPageView> {
-  // final textController = TextEditingController();
+class WritingPageViewState extends State<WritingPageView>
+    with AutomaticKeepAliveClientMixin {
   final FocusNode focusNode = FocusNode();
-  EditorController editorController = EditorController();
-  final EditorConfigM config = EditorConfigM();
+  final EditorController editorController = EditorController();
 
   @override
   void initState() {
     super.initState();
-    focusNode.addListener(_handleFocusChange);
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final uiBloc = context.read<WritingUIBloc>();
+      final WritingBloc writingBloc = context.read<WritingBloc>();
+      writingBloc
+          .add(SetEditorControllerCallbackEvent(callback: getEditorController));
       uiBloc.state.textScrollController.addListener(() {
         uiBloc.add(RemoveHighlightEvent());
       });
     });
   }
 
-  void _handleFocusChange() {
-    if (focusNode.hasFocus) {
-      RawKeyboard.instance.addListener(_handleKeyEvent);
-    } else {
-      RawKeyboard.instance.removeListener(_handleKeyEvent);
-    }
+  @override
+  void dispose() {
+    editorController.close();
+    focusNode.dispose();
+    super.dispose();
   }
 
-  void _handleKeyEvent(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      final isCmdPressed = event.isMetaPressed;
-      final isCtrlPressed = event.isControlPressed;
-      final isZPressed = event.logicalKey == LogicalKeyboardKey.keyZ;
-
-      if ((isCmdPressed || isCtrlPressed) && isZPressed) {
-        print("Undo Pressed!");
-        // Implement undo logic
-      }
-    }
+  EditorController getEditorController() {
+    return editorController;
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
         constraints: BoxConstraints(maxWidth: WritingUIBloc.pageWidth),
-        child:
-            BlocConsumer<WritingBloc, WritingState>(listener: (context, state) {
-          // if what is stored in the state is not the same format, then we need to convert it
-          setState(() {
-            if (state.chapters[state.currentIndex] == "" ||
-                state.chapters[state.currentIndex] == null) {
-              editorController = EditorController(document: DeltaDocM());
-            } else {
-              editorController = EditorController(
-                  document: DeltaDocM.fromJson(
-                      jsonDecode(state.chapters[state.currentIndex]!)));
-            }
-          });
-        }, buildWhen: (previous, current) {
+        child: BlocBuilder<WritingBloc, WritingState>(
+            buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex ||
               previous.loadingStruct != current.loadingStruct;
         }, builder: (context, state) {
@@ -97,11 +74,20 @@ class WritingPageViewState extends State<WritingPageView> {
                       context.read<WritingUIBloc>().state.textScrollController,
                   controller: editorController,
                   focusNode: focusNode,
-                  config: config,
+                  config: state.config,
                 )));
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: toReturn);
         }));
+  }
+
+  @override
+  bool get wantKeepAlive {
+    if (editorController.isClosed()) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
