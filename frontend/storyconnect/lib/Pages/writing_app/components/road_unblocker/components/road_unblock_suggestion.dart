@@ -88,7 +88,7 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
                 //     context.read<RoadUnblockerBloc>().add(AcceptSuggestionEvent(
                 //         responseLocalId: responseLocalId,
                 //         localId: suggestion.uid,
-                //         chapterBloc: context.read<ChapterBloc>()));
+                //         WritingBloc: context.read<WritingBloc>()));
                 //   },
                 //   icon: Icon(FontAwesomeIcons.check),
                 //   label: Text(

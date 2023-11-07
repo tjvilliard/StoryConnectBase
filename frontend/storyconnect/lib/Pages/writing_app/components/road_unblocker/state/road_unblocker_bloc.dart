@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -91,12 +91,12 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     //     suggestions.firstWhere((element) => element.uid == event.localId);
 
     // // add a chapter change to the chapter bloc with the new suggestion
-    // String currentChapterText = event.chapterBloc.state.currentChapterText;
+    // String currentChapterText = event.WritingBloc.state.currentChapterText;
 
     // final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
     //     suggestion.offsetEnd, suggestion.suggestedChange);
 
-    // event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
+    // event.WritingBloc.add(UpdateChapterEvent(text: chapterText));
 
     suggestions.removeWhere((element) => element.uid == event.localId);
     responses.removeWhere((element) => element.uid == event.responseLocalId);

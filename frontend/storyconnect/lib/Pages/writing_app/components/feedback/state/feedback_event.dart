@@ -20,10 +20,10 @@ class ToggleGhostFeedbackEvent extends FeedbackEvent {
 
 class AcceptFeedbackEvent extends FeedbackEvent {
   final int feedbackId;
-  final ChapterBloc chapterBloc;
+  final WritingBloc writingBloc;
   const AcceptFeedbackEvent({
     required this.feedbackId,
-    required this.chapterBloc,
+    required this.writingBloc,
   });
 }
 

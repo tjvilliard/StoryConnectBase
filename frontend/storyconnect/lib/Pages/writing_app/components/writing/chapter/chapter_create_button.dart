@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ChapterCreateButton extends StatelessWidget {
@@ -8,8 +8,7 @@ class ChapterCreateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ChapterBloc, ChapterBlocStruct>(
-        listener: (context, state) {
+    return BlocConsumer<WritingBloc, WritingState>(listener: (context, state) {
       Scrollable.ensureVisible(context,
           duration: Duration(milliseconds: 250),
           curve: Curves.easeInOut,
@@ -18,12 +17,12 @@ class ChapterCreateButton extends StatelessWidget {
       return previous.loadingStruct != current.loadingStruct;
     }, buildWhen: (previous, current) {
       return previous.loadingStruct != current.loadingStruct;
-    }, builder: (context, chapterState) {
-      if (chapterState.loadingStruct.isLoading) {
-        return LoadingWidget(loadingStruct: chapterState.loadingStruct);
+    }, builder: (context, writingState) {
+      if (writingState.loadingStruct.isLoading) {
+        return LoadingWidget(loadingStruct: writingState.loadingStruct);
       }
       return OutlinedButton(
-          onPressed: () => context.read<ChapterBloc>().add(AddChapter()),
+          onPressed: () => context.read<WritingBloc>().add(AddChapterEvent()),
           child: Text("Add Chapter"));
     });
   }
