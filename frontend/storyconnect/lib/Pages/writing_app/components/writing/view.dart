@@ -13,19 +13,14 @@ class WritingPageView extends StatefulWidget {
   WritingPageViewState createState() => WritingPageViewState();
 }
 
-class WritingPageViewState extends State<WritingPageView>
-    with AutomaticKeepAliveClientMixin {
+class WritingPageViewState extends State<WritingPageView> {
   final FocusNode focusNode = FocusNode();
-  final EditorController editorController = EditorController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final uiBloc = context.read<WritingUIBloc>();
-      final WritingBloc writingBloc = context.read<WritingBloc>();
-      writingBloc
-          .add(SetEditorControllerCallbackEvent(callback: getEditorController));
       uiBloc.state.textScrollController.addListener(() {
         uiBloc.add(RemoveHighlightEvent());
       });
@@ -34,20 +29,16 @@ class WritingPageViewState extends State<WritingPageView>
 
   @override
   void dispose() {
-    editorController.close();
     focusNode.dispose();
     super.dispose();
   }
 
-  EditorController getEditorController() {
-    return editorController;
-  }
-
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Container(
-        constraints: BoxConstraints(maxWidth: WritingUIBloc.pageWidth),
+        constraints: BoxConstraints(
+          maxWidth: WritingUIBloc.pageWidth,
+        ),
         child: BlocBuilder<WritingBloc, WritingState>(
             buildWhen: (previous, current) {
           return previous.currentIndex != current.currentIndex ||
@@ -63,6 +54,14 @@ class WritingPageViewState extends State<WritingPageView>
                 margin: EdgeInsets.all(20),
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
                   border: Border.all(color: Colors.grey[200]!, width: 1),
                   color: Colors.white,
                 ),
@@ -72,7 +71,8 @@ class WritingPageViewState extends State<WritingPageView>
                     child: VisualEditor(
                   scrollController:
                       context.read<WritingUIBloc>().state.textScrollController,
-                  controller: editorController,
+                  controller:
+                      context.read<WritingUIBloc>().state.editorController,
                   focusNode: focusNode,
                   config: state.config,
                 )));
@@ -80,14 +80,5 @@ class WritingPageViewState extends State<WritingPageView>
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: toReturn);
         }));
-  }
-
-  @override
-  bool get wantKeepAlive {
-    if (editorController.isClosed()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 }

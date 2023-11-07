@@ -8,6 +8,7 @@ import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:visual_editor/visual-editor.dart';
 
 part 'writing_ui_bloc.freezed.dart';
 part 'writing_ui_state.dart';
@@ -20,7 +21,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       timer; // Static variable to maintain state between calls to highlight
 
   static double pageWidth = 800.0;
-  static double pageHeight = 800.0;
+  static double pageHeight = 1050.0;
 
   WritingRepository repository = WritingRepository();
   WritingUIBloc({required this.repository}) : super(WritingUIState.initial()) {
@@ -125,8 +126,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
           extentOffset: event.selection.offsetEnd));
 
       // Map all the boxes to rects and update the state
-      emit(state.copyWith(
-          rectsToHighlight: boxes.map((e) => e.toRect()).toList()));
+      final rects = boxes.map((e) => e.toRect()).toList();
+      emit(state.copyWith(rectsToHighlight: rects));
 
       // Remove the highlight after a second
       timer?.cancel(); // Cancel the existing timer if there is one

@@ -59,6 +59,6 @@ class _UpdateChapterHelperEvent extends WritingEvent {
 }
 
 class SetEditorControllerCallbackEvent extends WritingEvent {
-  final EditorController Function()? callback;
+  final EditorController? Function() callback;
   SetEditorControllerCallbackEvent({required this.callback});
 }

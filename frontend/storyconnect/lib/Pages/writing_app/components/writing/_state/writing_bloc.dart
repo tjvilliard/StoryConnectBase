@@ -21,7 +21,7 @@ typedef WritingEmitter = Emitter<WritingState>;
 class WritingBloc extends Bloc<WritingEvent, WritingState>
     with ReplayBlocMixin<WritingEvent, WritingState> {
   static Lock writingLock = Lock();
-  EditorController Function()? getEditorControllerCallback;
+  EditorController? Function()? getEditorControllerCallback;
   Timer? debounceTimer;
   StreamSubscription? editorSubscription;
 
@@ -95,56 +95,50 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
   }
 
   void switchChapter(SwitchChapterEvent event, WritingEmitter emit) async {
-    await writingLock.synchronized(() async {
-      final doc = convertToDeltaDoc(state.chapters[event.chapterToSwitchTo]!);
+    final doc = convertToDeltaDoc(state.chapters[event.chapterToSwitchTo]!);
 
-      final editor = getEditorControllerCallback?.call();
-      editorSubscription?.cancel();
-      emit(state.copyWith(
-        currentIndex: event.chapterToSwitchTo,
-      ));
-      if (editor != null) {
-        await editorSubscription?.cancel();
-        editor.update(doc.delta);
-        editorSubscription = editor.changes$.listen((docEvent) async {
-          await writingLock.synchronized(() {
-            add(UpdateChapterEvent(
-                chapterNum: event.chapterToSwitchTo,
-                text: jsonEncode(docEvent.docDelta.toJson()),
-                storeCommand: false));
-          });
+    final editor = getEditorControllerCallback?.call();
+    editorSubscription?.cancel();
+    emit(state.copyWith(
+      currentIndex: event.chapterToSwitchTo,
+    ));
+    if (editor != null) {
+      await editorSubscription?.cancel();
+      editor.update(doc.delta);
+      editorSubscription = editor.changes$.listen((docEvent) async {
+        await writingLock.synchronized(() {
+          add(UpdateChapterEvent(
+              chapterNum: event.chapterToSwitchTo,
+              text: jsonEncode(docEvent.docDelta.toJson()),
+              storeCommand: false));
         });
-      }
-    });
+      });
+    }
   }
 
   void updateChapter(UpdateChapterEvent event, WritingEmitter emit) async {
-    await writingLock.synchronized(() async {
-      if (debounceTimer != null && debounceTimer!.isActive) {
-        debounceTimer!.cancel();
-      }
-      debounceTimer = Timer(Duration(milliseconds: 250), () {
-        add(_UpdateChapterHelperEvent(event: event));
-      });
+    if (debounceTimer != null && debounceTimer!.isActive) {
+      debounceTimer!.cancel();
+    }
+    debounceTimer = Timer(Duration(milliseconds: 250), () {
+      add(_UpdateChapterHelperEvent(event: event));
     });
   }
 
   void _updateChapterHelper(
       UpdateChapterEvent event, WritingEmitter emit) async {
-    await writingLock.synchronized(() async {
-      Map<int, String> chapters = Map.from(state.chapters);
-      chapters[event.chapterNum] = event.text;
+    Map<int, String> chapters = Map.from(state.chapters);
+    chapters[event.chapterNum] = event.text;
 
-      emit(state.copyWith(chapters: chapters));
+    emit(state.copyWith(chapters: chapters));
 
-      final chapterResult = await _repo.updateChapter(
-        chapterId: state.chapterNumToID[event.chapterNum] ?? -1,
-        number: event.chapterNum,
-        text: chapters[event.chapterNum]!,
-      );
+    final chapterResult = await _repo.updateChapter(
+      chapterId: state.chapterNumToID[event.chapterNum] ?? -1,
+      number: event.chapterNum,
+      text: chapters[event.chapterNum]!,
+    );
 
-      assert(chapterResult?.chapterContent == event.text);
-    });
+    assert(chapterResult?.chapterContent == event.text);
   }
 
   // helper function to load chapters into expected format
@@ -160,34 +154,34 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
   }
 
   void loadWritingEvent(LoadWritingEvent event, WritingEmitter emit) async {
-    await writingLock.synchronized(() async {
-      emit(
-          state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
-      final unParsedChapters = await _repo.getChapters();
-      final _ParsedChapterResult result = _parseChapters(unParsedChapters);
-      print("we should only be calling this once");
-      final editor = getEditorControllerCallback?.call();
-      if (editor != null) {
-        await editorSubscription?.cancel();
-        editorSubscription = editor.changes$.listen((event) async {
-          await writingLock.synchronized(() {
-            add(UpdateChapterEvent(
-                chapterNum: 0,
-                text: jsonEncode(event.docDelta.toJson()),
-                storeCommand: false));
-          });
+    emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
+    final unParsedChapters = await _repo.getChapters();
+    final _ParsedChapterResult result = _parseChapters(unParsedChapters);
+    print("we should only be calling this once");
+    final editor = getEditorControllerCallback?.call();
+    if (editor != null) {
+      await editorSubscription?.cancel();
+
+      final doc = convertToDeltaDoc(result.chapters[0]!);
+      editor.update(doc.delta);
+      editorSubscription = editor.changes$.listen((event) async {
+        await writingLock.synchronized(() {
+          add(UpdateChapterEvent(
+              chapterNum: 0,
+              text: jsonEncode(event.docDelta.toJson()),
+              storeCommand: false));
         });
+      });
 
-        emit(state.copyWith(
-            chapters: result.chapters,
-            chapterNumToID: result.chapterNumToID,
-            loadingStruct: LoadingStruct.loading(false)));
-        clearHistory();
+      emit(state.copyWith(
+          chapters: result.chapters,
+          chapterNumToID: result.chapterNumToID,
+          loadingStruct: LoadingStruct.loading(false)));
+      clearHistory();
 
-        final chapterId = state.chapterNumToID[state.currentIndex]!;
-        event.feedbackBloc.add(LoadChapterFeedback(chapterId));
-      }
-    });
+      final chapterId = state.chapterNumToID[state.currentIndex]!;
+      event.feedbackBloc.add(LoadChapterFeedback(chapterId));
+    }
   }
 
   /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,

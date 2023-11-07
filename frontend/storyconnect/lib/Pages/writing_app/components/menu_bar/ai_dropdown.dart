@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/popup.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 
-class DropDownMenuBar extends StatelessWidget {
+class AIDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubmenuButton(

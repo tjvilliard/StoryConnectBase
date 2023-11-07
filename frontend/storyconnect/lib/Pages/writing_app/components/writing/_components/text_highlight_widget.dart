@@ -40,6 +40,7 @@ class TextHighlightWidgetState extends State<TextHighlightWidget>
         _animationController.reset();
       }
     }, builder: (context, uiState) {
+      print(uiState.rectsToHighlight);
       return CustomPaint(
           painter: CustomHighlightPainter(
             rects: uiState.rectsToHighlight ?? [],

@@ -9,6 +9,7 @@ class WritingUIState with _$WritingUIState {
     required bool roadUnblockerShown,
     required bool continuityCheckerShown,
     required ScrollController textScrollController,
+    required EditorController editorController,
     String? title,
     List<Rect>? rectsToHighlight,
     required LoadingStruct loadingStruct,
@@ -17,6 +18,7 @@ class WritingUIState with _$WritingUIState {
   // initial state
   factory WritingUIState.initial() {
     return WritingUIState(
+      editorController: EditorController(),
       bookId: 0,
       chapterOutlineShown: false,
       feedbackUIshown: false,
