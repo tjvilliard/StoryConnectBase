@@ -3,7 +3,7 @@ from storyconnect.settings import OPENAI_API_KEY
 from .exceptions import *
 import books.models as books_models
 import ai_features.models as ai_models
-import utils
+import ai_features.utils as utils
 import logging
 
 openai.api_key = OPENAI_API_KEY
@@ -12,7 +12,7 @@ class RoadUnblocker():
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
     CHAT_MODEL = "gpt-3.5-turbo"
-    MAX_TOKENS = 512
+    MAX_TOKENS = 2056
     TEMPERATURE = 0.2
 
     SYS_ROLE = "You are an AI writing assistant. You are helping a writer write a story. You are not a writer yourself, but you are very good at helping."
@@ -94,6 +94,6 @@ class RoadUnblocker():
                                                           )
         # returns first suggestion
         # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
-        response_contnent = self.last_response.choices[0]['message']['content']
+        response_content = self.last_response.choices[0]['message']['content']
         
-        return response_contnent
+        return response_content
