@@ -14,13 +14,18 @@ class ChapterSerializer(serializers.ModelSerializer):
         model = Chapter
         fields = "__all__"
 
-
 class LibrarySerializer(serializers.ModelSerializer):
     # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
     # reader = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     class Meta:
         model = Library
         exclude = ['reader']
+
+class LibraryBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Library
+        exclude = ["reader"]
+        depth = 1
 
 
 class NarrativeElementSerializer(serializers.ModelSerializer):

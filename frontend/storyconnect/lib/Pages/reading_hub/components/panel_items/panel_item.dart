@@ -118,7 +118,7 @@ class BookGrid extends PanelItem {
                       alignment: WrapAlignment.center,
                       children: this
                           .books
-                          .map((book) => LibraryBook(
+                          .map((book) => LibraryBookItem(
                               onPressed: () {
                                 final uri = PageUrls.readBook(book.id);
                                 Beamer.of(context)

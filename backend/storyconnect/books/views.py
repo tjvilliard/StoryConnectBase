@@ -239,10 +239,11 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+
     @action(detail=False, methods=['get'])
     def get_user_library(self, request):
         library = Library.objects.filter(reader=request.user)
-        serializer = LibrarySerializer(library, many=True)
+        serializer = LibraryBookSerializer(library, many=True)
         return Response(serializer.data)
     
     def create(self, request, *args, **kwargs):

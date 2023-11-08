@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Repositories/reading_repository.dart';
+import 'package:storyconnect/Repositories/library_repository.dart';
 
 part 'library_event.dart';
 part 'library_struct.dart';
@@ -20,7 +20,7 @@ typedef LibraryEmitter = Emitter<LibraryStruct>;
 
 class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
   /// The Book Reading Repository.
-  late final ReadingRepository _repo;
+  late final LibraryRepository _repo;
 
   LibraryBloc(this._repo)
       : super(LibraryStruct(
@@ -28,35 +28,20 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
           loadingStruct: LoadingStruct(isLoading: false),
         )) {
     on<GetLibraryEvent>((event, emit) => getLibrary(event, emit));
+    on<RemoveBookEvent>((event, emit) => removeBook(event, emit));
+    on<AddBookEvent>((event, emit) => addBook(event, emit));
   }
 
-  getLibrary(GetLibraryEvent event, LibraryEmitter emit) async {
-    emit(LibraryStruct(
-      libraryBooks: state.libraryBooks,
-      loadingStruct: LoadingStruct.loading(true),
-    ));
-
-    List<Book> libBooks = await this._repo.getLibraryBooks();
+  void getLibrary(GetLibraryEvent event, LibraryEmitter emit) async {
+    this._repo.getLibraryBooks();
 
     emit(LibraryStruct(
-      libraryBooks: libBooks,
-      loadingStruct: LoadingStruct.loading(false),
+      libraryBooks: this._repo.libraryBookMap.values.toList(),
+      loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
   }
 
-  removeBook(RemoveBookEvent event, LibraryEmitter emit) async {
-    emit(LibraryStruct(
-      libraryBooks: state.libraryBooks,
-      loadingStruct: LoadingStruct.loading(true),
-    ));
+  void removeBook(RemoveBookEvent event, LibraryEmitter emit) async {}
 
-    event.bookId;
-
-    //remove book by book ID to library.
-    List<Book> libBooks = await this._repo.getBooks();
-    emit(LibraryStruct(
-      libraryBooks: libBooks,
-      loadingStruct: LoadingStruct.loading(false),
-    ));
-  }
+  void addBook(AddBookEvent event, Emitter<LibraryStruct> emit) async {}
 }

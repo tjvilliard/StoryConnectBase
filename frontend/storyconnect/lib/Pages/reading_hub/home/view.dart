@@ -5,6 +5,7 @@ import 'package:storyconnect/Pages/reading_hub/components/background_panels/soli
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
 import 'package:storyconnect/Pages/reading_hub/components/background_panels/content_panel.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/theme.dart';
 
@@ -27,6 +28,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
       if (initialLoad) {
         initialLoad = false;
         final readingHomeBloc = context.read<ReadingHomeBloc>();
+        final libraryBloc = context.read<LibraryBloc>();
+        libraryBloc.add(GetLibraryEvent());
         readingHomeBloc.add(GetBooksEvent());
       }
     });
@@ -39,15 +42,15 @@ class ReadingHomeState extends State<ReadingHomeView> {
         body: Center(child: Container(child:
             BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
                 builder: (BuildContext context, ReadingHomeStruct homeState) {
-          List<ContentPanel> toReturn;
+          List<Widget> toReturn;
           if (homeState.loadingStruct.isLoading) {
-            toReturn = <ContentPanel>[
+            toReturn = <Widget>[
               SolidContentPanel(
                   children: [LoadingItem()],
                   primary: Theme.of(context).canvasColor)
             ];
           } else {
-            toReturn = <ContentPanel>[
+            toReturn = <Widget>[
               SolidContentPanel(
                   children: [BlankPanel(height: 1.5)],
                   primary: Colors.transparent),
@@ -55,13 +58,16 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 color: myColorScheme.secondary,
                 thickness: 2.0,
               ),
-              FadedContentPanel.titledBookPanel(
-                  homeState.libraryBooks,
-                  myColorScheme.secondary.withOpacity(0.45),
-                  Theme.of(context).canvasColor,
-                  "Continue Reading",
-                  "Pick up where you left off",
-                  false),
+              BlocBuilder<LibraryBloc, LibraryStruct>(
+                  builder: (context, state) {
+                return FadedContentPanel.titledBookPanel(
+                    state.libraryBooks,
+                    myColorScheme.secondary.withOpacity(0.45),
+                    Theme.of(context).canvasColor,
+                    "Continue Reading",
+                    "Pick up where you left off",
+                    false);
+              }),
               ContentDivider(
                 color: myColorScheme.secondary,
                 thickness: 2.0,

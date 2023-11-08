@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 ///
-class LibraryBook extends StatefulWidget {
+class LibraryBookItem extends StatefulWidget {
   final VoidCallback onPressed;
   final Widget child;
 
-  const LibraryBook({
+  const LibraryBookItem({
     super.key,
     required this.onPressed,
     required this.child,
@@ -17,7 +17,7 @@ class LibraryBook extends StatefulWidget {
 }
 
 ///
-class _libraryBookState extends State<LibraryBook> {
+class _libraryBookState extends State<LibraryBookItem> {
   bool showButtons = false;
   final VoidCallback onPressed;
   final Widget child;

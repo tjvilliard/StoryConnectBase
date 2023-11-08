@@ -18,52 +18,51 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
-        builder: (context, uiState) {
-      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-          builder: (context, chapterState) {
-        return BlocBuilder<FeedbackBloc, FeedbackState>(
-            builder: (context, feedbackState) {
-          return AnimatedCrossFade(
-              alignment: Alignment.centerRight,
-              firstChild: Container(),
-              secondChild: Container(
-                  width: 300,
-                  child: Card(
-                      elevation: 3,
-                      child: uiState.feedbackBarShown
-                          ? Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                children: [
-                                  FeedbackTypeSelector(),
-                                  Container(
-                                      constraints: BoxConstraints(),
-                                      child: SentimentSelectorWidget()),
-                                  Expanded(
-                                      child: FeedbackCardListWidget(
-                                          feedbackItems: feedbackState
-                                                  .feedbackSet.isEmpty
-                                              ? []
-                                              : feedbackState
-                                                  .feedbackSet.entries
-                                                  .where((element) =>
-                                                      element.key ==
-                                                      chapterState.chapterIndex)
-                                                  .first
-                                                  .value)),
-                                  feedbackState.selectedFeedbackType ==
-                                          FeedbackType.suggestion
-                                      ? SuggestionInputWidget()
-                                      : CommentInputWidget()
-                                ],
-                              ))
-                          : Container())),
-              crossFadeState: uiState.feedbackBarShown
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              duration: Duration(milliseconds: 200));
-        });
-      });
+        buildWhen: (previous, current) {
+      final bool feedbackBarShownChanged =
+          previous.feedbackBarShown != current.feedbackBarShown;
+
+      return feedbackBarShownChanged;
+    }, builder: (context, uiState) {
+      return AnimatedCrossFade(
+        firstChild: SizedBox.shrink(),
+        secondChild: uiState.feedbackBarShown
+            ? SizedBox.shrink()
+            : BlocBuilder<FeedbackBloc, FeedbackState>(
+                builder: (context, feedbackState) {
+                return Card(
+                    child: Container(
+                        constraints:
+                            BoxConstraints(maxWidth: 400, minWidth: 300),
+                        padding: EdgeInsets.all(16),
+                        child: Column(children: [
+                          FeedbackTypeSelector(),
+                          SentimentSelectorWidget(),
+                          Container(),
+                          Expanded(
+                              child:
+                                  BlocListener<ChapterBloc, ChapterBlocStruct>(
+                            listener: (context, chapterState) {
+                              int id = context
+                                  .read<ChapterBloc>()
+                                  .chapterNumToID[chapterState.chapterIndex]!;
+                              print(id);
+                            },
+                            child: FeedbackCardListWidget(
+                              feedbackItems: [],
+                            ),
+                          )),
+                          feedbackState.selectedFeedbackType ==
+                                  FeedbackType.suggestion
+                              ? SuggestionInputWidget()
+                              : CommentInputWidget()
+                        ])));
+              }),
+        crossFadeState: uiState.feedbackBarShown
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
+        duration: Duration(milliseconds: 200),
+      );
     });
   }
 }

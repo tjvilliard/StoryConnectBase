@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menu_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 
 /// Custom Menu Bar for the Reading UI Page.
 class ReadingMenuBar extends StatelessWidget {
@@ -105,17 +106,16 @@ class ReadingMenuBar extends StatelessWidget {
                                       onPressed: () {},
                                     ),
 
-                                    Checkbox.adaptive(
-                                        value: uiState.libBookIds
-                                            .where((element) =>
-                                                element.book == this.bookId)
-                                            .isNotEmpty,
-                                        onChanged: (_) {
-                                          BlocProvider.of<ReadingUIBloc>(
-                                                  context)
-                                              .add(LibraryToggleEvent(
-                                                  bookId: this.bookId));
-                                        }),
+                                    BlocBuilder<LibraryBloc, LibraryStruct>(
+                                      builder: (context, libState) {
+                                        return Checkbox.adaptive(
+                                            value: libState.libraryBooks
+                                                .where((element) =>
+                                                    element.id == this.bookId)
+                                                .isNotEmpty,
+                                            onChanged: (_) {});
+                                      },
+                                    ),
 
                                     // Chapter Feedback
                                     ReadingIconButton(

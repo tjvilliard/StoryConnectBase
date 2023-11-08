@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Models/text_annotation/text_selection.dart';
@@ -68,6 +67,9 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   sentimentChanged(SentimentChangedEvent event, FeedbackEmitter emit) {
     emit(state.copyWith(
         serializer: state.serializer.copyWith(sentiment: event.sentiment)));
+
+    print(event.sentiment);
+    print(state.serializer.chapterId);
   }
 
   /// Changes the type of feedback and emits the changed state.
