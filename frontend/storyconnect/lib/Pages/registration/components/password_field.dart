@@ -31,6 +31,8 @@ class _passwordState extends State<PasswordField> {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
         builder: (BuildContext context, RegistrationState state) {
+      final IconData eyeIcon =
+          state.showPassword ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash;
       return Container(
           constraints: BoxConstraints(minHeight: 56),
           width: LoginPageConstants.maxWidth,
@@ -48,9 +50,10 @@ class _passwordState extends State<PasswordField> {
                     borderRadius: BorderRadius.circular(10.0)),
                 prefixIcon: Icon(Icons.lock_rounded),
                 suffixIcon: IconButton(
-                  icon: state.showPassword
-                      ? Icon(FontAwesomeIcons.eye)
-                      : Icon(FontAwesomeIcons.eyeSlash),
+                  icon: Padding(
+                    padding: EdgeInsets.only(right: 4),
+                    child: Icon(eyeIcon),
+                  ),
                   onPressed: () {
                     context
                         .read<RegistrationBloc>()
