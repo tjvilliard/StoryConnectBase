@@ -1,21 +1,12 @@
-from json import JSONDecodeError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser, AllowAny
-from rest_framework import viewsets, status, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
-from .models import *
-from .serializers import *
+from .models import Book, Chapter, Library
+from .serializers import  BookSerializer, ChapterSerializer, LibrarySerializer
 from django.db import transaction
-import pdb
 from rest_framework.views import APIView
-
-
-
-# Create your views here.
 
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
@@ -24,7 +15,6 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all()
 
-    
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
@@ -36,11 +26,9 @@ class BookViewSet(viewsets.ModelViewSet):
 
             # Use the instance directly instead of querying it again
             book = serializer.instance
-            # book.owner = request.user
+            book.author = request.user.username
+            book.save()
 
-            # print(request.user)
-
-            # book.save()
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 
@@ -63,10 +51,19 @@ class BookViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def by_writer(self, request):
-
         # TODO: Test this
-        
         books = Book.objects.filter(owner=request.user)
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='by-author/(?P<author>[^/.]+)')
+    def by_author(self, request):
+        author = request.query_params.get('author')
+
+        if not author:
+            return Response({'detail': 'No author specified'}, status=status.HTTP_400_BAD_REQUEST)
+
+        books = Book.objects.filter(author=author)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 
@@ -257,19 +254,19 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def change_entry_status(self, request):
         library = self.get_object()
-        book = library.book
-        book_id = book.id
-        status = request.data['status']
+        # TODO: Why is there unaccesed data here?
+        # book = library.book
+        # book_id = book.id
+        # status = request.data['status']
         library.save()
         serializer = LibrarySerializer(library)
         return Response(serializer.data)
     
     @action(detail=True, methods=['delete'])
-    def change_entry_status(self, request, *args, **kwargs):
-        instance = self.get_object().delete()
+    def delete_entry_status(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 
 
 #TODO: Add a view for narrative element queries

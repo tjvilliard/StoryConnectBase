@@ -1,8 +1,7 @@
 import openai
 from storyconnect.settings import OPENAI_API_KEY
-from .exceptions import *
-from .models import StatementSheet
-import logging
+from .exceptions import ContinuityCheckerNullTextError
+# from .models import StatementSheet
 import lxml.etree as etree
 import re 
 

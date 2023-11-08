@@ -1,5 +1,5 @@
-from django.urls import path, include
-from .views import *
+from django.urls import path
+from .views import RoadUnblockerRequestView, RoadUnblockerSuggestionView, NarrativeElementView, ContinuityCheckerView
 
 
 app_name = "ai_features"

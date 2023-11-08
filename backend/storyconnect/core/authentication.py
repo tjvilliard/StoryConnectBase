@@ -1,49 +1,26 @@
-import os
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from core.authentication import FirebaseAuthentication 
+from .serializers import UserUidConversionSerializer
 
-import firebase_admin
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.utils import timezone
-from firebase_admin import auth
-from firebase_admin import credentials
-from rest_framework import authentication
-from rest_framework import exceptions
-
-from .exceptions import FirebaseError
-from .exceptions import InvalidAuthToken
-from .exceptions import NoAuthToken
-
-class FirebaseAuthentication(authentication.BaseAuthentication):
-    def authenticate(self, request):
-        auth_header = request.META.get("HTTP_AUTHORIZATION")
-
-        # # TODO: Remove this when done testing
-        # postman = request.META.get("HTTP_POSTMAN_TOKEN")
-        # if postman:
-        #     return None
-
-        if not auth_header:
-            raise NoAuthToken("No auth token provided")
-
-        id_token = auth_header.split(" ").pop()
-
-        decoded_token = None
-        try:
-            decoded_token = auth.verify_id_token(id_token)
+class UserUidConversion(APIView):
+    # UID is now taken from the URL directly as a keyword argument
+    def get(self, request, uid, format=None):
+        if not uid:
+            return Response({"error": "UID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = FirebaseAuthentication.get_firebase_user(uid)
+        if user and user.display_name:
+            # Ensure the serializer is initialized with 'data' as a keyword argument
+            serializer = UserUidConversionSerializer(data={'username': user.display_name})
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                # In case of serializer errors, return a 400 Bad Request with the error messages
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # If the user or display_name is not found, return a 404 Not Found
+            return Response({"error": "User not found or display name not set."}, status=status.HTTP_404_NOT_FOUND)
 
 
-        except Exception:
-            raise InvalidAuthToken("Invalid auth token")
-
-        if not id_token or not decoded_token:
-            return None
-
-        try:
-            uid = decoded_token.get("uid")
-        except Exception:
-            raise FirebaseError()
-
-        user, created = User.objects.get_or_create(username=uid)
-        #user.profile.last_activity = timezone.localtime()
-
-        return (user, None)
