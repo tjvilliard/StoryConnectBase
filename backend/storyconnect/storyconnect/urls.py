@@ -19,8 +19,7 @@ from rest_framework import routers
 from books import views as books_views
 from comment import views as comment_views
 from ai_features import urls as ai_features_urls
-from core import views as core_views
-
+from core import urls as core_views
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
