@@ -11,8 +11,8 @@ openai.api_key = OPENAI_API_KEY
 class RoadUnblocker():
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
-    CHAT_MODEL = "gpt-3.5-turbo"
-    MAX_TOKENS = 2056
+    CHAT_MODEL = "gpt-3.5-turbo-16k"
+    MAX_TOKENS = 5000
     TEMPERATURE = 0.2
 
     SYS_ROLE = "You are an AI writing assistant. You are helping a writer write a story. You are not a writer yourself, but you are very good at helping."
@@ -71,7 +71,9 @@ class RoadUnblocker():
         # include summary only if more than one chapter
         if bk_chapters.count() > 1:
             u_msg_summary = "Here is a summary of my book so far:\n\n"
-            u_msg_summary += utils.summarize_book(book.id)
+            
+            # TODO: Remember that this is now chat model
+            u_msg_summary += utils.summarize_book_chat(book.id)
             messages.append({"role": "user", "content": u_msg_summary})
         
         # include chapter content
@@ -91,6 +93,7 @@ class RoadUnblocker():
         messages.append({"role": "user", "content": question})
         self.last_response = openai.ChatCompletion.create(model = self.CHAT_MODEL,
                                                           messages = messages,
+                                                          max_tokens = self.MAX_TOKENS
                                                           )
         # returns first suggestion
         # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble

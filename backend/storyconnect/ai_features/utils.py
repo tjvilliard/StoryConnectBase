@@ -203,7 +203,7 @@ def summarize_book(book_id):
     return bk_summary_text, created
 
 def summarize_book_chat(book_id):
-    """Summarizes a book using the BASE_MODEL. Stores in BookSummary table"""
+    """Summarizes a book using the CHAT_MODEL. Stores in BookSummary table"""
 
     # get or create bk sum model
     book = books_models.Book.objects.get(pk=book_id)
