@@ -1,5 +1,5 @@
 class FirebaseHelper {
-  static Future<String?> getDisplayNameForUid(String uid) async {
+  static Future<String?> getDisplayName(String uid) async {
     return null;
   }
 }
