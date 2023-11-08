@@ -1,39 +1,25 @@
-
 from rest_framework.views import APIView
-from core.authentication import FirebaseAuthentication
-from serializers import UserUidConversionSerializer
 from rest_framework.response import Response
 from rest_framework import status
-# Create your views here.
-# class UserInformation(viewsets.ModelViewSet):
-#     queryset = UserInformation.objects.all()
-#     serializer_class = UserInformationSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-#     def update(self, request, *args, **kwargs):
-#         partial = kwargs.pop('partial', False)
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=partial)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-#         return JsonResponse(serializer.data)
-
+from .authentication import FirebaseAuthentication 
+from .serializers import UserUidConversionSerializer
 
 class UserUidConversion(APIView):
-    def get(self, request, format=None):
-        uid = self.kwargs.get('uid')
-
+    # UID is now taken from the URL directly as a keyword argument
+    def get(self, request, uid, format=None):
         if not uid:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+            return Response({"error": "UID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
         user = FirebaseAuthentication.get_firebase_user(uid)
-        # create new serializer with the user data
-        serializer = UserUidConversionSerializer(username=user.display_name)
+        if user and user.display_name:
+            # Ensure the serializer is initialized with 'data' as a keyword argument
+            serializer = UserUidConversionSerializer(data={'username': user.display_name})
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                # In case of serializer errors, return a 400 Bad Request with the error messages
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # If the user or display_name is not found, return a 404 Not Found
+            return Response({"error": "User not found or display name not set."}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(serializer.data)

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Widgets/display_name_loader.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({super.key});
@@ -28,8 +30,8 @@ class ProfileCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  Text("Author Name",
-                      style: Theme.of(context).textTheme.titleMedium),
+                  DisplayNameLoaderWidget(
+                      uid: FirebaseAuth.instance.currentUser!.uid)
                 ],
               ),
               SizedBox(width: 20), // some spacing between columns
