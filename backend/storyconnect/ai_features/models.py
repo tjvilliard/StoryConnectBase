@@ -2,8 +2,8 @@ from typing import Any
 from django.db import models
 from books.models import Chapter
 from comment.models import TextSelection
-from road_unblocker import RoadUnblocker
-from utils import *
+from .road_unblocker import RoadUnblocker
+import ai_features.utils as utils
 from lxml import etree
 from .exceptions import StatementSheetInvalidDocumentError
 import logging
@@ -140,7 +140,10 @@ class ChapterSummary(models.Model):
     
     def save(self, *args, **kwargs):
         # self.summary = self.summary.replace("\n", "<br>")
-        self.summary = summarize_chapter(self.chapter.id, **kwargs)
+        # TODO: REMEMBER THIS CHANGE 
+        #self.summary = utils.summarize_chapter(self.chapter.id)
+        self.summary = utils.summarize_chapter_chat(self.chapter.id)
+
         super().save(*args, **kwargs)
 
 class BookSummary(models.Model):
