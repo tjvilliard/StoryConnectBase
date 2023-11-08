@@ -10,7 +10,7 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
   const factory FeedbackCreationSerializer({
     required int chapterId,
     required AnnotatedTextSelection selection,
-    required FeedbackSentiment sentiment,
+    required int sentiment,
     required bool isSuggestion,
     required bool dismissed,
     String? comment,
@@ -27,7 +27,7 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
       chapterId: 0,
       selection: AnnotatedTextSelection(
           chapterId: 0, floating: false, offsetEnd: 0, offset: 0, text: ""),
-      sentiment: FeedbackSentiment.good,
+      sentiment: FeedbackSentiment.good.index,
       isSuggestion: false,
       dismissed: false,
       comment: "",

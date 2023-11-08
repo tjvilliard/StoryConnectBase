@@ -109,7 +109,7 @@ class WritingApiProvider {
             chapterId: 1,
             offset: 10,
             offsetEnd: 20),
-        sentiment: FeedbackSentiment.good,
+        sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
   }

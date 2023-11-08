@@ -32,7 +32,7 @@ class CommentEditedEvent extends FeedbackEvent {
 
 /// Change the entry for the sentiment field.
 class SentimentChangedEvent extends FeedbackEvent {
-  final FeedbackSentiment sentiment;
+  final int sentiment;
   const SentimentChangedEvent({
     required this.sentiment,
   });
