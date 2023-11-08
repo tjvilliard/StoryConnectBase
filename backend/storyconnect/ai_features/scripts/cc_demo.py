@@ -6,7 +6,7 @@ with open('ai_features/demo/grey.txt', 'r') as f:
 
 print(len(chapter))
 
-cont = cc.ContinuityChecker()
+cont = cc.ContinuityCheckerChat()
 
 statements = cont.create_statementsheet(chapter)
 
