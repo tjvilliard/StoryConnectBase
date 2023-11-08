@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/app_nav/app_menu.dart';
 import 'package:storyconnect/Widgets/app_nav/appbar_button.dart';
@@ -38,14 +39,14 @@ class CustomAppBar extends AppBar {
                             // My Library Button
                             AppBarTextButton(
                               text: "My Library",
-                              icon: Icon(Icons.bookmark),
+                              icon: Icon(FontAwesomeIcons.bookmark),
                               uri: PageUrls.readerLibrary,
                             ),
 
                             // Writing Hub Button
                             AppBarTextButton(
                               text: "Writing Hub",
-                              icon: Icon(Icons.create),
+                              icon: Icon(FontAwesomeIcons.pencil),
                               uri: PageUrls.writerHome,
                             ),
                           ]))),
@@ -65,7 +66,8 @@ class CustomAppBar extends AppBar {
                                         minHeight: 40,
                                       ),
                                       child: SearchBar(
-                                        leading: Icon(Icons.search),
+                                        leading: Icon(
+                                            FontAwesomeIcons.magnifyingGlass),
                                         hintText: "Search",
                                       ))),
                               // Dropdown Menu Button.

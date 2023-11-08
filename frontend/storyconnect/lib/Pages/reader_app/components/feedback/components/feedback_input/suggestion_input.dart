@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_input/feedback_input.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
@@ -14,7 +15,6 @@ class _SuggestionInputWidgetState extends State<SuggestionInputWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -66,7 +66,7 @@ class _SuggestionInputWidgetState extends State<SuggestionInputWidget> {
                         Container(
                             alignment: Alignment.bottomCenter,
                             child: IconButton(
-                                icon: Icon(Icons.send),
+                                icon: Icon(FontAwesomeIcons.paperPlane),
                                 onPressed: () {
                                   context.read<FeedbackBloc>().add(
                                       SubmitFeedbackEvent(

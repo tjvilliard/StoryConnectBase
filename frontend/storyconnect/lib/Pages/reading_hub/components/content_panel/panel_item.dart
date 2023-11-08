@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/components/detailed_book_item.dart';
@@ -259,7 +260,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                       duration: Duration(milliseconds: 500),
                                       curve: Curves.easeIn);
                                 },
-                                child: Icon(Icons.arrow_left))),
+                                child: Icon(FontAwesomeIcons.arrowLeft))),
                         replacement: SizedBox.shrink())),
                 Positioned(
                     right: 1.0,
@@ -277,7 +278,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                       duration: Duration(milliseconds: 500),
                                       curve: Curves.easeIn);
                                 },
-                                child: Icon(Icons.arrow_right))),
+                                child: Icon(FontAwesomeIcons.arrowRight))),
                         replacement: SizedBox.shrink()))
               ],
             )));

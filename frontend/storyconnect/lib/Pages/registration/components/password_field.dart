@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
@@ -48,8 +49,8 @@ class _passwordState extends State<PasswordField> {
                 prefixIcon: Icon(Icons.lock_rounded),
                 suffixIcon: IconButton(
                   icon: state.showPassword
-                      ? Icon(Icons.visibility)
-                      : Icon(Icons.visibility_off),
+                      ? Icon(FontAwesomeIcons.eye)
+                      : Icon(FontAwesomeIcons.eyeSlash),
                   onPressed: () {
                     context
                         .read<RegistrationBloc>()

@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/page_view/page_view.dart';
@@ -48,7 +49,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
             title: Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.home_filled),
+                  icon: Icon(FontAwesomeIcons.house),
                   onPressed: () {
                     BeamerDelegate beamer = Beamer.of(context);
                     if (beamer.canBeamBack) {

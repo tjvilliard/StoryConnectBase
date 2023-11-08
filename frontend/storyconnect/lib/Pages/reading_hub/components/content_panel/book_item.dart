@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:storyconnect/Models/models.dart';
 
@@ -34,7 +35,8 @@ class CoverBookItem extends BookItem {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     children: [
-                      WidgetSpan(child: Icon(Icons.person_outline, size: 16)),
+                      WidgetSpan(
+                          child: Icon(FontAwesomeIcons.person, size: 16)),
                       TextSpan(
                           text: "Author",
                           style: TextStyle(

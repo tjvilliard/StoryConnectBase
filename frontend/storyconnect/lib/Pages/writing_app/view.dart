@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:storyconnect/Pages/writing_app/components/menu_bar/rich_text_menu.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
@@ -64,7 +65,7 @@ class _WritingAppViewState extends State<WritingAppView> {
           title: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.home_filled),
+                icon: Icon(FontAwesomeIcons.house),
                 onPressed: () {
                   final beamed = Beamer.of(context).beamBack();
                   if (!beamed) {

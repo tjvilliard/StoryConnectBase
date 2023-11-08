@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_card.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
@@ -97,7 +98,7 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
                             },
-                            child: Icon(Icons.arrow_upward))),
+                            child: Icon(FontAwesomeIcons.arrowUp))),
                     replacement: SizedBox.shrink())),
             Positioned(
                 left: 0.0,
@@ -117,7 +118,7 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
                                   duration: Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
                             },
-                            child: Icon(Icons.arrow_downward))),
+                            child: Icon(FontAwesomeIcons.arrowDown))),
                     replacement: SizedBox.shrink()))
           ],
         );

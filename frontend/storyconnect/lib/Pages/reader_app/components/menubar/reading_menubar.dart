@@ -40,7 +40,7 @@ class ReadingMenuBar extends StatelessWidget {
                                   children: [
                                     // Previous chapter button
                                     ReadingIconButton(
-                                      icon: Icon(Icons.arrow_left),
+                                      icon: Icon(FontAwesomeIcons.arrowLeft),
 
                                       // Disable the previous chapter button if we are on the first chapter
                                       onPressed: chapterState.chapterIndex == 0
@@ -60,7 +60,7 @@ class ReadingMenuBar extends StatelessWidget {
 
                                     // Navigate Chapter Forward
                                     ReadingIconButton(
-                                      icon: Icon(Icons.arrow_right),
+                                      icon: Icon(FontAwesomeIcons.arrowRight),
 
                                       // Disable the next chapter button if we are on the first chapter.
                                       onPressed: chapterState.chapterIndex ==
@@ -101,7 +101,7 @@ class ReadingMenuBar extends StatelessWidget {
                                   children: [
                                     // Author profile button
                                     ReadingIconButton(
-                                      icon: Icon(Icons.person),
+                                      icon: Icon(FontAwesomeIcons.person),
                                       onPressed: () {},
                                     ),
 

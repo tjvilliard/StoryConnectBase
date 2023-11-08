@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
@@ -34,11 +35,11 @@ class _confirmPasswordState extends State<ConfirmPasswordField> {
                 errorMaxLines: 3,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                prefixIcon: Icon(Icons.lock_rounded),
+                prefixIcon: Icon(FontAwesomeIcons.lock),
                 suffixIcon: IconButton(
                   icon: state.showConfirmPassword
-                      ? Icon(Icons.visibility)
-                      : Icon(Icons.visibility_off),
+                      ? Icon(FontAwesomeIcons.eye)
+                      : Icon(FontAwesomeIcons.eyeSlash),
                   onPressed: () {
                     context
                         .read<RegistrationBloc>()
