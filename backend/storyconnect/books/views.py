@@ -172,6 +172,15 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # add the owner 
+        serializer.save(owner=request.user)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     @action(detail=False, methods=['get'])
     def get_user_library(self, request):
         library = Library.objects.filter(reader=request.user)
