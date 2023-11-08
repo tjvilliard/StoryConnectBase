@@ -17,3 +17,7 @@ django-debug-toolbar==4.2.0
 debugpy==1.8.0
 openai==0.28.1
 lxml==4.9.3
+pandas==1.5.3
+numpy==1.23.5
+nltk==3.8.1
+sklearn-pandas==2.2.0
