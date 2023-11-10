@@ -23,23 +23,22 @@ class ChapterNavButton extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 4),
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  backgroundColor: chapterState.chapterIndex == index
+                  backgroundColor: chapterState.currentChapterIndex == index
                       ? selectedColor
                       : Colors.transparent),
               onPressed: () {
                 context.read<ChapterBloc>().add(SwitchChapter(
                     chapterToSwitchTo: index,
-                    chapterToSwitchFrom: chapterState.chapterIndex));
-                context
-                    .read<FeedbackBloc>()
-                    .add(LoadChapterFeedbackEvent(chapterId: index));
+                    chapterToSwitchFrom: chapterState.currentChapterIndex));
+                context.read<FeedbackBloc>().add(LoadChapterFeedbackEvent(
+                    chapterBloc: context.read<ChapterBloc>()));
               },
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
                   child: Text("Chapter ${index + 1}",
                       style: Theme.of(context).textTheme.labelLarge?.apply(
                           fontSizeDelta: 4,
-                          color: chapterState.chapterIndex == index
+                          color: chapterState.currentChapterIndex == index
                               ? selectedTextColor
                               : null))),
             ));

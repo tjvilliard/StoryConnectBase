@@ -1,11 +1,13 @@
 import 'dart:ui';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/components/book_items/library_book.dart';
 import 'package:storyconnect/Pages/reading_hub/components/detailed_book_item.dart';
 import 'package:storyconnect/Pages/reading_hub/components/book_items/book_cover.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -100,33 +102,36 @@ class BookGrid extends PanelItem {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-        child: SizedBox(
-            width: 800,
-            child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse
-                    }),
-                child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      alignment: WrapAlignment.center,
-                      children: this
-                          .books
-                          .map((book) => LibraryBookItem(
-                              onPressed: () {
-                                final uri = PageUrls.readBook(book.id);
-                                Beamer.of(context)
-                                    .beamToNamed(uri, data: {"book": book});
-                              },
-                              child: BookCoverWidget(book: book)))
-                          .toList(),
-                    )))));
+    return BlocBuilder<LibraryBloc, LibraryStruct>(
+      builder: (BuildContext context, state) {
+        return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: SizedBox(
+                width: 800,
+                child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse
+                        }),
+                    child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 40,
+                        ),
+                        child: Wrap(
+                          spacing: 30,
+                          runSpacing: 30,
+                          alignment: WrapAlignment.center,
+                          children: this
+                              .books
+                              .map((book) => LibraryBookItem(
+                                  bookId: book.id,
+                                  child: BookCoverWidget(book: book)))
+                              .toList(),
+                        )))));
+      },
+    );
   }
 }
 

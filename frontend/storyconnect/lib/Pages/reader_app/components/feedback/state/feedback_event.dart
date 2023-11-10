@@ -6,14 +6,6 @@ abstract class FeedbackEvent {
   const FeedbackEvent();
 }
 
-/// Load the comments for the chapter.
-class LoadChapterFeedbackEvent extends FeedbackEvent {
-  final int chapterId;
-  const LoadChapterFeedbackEvent({
-    required this.chapterId,
-  });
-}
-
 /// Change the entry for the suggestion field.
 class SuggestionEditedEvent extends FeedbackEvent {
   final String? suggestion;
@@ -46,10 +38,18 @@ class FeedbackTypeChangedEvent extends FeedbackEvent {
   });
 }
 
+/// Load the comments for the chapter.
+class LoadChapterFeedbackEvent extends FeedbackEvent {
+  final ChapterBloc chapterBloc;
+  const LoadChapterFeedbackEvent({
+    required this.chapterBloc,
+  });
+}
+
 /// Submits a new feedback item.
 class SubmitFeedbackEvent extends FeedbackEvent {
-  final int chapterId;
+  final ChapterBloc chapterBloc;
   const SubmitFeedbackEvent({
-    required this.chapterId,
+    required this.chapterBloc,
   });
 }

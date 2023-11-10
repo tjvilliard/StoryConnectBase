@@ -25,9 +25,9 @@ class ReadingPageViewState extends State<ReadingPageView> {
         constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
         child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
             listener: (context, state) {
-          textController.text = state.chapters[state.chapterIndex] ?? "";
+          textController.text = state.chapters[state.currentChapterIndex] ?? "";
         }, buildWhen: (previous, current) {
-          return previous.chapterIndex != current.chapterIndex ||
+          return previous.currentChapterIndex != current.currentChapterIndex ||
               previous.loadingStruct != current.loadingStruct;
         }, builder: (context, state) {
           Widget toReturn;

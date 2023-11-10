@@ -68,7 +68,6 @@ class ReadingApiProvider {
       });
 
       for (var book in jsonDecode(result.body)) {
-        print(book);
         yield Book.fromJson(book);
       }
     } catch (e) {

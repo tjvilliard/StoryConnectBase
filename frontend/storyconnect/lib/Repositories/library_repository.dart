@@ -23,7 +23,6 @@ class LibraryApiProvider {
       });
 
       for (var map in jsonDecode(result.body)) {
-        print(map);
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield new MapEntry<Library, Book>(
@@ -77,20 +76,20 @@ class LibraryRepository {
   Map<Library, Book> libraryBookMap = {};
   LibraryApiProvider _api = LibraryApiProvider();
 
-  void getLibraryBooks() async {
+  Future<void> getLibraryBooks() async {
     this.libraryBookMap.clear();
     await for (MapEntry<Library, Book> entry in this._api.getLibraryBooks()) {
       this.libraryBookMap.addEntries([entry]);
     }
   }
 
-  void removeLibraryBook(LibraryEntrySerializer serialzier) async {
+  Future<void> removeLibraryBook(LibraryEntrySerializer serialzier) async {
     await this._api.removeBookFromLibrary(serialzier);
-    this.getLibraryBooks();
+    await this.getLibraryBooks();
   }
 
-  void addLibraryBook(LibraryEntrySerializer serialzier) async {
+  Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
     await this._api.addBooktoLibrary(serialzier);
-    this.getLibraryBooks();
+    await this.getLibraryBooks();
   }
 }
