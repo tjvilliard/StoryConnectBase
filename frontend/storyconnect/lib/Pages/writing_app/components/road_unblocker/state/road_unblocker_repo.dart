@@ -5,15 +5,10 @@ class RoadUnblockerApi {
   const RoadUnblockerApi();
   Future<RoadUnblockerResponse> submitUnblock(
       RoadUnblockerRequest request) async {
-    final url = UrlContants.roadUnblock();
-    String authToken =
-        (await FirebaseAuth.instance.currentUser!.getIdToken(true)) as String;
+    final url = UrlConstants.roadUnblock();
+
     final result = await http.post(url,
-        body: jsonEncode(request.toJson()),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $authToken'
-        });
+        body: jsonEncode(request.toJson()), headers: await buildHeaders());
     return RoadUnblockerResponse.fromJson(jsonDecode(result.body));
   }
 }

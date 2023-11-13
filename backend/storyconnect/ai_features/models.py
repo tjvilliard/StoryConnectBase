@@ -1,7 +1,7 @@
 from typing import Any
 from django.db import models
 from books.models import Chapter
-from comment.models import TextSelection
+# from comment.models import TextSelection
 from lxml import etree
 from .exceptions import StatementSheetInvalidDocumentError
 import logging

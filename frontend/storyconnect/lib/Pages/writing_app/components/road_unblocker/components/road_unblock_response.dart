@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/components/road_unblock_suggestion.dart';
+import 'package:storyconnect/Pages/writing_app/components/road_unblocker/models/road_unblocker_models.dart';
 
 class RoadUnblockResponseWidget extends StatelessWidget {
   final RoadUnblockerResponse response;

@@ -1,20 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    String authToken =
-        await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
-    final result = await http
-        .get(UrlContants.getChapters(bookId), headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Token $authToken'
-    });
+    final result = await http.get(UrlConstants.getChapters(bookId),
+        headers: await buildHeaders());
 
     final undecodedChapterList =
         jsonDecode(utf8.decode(result.bodyBytes)) as List;
@@ -27,22 +20,16 @@ class BookApiProvider {
 
   Future<Chapter?> createChapter(int bookId, int number) async {
     try {
-      String authToken =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
       final ChapterUpload toUpload = ChapterUpload(
           number: number,
           chapterContent: "",
           book: bookId,
           chapterTitle: "$number");
-      final url = UrlContants.createChapter(bookId);
+      final url = UrlConstants.createChapter(bookId);
 
       final result = await http.post(
         url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $authToken'
-        },
+        headers: await buildHeaders(),
         body: jsonEncode(toUpload.toJson()),
       );
       return Chapter.fromJson(jsonDecode(result.body));
@@ -55,23 +42,17 @@ class BookApiProvider {
   Future<Chapter?> updateChapter(
       int bookId, int chapterId, int number, String text) async {
     try {
-      String authToken =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
       Chapter toUpload = Chapter(
           id: chapterId,
           number: number,
           chapterContent: text,
           book: bookId,
           chapterTitle: "$number");
-      final url = UrlContants.updateChapter(chapterId);
+      final url = UrlConstants.updateChapter(chapterId);
 
       final result = await http.patch(
         url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token $authToken'
-        },
+        headers: await buildHeaders(),
         body: jsonEncode(toUpload.toJson()),
       );
       return Chapter.fromJson(jsonDecode(result.body));

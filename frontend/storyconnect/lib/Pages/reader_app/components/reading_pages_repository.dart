@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
@@ -10,14 +9,8 @@ import 'package:storyconnect/Services/url_service.dart';
 class BookApiProvider {
   /// Gets the Chapters for a the book-reading UI.
   Future<List<Chapter>> getChapters(int bookId) async {
-    String authToken =
-        await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-
-    final result = await http
-        .get(UrlContants.getChapters(bookId), headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': 'Token $authToken'
-    });
+    final result = await http.get(UrlConstants.getChapters(bookId),
+        headers: await buildHeaders());
 
     final undecodedChapterList =
         jsonDecode(utf8.decode(result.bodyBytes)) as List;

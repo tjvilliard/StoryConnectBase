@@ -1,17 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 /// Builder for api uri's
 class _UrlBuilder {
   int version = 1; // use this later to change the api version
-  String baseUrl = "https://storyconnect.app/api/";
+  String baseUrl = "http://localhost:8000/api/";
 
-  Uri build(String path) {
-    final Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
+  Uri build(String path, {Map<String, String>? queryParameters}) {
+    Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
     // if we don't have a trailing slash, add one
     if (!partialURI.path.endsWith('/')) {
-      return partialURI.replace(path: partialURI.path + '/');
-    } else {
-      return partialURI;
+      partialURI = partialURI.replace(path: partialURI.path + '/');
     }
+    if (queryParameters != null) {
+      partialURI = partialURI.replace(queryParameters: queryParameters);
+    }
+    return partialURI;
   }
+}
+
+Future<Map<String, String>> buildHeaders() async {
+  String authToken =
+      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  return <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Token $authToken'
+  };
 }
 
 /// URL constants and builders for app pages.
@@ -38,13 +51,13 @@ class PageUrls {
   }
 
   /// URL for a writer's profile.
-  static String writerProfile(int userID) {
-    return "/profile/writer/$userID";
+  static String writerProfile(String uid) {
+    return "/profile/writer/$uid";
   }
 }
 
 /// URL constants for REST api calls.
-class UrlContants {
+class UrlConstants {
   static final _urlBuilder = _UrlBuilder();
 
   ///
@@ -64,6 +77,24 @@ class UrlContants {
     return _urlBuilder.build('books/$bookId/get_chapters');
   }
 
+  static Uri books({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
+    }
+    return _urlBuilder.build('books/');
+  }
+
+  static Uri currentUserBooks() {
+    return _urlBuilder.build(
+      'books/writer/',
+    );
+  }
+
+  static Uri createBook() {
+    return _urlBuilder.build('books/');
+  }
+
   ///
   static Uri createChapter(int bookId) {
     return _urlBuilder.build('chapters');
@@ -73,9 +104,6 @@ class UrlContants {
   static Uri updateChapter(int chapterId) {
     return _urlBuilder.build('chapters/$chapterId/');
   }
-
-  static Uri books = _urlBuilder.build('books/');
-  static Uri writerBooks = books.resolve("by_writer/");
 
   static Uri roadUnblock() {
     return _urlBuilder.build('road_unblock/');
@@ -100,7 +128,37 @@ class UrlContants {
     return _urlBuilder.build('continuities/$chapterId');
   }
 
-  static getNarrativeElements(int bookId) {
+  static Uri getNarrativeElements(int bookId) {
     return _urlBuilder.build('narrative_elements/$bookId');
+  }
+
+  static Uri getDisplayName(String uid) {
+    return _urlBuilder.build('display_name/$uid');
+  }
+
+  static Uri getBooksByUser({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
+    }
+    return _urlBuilder.build('books/writer/');
+  }
+
+  static Uri getProfile(String uid) {
+    return _urlBuilder.build('profiles/$uid');
+  }
+
+  static Uri announcements({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder.build('announcements/by_writer/$uid');
+    }
+    return _urlBuilder.build('announcements/');
+  }
+
+  static Uri activities({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder.build('activities/by_writer/$uid');
+    }
+    return _urlBuilder.build('activities/');
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Widgets/image_loader.dart';
 
 class BookWidget extends StatefulWidget {
   final Book book;
@@ -39,7 +40,6 @@ class BookWidgetState extends State<BookWidget> {
       return;
     }
     Reference ref = FirebaseStorage.instance.ref().child(relativePath);
-
     final result = await ref.getDownloadURL();
 
     setState(() {
@@ -56,8 +56,7 @@ class BookWidgetState extends State<BookWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Image.network(coverCDN),
-          if (url != null && url!.isNotEmpty) Image.network(url!),
+          if (url != null && url!.isNotEmpty) ImageLoader(url: url!),
           if (url == null || url!.isEmpty) _imagePlaceHolder(),
           Flexible(
               child: Padding(
@@ -68,8 +67,8 @@ class BookWidgetState extends State<BookWidget> {
                     style: Theme.of(context).textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ))),
-          if (widget.book.author != null)
-            Text(widget.book.author!,
+          if (widget.book.owner != null)
+            Text(widget.book.owner?.toString() ?? "",
                 style: Theme.of(context).textTheme.labelSmall),
         ],
       ),

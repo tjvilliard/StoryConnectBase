@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writing_app/components/road_unblocker/models/road_unblocker_models.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
-import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Services/url_service.dart';
 
 part 'road_unblocker_events.dart';
 part 'road_unblocker_state.dart';
