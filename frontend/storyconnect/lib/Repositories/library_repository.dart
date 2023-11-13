@@ -15,7 +15,7 @@ class LibraryApiProvider {
 
   Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
     try {
-      final url = UrlContants.getUserLibrary();
+      final url = UrlConstants.getUserLibrary();
 
       final result = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -41,7 +41,7 @@ class LibraryApiProvider {
   /// API endpoint for adding a new entry to a user's library.
   Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
-      final url = UrlContants.addLibraryBook();
+      final url = UrlConstants.addLibraryBook();
 
       await http.post(url,
           headers: <String, String>{
@@ -57,7 +57,7 @@ class LibraryApiProvider {
   /// API endpoint for removing an entry from a user's library.
   Future<void> removeBookFromLibrary(LibraryEntrySerializer serializer) async {
     try {
-      final url = UrlContants.removeLibraryBook(serializer.id!);
+      final url = UrlConstants.removeLibraryBook(serializer.id!);
 
       await http.delete(
         url,
