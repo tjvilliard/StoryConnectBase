@@ -39,10 +39,6 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
-                                      "Feedback for Chapter Index: ${BlocProvider.of<ChapterBloc>(context).state.currentChapterIndex}"),
-                                  Text(
-                                      "Feedback for Chapter ID: ${BlocProvider.of<ChapterBloc>(context).currentChapterId}"),
                                   FeedbackTypeSelector(),
                                   SentimentSelectorWidget(),
                                   Expanded(

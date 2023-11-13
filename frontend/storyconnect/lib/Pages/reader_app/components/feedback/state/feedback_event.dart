@@ -7,9 +7,9 @@ abstract class FeedbackEvent {
 }
 
 /// Change the entry for the suggestion field.
-class SuggestionEditedEvent extends FeedbackEvent {
+class FeedbackEditedEvent extends FeedbackEvent {
   final String? suggestion;
-  const SuggestionEditedEvent({
+  const FeedbackEditedEvent({
     required String? this.suggestion,
   });
 }
@@ -35,6 +35,22 @@ class FeedbackTypeChangedEvent extends FeedbackEvent {
   final FeedbackType feedbackType;
   const FeedbackTypeChangedEvent({
     required this.feedbackType,
+  });
+}
+
+/// Updates the Recorded Annotation Item.
+class AnnotationChangedEvent extends FeedbackEvent {
+  final ChapterBloc chapterBloc;
+  final int offset;
+  final int offsetEnd;
+  final String text;
+
+  ///
+  const AnnotationChangedEvent({
+    required this.chapterBloc,
+    required this.offset,
+    required this.offsetEnd,
+    required this.text,
   });
 }
 

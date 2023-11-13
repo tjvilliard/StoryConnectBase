@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/background_panels/panel_divider.dart';
-import 'package:storyconnect/Pages/reading_hub/components/background_panels/solid_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/background_panels/content_panel.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
-import 'package:storyconnect/theme.dart';
 
 /// The Reading Home View: Displays a curated set of book content for the readers.
 class ReadingHomeView extends StatefulWidget {
@@ -45,41 +42,13 @@ class ReadingHomeState extends State<ReadingHomeView> {
           List<Widget> toReturn;
           if (homeState.loadingStruct.isLoading) {
             toReturn = <Widget>[
-              SolidContentPanel(
+              SolidPanel(
                   children: [LoadingItem()],
                   primary: Theme.of(context).canvasColor)
             ];
           } else {
-            toReturn = <Widget>[
-              SolidContentPanel(
-                  children: [BlankPanel(height: 1.5)],
-                  primary: Colors.transparent),
-              ContentDivider(
-                color: myColorScheme.secondary,
-                thickness: 2.0,
-              ),
-              BlocBuilder<LibraryBloc, LibraryStruct>(
-                  builder: (context, state) {
-                return FadedContentPanel.titledBookPanel(
-                    state.libraryBooks,
-                    myColorScheme.secondary.withOpacity(0.45),
-                    Theme.of(context).canvasColor,
-                    "Continue Reading",
-                    "Pick up where you left off",
-                    false);
-              }),
-              ContentDivider(
-                color: myColorScheme.secondary,
-                thickness: 2.0,
-              ),
-              FadedContentPanel.titledBookPanel(
-                  homeState.books,
-                  Colors.grey.withOpacity(.1),
-                  Theme.of(context).canvasColor,
-                  "Browse some Books",
-                  "",
-                  true)
-            ];
+            /// Build scrolling paginated view of book panels
+            toReturn = <Widget>[];
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500),

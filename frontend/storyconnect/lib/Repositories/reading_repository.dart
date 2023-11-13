@@ -19,22 +19,21 @@ class ReadingApiProvider {
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
-      print("getting feedback url");
       final url = UrlContants.createWriterFeedback();
-      print("getting result from post call");
+      print("[INFO]: Getting result from post call. \n");
 
-      print(jsonEncode(serializer.toJson()));
+      final token = await getAuthToken();
 
       final result = await http.post(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token ${await getAuthToken()}'
+          'Authorization': 'Token ${token}'
         },
         body: jsonEncode(serializer.toJson()),
       );
 
-      print(result.body);
+      print("[DEBUG]: Json Result: \n ${result.body} \n");
 
       return WriterFeedback.fromJson(jsonDecode(result.body));
     } catch (e) {

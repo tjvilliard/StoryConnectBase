@@ -29,10 +29,10 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     on<FeedbackTypeChangedEvent>(
         (event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
-    on<SuggestionEditedEvent>((event, emit) => suggestionEdited(event, emit));
-    on<CommentEditedEvent>((event, emit) => commentEdited(event, emit));
+    on<FeedbackEditedEvent>((event, emit) => feedbackEdited(event, emit));
 
     on<SubmitFeedbackEvent>((event, emit) => submitFeedback(event, emit));
+    on<AnnotationChangedEvent>((event, emit) => annotationChanged(event, emit));
     on<LoadChapterFeedbackEvent>(
         (event, emit) => loadChapterFeedback(event, emit));
   }
@@ -54,12 +54,12 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
     bloc.currentChapterId;
 
-    // final List<WriterFeedback> newFeedbackSet =
-    //    await this._repo.getChapterFeedback(event.chpaterBloc);
+    final List<WriterFeedback> newFeedbackSet =
+        await this._repo.getChapterFeedback(event.chapterBloc.currentChapterId);
 
-    // currentFeedbackSet.remove(event.chapterId);
+    currentFeedbackSet.remove(event.chapterBloc.currentChapterId);
 
-    // currentFeedbackSet[event.chapterId] = newFeedbackSet;
+    currentFeedbackSet[event.chapterBloc.currentChapterId] = newFeedbackSet;
 
     emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(false),
@@ -67,15 +67,27 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     ));
   }
 
-  sentimentChanged(SentimentChangedEvent event, FeedbackEmitter emit) {
+  void sentimentChanged(SentimentChangedEvent event, FeedbackEmitter emit) {
     emit(state.copyWith(
         serializer: state.serializer.copyWith(sentiment: event.sentiment)));
-
-    print(event.sentiment);
-    print(state.serializer.chapterId);
   }
 
-  feedbackTypeChanged(FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
+  void annotationChanged(AnnotationChangedEvent event, FeedbackEmitter emit) {
+    emit(state.copyWith(
+        serializer: state.serializer.copyWith(
+            selection: state.serializer.selection.copyWith(
+      offset: event.offset,
+      offsetEnd: event.offsetEnd,
+      chapterId: event.chapterBloc.currentChapterId,
+      text: event.text,
+    ))));
+
+    print("[DEBUG]: Serializer State:\n");
+    print("${state.serializer}");
+  }
+
+  void feedbackTypeChanged(
+      FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
     if (event.feedbackType == FeedbackType.suggestion) {
       String? commentState = state.serializer.comment;
 
@@ -106,29 +118,35 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   }
 
   /// Changes the contents of the feedback suggestion and emits the changed state.
-  suggestionEdited(SuggestionEditedEvent event, FeedbackEmitter emit) {
-    emit(state.copyWith(
-        serializer: state.serializer.copyWith(suggestion: event.suggestion)));
-  }
-
-  /// Changes the contents of the feedback comment and emits the changed comment.
-  commentEdited(CommentEditedEvent event, FeedbackEmitter emit) {
-    emit(state.copyWith(
-        serializer: state.serializer.copyWith(comment: event.comment)));
+  void feedbackEdited(FeedbackEditedEvent event, FeedbackEmitter emit) {
+    if (state.selectedFeedbackType == FeedbackType.suggestion) {
+      emit(state.copyWith(
+        serializer: state.serializer.copyWith(suggestion: event.suggestion),
+      ));
+    } else {
+      emit(state.copyWith(
+        serializer: state.serializer.copyWith(comment: event.suggestion),
+      ));
+    }
   }
 
   /// Submits the feedback item, and emits the changed state.
-  submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
+  void submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
+    int chapterId = event.chapterBloc.currentChapterId;
+
+    String loadingMessage =
+        state.selectedFeedbackType == FeedbackType.suggestion
+            ? "Posting Suggestion"
+            : "Posting Comment";
+
     emit(state.copyWith(
-        serializer: state.serializer.copyWith(
-            selection: AnnotatedTextSelection(
-              chapterId: event.chapterBloc.currentChapterId,
-              floating: false,
-              offset: 0,
-              offsetEnd: 0,
-              text: "",
-            ),
-            chapterId: event.chapterBloc.currentChapterId)));
+      serializer: state.serializer.copyWith(
+          chapterId: chapterId,
+          selection: state.serializer.selection.copyWith(
+            chapterId: chapterId,
+          )),
+      loadingStruct: LoadingStruct.message(loadingMessage),
+    ));
 
     print("Submitting Feedback");
 

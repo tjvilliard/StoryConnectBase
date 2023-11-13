@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/background_panels/solid_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/background_panels/content_panel.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/tabbed_item.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
@@ -39,13 +38,13 @@ class LibraryState extends State<LibraryView> {
               List<ContentPanel> toReturn;
               if (libState.loadingStruct.isLoading) {
                 toReturn = <ContentPanel>[
-                  SolidContentPanel(
+                  SolidPanel(
                       children: [LoadingItem()],
                       primary: Theme.of(context).canvasColor)
                 ];
               } else {
                 toReturn = <ContentPanel>[
-                  SolidContentPanel(children: [
+                  SolidPanel(children: [
                     BlankPanel(height: 25),
                     PanelHeader("My Library"),
                     BlankPanel(height: 25),

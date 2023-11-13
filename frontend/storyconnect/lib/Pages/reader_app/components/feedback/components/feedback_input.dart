@@ -53,12 +53,18 @@ class _feedbackInputWidget extends State<FeedbackInputWidget> {
                           child: Container(
                         constraints: BoxConstraints(minHeight: 60),
                         child: TextField(
-                          maxLength: 1000,
-                          minLines: 1,
-                          maxLines: 5,
-                          decoration: InputDecoration(
-                              hintText: "Write your Suggestion Here."),
-                        ),
+                            controller: this._feedbackInputController,
+                            maxLength: 1000,
+                            minLines: 1,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                                hintText: "Write your Suggestion Here."),
+                            onChanged: (_) {
+                              context.read<FeedbackBloc>().add(
+                                  FeedbackEditedEvent(
+                                      suggestion:
+                                          this._feedbackInputController.text));
+                            }),
                       )),
                       Container(
                           alignment: Alignment.bottomCenter,
