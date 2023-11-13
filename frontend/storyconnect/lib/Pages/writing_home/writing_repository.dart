@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class WritingHomeApiProvider {
   Future<Book?> createBook({required String title}) async {
     try {
-      final Uri url = UrlContants.getBooks();
+      final Uri url = UrlConstants.getBooks();
       final result = await http.post(
         url,
         headers: <String, String>{
@@ -25,7 +25,7 @@ class WritingHomeApiProvider {
 
   Future<List<Book>> getBooks() async {
     try {
-      final Uri url = UrlContants.getBooks();
+      final Uri url = UrlConstants.getBooks();
       final result = await http.get(url);
       final undecodedBookList = jsonDecode(result.body) as List;
       List<Book> results = [];

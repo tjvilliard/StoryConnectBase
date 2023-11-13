@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
@@ -11,27 +10,19 @@ import 'package:storyconnect/Pages/reading_hub/components/serializers/library_en
 import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
-  Future<String> getAuthToken() async {
-    return (await FirebaseAuth.instance.currentUser!.getIdToken(true))
-        as String;
-  }
-
   /// Generates HTTP: POST request for new feedback item.
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
       print("getting feedback url");
-      final url = UrlContants.createWriterFeedback();
+      final url = UrlConstants.createWriterFeedback();
       print("getting result from post call");
 
       print(jsonEncode(serializer.toJson()));
 
       final result = await http.post(
         url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token ${await getAuthToken()}'
-        },
+        headers: await buildHeaders(),
         body: jsonEncode(serializer.toJson()),
       );
 
@@ -46,14 +37,8 @@ class ReadingApiProvider {
 
   /// Get feedback items associated with this chapter.
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
-    final url = UrlContants.getWriterFeedback(chapterId);
-    final result = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token ${await getAuthToken()}'
-      },
-    );
+    final url = UrlConstants.getWriterFeedback(chapterId);
+    final result = await http.get(url, headers: await buildHeaders());
     for (var feedback in jsonDecode(result.body)) {
       yield WriterFeedback.fromJson(feedback);
     }
@@ -61,12 +46,9 @@ class ReadingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlContants.books;
+      final url = UrlConstants.books;
 
-      final result = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token ${await getAuthToken()}'
-      });
+      final result = await http.get(url, headers: await buildHeaders());
 
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);
@@ -80,15 +62,10 @@ class ReadingApiProvider {
   Stream<Library> getLibrary() async* {
     try {
       // get url for user library api call.
-      final url = UrlContants.getUserLibrary();
-
-      String token = await getAuthToken();
+      final url = UrlConstants.getUserLibrary();
 
       // get result for HTTP GET request
-      final result = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token ${token}'
-      });
+      final result = await http.get(url, headers: await buildHeaders());
 
       for (var libraryEntry in jsonDecode(result.body)) {
         yield Library.fromJson(libraryEntry);
@@ -102,14 +79,11 @@ class ReadingApiProvider {
   Future<void> addBooktoLibrary(LibraryEntrySerialzier serializer) async {
     try {
       // get url for adding entry to user library api call.
-      final url = UrlContants.addLibraryBook();
+      final url = UrlConstants.addLibraryBook();
 
       // send off HTTP POST request
       await http.post(url,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'Token ${await getAuthToken()}'
-          },
+          headers: await buildHeaders(),
           body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       print(e);
@@ -120,16 +94,10 @@ class ReadingApiProvider {
   Future<void> removeBookfromLibrary(LibraryEntrySerialzier serializer) async {
     try {
       // get url for removing entry from user library api call.
-      final url = UrlContants.removeLibraryBook(serializer.id!);
+      final url = UrlConstants.removeLibraryBook(serializer.id!);
 
       // send off HTTP DELETE request
-      await http.delete(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token ${await getAuthToken()}'
-        },
-      );
+      await http.delete(url, headers: await buildHeaders());
     } catch (e) {
       print(e);
     }

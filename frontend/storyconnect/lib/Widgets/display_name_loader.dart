@@ -32,11 +32,15 @@ class _DisplayNameLoaderWidgetState extends State<DisplayNameLoaderWidget> {
         displayName = cachedName;
       });
     } else {
-      FirebaseHelper.getDisplayName(widget.uid).then((fetchedName) {
+      FirebaseHelper.getDisplayName(widget.uid).then((String? fetchedName) {
         if (fetchedName != null) {
           setState(() {
             displayName = fetchedName;
             _displayNameCache[widget.uid] = fetchedName;
+          });
+        } else {
+          setState(() {
+            displayName = "Unknown";
           });
         }
       });
@@ -48,8 +52,11 @@ class _DisplayNameLoaderWidgetState extends State<DisplayNameLoaderWidget> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       child: displayName == null
-          ? LoadingWidget(loadingStruct: LoadingStruct.message("Loading..."))
-          : Text(displayName!, style: widget.style, key: ValueKey('name')),
+          ? LoadingWidget(loadingStruct: LoadingStruct.loading(true))
+          : Padding(
+              padding: EdgeInsets.all(5),
+              child: Text(displayName!,
+                  style: widget.style, key: ValueKey('name'))),
     );
   }
 }
