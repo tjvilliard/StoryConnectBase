@@ -25,11 +25,8 @@ class BookViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
-            # Use the instance directly instead of querying it again
             book = serializer.instance
-            book.author = request.user.username
-            book.save()
-
+            
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 

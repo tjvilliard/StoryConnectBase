@@ -20,10 +20,6 @@ typedef BookCreateEmitter = void Function(BookCreateState);
 class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
   final WritingRepository repository;
   BookCreateBloc(this.repository) : super(BookCreateState.initial()) {
-    on<AuthorChangedEvent>((event, emit) {
-      // emit(state.copyWith(
-      //     serializer: state.serializer.copyWith(author: event.author)));
-    });
     on<TitleChangedEvent>((event, emit) {
       emit(state.copyWith(
           serializer: state.serializer.copyWith(title: event.title)));

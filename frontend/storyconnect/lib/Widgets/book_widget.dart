@@ -67,8 +67,8 @@ class BookWidgetState extends State<BookWidget> {
                     style: Theme.of(context).textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ))),
-          if (widget.book.author != null)
-            Text(widget.book.author!,
+          if (widget.book.owner != null)
+            Text(widget.book.owner?.toString() ?? "",
                 style: Theme.of(context).textTheme.labelSmall),
         ],
       ),
