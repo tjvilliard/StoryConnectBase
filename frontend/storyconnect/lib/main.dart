@@ -1,7 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Repositories/profile_repository.dart';
+import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/login_locations.dart';
@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
             lazy: false,
             create: (_) => ReadingRepository(),
           ),
-          RepositoryProvider(create: (_) => ProfileRepository())
+          RepositoryProvider(create: (_) => CoreRepository())
         ],
         child: MaterialApp.router(
           theme: lightTheme,

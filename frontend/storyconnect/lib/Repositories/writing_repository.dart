@@ -22,7 +22,7 @@ class WritingApiProvider {
 
   Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
     try {
-      final url = UrlConstants.books;
+      final url = UrlConstants.books();
       final result = await http.post(
         url,
         headers: await buildHeaders(),
@@ -37,7 +37,7 @@ class WritingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlConstants.writerBooks;
+      final url = UrlConstants.currentUserBooks();
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var book in jsonDecode(result.body)) {

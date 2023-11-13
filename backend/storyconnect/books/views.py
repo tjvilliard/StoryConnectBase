@@ -7,12 +7,13 @@ from .models import Book, Chapter, Library
 from .serializers import  BookSerializer, ChapterSerializer, LibrarySerializer
 from django.db import transaction
 from rest_framework.views import APIView
+from core.permissions import IsOwnerOrReadOnly
 
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
     # search_fields = ['title', 'author', 'language']
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Book.objects.all()
 
     def create(self, request, *args, **kwargs):
@@ -50,20 +51,16 @@ class BookViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
     
     @action(detail=False, methods=['get'])
-    def by_writer(self, request):
-        # TODO: Test this
-        books = Book.objects.filter(owner=request.user)
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
-    
-    @action(detail=False, methods=['get'], url_path='by-author/(?P<author>[^/.]+)')
-    def by_author(self, request):
-        author = request.query_params.get('author')
+    def writer(self, request):
+        username = request.query_params.get('username', None)
 
-        if not author:
-            return Response({'detail': 'No author specified'}, status=status.HTTP_400_BAD_REQUEST)
+        if username:
+            # Filter books based on the provided username
+            books = Book.objects.filter(author=username)
+        else:
+            # Default to filtering books based on the request user
+            books = Book.objects.filter(owner=request.user)
 
-        books = Book.objects.filter(author=author)
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 

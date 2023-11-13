@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/view.dart';
-import 'package:storyconnect/Repositories/profile_repository.dart';
+import 'package:storyconnect/Repositories/core_repository.dart';
 
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
@@ -25,7 +25,7 @@ class ProfileLocations extends BeamLocation<BeamState> {
           key: ValueKey('writer-$userId'),
           child: BlocProvider(
             create: (context) =>
-                WriterProfileBloc(context.read<ProfileRepository>()),
+                WriterProfileBloc(context.read<CoreRepository>()),
             child: WriterProfileWidget(uid: userId!),
           )));
     } else {

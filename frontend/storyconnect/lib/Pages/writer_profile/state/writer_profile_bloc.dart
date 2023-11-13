@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writer_profile/models/writer_profile_models.dart';
-import 'package:storyconnect/Repositories/profile_repository.dart';
+import 'package:storyconnect/Repositories/core_repository.dart';
 
 part 'writer_profile_events.dart';
 part 'writer_profile_state.dart';
@@ -12,8 +12,8 @@ part 'writer_profile_bloc.freezed.dart';
 typedef WriterProfileEmitter = Emitter<WriterProfileState>;
 
 class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
-  final ProfileRepository _repo;
-  WriterProfileBloc(ProfileRepository repo)
+  final CoreRepository _repo;
+  WriterProfileBloc(CoreRepository repo)
       : _repo = repo,
         super(WriterProfileState.initial()) {
     on<WriterProfileLoadEvent>((event, emit) => load(event, emit));
