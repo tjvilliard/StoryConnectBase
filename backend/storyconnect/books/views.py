@@ -56,7 +56,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
         if username:
             # Filter books based on the provided username
-            books = Book.objects.filter(author=username)
+            books = Book.objects.filter(owner__username=username)
         else:
             # Default to filtering books based on the request user
             books = Book.objects.filter(owner=request.user)

@@ -52,10 +52,12 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
 
   makeAnnouncement(
       MakeAnnouncementEvent event, WriterProfileEmitter emit) async {
-    final response = await _repo.makeAnnouncement(event.title, event.content);
+    final Announcement? response =
+        await _repo.makeAnnouncement(event.title, event.content);
 
-    if (response) {
+    if (response != null) {
       emit(state.copyWith(
+        announcements: [response, ...state.announcements],
         responseMessages: ["Announcement made successfully"],
       ));
     } else {

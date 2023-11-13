@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from .authentication import FirebaseAuthentication 
 from .serializers import UserUidConversionSerializer, ProfileSerializer, ActivitySerializer, AnnouncementSerializer
 from .models import Profile, Activity, Announcement
@@ -98,4 +97,4 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
-        serializer.save(writer_id=self.request.user.id)
+        serializer.save(user=self.request.user)
