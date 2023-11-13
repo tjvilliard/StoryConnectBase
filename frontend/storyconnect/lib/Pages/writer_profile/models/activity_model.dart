@@ -19,4 +19,7 @@ class Activity with _$Activity {
         preposition: "",
         time: DateTime.now(),
       );
+
+  factory Activity.fromJson(Map<String, dynamic> json) =>
+      _$ActivityFromJson(json);
 }

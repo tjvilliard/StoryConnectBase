@@ -6,7 +6,7 @@ class Announcement with _$Announcement {
     required int id,
     required String title,
     required String content,
-    required String writerId,
+    @JsonKey(name: 'user') required int userId,
     required DateTime createdAt,
   }) = _Announcement;
 

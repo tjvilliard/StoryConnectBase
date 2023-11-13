@@ -42,7 +42,7 @@ class ReadingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlConstants.books;
+      final url = UrlConstants.books();
 
       final result = await http.get(url, headers: await buildHeaders());
 

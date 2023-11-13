@@ -34,7 +34,8 @@ class ProfileCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(profile.name),
+                  Text(profile.displayName ?? "No name",
+                      style: Theme.of(context).textTheme.titleMedium),
                 ],
               ),
               SizedBox(width: 20), // some spacing between columns
