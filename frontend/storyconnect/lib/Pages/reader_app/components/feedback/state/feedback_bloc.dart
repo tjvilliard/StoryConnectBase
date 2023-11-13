@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
-import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
