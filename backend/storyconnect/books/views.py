@@ -56,7 +56,8 @@ class BookViewSet(viewsets.ModelViewSet):
             books = Book.objects.filter(owner__username=username)
         else:
             # Default to filtering books based on the request user
-            books = Book.objects.filter(owner=request.user)
+            print(request.user.id)
+            books = Book.objects.filter(owner__id=request.user.id)
 
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
