@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
 
 class NavigateToFeedbackButton extends StatelessWidget {
@@ -25,7 +25,7 @@ class NavigateToFeedbackButton extends StatelessWidget {
                   .copyWith(color: Colors.black, fontSize: 16),
               selection: feedback.selection,
               chapterText:
-                  context.read<ChapterBloc>().state.currentChapterText)),
+                  context.read<WritingBloc>().state.currentChapterText)),
           icon: Icon(FontAwesomeIcons.arrowRight, size: 15),
         ));
   }

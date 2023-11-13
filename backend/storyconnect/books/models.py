@@ -1,10 +1,6 @@
 from django.db import models
 # from django import forms
 from django.contrib.auth.models import User
-from django_extensions.db.models import TimeStampedModel
-from firebase_admin import storage
-from storyconnect.settings import FIREBASE_BUCKET
-import os
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 

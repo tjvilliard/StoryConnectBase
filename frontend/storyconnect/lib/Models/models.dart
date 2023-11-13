@@ -162,48 +162,21 @@ class Highlight with _$Highlight {
 }
 
 @freezed
-class RoadUnblockerRequest with _$RoadUnblockerRequest {
-  const factory RoadUnblockerRequest({
-    required String chapter,
-    required String selection,
-    required String question,
-  }) = _RoadUnblockerRequest;
-  const RoadUnblockerRequest._();
+class Profile with _$Profile {
+  const factory Profile({
+    required int id,
+    required String bio,
+    required String avatar,
+    required String name,
+  }) = _Profile;
 
-  factory RoadUnblockerRequest.fromJson(Map<String, dynamic> json) =>
-      _$RoadUnblockerRequestFromJson(json);
-}
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
 
-@freezed
-class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
-  factory RoadUnblockerSuggestion({
-    // This field stores a locally generated UUID and is not serialized to JSON
-    required String uid, // <- Local only UUID
-    @JsonKey(name: 'offset_start') int? offsetStart,
-    @JsonKey(name: 'offset_end') int? offsetEnd,
-    required String suggestion,
-    String? original,
-    @JsonKey(name: 'suggested_change') required String suggestedChange,
-  }) = _RoadUnblockerSuggestion;
-  const RoadUnblockerSuggestion._();
-
-  bool isAddition() {
-    return original == null || original!.isEmpty;
-  }
-
-  factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) =>
-      _$RoadUnblockerSuggestionFromJson(json);
-}
-
-@freezed
-class RoadUnblockerResponse with _$RoadUnblockerResponse {
-  factory RoadUnblockerResponse({
-    required String uid,
-    required String message,
-    required List<RoadUnblockerSuggestion> suggestions,
-  }) = _RoadUnblockerResponse;
-  const RoadUnblockerResponse._();
-
-  factory RoadUnblockerResponse.fromJson(Map<String, dynamic> json) =>
-      _$RoadUnblockerResponseFromJson(json);
+  factory Profile.initial() => Profile(
+        id: 0,
+        bio: '',
+        avatar: '',
+        name: '',
+      );
 }

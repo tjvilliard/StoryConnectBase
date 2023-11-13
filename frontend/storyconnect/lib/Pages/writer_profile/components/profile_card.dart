@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({super.key});
+  final Profile profile;
+  const ProfileCard({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +33,8 @@ class ProfileCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  Text("Author Name",
-                      style: Theme.of(context).textTheme.titleMedium),
+                  SizedBox(height: 8),
+                  Text(profile.name),
                 ],
               ),
               SizedBox(width: 20), // some spacing between columns
@@ -38,7 +43,20 @@ class ProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Bio", style: Theme.of(context).textTheme.titleLarge),
-                    Text("Lorem ipsum // 100 characters"),
+                    BlocBuilder<WriterProfileBloc, WriterProfileState>(
+                        builder: (context, state) {
+                      Widget toReturn;
+                      if (state.profileLoadingStruct.isLoading == true) {
+                        toReturn = LoadingWidget(
+                            loadingStruct: state.profileLoadingStruct);
+                      } else {
+                        toReturn = Text(state.profile.bio,
+                            style: Theme.of(context).textTheme.labelMedium);
+                      }
+                      return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: toReturn);
+                    })
                   ],
                 ),
               ),

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 /// Builder for api uri's
 class _UrlBuilder {
   int version = 1; // use this later to change the api version
@@ -12,6 +14,15 @@ class _UrlBuilder {
       return partialURI;
     }
   }
+}
+
+Future<Map<String, String>> buildHeaders() async {
+  String authToken =
+      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  return <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Token $authToken'
+  };
 }
 
 /// URL constants and builders for app pages.
@@ -38,13 +49,13 @@ class PageUrls {
   }
 
   /// URL for a writer's profile.
-  static String writerProfile(int userID) {
-    return "/profile/writer/$userID";
+  static String writerProfile(String uid) {
+    return "/profile/writer/$uid";
   }
 }
 
 /// URL constants for REST api calls.
-class UrlContants {
+class UrlConstants {
   static final _urlBuilder = _UrlBuilder();
 
   ///
@@ -62,6 +73,14 @@ class UrlContants {
   ///
   static Uri getChapters(int bookId) {
     return _urlBuilder.build('books/$bookId/get_chapters');
+  }
+
+  static Uri getBooks() {
+    return _urlBuilder.build('books/');
+  }
+
+  static Uri createBook() {
+    return _urlBuilder.build('books/');
   }
 
   ///
@@ -103,4 +122,26 @@ class UrlContants {
   static getNarrativeElements(int bookId) {
     return _urlBuilder.build('narrative_elements/$bookId');
   }
+
+  static Uri getDisplayName(String uid) {
+    return _urlBuilder.build('display_name/$uid');
+  }
+
+  static getBooksByUser(String uid) {
+    return _urlBuilder.build('books/by_writer/$uid');
+  }
+
+  static getAnnouncements(String uid) {
+    return _urlBuilder.build('announcements/by_writer/$uid');
+  }
+
+  static getProfile(String uid) {
+    return _urlBuilder.build('profile/$uid');
+  }
+
+  static makeAnnouncement() {
+    return _urlBuilder.build('announcements/');
+  }
+
+  static getActivities(String uid) {}
 }

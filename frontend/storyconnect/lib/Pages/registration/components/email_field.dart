@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
@@ -35,7 +36,7 @@ class _emailState extends State<EmailField> {
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                prefixIcon: Icon(Icons.email_rounded),
+                prefixIcon: Icon(FontAwesomeIcons.envelope),
                 labelText: 'Email',
                 errorText: state.showEmailError ? state.emailError : null),
           ),

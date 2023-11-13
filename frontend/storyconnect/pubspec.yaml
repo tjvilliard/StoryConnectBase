@@ -9,28 +9,30 @@ environment:
 dependencies:
   beamer: ^1.5.3
   bloc_concurrency: ^0.2.2
-  file_picker: ^6.0.0
-  firebase_auth: ^4.11.1 
-  firebase_core: ^2.19.0
-  firebase_storage: ^11.3.1
+  file_picker: ^6.1.1
+  firebase_auth: ^4.12.1 
+  firebase_core: ^2.21.0 
+  firebase_storage: ^11.4.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
-  font_awesome_flutter: ^10.5.0
+  font_awesome_flutter: ^10.6.0
   freezed_annotation: ^2.4.1
-  google_fonts: ^5.1.0
-  intl: ^0.18.1
+  google_fonts: ^6.1.0
   json_annotation: ^4.8.1
   replay_bloc: ^0.2.4
   synchronized: ^3.1.0
   tuple: ^2.0.1
   uuid: ^4.0.0
+  visual_editor:
+    git: 
+      url: https://github.com/Dall127/visual-editor.git
+      ref: 9bdf595
     
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
   build_runner: ^2.4.6
   freezed: ^2.4.3
   json_serializable: ^6.7.1

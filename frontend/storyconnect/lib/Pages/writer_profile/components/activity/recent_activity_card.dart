@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/writer_profile/models/writer_profile_models.dart';
+import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 part 'activity_card.dart';
 
@@ -8,7 +12,8 @@ class RecentActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Padding(
+        child: Container(
+            constraints: BoxConstraints(maxWidth: 230),
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
@@ -18,11 +23,30 @@ class RecentActivityCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(height: 20),
-                ...List.generate(
-                    3,
-                    (index) => _ActivityCard(
-                          activity: "Author X did activity: $index",
-                        ))
+                BlocBuilder<WriterProfileBloc, WriterProfileState>(
+                    builder: (context, state) {
+                  Widget toReturn;
+                  if (state.activitiesLoadingStruct.isLoading == true) {
+                    toReturn = LoadingWidget(
+                        loadingStruct: state.activitiesLoadingStruct);
+                  } else {
+                    if (state.activities.isEmpty) {
+                      toReturn = Text("No activity found");
+                    } else {
+                      toReturn = ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: state.activities.length,
+                          itemBuilder: (context, index) {
+                            return _ActivityCard(
+                                activity: state.activities[index]);
+                          });
+                    }
+                  }
+                  return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: toReturn);
+                })
               ],
             )));
   }

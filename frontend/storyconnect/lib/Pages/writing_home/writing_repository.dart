@@ -1,14 +1,14 @@
 import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Services/url_service.dart';
+import 'package:http/http.dart' as http;
 
 class WritingHomeApiProvider {
   Future<Book?> createBook({required String title}) async {
     try {
+      final Uri url = UrlConstants.getBooks();
       final result = await http.post(
-        Uri.parse('https://storyconnect.app/api/books/'),
+        url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -25,9 +25,8 @@ class WritingHomeApiProvider {
 
   Future<List<Book>> getBooks() async {
     try {
-      final result = await http.get(
-        Uri.parse('https://storyconnect.app/api/books'),
-      );
+      final Uri url = UrlConstants.getBooks();
+      final result = await http.get(url);
       final undecodedBookList = jsonDecode(result.body) as List;
       List<Book> results = [];
       for (var book in undecodedBookList) {

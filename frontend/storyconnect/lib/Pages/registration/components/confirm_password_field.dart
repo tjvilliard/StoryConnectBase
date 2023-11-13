@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
@@ -18,6 +19,8 @@ class _confirmPasswordState extends State<ConfirmPasswordField> {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
         builder: (BuildContext context, RegistrationState state) {
+      final IconData eyeIcon =
+          state.showPassword ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash;
       return Container(
           constraints: BoxConstraints(minHeight: 56),
           width: LoginPageConstants.maxWidth,
@@ -34,11 +37,12 @@ class _confirmPasswordState extends State<ConfirmPasswordField> {
                 errorMaxLines: 3,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                prefixIcon: Icon(Icons.lock_rounded),
+                prefixIcon: Icon(FontAwesomeIcons.lock),
                 suffixIcon: IconButton(
-                  icon: state.showConfirmPassword
-                      ? Icon(Icons.visibility)
-                      : Icon(Icons.visibility_off),
+                  icon: Padding(
+                    padding: EdgeInsets.only(right: 4),
+                    child: Icon(eyeIcon),
+                  ),
                   onPressed: () {
                     context
                         .read<RegistrationBloc>()

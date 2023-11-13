@@ -71,7 +71,8 @@ class _readingMenuBarState extends State<ReadingMenuBar> {
 
                                         // Navigate Chapter Forward
                                         ReadingIconButton(
-                                          icon: Icon(Icons.arrow_right),
+                                          icon:
+                                              Icon(FontAwesomeIcons.arrowRight),
                                           onPressed: chapterState
                                                       .currentChapterIndex ==
                                                   chapterState.chapters.length -

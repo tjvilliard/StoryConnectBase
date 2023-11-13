@@ -33,9 +33,10 @@ class BookCreationFormFields extends StatelessWidget {
           children: [
             Padding(padding: padding, child: LanguageDropdown()),
             Padding(padding: padding, child: AudienceDropdown()),
-            Padding(padding: padding, child: CopyrightDropdown())
           ],
         ),
+        SizedBox(height: 20),
+        Padding(padding: padding, child: CopyrightDropdown()),
         SizedBox(height: 20),
         ImageUpload(),
         SizedBox(height: 20),
