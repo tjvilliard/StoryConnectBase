@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Book, Chapter, Library
-from .serializers import  BookSerializer, ChapterSerializer, LibrarySerializer
+from .serializers import  BookSerializer, ChapterSerializer, LibraryBookSerializer, LibrarySerializer
 from django.db import transaction
 from rest_framework.views import APIView
 from core.permissions import IsOwnerOrReadOnly

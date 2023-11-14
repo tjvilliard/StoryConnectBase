@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
+import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
@@ -13,7 +14,7 @@ class ReadingApiProvider {
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
-      final url = UrlContants.createWriterFeedback();
+      final url = UrlConstants.createWriterFeedback();
       print("[INFO]: Getting result from post call. \n");
 
       final result = await http.post(
@@ -42,7 +43,7 @@ class ReadingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlConstants.books();
+      final url = UrlConstants.books(uid: "uid");
 
       final result = await http.get(url, headers: await buildHeaders());
 
@@ -72,7 +73,7 @@ class ReadingApiProvider {
   }
 
   /// Completes API action of adding a book to user library.
-  Future<void> addBooktoLibrary(LibraryEntrySerialzier serializer) async {
+  Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
       // get url for adding entry to user library api call.
       final url = UrlConstants.addLibraryBook();
@@ -87,7 +88,7 @@ class ReadingApiProvider {
   }
 
   /// Completes API action of removing a book from user library.
-  Future<void> removeBookfromLibrary(LibraryEntrySerialzier serializer) async {
+  Future<void> removeBookfromLibrary(LibraryEntrySerializer serializer) async {
     try {
       // get url for removing entry from user library api call.
       final url = UrlConstants.removeLibraryBook(serializer.id!);
