@@ -45,18 +45,18 @@ class CoreApiProvider {
     }
   }
 
-  Future<bool> makeAnnouncement(String title, String content) async {
+  Future<Announcement?> makeAnnouncement(String title, String content) async {
     try {
-      final serializer = AnnouncementSerializer(
+      final serializer = Announcement(
           title: title, content: content, createdAt: DateTime.now());
       final url = UrlConstants.announcements();
       final result = await http.post(url,
           headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
 
-      return result.statusCode == 200;
+      return Announcement.fromJson(jsonDecode(result.body));
     } catch (e) {
       print(e);
-      throw e;
+      return null;
     }
   }
 
@@ -90,7 +90,7 @@ class CoreRepository {
     return _api.getProfile(uid);
   }
 
-  Future<bool> makeAnnouncement(String title, String message) async {
+  Future<Announcement?> makeAnnouncement(String title, String message) async {
     return _api.makeAnnouncement(title, message);
   }
 

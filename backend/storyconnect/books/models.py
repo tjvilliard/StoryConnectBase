@@ -29,7 +29,6 @@ class Book(models.Model):
     ]
     
     title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100, null = True, blank = True)
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
@@ -44,19 +43,15 @@ class Book(models.Model):
     # rating = models.FloatField(null=True, blank=True, max_value = 5.0)
 
 
-
-
     def __str__(self):
         return self.title
     
-    # What does this do?
+    # TODO: What does this do?
     def get_attribute(self, attr):
         if attr == "title":
             return Book.objects.filter(title=self.title)
-        elif attr == "author":
-            return Book.objects.filter(author=self.author)
         elif attr == "language":
-            return Book.objects.filter(author=self.language)
+            return Book.objects.filter(language=self.language)
         
     def get_chapters(self):
         return Chapter.objects.filter(book=self)

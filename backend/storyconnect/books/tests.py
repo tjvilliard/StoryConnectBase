@@ -1,11 +1,11 @@
-from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 
-from .models import Book, Chapter, Character, Location, Scene
+from .models import Book
+# from .models import Chapter, Character, Location, Scene
 
 # Add test cases for Chapter, Character, Location, and Scene models similarly
 class BookViewSetTestCase(APITestCase):
@@ -23,7 +23,6 @@ class BookViewSetTestCase(APITestCase):
         # Create a sample book
         self.book = Book.objects.create(
             title='Test Book',
-            author='Test Author',
             owner=self.user,
             language='English',
             target_audience=1,
@@ -178,6 +177,7 @@ class UserBookCreationTestCase(APITestCase):
     
     # testing deleting a book in the database
     def test_delete_a_book(self):
+        #  TODO: need to fix this
         book_delete = {
             'title'               : "Glass Sword",
             'author'              : "Victoria Aveyard",

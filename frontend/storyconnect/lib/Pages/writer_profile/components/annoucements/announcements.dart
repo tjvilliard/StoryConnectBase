@@ -47,9 +47,8 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 700,
-        ),
+        constraints:
+            BoxConstraints(maxWidth: 550, minWidth: 350, minHeight: 250),
         child: Card(
             child: Container(
                 padding: EdgeInsets.all(20),
@@ -71,14 +70,16 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
                         if (state.announcements.isEmpty) {
                           toReturn = Text("No announcements found");
                         } else {
-                          toReturn = Column(
-                            children: List.generate(
-                              announcements.length,
-                              (index) => AnnouncementCard(
-                                announcement: announcements[index],
-                              ),
-                            ),
-                          );
+                          toReturn = ConstrainedBox(
+                              constraints: BoxConstraints(maxHeight: 250),
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: state.announcements.length,
+                                  itemBuilder: (context, index) {
+                                    return AnnouncementCard(
+                                      announcement: announcements[index],
+                                    );
+                                  }));
                         }
                       }
                       return AnimatedSwitcher(

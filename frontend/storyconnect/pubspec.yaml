@@ -27,7 +27,7 @@ dependencies:
   visual_editor:
     git: 
       url: https://github.com/Dall127/visual-editor.git
-      ref: 9bdf595
+      ref: 19cd6c9
     
 dev_dependencies:
   flutter_test:

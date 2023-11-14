@@ -25,11 +25,8 @@ class BookViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
-            # Use the instance directly instead of querying it again
             book = serializer.instance
-            book.author = request.user.username
-            book.save()
-
+            
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 
@@ -56,10 +53,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
         if username:
             # Filter books based on the provided username
-            books = Book.objects.filter(author=username)
+            books = Book.objects.filter(owner__username=username)
         else:
             # Default to filtering books based on the request user
-            books = Book.objects.filter(owner=request.user)
+            print(request.user.id)
+            books = Book.objects.filter(owner__id=request.user.id)
 
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)

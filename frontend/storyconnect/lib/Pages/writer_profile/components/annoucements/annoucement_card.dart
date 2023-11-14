@@ -34,7 +34,7 @@ class AnnouncementCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(announcement.content),
+          Text(announcement.title),
           IconButton.filledTonal(
             onPressed: () => _readAnnouncement(context),
             padding: EdgeInsets.only(right: 2),
