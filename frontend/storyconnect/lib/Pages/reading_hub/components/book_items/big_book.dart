@@ -81,9 +81,7 @@ class BigBook extends StatelessBookItem {
                                             child: Icon(Icons.person_outline,
                                                 size: 16)),
                                         TextSpan(
-                                            text: this.book.author == null
-                                                ? ""
-                                                : this.book.author,
+                                            text: "Author Fillin...",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall)
