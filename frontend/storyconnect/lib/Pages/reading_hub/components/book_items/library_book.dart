@@ -30,9 +30,11 @@ class _removeBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle? _buttonStyle = ButtonStyle(
-        //textStyle: MaterialStatePropertyAll(Theme.of(context).te),
-        //overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
-        //backgroundColor: MaterialStatePropertyAll(Theme.of(context).focusColor),
+        textStyle:
+            MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+        overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
+        backgroundColor:
+            MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
             side: BorderSide(width: 1.0),
             borderRadius: BorderRadius.circular(10))));
@@ -68,9 +70,11 @@ class _libraryBookState extends State<LibraryBookItem> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle? _buttonStyle = ButtonStyle(
-        //textStyle: MaterialStatePropertyAll(Theme.of(context).te),
-        //overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
-        //backgroundColor: MaterialStatePropertyAll(Theme.of(context).focusColor),
+        textStyle:
+            MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+        overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
+        backgroundColor:
+            MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
             side: BorderSide(width: 1.0),
             borderRadius: BorderRadius.circular(10))));

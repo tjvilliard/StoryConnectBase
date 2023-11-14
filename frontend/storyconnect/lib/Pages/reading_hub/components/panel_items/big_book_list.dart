@@ -74,10 +74,10 @@ class _bigBookListWidgetState extends State<BigBookListWidget> {
                           children: this
                               .books
                               .map((book) => Container(
-                                  height: 270,
+                                  height: 200,
                                   width: 400.0,
                                   child: Card(
-                                      elevation: 3,
+                                      elevation: 0,
                                       child: BigBook(
                                         book: book,
                                       ))))
