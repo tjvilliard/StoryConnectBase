@@ -132,7 +132,7 @@ class UrlConstants {
     return _urlBuilder.build('narrative_elements/$bookId');
   }
 
-  static Uri getDisplayName(String uid) {
+  static Uri getDisplayName(int uid) {
     return _urlBuilder.build('display_name/$uid');
   }
 

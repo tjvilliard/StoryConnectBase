@@ -23,18 +23,20 @@ class BioTextEditorState extends State<BioTextEditor> {
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Flexible(
-          child: TextField(
-              onChanged: (String value) {
-                context
-                    .read<WriterProfileBloc>()
-                    .add(EditBioStateEvent(bio: value));
-              },
-              maxLines: 5,
-              controller: _controller,
-              decoration: InputDecoration(
-                  hintText: "Body",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5))))),
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: TextField(
+                  onChanged: (String value) {
+                    context
+                        .read<WriterProfileBloc>()
+                        .add(EditBioStateEvent(bio: value));
+                  },
+                  maxLines: 5,
+                  controller: _controller,
+                  decoration: InputDecoration(
+                      hintText: "Body",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5)))))),
       SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,

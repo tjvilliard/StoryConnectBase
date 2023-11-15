@@ -1,16 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writer_profile/components/bio_text_editor.dart';
 import 'package:storyconnect/Pages/writer_profile/components/edit_bio_button.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/display_name_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ProfileCard extends StatefulWidget {
-  final Profile profile;
   final String uid;
-  const ProfileCard({super.key, required this.profile, required this.uid});
+  const ProfileCard({super.key, required this.uid});
 
   @override
   ProfileCardState createState() => ProfileCardState();
@@ -18,7 +17,6 @@ class ProfileCard extends StatefulWidget {
 
 class ProfileCardState extends State<ProfileCard> {
   String get uid => widget.uid;
-  Profile get profile => widget.profile;
   bool? _showEditProfile = null;
 
   @override
@@ -57,15 +55,28 @@ class ProfileCardState extends State<ProfileCard> {
                   Container(
                     width: 100,
                     height: 100,
-                    // placeholder for now
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       shape: BoxShape.circle,
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(profile.displayName ?? "No name",
-                      style: Theme.of(context).textTheme.titleMedium),
+                  BlocBuilder<WriterProfileBloc, WriterProfileState>(
+                    builder: (context, state) {
+                      Widget toReturn;
+                      if (state.loadingStructs.profileLoadingStruct.isLoading ==
+                          true) {
+                        return Container();
+                      } else {
+                        toReturn = DisplayNameLoaderWidget(
+                            id: state.profile.user ?? 0,
+                            style: Theme.of(context).textTheme.titleMedium);
+                      }
+                      return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: toReturn);
+                    },
+                  )
                 ],
               ),
               SizedBox(width: 20), // some spacing between columns
@@ -89,20 +100,16 @@ class ProfileCardState extends State<ProfileCard> {
                           ],
                         );
                       } else if (state.isEditingBio) {
-                        toReturn = Padding(
-                            key: ValueKey('bio_editor'),
-                            padding: EdgeInsets.all(10),
-                            child: BioTextEditor());
+                        toReturn = BioTextEditor();
                       } else {
-                        toReturn = Padding(
-                            key: ValueKey('bio_text'),
-                            padding: EdgeInsets.all(10),
-                            child: Text(state.profile.bio,
-                                style: Theme.of(context).textTheme.labelLarge));
+                        toReturn = Text(state.profile.bio,
+                            style: Theme.of(context).textTheme.labelLarge);
                       }
-                      return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: toReturn);
+                      return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 200),
+                              child: toReturn));
                     })
                   ],
                 ),

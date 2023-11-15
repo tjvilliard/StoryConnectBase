@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Widgets/display_name_loader.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
 
 class BookWidget extends StatefulWidget {
@@ -68,8 +69,9 @@ class BookWidgetState extends State<BookWidget> {
                     textAlign: TextAlign.center,
                   ))),
           if (widget.book.owner != null)
-            Text(widget.book.owner?.toString() ?? "",
-                style: Theme.of(context).textTheme.labelSmall),
+            DisplayNameLoaderWidget(
+                id: widget.book.owner!,
+                style: Theme.of(context).textTheme.labelSmall)
         ],
       ),
     );

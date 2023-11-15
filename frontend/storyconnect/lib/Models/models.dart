@@ -151,7 +151,7 @@ class Profile with _$Profile {
   const factory Profile({
     required String bio,
     int? id,
-    @JsonKey(name: 'display_name') String? displayName,
+    int? user,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
@@ -160,6 +160,6 @@ class Profile with _$Profile {
   factory Profile.initial() => Profile(
         id: 0,
         bio: '',
-        displayName: '',
+        user: 0,
       );
 }

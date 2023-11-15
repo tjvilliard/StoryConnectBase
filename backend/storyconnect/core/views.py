@@ -13,14 +13,24 @@ from rest_framework.decorators import action
 
 class UserUidConversion(APIView):
     # UID is now taken from the URL directly as a keyword argument
-    def get(self, request, uid, format=None):
-        if not uid:
+    def get(self, request, id, format=None):
+        if not id:
             return Response({"error": "UID is required."}, status=status.HTTP_400_BAD_REQUEST)
         
-        user = FirebaseAuthentication.get_firebase_user(uid)
+        django_user =  User.objects.filter(id=id).first()
+
+        user = FirebaseAuthentication.get_firebase_user(django_user.username)
+
         if user and user.display_name:
             # Ensure the serializer is initialized with 'data' as a keyword argument
             serializer = UserUidConversionSerializer(data={'username': user.display_name})
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                # In case of serializer errors, return a 400 Bad Request with the error messages
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif user: 
+            serializer = UserUidConversionSerializer(data={'username': "Display Name not set"})
             if serializer.is_valid():
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:

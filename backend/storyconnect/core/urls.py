@@ -11,5 +11,5 @@ router.register(r'announcements',  AnnouncementViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('api/display_name/<str:uid>/', UserUidConversion.as_view(), name="user_uid_conversion_request"),
+    path('api/display_name/<int:id>/', UserUidConversion.as_view(), name="user_uid_conversion_request"),
 ]

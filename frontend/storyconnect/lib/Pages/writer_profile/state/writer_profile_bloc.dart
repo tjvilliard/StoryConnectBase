@@ -4,7 +4,6 @@ import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/writer_profile/models/writer_profile_models.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
-
 part 'writer_profile_events.dart';
 part 'writer_profile_state.dart';
 part 'writer_profile_bloc.freezed.dart';
@@ -18,13 +17,20 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
         super(WriterProfileState.initial()) {
     on<WriterProfileLoadEvent>((event, emit) => load(event, emit));
     on<MakeAnnouncementEvent>((event, emit) => makeAnnouncement(event, emit));
-    on<RecievedProfileEvent>((event, emit) => recievedProfile(event, emit));
-    on<RecievedBooks>((event, emit) => recievedBooks(event, emit));
+
     on<ClearLastResponseEvent>((event, emit) => clearLastResponse(event, emit));
+    on<RecievedProfileEvent>(
+      (event, emit) => recievedProfile(event, emit),
+    );
+    on<RecievedBooks>(
+      (event, emit) => recievedBooks(event, emit),
+    );
     on<RecievedActivitiesEvent>(
-        (event, emit) => recievedActivities(event, emit));
+      (event, emit) => recievedActivities(event, emit),
+    );
     on<RecievedAnnouncementsEvent>(
-        (event, emit) => recievedAnnouncements(event, emit));
+      (event, emit) => recievedAnnouncements(event, emit),
+    );
     on<EditBioEvent>((event, emit) => editBio(event, emit));
     on<SaveBioEvent>((event, emit) => saveBio(event, emit));
     on<CancelBioEvent>((event, emit) => cancelBio(event, emit));
@@ -46,13 +52,13 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
     _repo
         .getAnnouncements(event.uid)
         .then((value) => add(RecievedAnnouncementsEvent(announcements: value)));
-    _repo
-        .getProfile(event.uid)
-        .then((value) => add(RecievedProfileEvent(profile: value)));
 
     _repo
         .getActivities(event.uid)
         .then((value) => add(RecievedActivitiesEvent(activities: value)));
+    _repo
+        .getProfile(event.uid)
+        .then((value) => add(RecievedProfileEvent(profile: value)));
   }
 
   makeAnnouncement(
