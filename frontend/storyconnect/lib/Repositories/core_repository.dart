@@ -21,7 +21,7 @@ class CoreApiProvider {
     }
   }
 
-  Future<GenericResponse> verifyDisplayNameUniqueness(
+  Future<GenericResponse?> verifyDisplayNameUniqueness(
       DisplayNameSerializer serializer) async {
     try {
       final url = UrlConstants.verifyDisplayNameUniqueness();
@@ -30,7 +30,7 @@ class CoreApiProvider {
       return GenericResponse.fromJson(jsonDecode(result.body));
     } catch (e) {
       print(e);
-      throw e;
+      return null;
     }
   }
 
@@ -135,6 +135,6 @@ class CoreRepository {
   Future<bool> verifyDisplayNameUniqueness(String displayName) async {
     final serializer = DisplayNameSerializer(displayName: displayName);
     final response = await _api.verifyDisplayNameUniqueness(serializer);
-    return response.success;
+    return response?.success ?? false;
   }
 }
