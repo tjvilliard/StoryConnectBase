@@ -41,13 +41,27 @@ class Book with _$Book {
 class Library with _$Library {
   const factory Library({
     required int id,
-    required int book,
+    int? book,
     required int status,
     int? reader,
   }) = _Library;
 
   factory Library.fromJson(Map<String, dynamic> json) =>
       _$LibraryFromJson(json);
+}
+
+@freezed
+class LibraryBook with _$LibraryBook {
+  const factory LibraryBook({
+    required int id,
+    int? bookId,
+    required int status,
+    required Book book,
+    int? reader,
+  }) = _LibraryBook;
+
+  factory LibraryBook.fromJson(Map<String, dynamic> json) =>
+      _$LibraryBookFromJson(json);
 }
 
 @freezed

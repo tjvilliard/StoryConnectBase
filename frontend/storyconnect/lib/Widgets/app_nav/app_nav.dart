@@ -59,17 +59,18 @@ class CustomAppBar extends AppBar {
                               // Search Bar Placeholder
                               Flexible(
                                   child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxWidth: 800,
-                                        minWidth: 100,
-                                        maxHeight: 40,
-                                        minHeight: 40,
-                                      ),
-                                      child: SearchBar(
-                                        leading: Icon(
-                                            FontAwesomeIcons.magnifyingGlass),
-                                        hintText: "Search",
-                                      ))),
+                                constraints: BoxConstraints(
+                                  maxWidth: 800,
+                                  minWidth: 100,
+                                  maxHeight: 40,
+                                  minHeight: 40,
+                                ),
+                                child: SearchBar(
+                                  leading:
+                                      Icon(FontAwesomeIcons.magnifyingGlass),
+                                  hintText: "Search",
+                                ),
+                              )),
                               // Dropdown Menu Button.
                               Flexible(
                                 child: CustomAppBarMenu(context: context),

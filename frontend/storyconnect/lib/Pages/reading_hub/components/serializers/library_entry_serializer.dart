@@ -4,19 +4,19 @@ part 'library_entry_serializer.freezed.dart';
 part 'library_entry_serializer.g.dart';
 
 @freezed
-class LibraryEntrySerialzier with _$LibraryEntrySerialzier {
-  const factory LibraryEntrySerialzier({
+class LibraryEntrySerializer with _$LibraryEntrySerializer {
+  const factory LibraryEntrySerializer({
     int? id,
     int? reader,
     required int book,
     required int status,
-  }) = _LibraryEntrySerialzier;
-  const LibraryEntrySerialzier._();
-  factory LibraryEntrySerialzier.fromJson(Map<String, dynamic> json) =>
-      _$LibraryEntrySerialzierFromJson(json);
+  }) = _LibraryEntrySerializer;
+  const LibraryEntrySerializer._();
+  factory LibraryEntrySerializer.fromJson(Map<String, dynamic> json) =>
+      _$LibraryEntrySerializerFromJson(json);
 
-  factory LibraryEntrySerialzier.initial(int bookId) {
-    return LibraryEntrySerialzier(
+  factory LibraryEntrySerializer.initial(int bookId) {
+    return LibraryEntrySerializer(
       book: bookId,
       status: 1,
     );

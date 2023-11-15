@@ -15,6 +15,30 @@ class SwitchChapter extends ChapterEvent {
   });
 }
 
+/// Wrapper Event for the simple operation of switching to the next
+/// sequential chapter.
+class IncrementChapterEvent extends SwitchChapter {
+  final int currentChapter;
+
+  IncrementChapterEvent({required this.currentChapter})
+      : super(
+            chapterToSwitchFrom: currentChapter,
+            chapterToSwitchTo: currentChapter + 1,
+            storeCommand: false);
+}
+
+/// Wrapper Event for the simple operation of switching to the
+/// previous sequential chapter.
+class DecrementChapterEvent extends SwitchChapter {
+  final int currentChapter;
+
+  DecrementChapterEvent({required this.currentChapter})
+      : super(
+            chapterToSwitchFrom: currentChapter,
+            chapterToSwitchTo: currentChapter - 1,
+            storeCommand: false);
+}
+
 class LoadEvent extends ChapterEvent {
   LoadEvent();
 }

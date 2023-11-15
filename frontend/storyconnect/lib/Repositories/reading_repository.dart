@@ -14,11 +14,8 @@ class ReadingApiProvider {
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
-      print("getting feedback url");
       final url = UrlConstants.createWriterFeedback();
-      print("getting result from post call");
-
-      print(jsonEncode(serializer.toJson()));
+      print("[INFO]: Getting result from post call. \n");
 
       final result = await http.post(
         url,
@@ -26,7 +23,7 @@ class ReadingApiProvider {
         body: jsonEncode(serializer.toJson()),
       );
 
-      print(result.body);
+      print("[DEBUG]: Json Result: \n ${result.body} \n");
 
       return WriterFeedback.fromJson(jsonDecode(result.body));
     } catch (e) {
@@ -46,7 +43,7 @@ class ReadingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlConstants.books();
+      final url = UrlConstants.books(uid: "uid");
 
       final result = await http.get(url, headers: await buildHeaders());
 
@@ -76,7 +73,7 @@ class ReadingApiProvider {
   }
 
   /// Completes API action of adding a book to user library.
-  Future<void> addBooktoLibrary(LibraryEntrySerialzier serializer) async {
+  Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
       // get url for adding entry to user library api call.
       final url = UrlConstants.addLibraryBook();
@@ -91,7 +88,7 @@ class ReadingApiProvider {
   }
 
   /// Completes API action of removing a book from user library.
-  Future<void> removeBookfromLibrary(LibraryEntrySerialzier serializer) async {
+  Future<void> removeBookfromLibrary(LibraryEntrySerializer serializer) async {
     try {
       // get url for removing entry from user library api call.
       final url = UrlConstants.removeLibraryBook(serializer.id!);
@@ -105,7 +102,6 @@ class ReadingApiProvider {
 }
 
 class ReadingRepository {
-  List<Book> libraryBooks = [];
   Map<String, List<Book>> taggedBooks = {};
   List<Book> books = [];
   ReadingApiProvider _api = ReadingApiProvider();
@@ -138,49 +134,5 @@ class ReadingRepository {
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = await this._api.getBooks();
     return result.toList();
-  }
-
-  /// Provided with a list of library entries, gets a list of books based
-  /// on those entries.
-  Future<List<Book>> getLibraryBooks() async {
-    final result = await this._api.getLibrary();
-    List<Library> entries = await result.toList();
-
-    List<Book> books = await this.getBooks();
-
-    List<Book> libraryBooks = [];
-    for (Library entry in entries) {
-      libraryBooks.addAll(books.where((book) => book.id == entry.book));
-    }
-
-    return libraryBooks;
-  }
-
-  Future<List<Library>> getLibraryEntries() async {
-    final result = await this._api.getLibrary();
-
-    List<Library> entries = await result.toList();
-
-    return entries;
-  }
-
-  Future<List<int>> getLibraryBookIds() async {
-    final result = await this._api.getLibrary();
-    List<Library> entries = await result.toList();
-
-    List<int> bookIds = [];
-
-    for (Library entry in entries) {
-      bookIds.add(entry.book);
-    }
-    return bookIds;
-  }
-
-  Future<void> addLibraryBook(LibraryEntrySerialzier serialzier) async {
-    await this._api.addBooktoLibrary(serialzier);
-  }
-
-  Future<void> removeLibraryBook(LibraryEntrySerialzier serialzier) async {
-    await this._api.removeBookfromLibrary(serialzier);
   }
 }

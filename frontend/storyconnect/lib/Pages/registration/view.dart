@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/components/confirm_password_field.dart';
+import 'package:storyconnect/Pages/registration/components/display_name_field.dart';
 import 'package:storyconnect/Pages/registration/components/email_field.dart';
 import 'package:storyconnect/Pages/registration/components/password_field.dart';
 import 'package:storyconnect/Pages/registration/components/register_button.dart';
@@ -46,6 +47,7 @@ class RegistrationPageView extends StatelessWidget {
                   // Google, Facebook, Apple, etc...
 
                   EmailField(),
+                  DisplayNameField(),
                   PasswordField(),
                   ConfirmPasswordField(),
                   RegistrationButton(),
