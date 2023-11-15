@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from .authentication import FirebaseAuthentication
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255, unique=True, default="Display Name not set")
 
     def __str__(self):
         return self.display_name
@@ -14,11 +13,6 @@ class Profile(models.Model):
     @property
     def uid(self):
         return self.user.username
-
-    @property
-    def display_name(self):
-        return FirebaseAuthentication.get_firebase_user(self.uid).display_name
-    
 
 class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

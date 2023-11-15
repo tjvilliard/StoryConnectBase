@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:storyconnect/Pages/registration/models/registration_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
@@ -17,6 +18,19 @@ class CoreApiProvider {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<GenericResponse?> verifyDisplayNameUniqueness(
+      DisplayNameSerializer serializer) async {
+    try {
+      final url = UrlConstants.verifyDisplayNameUniqueness();
+      final result = await http.post(url,
+          headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
+      return GenericResponse.fromJson(jsonDecode(result.body));
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 
@@ -116,5 +130,11 @@ class CoreRepository {
 
   Future<Profile?> updateBio(Profile profile) {
     return _api.updateProfile(profile);
+  }
+
+  Future<bool> verifyDisplayNameUniqueness(String displayName) async {
+    final serializer = DisplayNameSerializer(displayName: displayName);
+    final response = await _api.verifyDisplayNameUniqueness(serializer);
+    return response?.success ?? false;
   }
 }
