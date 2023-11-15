@@ -80,6 +80,7 @@ class ProfileCardState extends State<ProfileCard> {
                       if (state.loadingStructs.profileLoadingStruct.isLoading ==
                           true) {
                         toReturn = Row(
+                          key: ValueKey('loading'),
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             LoadingWidget(
@@ -89,27 +90,43 @@ class ProfileCardState extends State<ProfileCard> {
                         );
                       } else if (state.isEditingBio) {
                         toReturn = Padding(
+                            key: ValueKey('bio_editor'),
                             padding: EdgeInsets.all(10),
                             child: BioTextEditor());
                       } else {
-                        toReturn = Text(state.profile.bio,
-                            style: Theme.of(context).textTheme.labelLarge);
+                        toReturn = Padding(
+                            key: ValueKey('bio_text'),
+                            padding: EdgeInsets.all(10),
+                            child: Text(state.profile.bio,
+                                style: Theme.of(context).textTheme.labelLarge));
                       }
                       return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 200),
                           child: toReturn);
                     })
                   ],
                 ),
               ),
               BlocBuilder<WriterProfileBloc, WriterProfileState>(
-                  builder: (context, state) {
-                return Column(
-                  children: [
-                    if (_showEditProfile == true && state.isEditingBio == false)
-                      EditBioButton()
-                  ],
-                );
+                  buildWhen: (previous, current) {
+                return previous.isEditingBio != current.isEditingBio;
+              }, builder: (context, state) {
+                Widget toReturn;
+                if (_showEditProfile == true && state.isEditingBio == false) {
+                  toReturn = Column(
+                    key: ValueKey('edit_bio_button'),
+                    children: [EditBioButton()],
+                  );
+                } else {
+                  toReturn = SizedBox(
+                    width: 40,
+                    key: ValueKey('empty_space'),
+                  );
+                }
+
+                return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: toReturn);
               })
             ],
           ),
