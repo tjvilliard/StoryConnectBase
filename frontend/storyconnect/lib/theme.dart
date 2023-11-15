@@ -20,9 +20,16 @@ const ColorScheme myColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
+final offWhite = Color.fromARGB(255, 250, 249, 249);
+
 ThemeData lightTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
-        colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue),
+        colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue)
+            .copyWith(background: offWhite),
+        appBarTheme: AppBarTheme(
+          backgroundColor: offWhite,
+          surfaceTintColor: Colors.transparent,
+        ),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
         cardTheme: CardTheme(
             surfaceTintColor: Color.fromARGB(255, 198, 198, 198), elevation: 2),

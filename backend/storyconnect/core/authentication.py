@@ -1,19 +1,19 @@
-import os
-
-import firebase_admin
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.utils import timezone
 from firebase_admin import auth
-from firebase_admin import credentials
 from rest_framework import authentication
-from rest_framework import exceptions
 
 from .exceptions import FirebaseError
 from .exceptions import InvalidAuthToken
 from .exceptions import NoAuthToken
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
+    def get_firebase_user(uid):
+        try:
+            user = auth.get_user(uid)
+            return user
+        except auth.AuthError as e:
+            print('Error fetching user data:', e)
+            return None
     def authenticate(self, request):
         auth_header = request.META.get("HTTP_AUTHORIZATION")
 

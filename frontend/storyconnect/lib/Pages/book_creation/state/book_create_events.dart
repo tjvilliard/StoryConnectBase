@@ -4,11 +4,6 @@ abstract class BookCreateEvent {
   const BookCreateEvent();
 }
 
-class AuthorChangedEvent extends BookCreateEvent {
-  final String author;
-  const AuthorChangedEvent({required this.author});
-}
-
 class TitleChangedEvent extends BookCreateEvent {
   final String title;
   const TitleChangedEvent({required this.title});
@@ -23,6 +18,10 @@ class TargetAudienceChangedEvent extends BookCreateEvent {
   final int targetAudience;
   TargetAudienceChangedEvent({required TargetAudience targetAudience})
       : this.targetAudience = targetAudience.index;
+}
+
+class UploadImageEvent extends BookCreateEvent {
+  const UploadImageEvent();
 }
 
 class SynopsisChangedEvent extends BookCreateEvent {

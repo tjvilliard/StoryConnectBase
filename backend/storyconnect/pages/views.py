@@ -12,6 +12,8 @@ from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
 from books import models as book_models
 from books import serializers as book_serializers
+from comment import models as comment_model
+from comment import serializers as comment_serializers
 
 class BrowserPage(APIView):
 
@@ -58,18 +60,18 @@ class WriterFeedbackPage(APIView):
         chapter_feedback = book_models.Chapter.objects.filter(book=book_feedback)
 
         chapter_id = [ch.pk for ch in chapter_feedback]
-        comments = book_models.Comments.objects.filter(chapter__in=chapter_id)
+        # comments = book_models.Comments.objects.filter(chapter__in=chapter_id)
 
         writer_books_serializer = book_serializers.BookSerializer(writer_books, many=True)
         book_feedback_serializer = book_serializers.BookSerializer(book_feedback, many=False)
         chapter_feedback_serializer = book_serializers.ChapterSerializer(chapter_feedback, many=True)
-        comments_serializer = book_serializers.CommentSerializer(comments, many=True)
+        # comments_serializer = book_serializers.CommentSerializer(comments, many=True)
 
         content = {
             'writer_books': writer_books_serializer.data,
             'book_feedback': book_feedback_serializer.data,
-            'chapter_feedback': chapter_feedback_serializer.data,
-            'comments': comments_serializer.data
+            'chapter_feedback': chapter_feedback_serializer.data
+            # 'comments': comments_serializer.data
         }
         return JsonResponse(content)
 
@@ -84,5 +86,18 @@ class BookDetailPage(APIView):
         content = {
             'book_details': book_details_serializer.data,
             'characters': characters_serializer.data
+        }
+        return JsonResponse(content)
+
+class DemographicsPage(APIView):
+
+    def get(self, request, user_id, book_id):
+        unique_readers = book_models.Library.objects.get(id=book_id)
+        chapter_comments = comment_model.WriterFeedback.objects.filter(user=user_id)
+        unique_readers_serializer = book_serializers.BookSerializer(unique_readers, many=False)
+        chapter_comments_serializer = comment_serializers.WriterFeedbackSerializer(chapter_comments, many=True)
+        content = {
+            'unique_readers': unique_readers_serializer.data,
+            'chapter_comments': chapter_comments_serializer.data
         }
         return JsonResponse(content)

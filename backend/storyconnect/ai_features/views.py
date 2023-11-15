@@ -1,21 +1,12 @@
-from json import JSONDecodeError
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import RoadUnblockerRequestSerializer, RoadUnblockerResponseSerializer, RoadUnblockerSuggestionSerializer
 from .models import StatementSheet
 from .continuity_checker import ContinuityChecker
 from .road_unblocker import RoadUnblocker
 from books import models as books_models
-from .serializers import *
+from .serializers import ContinuityCheckerResponseSerializer
 from uuid import uuid4
 import re
 import logging

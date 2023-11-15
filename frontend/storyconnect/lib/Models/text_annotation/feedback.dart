@@ -8,9 +8,9 @@ part 'feedback.g.dart';
 @freezed
 class WriterFeedback with _$WriterFeedback {
   const factory WriterFeedback({
-    required int id,
-    required int userId,
-    required int chapterId,
+    required int id, // ID of the comment
+    required int userId, //ID of the user in the db.
+    required int chapterId, //not chapter index, but the actual chapter ID
     required AnnotatedTextSelection selection,
     required FeedbackSentiment sentiment,
     required bool isSuggestion,

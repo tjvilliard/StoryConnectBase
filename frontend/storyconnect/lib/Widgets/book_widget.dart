@@ -1,11 +1,28 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Widgets/display_name_loader.dart';
+import 'package:storyconnect/Widgets/image_loader.dart';
 
-class BookWidget extends StatelessWidget {
-  final String title;
-  final String? author; // if we're the author, we don't need to show this
-  final String coverCDN;
+class BookWidget extends StatefulWidget {
+  final Book book;
 
-  BookWidget({required this.title, this.author, required this.coverCDN});
+  BookWidget({required this.book});
+
+  @override
+  State<StatefulWidget> createState() {
+    return BookWidgetState();
+  }
+}
+
+class BookWidgetState extends State<BookWidget> {
+  String? url = null;
+
+  @override
+  void initState() {
+    get_image(widget.book.cover);
+    super.initState();
+  }
 
   // build a rectangular placeholder for the book cover
   Widget _imagePlaceHolder() {
@@ -14,6 +31,21 @@ class BookWidget extends StatelessWidget {
       width: 100,
       child: Icon(Icons.book, size: 100),
     );
+  }
+
+  Future<void> get_image(String? relativePath) async {
+    if (relativePath == null || relativePath.isEmpty) {
+      setState(() {
+        url = "";
+      });
+      return;
+    }
+    Reference ref = FirebaseStorage.instance.ref().child(relativePath);
+    final result = await ref.getDownloadURL();
+
+    setState(() {
+      url = result;
+    });
   }
 
   @override
@@ -25,19 +57,21 @@ class BookWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Image.network(coverCDN),
-          _imagePlaceHolder(),
+          if (url != null && url!.isNotEmpty) ImageLoader(url: url!),
+          if (url == null || url!.isEmpty) _imagePlaceHolder(),
           Flexible(
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    title,
+                    widget.book.title,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ))),
-          if (author != null)
-            Text(author!, style: Theme.of(context).textTheme.labelSmall),
+          if (widget.book.owner != null)
+            DisplayNameLoaderWidget(
+                id: widget.book.owner!,
+                style: Theme.of(context).textTheme.labelSmall)
         ],
       ),
     );

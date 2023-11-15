@@ -13,7 +13,7 @@ class RoadUnblockerWidget extends StatelessWidget {
     return BlocBuilder<WritingUIBloc, WritingUIState>(
         builder: (context, uiState) {
       return BlocBuilder<RoadUnblockerBloc, RoadUnblockerState>(
-          builder: (context, chapterState) {
+          builder: (context, writingState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(

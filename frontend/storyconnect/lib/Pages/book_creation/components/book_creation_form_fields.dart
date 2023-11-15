@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/components/audience_dropdown.dart';
 import 'package:storyconnect/Pages/book_creation/components/copyright_dropdown.dart';
+import 'package:storyconnect/Pages/book_creation/components/image_upload.dart';
 import 'package:storyconnect/Pages/book_creation/components/language_dropdown.dart';
 import 'package:storyconnect/Pages/book_creation/components/synopsis_form_field.dart';
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
@@ -16,14 +17,6 @@ class BookCreationFormFields extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // BookCreationFormField(
-        //   onChanged: (value) {
-        //     context
-        //         .read<BookCreateBloc>()
-        //         .add(AuthorChangedEvent(author: value));
-        //   },
-        //   label: "Author",
-        // ),
         BookCreationFormField(
           onChanged: (value) {
             context.read<BookCreateBloc>().add(TitleChangedEvent(title: value));
@@ -40,9 +33,13 @@ class BookCreationFormFields extends StatelessWidget {
           children: [
             Padding(padding: padding, child: LanguageDropdown()),
             Padding(padding: padding, child: AudienceDropdown()),
-            Padding(padding: padding, child: CopyrightDropdown())
           ],
         ),
+        SizedBox(height: 20),
+        Padding(padding: padding, child: CopyrightDropdown()),
+        SizedBox(height: 20),
+        ImageUpload(),
+        SizedBox(height: 20),
         SynopsisFormField(
           onChanged: (value) {
             context

@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from rest_framework import status
-from rest_framework.exceptions import APIException
-from .models import *
+from .models import Book, Chapter, Library, NarrativeElement, NarrativeElementType, NarrativeElementAttribute, NarrativeElementAttributeType
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,13 +12,18 @@ class ChapterSerializer(serializers.ModelSerializer):
         model = Chapter
         fields = "__all__"
 
-
 class LibrarySerializer(serializers.ModelSerializer):
     # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)
     # reader = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     class Meta:
         model = Library
-        fields = "__all__"
+        exclude = ['reader']
+
+class LibraryBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Library
+        exclude = ["reader"]
+        depth = 1
 
 
 class NarrativeElementSerializer(serializers.ModelSerializer):

@@ -1,10 +1,6 @@
 from django.db import models
 # from django import forms
 from django.contrib.auth.models import User
-from django_extensions.db.models import TimeStampedModel
-from firebase_admin import storage
-from storyconnect.settings import FIREBASE_BUCKET
-import os
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -33,13 +29,12 @@ class Book(models.Model):
     ]
     
     title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100, null = True, blank = True)
     owner = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(choices=TARGET_AUDIENCES, null=True, blank=True)
     book_status = models.IntegerField(choices=STATUS, null=True, default=2)
     tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
+    cover = models.CharField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     synopsis = models.TextField(max_length=1000, null=True, blank=True)
@@ -48,38 +43,15 @@ class Book(models.Model):
     # rating = models.FloatField(null=True, blank=True, max_value = 5.0)
 
 
-    cover = models.ImageField(upload_to='covers/', null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        #TODO:
-        if self.cover:
-            # uses local covers/ temporarily for image upload to bucket
-            image_path = str(self.cover)
-            bucket = FIREBASE_BUCKET
-            blob = bucket.blob(image_path)
-            blob.upload_from_filename(self.cover.path)
-
-            # delete local covers/ after upload
-            os.remove(image_path)
-
-            # make the image public and save the public url to the image field
-            blob.make_public()
-            self.cover = blob.public_url  # Save the public URL to the image field
-            super().save(*args, **kwargs)
-
     def __str__(self):
         return self.title
     
-    # What does this do?
+    # TODO: What does this do?
     def get_attribute(self, attr):
         if attr == "title":
             return Book.objects.filter(title=self.title)
-        elif attr == "author":
-            return Book.objects.filter(author=self.author)
         elif attr == "language":
-            return Book.objects.filter(author=self.language)
+            return Book.objects.filter(language=self.language)
         
     def get_chapters(self):
         return Chapter.objects.filter(book=self).order_by('chapter_number')

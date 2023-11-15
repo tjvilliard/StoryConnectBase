@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/components/continuity_list.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/components/generate_continuities_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/state/continuity_bloc.dart';
@@ -53,7 +53,7 @@ class ContinuityWidget extends StatelessWidget {
                                 GenerateContinuitiesButton(onPressed: () {
                                   context.read<ContinuityBloc>().add(
                                       GenerateContinuitiesEvent(context
-                                          .read<ChapterBloc>()
+                                          .read<WritingBloc>()
                                           .state
                                           .currentChapterId));
                                 })

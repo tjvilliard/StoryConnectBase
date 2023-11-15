@@ -1,30 +1,21 @@
-from json import JSONDecodeError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser, AllowAny
-from rest_framework import viewsets, status, filters
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin,UpdateModelMixin,RetrieveModelMixin
-from .models import *
-from .serializers import *
+from .models import Book, Chapter, Library
+from .serializers import  BookSerializer, ChapterSerializer, LibraryBookSerializer, LibrarySerializer
 from django.db import transaction
-import pdb
 from rest_framework.views import APIView
-
-
-
-# Create your views here.
+from core.permissions import IsOwnerOrReadOnly
 
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
     # search_fields = ['title', 'author', 'language']
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Book.objects.all()
 
-    
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
@@ -34,13 +25,8 @@ class BookViewSet(viewsets.ModelViewSet):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
-            # Use the instance directly instead of querying it again
             book = serializer.instance
-            # book.owner = request.user
-
-            # print(request.user)
-
-            # book.save()
+            
             # Create the first chapter for the book
             Chapter.objects.create(book=book)
 
@@ -62,11 +48,17 @@ class BookViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
     
     @action(detail=False, methods=['get'])
-    def by_writer(self, request):
+    def writer(self, request):
+        username = request.query_params.get('username', None)
 
-        # TODO: Test this
-        
-        books = Book.objects.filter(owner=request.user)
+        if username:
+            # Filter books based on the provided username
+            books = Book.objects.filter(owner__username=username)
+        else:
+            # Default to filtering books based on the request user
+            print(request.user.id)
+            books = Book.objects.filter(owner__id=request.user.id)
+
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
 
@@ -172,6 +164,8 @@ class LibraryViewSet(viewsets.ModelViewSet):
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -184,21 +178,35 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def get_user_library(self, request):
         library = Library.objects.filter(reader=request.user)
-        serializer = LibrarySerializer(library, many=True)
+        serializer = LibraryBookSerializer(library, many=True)
         return Response(serializer.data)
     
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # add the owner 
+        serializer.save(reader=request.user)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
     @action(detail=True, methods=['post'])
-    def change_entry_status(self, request, pk=None):
+    def change_entry_status(self, request):
         #TODO: Test this
         library = self.get_object()
-        book = library.book
-        book_id = book.id
-        status = request.data['status']
+        # TODO: Why is there unaccesed data here?
+        # book = library.book
+        # book_id = book.id
+        # status = request.data['status']
         library.save()
         serializer = LibrarySerializer(library)
         return Response(serializer.data)
-
-
+    
+    @action(detail=True, methods=['delete'])
+    def delete_entry_status(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 #TODO: Add a view for narrative element queries
