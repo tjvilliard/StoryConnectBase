@@ -11,6 +11,11 @@ class EmailFieldChangedEvent extends RegistrationEvent {
   const EmailFieldChangedEvent({required this.email});
 }
 
+class DisplayNameChangedEvent extends RegistrationEvent {
+  final String displayName;
+  const DisplayNameChangedEvent({required this.displayName});
+}
+
 /// Action for when user changes contents of password field.
 class PasswordFieldChangedEvent extends RegistrationEvent {
   final String password;
