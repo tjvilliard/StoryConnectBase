@@ -29,7 +29,10 @@ class _displayNameState extends State<DisplayNameField> {
             child: TextField(
                 controller: this._displayNameController,
                 obscureText: false,
-                onChanged: (_) {},
+                onChanged: (_) {
+
+                  
+                },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
