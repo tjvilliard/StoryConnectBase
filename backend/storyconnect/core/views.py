@@ -40,6 +40,24 @@ class UserUidConversion(APIView):
             # If the user or display_name is not found, return a 404 Not Found
             return Response({"error": "User not found or display name not set."}, status=status.HTTP_404_NOT_FOUND)
 
+
+# A view to verify display name uniqueness on a profile before saving
+class ProfileDisplayNameVerification(APIView):
+    def post(self, request, format=None):
+        if not request.data.get('display_name'):
+            return Response({"error": "Display name is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get the display name from the request
+        display_name = request.data.get('display_name')
+
+        # Check if the display name is unique
+        if Profile.objects.filter(display_name=display_name).exists():
+            return Response({"error": "Display name already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"message": "Success"}, status=status.HTTP_200_OK)
+
+
+
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

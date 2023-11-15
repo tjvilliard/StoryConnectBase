@@ -6,9 +6,10 @@ from .authentication import FirebaseAuthentication
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.user.username
+        return self.display_name
     
     @property
     def uid(self):
