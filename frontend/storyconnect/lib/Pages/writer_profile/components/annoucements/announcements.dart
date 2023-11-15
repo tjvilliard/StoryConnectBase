@@ -63,9 +63,11 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
                     BlocBuilder<WriterProfileBloc, WriterProfileState>(
                         builder: (context, state) {
                       Widget toReturn;
-                      if (state.annoucementsLoadingStruct.isLoading) {
+                      if (state
+                          .loadingStructs.annoucementsLoadingStruct.isLoading) {
                         toReturn = LoadingWidget(
-                            loadingStruct: state.annoucementsLoadingStruct);
+                            loadingStruct:
+                                state.loadingStructs.annoucementsLoadingStruct);
                       } else {
                         if (state.announcements.isEmpty) {
                           toReturn = Text("No announcements found");

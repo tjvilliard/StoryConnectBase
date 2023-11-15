@@ -50,3 +50,20 @@ class WriterProfileEventClearEvent extends WriterProfileEvent {
 class ClearLastResponseEvent extends WriterProfileEvent {
   const ClearLastResponseEvent();
 }
+
+class EditBioEvent extends WriterProfileEvent {
+  const EditBioEvent();
+}
+
+class EditBioStateEvent extends WriterProfileEvent {
+  final String bio;
+  const EditBioStateEvent({required this.bio});
+}
+
+class SaveBioEvent extends WriterProfileEvent {
+  const SaveBioEvent();
+}
+
+class CancelBioEvent extends WriterProfileEvent {
+  const CancelBioEvent();
+}

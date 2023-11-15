@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
@@ -35,9 +36,8 @@ class CoreApiProvider {
 
   Future<Profile> getProfile(String uid) async {
     try {
-      final url = UrlConstants.getProfile(uid);
+      final url = UrlConstants.profiles(uid: uid);
       final result = await http.get(url, headers: await buildHeaders());
-
       return Profile.fromJson(jsonDecode(result.body));
     } catch (e) {
       print(e);
@@ -73,6 +73,22 @@ class CoreApiProvider {
       throw e;
     }
   }
+
+  Future<Profile> updateProfile(Profile profile) async {
+    try {
+      final String? uid = FirebaseAuth.instance.currentUser!.uid;
+      if (uid == null) throw Exception("User not logged in");
+
+      final url = UrlConstants.profiles(uid: uid);
+      return http
+          .patch(url,
+              headers: await buildHeaders(), body: jsonEncode(profile.toJson()))
+          .then((value) => Profile.fromJson(jsonDecode(value.body)));
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
 }
 
 class CoreRepository {
@@ -96,5 +112,9 @@ class CoreRepository {
 
   Future<List<Activity>> getActivities(String uid) {
     return _api.getActivities(uid).toList();
+  }
+
+  Future<Profile?> updateBio(Profile profile) {
+    return _api.updateProfile(profile);
   }
 }

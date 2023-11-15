@@ -149,8 +149,8 @@ class Highlight with _$Highlight {
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    required int id,
     required String bio,
+    int? id,
     @JsonKey(name: 'display_name') String? displayName,
   }) = _Profile;
 

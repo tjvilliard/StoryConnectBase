@@ -26,9 +26,11 @@ class RecentActivityCard extends StatelessWidget {
                 BlocBuilder<WriterProfileBloc, WriterProfileState>(
                     builder: (context, state) {
                   Widget toReturn;
-                  if (state.activitiesLoadingStruct.isLoading == true) {
+                  if (state.loadingStructs.activitiesLoadingStruct.isLoading ==
+                      true) {
                     toReturn = LoadingWidget(
-                        loadingStruct: state.activitiesLoadingStruct);
+                        loadingStruct:
+                            state.loadingStructs.activitiesLoadingStruct);
                   } else {
                     if (state.activities.isEmpty) {
                       toReturn = Text("No activity found");

@@ -33,7 +33,7 @@ class UserUidConversion(APIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     lookup_field = 'user__username'
 
     def get_queryset(self):
@@ -58,6 +58,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
             pass
 
         return profile
+
+
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()

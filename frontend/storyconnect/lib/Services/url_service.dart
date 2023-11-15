@@ -144,8 +144,11 @@ class UrlConstants {
     return _urlBuilder.build('books/writer/');
   }
 
-  static Uri getProfile(String uid) {
-    return _urlBuilder.build('profiles/$uid');
+  static Uri profiles({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder.build('profiles/$uid');
+    }
+    return _urlBuilder.build('profiles/');
   }
 
   static Uri announcements({String? uid}) {

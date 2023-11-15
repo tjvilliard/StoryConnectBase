@@ -8,22 +8,38 @@ class WriterProfileState with _$WriterProfileState {
     required List<Announcement> announcements,
     required List<Activity> activities,
     required List<String> responseMessages,
-    required LoadingStruct annoucementsLoadingStruct,
-    required LoadingStruct booksLoadingStruct,
-    required LoadingStruct profileLoadingStruct,
-    required LoadingStruct makeAnnouncementLoadingStruct,
-    required LoadingStruct activitiesLoadingStruct,
+    required bool isEditingBio,
+    String? bioEditingState,
+    required WritingProfileLoadingStructs loadingStructs,
   }) = _WriterProfileState;
 
   factory WriterProfileState.initial() => WriterProfileState(
         profile: Profile.initial(),
+        isEditingBio: false,
         books: [],
         announcements: [],
         responseMessages: [],
         activities: [],
-        annoucementsLoadingStruct: LoadingStruct.loading(true),
-        booksLoadingStruct: LoadingStruct.loading(true),
+        bioEditingState: null,
+        loadingStructs: WritingProfileLoadingStructs.initial(),
+      );
+}
+
+@freezed
+class WritingProfileLoadingStructs with _$WritingProfileLoadingStructs {
+  const factory WritingProfileLoadingStructs({
+    required LoadingStruct profileLoadingStruct,
+    required LoadingStruct booksLoadingStruct,
+    required LoadingStruct annoucementsLoadingStruct,
+    required LoadingStruct activitiesLoadingStruct,
+    required LoadingStruct makeAnnouncementLoadingStruct,
+  }) = _WritingProfileLoadingStructs;
+
+  factory WritingProfileLoadingStructs.initial() =>
+      WritingProfileLoadingStructs(
         profileLoadingStruct: LoadingStruct.loading(true),
+        booksLoadingStruct: LoadingStruct.loading(true),
+        annoucementsLoadingStruct: LoadingStruct.loading(true),
         activitiesLoadingStruct: LoadingStruct.loading(true),
         makeAnnouncementLoadingStruct: LoadingStruct.loading(false),
       );

@@ -25,15 +25,20 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
         (event, emit) => recievedActivities(event, emit));
     on<RecievedAnnouncementsEvent>(
         (event, emit) => recievedAnnouncements(event, emit));
+    on<EditBioEvent>((event, emit) => editBio(event, emit));
+    on<SaveBioEvent>((event, emit) => saveBio(event, emit));
+    on<CancelBioEvent>((event, emit) => cancelBio(event, emit));
+    on<EditBioStateEvent>((event, emit) => editBioState(event, emit));
   }
 
   load(WriterProfileLoadEvent event, WriterProfileEmitter emit) async {
     emit(state.copyWith(
+        loadingStructs: state.loadingStructs.copyWith(
       profileLoadingStruct: LoadingStruct.message("Loading profile"),
       booksLoadingStruct: LoadingStruct.message("Loading books"),
       annoucementsLoadingStruct: LoadingStruct.message("Loading announcements"),
       activitiesLoadingStruct: LoadingStruct.message("Loading activities"),
-    ));
+    )));
 
     _repo
         .getBooksByUser(event.uid)
@@ -70,19 +75,23 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   recievedProfile(RecievedProfileEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         profile: event.profile,
-        profileLoadingStruct: LoadingStruct.loading(false)));
+        loadingStructs: state.loadingStructs
+            .copyWith(profileLoadingStruct: LoadingStruct.loading(false))));
   }
 
   recievedBooks(RecievedBooks event, WriterProfileEmitter emit) {
     emit(state.copyWith(
-        books: event.books, booksLoadingStruct: LoadingStruct.loading(false)));
+        books: event.books,
+        loadingStructs: state.loadingStructs
+            .copyWith(booksLoadingStruct: LoadingStruct.loading(false))));
   }
 
   recievedAnnouncements(
       RecievedAnnouncementsEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         announcements: event.announcements,
-        annoucementsLoadingStruct: LoadingStruct.loading(false)));
+        loadingStructs: state.loadingStructs.copyWith(
+            annoucementsLoadingStruct: LoadingStruct.loading(false))));
   }
 
   clear(WriterProfileEventClearEvent event, WriterProfileEmitter emit) {
@@ -99,6 +108,46 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   recievedActivities(RecievedActivitiesEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         activities: event.activities,
-        activitiesLoadingStruct: LoadingStruct.loading(false)));
+        loadingStructs: state.loadingStructs
+            .copyWith(activitiesLoadingStruct: LoadingStruct.loading(false))));
+  }
+
+  editBio(EditBioEvent event, WriterProfileEmitter emit) {
+    emit(state.copyWith(isEditingBio: true));
+  }
+
+  saveBio(SaveBioEvent event, WriterProfileEmitter emit) async {
+    emit(state.copyWith(
+        loadingStructs: state.loadingStructs.copyWith(
+      profileLoadingStruct: LoadingStruct.message("Saving bio"),
+    )));
+    if (state.bioEditingState != null) {
+      final response = await _repo
+          .updateBio(state.profile.copyWith(bio: state.bioEditingState!));
+      if (response != null) {
+        emit(state.copyWith(
+          isEditingBio: false,
+          profile: response,
+          loadingStructs: state.loadingStructs.copyWith(
+            profileLoadingStruct: LoadingStruct.loading(false),
+          ),
+          responseMessages: ["Bio updated successfully"],
+        ));
+      } else {
+        emit(state.copyWith(
+          loadingStructs: state.loadingStructs
+              .copyWith(profileLoadingStruct: LoadingStruct.loading(false)),
+          responseMessages: ["Failed to update bio"],
+        ));
+      }
+    }
+  }
+
+  cancelBio(CancelBioEvent event, WriterProfileEmitter emit) {
+    emit(state.copyWith(isEditingBio: false));
+  }
+
+  editBioState(EditBioStateEvent event, WriterProfileEmitter emit) {
+    emit(state.copyWith(bioEditingState: event.bio));
   }
 }
