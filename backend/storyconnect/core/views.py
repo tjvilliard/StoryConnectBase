@@ -45,16 +45,16 @@ class UserUidConversion(APIView):
 class ProfileDisplayNameVerification(APIView):
     def post(self, request, format=None):
         if not request.data.get('display_name'):
-            return Response({"error": "Display name is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
 
         # Get the display name from the request
         display_name = request.data.get('display_name')
 
         # Check if the display name is unique
         if Profile.objects.filter(display_name=display_name).exists():
-            return Response({"error": "Display name already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"message": "Success"}, status=status.HTTP_200_OK)
+            return Response({"success": True}, status=status.HTTP_200_OK)
 
 
 

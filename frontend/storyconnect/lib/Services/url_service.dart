@@ -164,4 +164,8 @@ class UrlConstants {
     }
     return _urlBuilder.build('activities/');
   }
+
+  static Uri verifyDisplayNameUniqueness() {
+    return _urlBuilder.build('display_name/verify_uniqueness/');
+  }
 }

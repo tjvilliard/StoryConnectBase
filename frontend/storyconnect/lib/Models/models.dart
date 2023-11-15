@@ -38,6 +38,16 @@ class Book with _$Book {
 }
 
 @freezed
+class GenericResponse with _$GenericResponse {
+  const factory GenericResponse({
+    required bool success,
+  }) = _GenericResponse;
+
+  factory GenericResponse.fromJson(Map<String, dynamic> json) =>
+      _$GenericResponseFromJson(json);
+}
+
+@freezed
 class Library with _$Library {
   const factory Library({
     required int id,
