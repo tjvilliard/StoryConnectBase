@@ -55,12 +55,18 @@ class FirebaseRepository {
     return FirebaseRepository._instance;
   }
 
-  Future<String> register(String email, String password) async {
+  Future<String> register(
+      String email, String displayName, String password) async {
     try {
-      await this._firebaseAuth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
+      UserCredential credential =
+          await this._firebaseAuth.createUserWithEmailAndPassword(
+                email: email,
+                password: password,
+              );
+
+      if (credential.user != null) {
+        credential.user?.updateDisplayName(displayName);
+      }
 
       return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {

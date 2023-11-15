@@ -19,6 +19,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     on<EmailFieldChangedEvent>(
       (event, emit) => this._emailFieldChanged(event, emit),
     );
+    on<DisplayNameChangedEvent>(
+        (event, emit) => this._displayNameFieldChanged(event, emit));
     on<PasswordFieldChangedEvent>(
         (event, emit) => this._passwordFieldChanged(event, emit));
     on<PasswordConfirmFieldChangedEvent>(
@@ -38,6 +40,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       email: event.email,
       emailError: "",
       showEmailError: false,
+    ));
+  }
+
+  /// Event Handler for a DisplayNameFieldChangedEvent, alters the state of the displayname text field.
+  void _displayNameFieldChanged(
+      DisplayNameChangedEvent event, RegistrationEmitter emit) {
+    emit(state.copyWith(
+      displayName: event.displayName,
+      displayNameError: "",
+      showDisplayNameError: false,
     ));
   }
 
@@ -78,12 +90,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       RegisterButtonPushedEvent event, RegistrationEmitter emit) async {
     bool emailValid = this.validateEmail(emit);
 
+    bool displayNameValid = false;
+
     bool passwordsValid = this.validatePassword(emit);
 
-    if (!emailValid || !passwordsValid) {
-      return;
-    } else {
-      String response = await this._repo.register(state.email, state.password);
+    if (emailValid & displayNameValid & passwordsValid) {
+      String response = await this
+          ._repo
+          .register(state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
         emit(state.copyWith(success: true));
@@ -102,6 +116,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           ));
         }
       }
+    } else {
+      return;
     }
   }
 
@@ -116,6 +132,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     } else {
       return true;
     }
+  }
+
+  bool validateDisplayName(RegistrationEmitter emit) {
+    return false;
   }
 
   /// Validates the password fields.

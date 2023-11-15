@@ -3,7 +3,6 @@ part of 'reading_ui_bloc.dart';
 @freezed
 class ReadingUIState with _$ReadingUIState {
   const factory ReadingUIState({
-    required List<Library> libBookIds,
     required bool chapterOutlineShown,
     required bool feedbackBarShown,
     required bool annotationBarShown,
@@ -15,7 +14,6 @@ class ReadingUIState with _$ReadingUIState {
 
   factory ReadingUIState.initial() {
     return ReadingUIState(
-        libBookIds: [],
         chapterOutlineShown: false,
         feedbackBarShown: false,
         annotationBarShown: false,

@@ -1,11 +1,13 @@
 import 'dart:ui';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/reading_hub/components/book_items/library_book.dart';
 import 'package:storyconnect/Pages/reading_hub/components/detailed_book_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/book_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/book_items/book_cover.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -100,38 +102,36 @@ class BookGrid extends PanelItem {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-        child: SizedBox(
-            width: 800,
-            child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse
-                    }),
-                child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      alignment: WrapAlignment.center,
-                      children: this
-                          .books
-                          .map((book) => Container(
-                              height: 270,
-                              width: (270.0 / 1.618) + 25,
-                              child: Card(
-                                  elevation: 4,
-                                  child: Clickable(
-                                      onPressed: () {
-                                        final uri = PageUrls.readBook(book.id);
-                                        Beamer.of(context).beamToNamed(uri,
-                                            data: {"book": book});
-                                      },
-                                      child: CoverBookItem(book: book)))))
-                          .toList(),
-                    )))));
+    return BlocBuilder<LibraryBloc, LibraryStruct>(
+      builder: (BuildContext context, state) {
+        return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: SizedBox(
+                width: 800,
+                child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse
+                        }),
+                    child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 40,
+                        ),
+                        child: Wrap(
+                          spacing: 30,
+                          runSpacing: 30,
+                          alignment: WrapAlignment.center,
+                          children: this
+                              .books
+                              .map((book) => LibraryBookItem(
+                                  bookId: book.id,
+                                  child: BookCoverWidget(book: book)))
+                              .toList(),
+                        )))));
+      },
+    );
   }
 }
 
@@ -242,7 +242,7 @@ class _BookListWidgetState extends State<BookListWidget> {
                                           },
                                           child: this.descript
                                               ? newDescriptBookItem(book: book)
-                                              : CoverBookItem(book: book)))))
+                                              : BookCoverWidget(book: book)))))
                               .toList()),
                     )),
                 Positioned(
@@ -257,10 +257,10 @@ class _BookListWidgetState extends State<BookListWidget> {
                                 onPressed: () {
                                   this._scrollController.animateTo(
                                       this._scrollController.offset - 400,
-                                      duration: Duration(milliseconds: 500),
+                                      duration: Duration(milliseconds: 350),
                                       curve: Curves.easeIn);
                                 },
-                                child: Icon(FontAwesomeIcons.arrowLeft))),
+                                child: Icon(Icons.arrow_left))),
                         replacement: SizedBox.shrink())),
                 Positioned(
                     right: 1.0,
@@ -275,10 +275,10 @@ class _BookListWidgetState extends State<BookListWidget> {
                                 onPressed: () {
                                   this._scrollController.animateTo(
                                       this._scrollController.offset + 400,
-                                      duration: Duration(milliseconds: 500),
+                                      duration: Duration(milliseconds: 350),
                                       curve: Curves.easeIn);
                                 },
-                                child: Icon(FontAwesomeIcons.arrowRight))),
+                                child: Icon(Icons.arrow_right))),
                         replacement: SizedBox.shrink()))
               ],
             )));

@@ -10,11 +10,6 @@ class ReadingLoadEvent extends ReadingUIEvent {
   ReadingLoadEvent({required this.bookId, required this.chapterBloc});
 }
 
-class LibraryToggleEvent extends ReadingUIEvent {
-  final int bookId;
-  LibraryToggleEvent({required this.bookId});
-}
-
 class UpdateAllEvent extends ReadingUIEvent {
   final ReadingUIState state;
   UpdateAllEvent({required this.state});

@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'reading_ui_event.dart';
@@ -24,7 +23,6 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
       : this._repository = repository,
         super(ReadingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => this.updateUI(event, emit));
-    on<LibraryToggleEvent>((event, emit) => this.libraryToggle(event, emit));
     on<ReadingLoadEvent>((event, emit) => this.loadEvent(event, emit));
     on<ToggleChapterOutlineEvent>(
         (event, emit) => toggleChapterOutline(event, emit));
@@ -56,42 +54,17 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     return "Error: Title not found";
   }
 
-  /// Toggle whether the book should be in the library anymore or not.
-  Future<void> libraryToggle(
-      LibraryToggleEvent event, ReadingUIEmitter emit) async {
-    Iterable<Library> entries =
-        state.libBookIds.where((entry) => entry.book == event.bookId);
-
-    if (entries.isEmpty) {
-      this
-          ._repository
-          .addLibraryBook(LibraryEntrySerialzier.initial(event.bookId));
-    } else {
-      Library entry = entries.first;
-      this._repository.removeLibraryBook(LibraryEntrySerialzier(
-            id: entry.id,
-            book: entry.book,
-            status: entry.status,
-          ));
-    }
-
-    emit(
-        state.copyWith(libBookIds: await this._repository.getLibraryEntries()));
-  }
-
   /// Completes all tasks related to loading a book into the reading UI.
   Future<void> loadEvent(ReadingLoadEvent event, ReadingUIEmitter emit) async {
-    emit(state
-        .copyWith(loadingStruct: LoadingStruct.loading(true), libBookIds: []));
+    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
     event.chapterBloc.add(LoadEvent());
 
     final title = await _getBookTitle(event.bookId);
-    final List<Library> libEntries = await this._repository.getLibraryEntries();
 
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.loading(false),
-        title: title,
-        libBookIds: libEntries));
+      loadingStruct: LoadingStruct.loading(false),
+      title: title,
+    ));
   }
 
   /// Completes the task of updating the whole state of the reading UI.

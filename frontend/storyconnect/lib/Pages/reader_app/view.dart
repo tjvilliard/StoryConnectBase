@@ -86,28 +86,30 @@ class _ReadingAppViewState extends State<ReadingAppView> {
               ],
             )),
         body: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
+                fit: FlexFit.loose,
                 child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned.fill(
-                    child: Align(
                   alignment: Alignment.center,
-                  child: ReadingPageView(),
+                  children: [
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.center,
+                      child: ReadingPageView(),
+                    )),
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.topLeft,
+                      child: ChapterNavigation(),
+                    )),
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.topRight,
+                      child: FeedbackWidget(),
+                    ))
+                  ],
                 )),
-                Positioned.fill(
-                    child: Align(
-                  alignment: Alignment.topLeft,
-                  child: ChapterNavigation(),
-                )),
-                Positioned.fill(
-                    child: Align(
-                  alignment: Alignment.topRight,
-                  child: FeedbackWidget(),
-                ))
-              ],
-            )),
             ReadingMenuBar(bookId: widget.bookId!),
           ],
         ));

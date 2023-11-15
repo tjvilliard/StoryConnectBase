@@ -23,19 +23,13 @@ class InitialLoadEvent extends ReadingHomeEvent {
 class ReadingHomeStruct {
   // add categories of books to navigate and
   // request based on user's interest.
-  /*
-  * Map of categories to books
-
-  */
 
   final List<Book> books;
-  final List<Book> libraryBooks;
   final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
 
   ReadingHomeStruct({
     required this.books,
-    required this.libraryBooks,
     required this.loadingStruct,
     this.bookToNavigate,
   });
@@ -48,7 +42,6 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   ReadingHomeBloc(this.repository)
       : super(ReadingHomeStruct(
           books: [],
-          libraryBooks: [],
           loadingStruct: LoadingStruct(isLoading: false),
         )) {
     on<GetBooksEvent>((event, emit) => updateBooksList(event, emit));
@@ -57,15 +50,12 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   void updateBooksList(ReadingHomeEvent event, ReadingHomeEmitter emit) async {
     emit(ReadingHomeStruct(
       books: state.books,
-      libraryBooks: state.libraryBooks,
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
     List<Book> books = await this.repository.getBooks();
-    List<Book> libBooks = await this.repository.getLibraryBooks();
 
     emit(ReadingHomeStruct(
       books: books,
-      libraryBooks: libBooks,
       loadingStruct: LoadingStruct.loading(false),
     ));
   }

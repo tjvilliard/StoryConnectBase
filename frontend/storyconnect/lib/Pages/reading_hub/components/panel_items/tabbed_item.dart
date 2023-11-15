@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/reading_hub/components/content_panel/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
 
 class TabbedPanel extends PanelItem {
   final List<Tab> tabs;

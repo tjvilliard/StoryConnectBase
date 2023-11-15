@@ -6,18 +6,10 @@ abstract class FeedbackEvent {
   const FeedbackEvent();
 }
 
-/// Load the comments for the chapter.
-class LoadChapterFeedbackEvent extends FeedbackEvent {
-  final int chapterId;
-  const LoadChapterFeedbackEvent({
-    required this.chapterId,
-  });
-}
-
 /// Change the entry for the suggestion field.
-class SuggestionEditedEvent extends FeedbackEvent {
+class FeedbackEditedEvent extends FeedbackEvent {
   final String? suggestion;
-  const SuggestionEditedEvent({
+  const FeedbackEditedEvent({
     required String? this.suggestion,
   });
 }
@@ -32,7 +24,7 @@ class CommentEditedEvent extends FeedbackEvent {
 
 /// Change the entry for the sentiment field.
 class SentimentChangedEvent extends FeedbackEvent {
-  final FeedbackSentiment sentiment;
+  final int sentiment;
   const SentimentChangedEvent({
     required this.sentiment,
   });
@@ -46,10 +38,34 @@ class FeedbackTypeChangedEvent extends FeedbackEvent {
   });
 }
 
+/// Updates the Recorded Annotation Item.
+class AnnotationChangedEvent extends FeedbackEvent {
+  final ChapterBloc chapterBloc;
+  final int offset;
+  final int offsetEnd;
+  final String text;
+
+  ///
+  const AnnotationChangedEvent({
+    required this.chapterBloc,
+    required this.offset,
+    required this.offsetEnd,
+    required this.text,
+  });
+}
+
+/// Load the comments for the chapter.
+class LoadChapterFeedbackEvent extends FeedbackEvent {
+  final ChapterBloc chapterBloc;
+  const LoadChapterFeedbackEvent({
+    required this.chapterBloc,
+  });
+}
+
 /// Submits a new feedback item.
 class SubmitFeedbackEvent extends FeedbackEvent {
-  final int chapterId;
+  final ChapterBloc chapterBloc;
   const SubmitFeedbackEvent({
-    required this.chapterId,
+    required this.chapterBloc,
   });
 }

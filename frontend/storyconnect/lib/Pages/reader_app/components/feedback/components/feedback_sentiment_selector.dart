@@ -18,11 +18,11 @@ class SentimentSelectorWidget extends StatelessWidget {
             Transform.scale(
                 scale: radioScale,
                 child: Radio.adaptive(
-                    value: FeedbackSentiment.bad,
+                    value: FeedbackSentiment.bad.index,
                     groupValue: feedbackState.serializer.sentiment,
-                    onChanged: (FeedbackSentiment? sentiment) {
+                    onChanged: (int? sentiment) {
                       context.read<FeedbackBloc>().add(SentimentChangedEvent(
-                          sentiment: FeedbackSentiment.bad));
+                          sentiment: FeedbackSentiment.bad.index));
                     })),
             Text(
               FeedbackSentiment.bad.description,
@@ -35,11 +35,11 @@ class SentimentSelectorWidget extends StatelessWidget {
             Transform.scale(
                 scale: radioScale,
                 child: Radio.adaptive(
-                    value: FeedbackSentiment.mediocre,
+                    value: FeedbackSentiment.mediocre.index,
                     groupValue: feedbackState.serializer.sentiment,
-                    onChanged: (FeedbackSentiment? sentiment) {
+                    onChanged: (int? sentiment) {
                       context.read<FeedbackBloc>().add(SentimentChangedEvent(
-                          sentiment: FeedbackSentiment.mediocre));
+                          sentiment: FeedbackSentiment.mediocre.index));
                     })),
             Text(FeedbackSentiment.mediocre.description,
                 style: TextStyle(fontSize: 12))
@@ -50,11 +50,11 @@ class SentimentSelectorWidget extends StatelessWidget {
             Transform.scale(
                 scale: radioScale,
                 child: Radio.adaptive(
-                    value: FeedbackSentiment.good,
+                    value: FeedbackSentiment.good.index,
                     groupValue: feedbackState.serializer.sentiment,
-                    onChanged: (FeedbackSentiment? sentiment) {
+                    onChanged: (int? sentiment) {
                       context.read<FeedbackBloc>().add(SentimentChangedEvent(
-                          sentiment: FeedbackSentiment.good));
+                          sentiment: FeedbackSentiment.good.index));
                     })),
             Text(FeedbackSentiment.good.description,
                 style: TextStyle(fontSize: 12))
@@ -65,11 +65,11 @@ class SentimentSelectorWidget extends StatelessWidget {
             Transform.scale(
                 scale: radioScale,
                 child: Radio.adaptive(
-                    value: FeedbackSentiment.great,
+                    value: FeedbackSentiment.great.index,
                     groupValue: feedbackState.serializer.sentiment,
-                    onChanged: (FeedbackSentiment? sentiment) {
+                    onChanged: (int? sentiment) {
                       context.read<FeedbackBloc>().add(SentimentChangedEvent(
-                          sentiment: FeedbackSentiment.great));
+                          sentiment: FeedbackSentiment.great.index));
                     })),
             Text(FeedbackSentiment.great.description,
                 style: TextStyle(fontSize: 12))

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 enum FeedbackSentiment {
-  good("Good"),
   great("Great"),
+  good("Good"),
   mediocre("Mediocre"),
   bad("Bad");
 
