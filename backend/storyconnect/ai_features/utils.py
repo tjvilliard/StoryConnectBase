@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 openai.api_key = OPENAI_API_KEY
 
 BASE_MODEL = "gpt-3.5-turbo-instruct"
-CHAT_MODEL = "gpt-3.5-turbo"
+CHAT_MODEL = "gpt-3.5-turbo-16k"
 MAX_TOKENS = 2000
 TEMPERATURE = 0.5
-MAX_CONTEXT = 4000
+MAX_CONTEXT = 16000
 AVG_TOKEN = 3.5
 
 def summarize_chapter(chapter_id, model=BASE_MODEL, max_tokens=MAX_TOKENS, temp=TEMPERATURE):
@@ -62,12 +62,12 @@ def summarize_chapter(chapter_id, model=BASE_MODEL, max_tokens=MAX_TOKENS, temp=
         summary = response.choices[0]['text']
 
     # return the appropriate summary
-    logger.info(do_two_prompts)
-    logger.info(len(summary))
-    logger.info(summary)
-    logger.info(response.choices)
-    logger.info(response2.choices)
-    logger.info(final_response.choices)
+    # logger.info(do_two_prompts)
+    # logger.info(len(summary))
+    # logger.info(summary)
+    # logger.info(response.choices)
+    # logger.info(response2.choices)
+    # logger.info(final_response.choices)
     return summary
 
 def summarize_chapter_chat(chapter_id, model=BASE_MODEL, max_tokens=MAX_TOKENS, temp=TEMPERATURE):
@@ -107,13 +107,13 @@ def summarize_chapter_chat(chapter_id, model=BASE_MODEL, max_tokens=MAX_TOKENS, 
         summary = response['choices'][0]['message']['content']
 
     # return the appropriate summary
-    logger.info(do_two_prompts)
-    logger.info(len(summary))
-    logger.info(summary)
-    logger.info(response['choices'])
-    if do_two_prompts:
-        logger.info(response2['choices'])
-        logger.info(final_response['choices'])
+    # logger.info(do_two_prompts)
+    # logger.info(len(summary))
+    # logger.info(summary)
+    # logger.info(response['choices'])
+    # if do_two_prompts:
+    #     logger.info(response2['choices'])
+    #     logger.info(final_response['choices'])
     return summary
 
 def summarize_book_chapters(book_id):

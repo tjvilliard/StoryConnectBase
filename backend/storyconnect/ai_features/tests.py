@@ -4,6 +4,7 @@ from books.models import Book
 from .continuity_checker import ContinuityChecker
 from .road_unblocker import RoadUnblocker
 import ai_features.utils as utils
+import re
 import logging
 # Create your tests here.
 class StatementSheetTests(TestCase):
@@ -101,8 +102,34 @@ class ContinuityCheckerTests(TestCase):
 class RoadUnblockerTests(TestCase):
     def setUp(self):
         self.ru = RoadUnblocker()
-        self.book = Book.objects.create(title="Test Book")
-        self.chapter = Chapter.objects.create(book=self.book, chapter_number=1, content="This is the first chapter of the book.")
+        self.book = Book.objects.create(title="Dorian Gray")
+
+        with open("ai_features/test_files/ch_1.txt", "r") as f1, open("ai_features/test_files/ch_2.txt", "r") as f2, open("ai_features/test_files/ch_3.txt", "r") as f3:
+            self.chapter1 = Chapter.objects.create(book=self.book, content=f1.read())
+            self.chapter2 = Chapter.objects.create(book=self.book, content=f2.read())
+            self.chapter3 = Chapter.objects.create(book=self.book, content=f3.read())
+        
+    def test_get_suggestion(self):
+        question = "Do you have any suggestions for this chapter?"
+        selection = ""
+        suggestion = self.ru.get_suggestions(selection, question, self.chapter1.id)
+        
+
+        with open("ai_features/test_files/ru_suggestions.txt", "w") as f:
+            f.write(suggestion)
+
+        
+    def test_itemize_response(sefl):
+        with(open("ai_features/test_files/ru_suggestions.txt", "r")) as f:
+            response = f.read()
+        # Use regular expression to extract numbered statements
+        statements = re.findall(r'\d+\.\s+(.+)', response)
+
+        # Remove numbers from the extracted statements
+        statements = [re.sub(r'\d+\.\s+', '', statement) for statement in statements]
+
+        for statement in statements:
+            print(statement)
 
 class UtilsTests(TestCase):
     def setUp(self):

@@ -13,9 +13,11 @@ from rest_framework.views import APIView
 from .serializers import RoadUnblockerRequestSerializer, RoadUnblockerResponseSerializer, RoadUnblockerSuggestionSerializer
 from .models import StatementSheet
 from .continuity_checker import ContinuityChecker
+from .road_unblocker import RoadUnblocker
 from books import models as books_models
 from .serializers import *
 from uuid import uuid4
+import re
 import logging
 
 logger = logging.getLogger(__name__)
@@ -25,29 +27,37 @@ class RoadUnblockerRequestView(APIView):
         
         serializer = RoadUnblockerRequestSerializer(data=request.data)
         if serializer.is_valid():
-            # Mock data (replace with actual AI tool logic)
-            mock_suggestions = [
-                {
-                    "offset_start": 12,
-                    "offset_end": 30,
-                    "original": "dolor sit amet",
-                    "suggested_change": "sit amet consectetur"
-                },
-                {
-                    "offset_start": 50,
-                    "offset_end": 63,
-                    "original": "adipiscing elit",
-                    "suggested_change": "elit adipiscing"
-                }
-            ]
-            
-            
-            response_data = {
-                "suggestions": mock_suggestions,
-                "message": "Here are some suggestions to improve your writing."
-            }
+            question = serializer.validated_data['question']
+            selection = serializer.validated_data['selection']
+            chapter_id = serializer.validated_data['chapter']
 
-            
+            ru = RoadUnblocker()
+
+            response = ru.get_suggestions(selection, question, chapter_id)
+
+            # Use regular expression to extract numbered statements
+            statements = re.findall(r'\d+\.\s+(.+)', response)
+
+            # Remove numbers from the extracted statements
+            statements = [re.sub(r'\d+\.\s+', '', statement) for statement in statements]
+
+            response_data = {
+                "uuid": uuid4(),
+                "message": "Here are some suggestions to help you get past your writer's block.",
+                "suggestions": []
+            }
+            for statement in statements:
+                suggestion_data = {
+                    "uuid": uuid4(),
+                    "offset_start": 0,
+                    "offset_end": 0,
+                    "original": "",
+                    "suggested_change": statement
+                }
+                response_data["suggestions"].append(suggestion_data)
+
+                
+
             response_serializer = RoadUnblockerResponseSerializer(data=response_data)
 
             if response_serializer.is_valid():

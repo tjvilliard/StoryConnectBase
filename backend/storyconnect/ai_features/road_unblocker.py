@@ -15,12 +15,12 @@ class RoadUnblocker():
     MAX_TOKENS = 5000
     TEMPERATURE = 0.2
 
-    SYS_ROLE = "You are an AI writing assistant. You are helping a writer write a story. You are not a writer yourself, but you are very good at helping."
+    SYS_ROLE = "You are an AI writing assistant. You are here to help the user write their story."
     PRE_MESSAGE = "Hello! I am Road Unblocker. Your personal AI writing assistant. I am here to help you write your story."
 
     def __init__(self):
         self.last_response = None
-        self.sys_message = [{"role": "system", "content": self.SYS_ROLE},]
+        self.sys_message = {"role": "system", "content": self.SYS_ROLE}
         
 
     # def _summarize_chapter(self, chapter_id):
@@ -73,7 +73,7 @@ class RoadUnblocker():
             u_msg_summary = "Here is a summary of my book so far:\n\n"
             
             # TODO: Remember that this is now chat model
-            u_msg_summary += utils.summarize_book_chat(book.id)
+            u_msg_summary += utils.summarize_book_chat(book.id)[0]
             messages.append({"role": "user", "content": u_msg_summary})
         
         # include chapter content
@@ -81,16 +81,34 @@ class RoadUnblocker():
         u_msg_chapter += chapter.content
         messages.append({"role": "user", "content": u_msg_chapter})
 
+        u_ex = "Do you have any suggestions for this chapter?"
+        messages.append({"role": "user", "content": u_ex})
+        
+        assist_ex = """Chapter Suggestions:
+
+                    1. Enhance the setting: Describe the studio and garden in more detail, using sensory details to immerse the reader in the environment. Expand on the scents, sounds, and visuals to create a vivid atmosphere.
+
+                    2. Deepen the character dynamics: Explore the relationship between Lord Henry and Basil Hallward further. Show their contrasting personalities and perspectives through their dialogue and actions. Highlight the tension and fascination that arises from their discussions about Dorian Gray.
+
+                    3. Develop the mystery of Dorian Gray: Drop subtle hints and foreshadowing about the hidden depths of Dorian's character. Create intrigue around his role in Basil's art and the impact he has on the people around him. Build anticipation for the dark and twisted path that lies ahead.
+
+                    4. Expand on the theme of art and beauty: Use Lord Henry and Basil's conversation to delve deeper into their contrasting views on art and its relationship to the artist and the subject. Examine the idea of art as a reflection of the artist's soul and the potential consequences of revealing too much of oneself in art.
+
+                    5. Foreshadowing and tension: Inject moments of tension and foreshadowing in the chapter to keep the reader engaged. Hint at the potential conflicts and challenges that may arise in the future as Lord Henry and Basil's obsession with Dorian Gray grows.
+                    """
+        messages.append({"role": "assistant", "content": assist_ex})
+
         return messages
-
-
-
-
         
 
-    def get_suggestions(self, question, chapter_id):
+    def get_suggestions(self, selection, question, chapter_id):
         messages = self._generate_context(chapter_id)
-        messages.append({"role": "user", "content": question})
+
+        if selection is not None and selection != "":
+            content = "Heres the particular selection I want to work on:\n" + selection
+            messages.append({"role": "user", "content": content})
+
+        messages.append({"role": "user", "content": "Question: " +  question})
         self.last_response = openai.ChatCompletion.create(model = self.CHAT_MODEL,
                                                           messages = messages,
                                                           max_tokens = self.MAX_TOKENS

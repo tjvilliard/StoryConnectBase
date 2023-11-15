@@ -35,7 +35,7 @@ urlpatterns += [
     # path('api/road_unblock/', ai_features.RoadUnblockerRequestView.as_view()),
     
     path('api/admin/', admin.site.urls),
-    path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
+    path('api/road_unblock/', ai_features.RoadUnblockerRequestView.as_view()),
 ]
 
 urlpatterns += ai_features_urls.urlpatterns
