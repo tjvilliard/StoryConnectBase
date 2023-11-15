@@ -72,7 +72,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
                             child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            ProfileCard(profile: state.profile),
+                            ProfileCard(uid: widget.uid),
                             CurrentWorksCard(),
                             Wrap(
                               alignment: WrapAlignment.center,

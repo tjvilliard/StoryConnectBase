@@ -163,9 +163,9 @@ class Highlight with _$Highlight {
 @freezed
 class Profile with _$Profile {
   const factory Profile({
-    required int id,
     required String bio,
-    @JsonKey(name: 'display_name') String? displayName,
+    int? id,
+    int? user,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
@@ -174,6 +174,6 @@ class Profile with _$Profile {
   factory Profile.initial() => Profile(
         id: 0,
         bio: '',
-        displayName: '',
+        user: 0,
       );
 }

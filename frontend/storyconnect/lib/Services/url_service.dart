@@ -132,7 +132,7 @@ class UrlConstants {
     return _urlBuilder.build('narrative_elements/$bookId');
   }
 
-  static Uri getDisplayName(String uid) {
+  static Uri getDisplayName(int uid) {
     return _urlBuilder.build('display_name/$uid');
   }
 
@@ -144,8 +144,11 @@ class UrlConstants {
     return _urlBuilder.build('books/writer/');
   }
 
-  static Uri getProfile(String uid) {
-    return _urlBuilder.build('profiles/$uid');
+  static Uri profiles({String? uid}) {
+    if (uid != null) {
+      return _urlBuilder.build('profiles/$uid');
+    }
+    return _urlBuilder.build('profiles/');
   }
 
   static Uri announcements({String? uid}) {

@@ -30,9 +30,11 @@ class CurrentWorksCard extends StatelessWidget {
                   BlocBuilder<WriterProfileBloc, WriterProfileState>(
                       builder: (context, state) {
                     Widget toReturn;
-                    if (state.booksLoadingStruct.isLoading == true) {
+                    if (state.loadingStructs.booksLoadingStruct.isLoading ==
+                        true) {
                       toReturn = LoadingWidget(
-                          loadingStruct: state.booksLoadingStruct);
+                          loadingStruct:
+                              state.loadingStructs.booksLoadingStruct);
                     } else {
                       if (state.books.isEmpty) {
                         toReturn = Text("No books found");
