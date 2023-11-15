@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-# import matplotlib.pyplot as plt
-# import seaborn as sns
 import csv
 import json
 
@@ -9,10 +7,10 @@ import json
 
 import re
 import string
-# from wordcloud import WordCloud
-# from collections import Counter
 
 import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -31,22 +29,12 @@ from sklearn.linear_model import LogisticRegression
 
 from books.models import * 
 
-nltk.download('punkt')
-nltk.download('stopwords')
-
 def parse_genre_values(genre_info):
     if genre_info == '':
         return []
     genre_dict = json.loads(genre_info)
     genres = list(genre_dict.values())
     return genres
-
-""" def plot_genre_distribution(df):
-#     plt.figure(figsize=(10,5))
-#     sns.barplot(x=df['genre'].value_counts().index,y=df['genre'].value_counts())
-#     plt.title('Genre Count')
-#     plt.xlabel('Genres')
-#     plt.ylabel('Count')"""
 
 # The below function comes in handy to count the number of characters in a text
 def char_count(text):
@@ -82,14 +70,6 @@ def predict_genre(book_id, chapter_num):
     # load data for training
     df=pd.read_csv('/src/scripts/data.csv',index_col='index')
 
-    # create dataframe for chapters. initialized by dummy row
-    # chapter_df = pd.DataFrame({
-    # 'book': [0],
-    # 'book_title': ['a'],
-    # 'chapter_number': [0],
-    # 'content': ['a']
-    # })
-
     # load data for prediction
     predict_books =  Book.objects.get(pk = book_id)
     book_id = predict_books.pk
@@ -102,48 +82,6 @@ def predict_genre(book_id, chapter_num):
     'book_title': [book_title],
     'chapter_number': [predict_chapter.chapter_number],
     'content': [predict_chapter.content]})
-
-    """# if book_id == -1: # filter by the user
-    #     user_owner,created = User.objects.get_or_create(id=user_id)
-    #     predict_books = Book.objects.filter(owner=user_owner)
-
-    #     for p_book in predict_books:
-    #         book_id = p_book.pk
-    #         book_title = p_book.title
-    #         book_chapters = Chapter.objects.filter(book = p_book)
-
-    #         for chapter in book_chapters:
-    #             ch = {'book': book_id,
-    #             'book_title': book_title,
-    #             'chapter_number': chapter.chapter_number,
-    #             'content': chapter.content}
-    #             chapter_df = chapter_df.append(ch, ignore_index=True)"""
-
-    # drop the dummy row
-    # chapter_df = chapter_df.iloc[1:, :]
-
-    # pre-processing data used for testing when initially
-    """data = []
-    # with open('/src/features/booksummaries.txt', 'r') as f:
-    #     reader = csv.reader(f, dialect='excel-tab')
-    #     for row in reader:
-    #         data.append(row)
-
-    # # convert data to pandas dataframe
-    # books = pd.DataFrame.from_records(data, columns=['book_id', 'freebase_id', 'book_title', 'author', 'publication_date', 'genre', 'summary'])
-    
-    # books['genre'] = books['genre'].apply(parse_genre_values)
-    # books = books.drop(columns = ['freebase_id', 'author', 'publication_date','book_id'])
-
-    # # check for missing values and duplicates
-    # books['genre'] = books['genre'].apply(lambda x: np.NaN if len(x) == 0 else x)
-
-    # print(books.isnull().sum().sort_values(ascending = False))
-    # print(df.isnull().sum().sort_values(ascending = False))
-
-    # collect the ones that doesn't have genres
-    # null_genre = pd.isnull(books["genre"])
-    # null_genre = books[null_genre]"""
 
     #Generating the column title_len
     df = df.assign(title_len = df['title'].apply(lambda x:len(x.split())))
@@ -159,30 +97,17 @@ def predict_genre(book_id, chapter_num):
     chapter_df = chapter_df.assign(summary_len = chapter_df['content'].apply(lambda x: len(x.split())))
     chapter_df = chapter_df.assign(summary_char_len = chapter_df['content'].apply(char_count))
 
-    # grouping books by genres based on title length and title character's length
-    # df.groupby('genre')[['title_len','title_char_len']].describe().transpose()
-
     #Combining the title and summary column for further text preprocessing
     df['Combined_Text']=df['title'] + ' ' + df['summary']
     chapter_df['Combined_Text']=chapter_df['book_title'] + ' ' + chapter_df['content']
-
-    #Finally we run the above defined funtions on the column Combined_Text
-    # df['Combined_Text']=df['Combined_Text'].apply(lowercase)
-    # df['Combined_Text']=df['Combined_Text'].apply(removepunc)
-    # df['Combined_Text']=df['Combined_Text'].apply(remove_sw)
-    # df['Combined_Text']=df['Combined_Text'].apply(stem_text)
 
     # df.head()
     pt_lst = []
     for text in df['Combined_Text']:
         processed_text = stem_text(remove_stopwords(clean_words(convertintolist(text))))
         pt_lst.append(processed_text)
-    # df = df.loc[index, 'Combined_Text'] = processed_text  # assigns processed to the cell at row index and column 'Combined_Text'
-    # df = df.assign(Combined_text=df['Combined_Text'].apply(lambda x:processed_text))
+    
     df['Combined_Text'] = pt_lst
-
-    # remove the genre column as it is the y label column
-    # null_genre = null_genre.drop(columns=['genre'])
 
     pt_lst_test = []
     for text in chapter_df['Combined_Text']:
@@ -221,20 +146,7 @@ def predict_genre(book_id, chapter_num):
     recall=round(recall_score(y_test,lg_y_pred,average='weighted'),3)
     
     # Converting back from label encoded form to labels
-    # lg_y_pred = encoder.inverse_transform(lg_y_pred)
     lg_y_pred_test = encoder.inverse_transform(lg_y_pred_test)
-
-    # plot for confusion matrix
-    # fig, ax = plt.subplots(1, 2, figsize = (25,  8))
-    # ax1 = plot_confusion_matrix(y_test, lg_y_pred, ax= ax[0], cmap= 'YlGnBu')
-    # ax2 = plot_roc(y_test, lg_y_prob, ax= ax[1], plot_macro= False, plot_micro= False, cmap= 'summer')
-
-    # test_pred.savetxt('decision_tree_pred.csv',test_pred, fmt = '%d', delimiter=",")
-    # test_pred.tofile('/content/drive/MyDrive/Colab Notebooks/dec_tree_pred.csv', sep = ',')
-    # with open('/content/drive/MyDrive/Fall 2023/decision_tree_pred.csv', 'w') as f:
-    #     mywriter = csv.writer(f, delimiter=',')
-    #     mywriter.writerow(['ID','Prediction'])
-    #     mywriter.writerows(enumerate(lg_y_pred_test,1))
 
     # chapter_df = chapter_df.join(lg_y_pred_test)
     lg_y_pred_test = pd.DataFrame(lg_y_pred_test, columns=['genre'])
