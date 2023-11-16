@@ -88,8 +88,19 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     try {
       doc = DeltaDocM.fromJson(jsonDecode(json));
     } catch (e) {
-      print("Unable to convert to Delta doc, returning as blank chapter: $e");
-      doc = DeltaDocM();
+      /// this feels really hacky, but it should work
+      try {
+        Map<String, String> intermediateJson = {"insert": "$json\n"};
+
+        final finalizedJson = jsonEncode([intermediateJson]);
+        final decodedJson = jsonDecode(finalizedJson);
+        doc = DeltaDocM.fromJson(decodedJson);
+        print("converted json to new format");
+      } catch (e) {
+        print(
+            "Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        doc = DeltaDocM();
+      }
     }
     return doc;
   }
