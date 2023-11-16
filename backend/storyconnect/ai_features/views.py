@@ -17,6 +17,7 @@ class RoadUnblockerRequestView(APIView):
     def post(self, request, format=None):
         
         serializer = RoadUnblockerRequestSerializer(data=request.data)
+        logger.info(request.data)
         if serializer.is_valid():
             question = serializer.validated_data['question']
             selection = serializer.validated_data['selection']
@@ -33,15 +34,16 @@ class RoadUnblockerRequestView(APIView):
             statements = [re.sub(r'\d+\.\s+', '', statement) for statement in statements]
 
             response_data = {
-                "uuid": uuid4(),
+                "uid": uuid4(),
                 "message": "Here are some suggestions to help you get past your writer's block.",
                 "suggestions": []
             }
             for statement in statements:
                 suggestion_data = {
-                    "uuid": uuid4(),
+                    "uid": uuid4(),
                     "offset_start": 0,
                     "offset_end": 0,
+                    "suggestion": "",
                     "original": "",
                     "suggested_change": statement
                 }
@@ -52,10 +54,16 @@ class RoadUnblockerRequestView(APIView):
             response_serializer = RoadUnblockerResponseSerializer(data=response_data)
 
             if response_serializer.is_valid():
+                logger.info("response serializer error")
+                logger.info(response_serializer.errors)
+                logger.info(response_serializer.data)
                 return Response(response_serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(response_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
+            logger.info("request serializer error")
+            logger.info(serializer.errors)
+            logger.info(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
