@@ -29,7 +29,8 @@ def run():
         ss_og = StatementSheet(book=dgray, document=f2.read())
 
     ## EDITABLE CODE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    targets = ss_og.get_character_statements("Basil-Hallward").strip().split("\n")
+    # targets = ss_og.get_character_statements("Basil-Hallward").strip().split("\n")
+    targets = ss_con.get_character_statements("Lord-Henry-Wotton").strip().split("\n")
 
 
 
