@@ -130,12 +130,19 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[event.chapterNum] = event.text;
 
+    final doc = DeltaDocM.fromJson(jsonDecode(event.text));
+    // temporary editor to get the plain text
+
+    final EditorController editor = EditorController(document: doc);
+    final String plainText = editor.plainText.text;
+
     emit(state.copyWith(chapters: chapters));
 
     final chapterResult = await _repo.updateChapter(
       chapterId: state.chapterNumToID[event.chapterNum] ?? -1,
       number: event.chapterNum,
-      text: chapters[event.chapterNum]!,
+      content: chapters[event.chapterNum]!,
+      rawContent: plainText,
     );
 
     assert(chapterResult?.chapterContent == event.text);

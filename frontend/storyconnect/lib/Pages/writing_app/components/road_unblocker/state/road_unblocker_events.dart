@@ -22,7 +22,8 @@ class LoadSelectionEvent extends RoadUnblockerEvent {
 }
 
 class SubmitUnblockEvent extends RoadUnblockerEvent {
-  const SubmitUnblockEvent();
+  final int chapterID;
+  const SubmitUnblockEvent({required this.chapterID});
 }
 
 class RecieveUnblockEvent extends RoadUnblockerEvent {

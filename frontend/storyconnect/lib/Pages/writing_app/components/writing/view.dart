@@ -35,7 +35,13 @@ class WritingPageViewState extends State<WritingPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+          focusNode.requestFocus();
+        }
+      },
+      child: Container(
         constraints: BoxConstraints(
           maxWidth: WritingUIBloc.pageWidth,
         ),
@@ -79,6 +85,8 @@ class WritingPageViewState extends State<WritingPageView> {
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: toReturn);
-        }));
+        }),
+      ),
+    );
   }
 }
