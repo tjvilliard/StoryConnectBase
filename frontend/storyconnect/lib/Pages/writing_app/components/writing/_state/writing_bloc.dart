@@ -65,10 +65,14 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     final newChapterNum = sortedChapterNum.first + 1;
     final result = await _repo.createChapter(newChapterNum);
     if (result != null) {
-      state.chapterNumToID[newChapterNum] = result.id;
+      final Map<int, int> chapterNumToID =
+          Map<int, int>.from(state.chapterNumToID);
+      chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
       emit.call(state.copyWith(
-          chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
+          chapterNumToID: chapterNumToID,
+          chapters: chapters,
+          loadingStruct: LoadingStruct.loading(false)));
     } else {
       emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
     }
