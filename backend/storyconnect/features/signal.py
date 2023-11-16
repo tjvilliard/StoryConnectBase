@@ -6,7 +6,7 @@ from features import models as features_models
 from books import models as book_models
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from django_postgres_extensions.models.functions import *
+# from django_postgres_extensions.models.functions import *
 
 @receiver(user_logged_out, sender=User)
 def user_logged_out_callback(sender, user, request, **kwargs):
@@ -15,7 +15,7 @@ def user_logged_out_callback(sender, user, request, **kwargs):
     all_user_books = book_models.Book.objects.filter(owner=user)
     for book in all_user_books:
         book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
-        book_genre = book_models.Book.objects.get_or_create(pk=book.pk)
+        book_genre, created = book_models.Book.objects.get_or_create(pk=book.pk)
         chapters_genres = []
         for chap in book.get_chapters():
             chapter_genre, created = features_models.ChapterTagging.objects.get_or_create(chapter = chap.pk)
@@ -28,11 +28,13 @@ def user_logged_out_callback(sender, user, request, **kwargs):
             chapter_genre.last_chapter_len = updated_chapter_len
             break
         
-        # genres_of_the_book_from_book_model = book_genre.tags
-        genres_of_the_book_from_book_model = book_models.Book._meta.get_field('tags').value_from_object(book_genre)
+        genres_of_the_book_from_book_model = book_genre.tags
+        # genres_of_the_book_from_book_model = book_models.Book._meta.get_field('tags').value_from_object(book_genre)
+        tmp_lst = genres_of_the_book_from_book_model
         for genre in chapters_genres:
             if genre not in (book_genretag.genre or genres_of_the_book_from_book_model):
-                features_models.GenreTagging.objects.filter(book=book_genretag).update(genre=ArrayAppend('genre', str(genre).lower()))
-                book_models.Book.objects.filter(pk=book_genre).update(tags=ArrayAppend('tags', str(genre).lower()))
+                tmp_lst.append(genre)
         
-        print(book.title , "=", book_genretag.genre)
+        features_models.GenreTagging.objects.filter(book=book_genretag).update(genre=tmp_lst)
+        book_models.Book.objects.filter(pk=book_genre).update(tags=tmp_lst)
+        print("finished.")
