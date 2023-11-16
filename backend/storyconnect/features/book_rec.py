@@ -1,6 +1,6 @@
 from books.models import *
 from django.db.models import Count
-
+from features import models as feature_models
 import itertools
 import pandas as pd
 from openpyxl import Workbook
@@ -137,7 +137,15 @@ def content_rec():
     # ax.legend()
     # plt.show()
 
+def genre_rating_rec(genre):
+    genre_books = Book.objects.filter(tags__contains = [str(genre)]).order_by('rating')
 
+    if len(genre_books) > 10:
+        genre_books = genre_books[0:11]  
+
+def genre_rating_rec_by_KNN():
+    # limit which fields
+    df = pd.DataFrame(list(Book.objects.all().values("title", "author", "genre", "rating")))
 
 
 

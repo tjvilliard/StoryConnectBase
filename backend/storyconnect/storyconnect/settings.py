@@ -78,7 +78,7 @@ INSTALLED_APPS = [
     'comment',
     'core',
     'ai_features',
-
+    'features',
 
 ]
 
