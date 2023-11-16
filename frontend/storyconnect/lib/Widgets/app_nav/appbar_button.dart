@@ -1,28 +1,31 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
 class AppBarTextButton extends StatelessWidget {
+  final Icon icon;
   final String text;
-  final void Function() onPressed;
+  final String uri;
   static const double width = 105.0;
 
-  const AppBarTextButton({required this.text, required this.onPressed});
+  const AppBarTextButton(
+      {required this.text, required this.icon, required this.uri});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: CustomAppBar.height,
-        width: AppBarTextButton.width,
-        child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.0),
-            child: TextButton(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0)))),
-              child: Text(this.text),
-              onPressed: this.onPressed,
-            )));
+    return Flexible(
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: ConstrainedBox(
+              constraints: BoxConstraints(),
+              child: TextButton.icon(
+                icon: this.icon,
+                label: Text(this.text),
+                onPressed: () {
+                  Beamer.of(context).beamToNamed(this.uri);
+                },
+              ))),
+    );
   }
 }
 

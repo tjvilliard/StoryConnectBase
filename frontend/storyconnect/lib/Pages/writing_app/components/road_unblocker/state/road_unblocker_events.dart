@@ -33,11 +33,11 @@ class RecieveUnblockEvent extends RoadUnblockerEvent {
 class AcceptSuggestionEvent extends RoadUnblockerEvent {
   final String responseLocalId;
   final String localId;
-  final ChapterBloc chapterBloc;
+  final WritingBloc writingBloc;
   const AcceptSuggestionEvent(
       {required this.responseLocalId,
       required this.localId,
-      required this.chapterBloc});
+      required this.writingBloc});
 }
 
 class RejectSuggestionEvent extends RoadUnblockerEvent {

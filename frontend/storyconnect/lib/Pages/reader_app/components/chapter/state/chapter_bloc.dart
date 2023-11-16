@@ -9,7 +9,9 @@ part 'chapter_bloc_struct.dart';
 typedef ChapterEmitter = Emitter<ChapterBlocStruct>;
 
 class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
-  final chapterNumToID = <int, int>{};
+  /// Maps the chapter number as we see it to the chapter Id as the Backend and Database sees it.
+
+  int get currentChapterId => state.chapterNumToID[state.currentChapterIndex]!;
 
   late final BookProviderRepository _repo;
   ChapterBloc(BookProviderRepository repository)
@@ -25,10 +27,12 @@ class ChapterBloc extends Bloc<ChapterEvent, ChapterBlocStruct> {
     ));
   }
 
+  /// Parses the list of chapters from the backend, mapping the
+  /// chapter numbers from index -> ID and index -> Content.
   Map<int, String> parseChapters(List<Chapter> chapters) {
     Map<int, String> parsedChapters = {};
     for (Chapter chapter in chapters) {
-      chapterNumToID[chapter.number] = chapter.id;
+      state.chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
     }
     return parsedChapters;

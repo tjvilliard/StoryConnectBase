@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_input.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_panel.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_sentiment_selector.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_type_selector.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
@@ -14,22 +19,39 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
         builder: (context, uiState) {
       return BlocBuilder<FeedbackBloc, FeedbackState>(
-          builder: (context, state) {
-        return AnimatedCrossFade(
-            alignment: Alignment.centerRight,
-            firstChild: Container(),
-            secondChild: Container(
-                width: 250,
-                child: Card(
+        builder: (context, feedState) {
+          return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
+              builder: (context, state) {
+            return AnimatedCrossFade(
+              crossFadeState: !uiState.feedbackBarShown
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              duration: Duration(milliseconds: 200),
+              alignment: Alignment.centerRight,
+              firstChild: Container(),
+              secondChild: Container(
+                  width: 350,
+                  child: Card(
                     elevation: 3,
                     child: uiState.feedbackBarShown
-                        ? Padding(padding: EdgeInsets.all(8), child: Column())
-                        : Container())),
-            crossFadeState: uiState.feedbackBarShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
-      });
+                        ? Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  FeedbackTypeSelector(),
+                                  SentimentSelectorWidget(),
+                                  Expanded(
+                                      child: FeedbackCardListWidget(
+                                          feedbackItems: [])),
+                                  FeedbackInputWidget(),
+                                ]))
+                        : Container(),
+                  )),
+            );
+          });
+        },
+      );
     });
   }
 }

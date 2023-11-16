@@ -1,17 +1,12 @@
-from json import JSONDecodeError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import viewsets, status, filters
+from rest_framework.permissions import  IsAuthenticatedOrReadOnly
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from storyconnect.mixins import *
-from .models import *
-from .serializers import *
-from django.db import transaction
+from storyconnect.mixins import CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson
+from .models import WriterFeedback, Highlight
+from .serializers import WriterFeedbackSerializer, HighlightSerializer
 import logging
-
 
 
 class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
@@ -20,7 +15,7 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
     permission_classes = [IsAuthenticatedOrReadOnly]
     logger = logging.getLogger(__name__)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post']) #consider changing the action of this to put rather than post.
     def dismiss(self, request, pk=None):
         '''
         Dismisses the comment. This is done by setting the dismissed field to true.

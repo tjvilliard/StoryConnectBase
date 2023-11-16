@@ -1,34 +1,100 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Models/text_annotation/feedback.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
+import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
-  //TODO: add differing kinds of book requests
-  // some to be added with a search function, some by category.
-  // Category based searches should not be hardcoded, but should be dynamic.
+  /// Generates HTTP: POST request for new feedback item.
+  Future<WriterFeedback?> createFeedbackItem(
+      {required FeedbackCreationSerializer serializer}) async {
+    try {
+      final url = UrlConstants.createWriterFeedback();
+      print("[INFO]: Getting result from post call. \n");
 
-  //TODO: replace this generic getBooks request with more
-  // sophisticated and dynamic requests.
+      final result = await http.post(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(serializer.toJson()),
+      );
+
+      print("[DEBUG]: Json Result: \n ${result.body} \n");
+
+      return WriterFeedback.fromJson(jsonDecode(result.body));
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  /// Get feedback items associated with this chapter.
+  Stream<WriterFeedback> getFeedback(int chapterId) async* {
+    final url = UrlConstants.getWriterFeedback(chapterId);
+    final result = await http.get(url, headers: await buildHeaders());
+    for (var feedback in jsonDecode(result.body)) {
+      yield WriterFeedback.fromJson(feedback);
+    }
+  }
+
   Stream<Book> getBooks() async* {
     try {
-      String authToken =
-          await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+      final url = UrlConstants.books(uid: "uid");
 
-      final url = UrlContants.books;
-
-      final result = await http.get(url, headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Token $authToken'
-      });
+      final result = await http.get(url, headers: await buildHeaders());
 
       for (var book in jsonDecode(result.body)) {
         yield Book.fromJson(book);
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// Gets the full set of user library entries, the book id, the reader, the book reading state, etc...
+  Stream<Library> getLibrary() async* {
+    try {
+      // get url for user library api call.
+      final url = UrlConstants.getUserLibrary();
+
+      // get result for HTTP GET request
+      final result = await http.get(url, headers: await buildHeaders());
+
+      for (var libraryEntry in jsonDecode(result.body)) {
+        yield Library.fromJson(libraryEntry);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// Completes API action of adding a book to user library.
+  Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
+    try {
+      // get url for adding entry to user library api call.
+      final url = UrlConstants.addLibraryBook();
+
+      // send off HTTP POST request
+      await http.post(url,
+          headers: await buildHeaders(),
+          body: (jsonEncode(serializer.toJson())));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// Completes API action of removing a book from user library.
+  Future<void> removeBookfromLibrary(LibraryEntrySerializer serializer) async {
+    try {
+      // get url for removing entry from user library api call.
+      final url = UrlConstants.removeLibraryBook(serializer.id!);
+
+      // send off HTTP DELETE request
+      await http.delete(url, headers: await buildHeaders());
     } catch (e) {
       print(e);
     }
@@ -40,15 +106,33 @@ class ReadingRepository {
   List<Book> books = [];
   ReadingApiProvider _api = ReadingApiProvider();
 
-  Future<List<Book>> getBooks() async {
-    final result = await this._api.getBooks();
+  /// Creates a new feedback item for chapter.
+  Future<int?> createChapterFeedback({
+    required FeedbackCreationSerializer serializer,
+  }) async {
+    final WriterFeedback? output =
+        await this._api.createFeedbackItem(serializer: serializer);
 
-    return result.toList();
+    if (output == null) {
+      return null;
+    } else {
+      return output.id;
+    }
   }
 
-  Future<Map<String, List<Book>>> getTaggedBooks() async {
-    final result = await this._api.getBooks();
+  /// Get The Feedback for this chapter.
+  Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
+    List<WriterFeedback> feedback = [];
 
-    return {"Library": await result.toList()};
+    await for (WriterFeedback item in this._api.getFeedback(chapterId)) {
+      feedback.add(item);
+    }
+
+    return feedback;
+  }
+
+  Future<List<Book>> getBooks() async {
+    final Stream<Book> result = await this._api.getBooks();
+    return result.toList();
   }
 }

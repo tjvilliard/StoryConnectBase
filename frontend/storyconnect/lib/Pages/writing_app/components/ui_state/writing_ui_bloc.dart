@@ -1,28 +1,28 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Models/text_annotation/text_selection.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:visual_editor/visual-editor.dart';
 
 part 'writing_ui_bloc.freezed.dart';
 part 'writing_ui_state.dart';
 part 'writing_ui_event.dart';
 
-class WritingLoadEvent extends WritingUIEvent {
-  final int bookId;
-  final ChapterBloc chapterBloc;
-  final FeedbackBloc feedbackBloc;
-  WritingLoadEvent({
-    required this.bookId,
-    required this.chapterBloc,
-    required this.feedbackBloc,
-  });
-}
-
 typedef WritingUIEmiter = Emitter<WritingUIState>;
 
 class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
+  static Timer?
+      timer; // Static variable to maintain state between calls to highlight
+
+  static double pageWidth = 800.0;
+  static double pageHeight = 1050.0;
+
   WritingRepository repository = WritingRepository();
   WritingUIBloc({required this.repository}) : super(WritingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
@@ -34,6 +34,10 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
         (event, emit) => toggleRoadUnblocker(event, emit));
     on<ToggleContinuityCheckerEvent>(
         (event, emit) => toggleContinuityChecker(event, emit));
+
+    on<HighlightEvent>((event, emit) => highlight(event, emit));
+
+    on<RemoveHighlightEvent>((event, emit) => removeHighlight(event, emit));
   }
   updateUI(UpdateAllEvent event, WritingUIEmiter emit) {
     emit(event.status);
@@ -58,7 +62,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(
         loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
 
-    event.chapterBloc.add(LoadEvent(
+    event.writingBloc.add(LoadWritingEvent(
       event.feedbackBloc,
     ));
 
@@ -95,5 +99,48 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
         continuityCheckerShown: !state.continuityCheckerShown,
         feedbackUIshown: false,
         roadUnblockerShown: false));
+  }
+
+  Future<void> highlight(
+      HighlightEvent event, Emitter<WritingUIState> emit) async {
+    final scrollController = state.textScrollController;
+
+    if (scrollController.hasClients) {
+      final chapterText = event.chapterText;
+      TextPainter painter = TextPainter(
+        text: TextSpan(text: chapterText, style: event.textStyle),
+        textDirection: TextDirection.ltr,
+      );
+
+      // Calculate the offset of the feedback
+      painter.layout(maxWidth: pageWidth);
+      final feedbackOffset = painter.getOffsetForCaret(
+          TextPosition(offset: event.selection.offset), Rect.zero);
+
+      await scrollController.animateTo(feedbackOffset.dy,
+          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+
+      // Create a temporary highlight effect on the feedback
+      final List<TextBox> boxes = painter.getBoxesForSelection(TextSelection(
+          baseOffset: event.selection.offset,
+          extentOffset: event.selection.offsetEnd));
+
+      // Map all the boxes to rects and update the state
+      final rects = boxes.map((e) => e.toRect()).toList();
+      emit(state.copyWith(rectsToHighlight: rects));
+
+      // Remove the highlight after a second
+      timer?.cancel(); // Cancel the existing timer if there is one
+      await Timer(Duration(milliseconds: 1000), () {
+        add(RemoveHighlightEvent());
+      });
+    }
+  }
+
+  void removeHighlight(
+      RemoveHighlightEvent event, Emitter<WritingUIState> emit) {
+    // if there is a timer, cancel it
+    timer?.cancel();
+    emit(state.copyWith(rectsToHighlight: null));
   }
 }

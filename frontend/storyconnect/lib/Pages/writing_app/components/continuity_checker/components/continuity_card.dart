@@ -26,12 +26,12 @@ class ContinuityCard extends StatelessWidget {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                  "Type: ${continuity.suggestionType ?? "Unknown"}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .apply(fontStyle: FontStyle.italic)),
+                              // Text(
+                              //     "Type: ${continuity.suggestionType ?? "Unknown"}",
+                              //     style: Theme.of(context)
+                              //         .textTheme
+                              //         .titleSmall!
+                              //         .apply(fontStyle: FontStyle.italic)),
                             ]),
                       ),
                       Container(

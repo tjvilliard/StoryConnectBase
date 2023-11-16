@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
-import 'package:storyconnect/Services/url_service.dart';
+import 'package:storyconnect/Pages/writing_app/components/road_unblocker/models/road_unblocker_models.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Services/url_service.dart';
 
 part 'road_unblocker_events.dart';
 part 'road_unblocker_state.dart';
@@ -87,16 +86,16 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     final suggestions =
         List<RoadUnblockerSuggestion>.from(response.suggestions);
 
-    final suggestion =
-        suggestions.firstWhere((element) => element.uid == event.localId);
+    // final suggestion =
+    //     suggestions.firstWhere((element) => element.uid == event.localId);
 
-    // add a chapter change to the chapter bloc with the new suggestion
-    String currentChapterText = event.chapterBloc.state.currentChapterText;
+    // // add a chapter change to the chapter bloc with the new suggestion
+    // String currentChapterText = event.WritingBloc.state.currentChapterText;
 
-    final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
-        suggestion.offsetEnd, suggestion.suggestedChange);
+    // final chapterText = currentChapterText.replaceRange(suggestion.offsetStart,
+    //     suggestion.offsetEnd, suggestion.suggestedChange);
 
-    event.chapterBloc.add(UpdateChapterEvent(text: chapterText));
+    // event.WritingBloc.add(UpdateChapterEvent(text: chapterText));
 
     suggestions.removeWhere((element) => element.uid == event.localId);
     responses.removeWhere((element) => element.uid == event.responseLocalId);

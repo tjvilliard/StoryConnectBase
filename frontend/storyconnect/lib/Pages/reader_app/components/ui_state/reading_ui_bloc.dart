@@ -62,7 +62,9 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     final title = await _getBookTitle(event.bookId);
 
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.loading(false), title: title));
+      loadingStruct: LoadingStruct.loading(false),
+      title: title,
+    ));
   }
 
   /// Completes the task of updating the whole state of the reading UI.

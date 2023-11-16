@@ -1,8 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/login/sign_in/view.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/state/continuity_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/pages_repository.dart';
@@ -19,8 +18,6 @@ import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 class WriterLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
-        '/',
-        '/login',
         '/writer/home',
         '/writer/book/:bookId',
         '/writer/create_book',
@@ -63,7 +60,7 @@ class WriterLocations extends BeamLocation<BeamState> {
                     providers: [
                       BlocProvider(
                           lazy: false,
-                          create: (context) => ChapterBloc(
+                          create: (context) => WritingBloc(
                               context.read<BookProviderRepository>())),
                       BlocProvider(
                           lazy: false,
@@ -94,13 +91,9 @@ class WriterLocations extends BeamLocation<BeamState> {
             ),
           ),
         );
+      } else {
+        print("Not Found");
       }
-    }
-    // hardcoded place to nowhere
-
-    else if (state.uri.pathSegments.isEmpty) {
-      pages.add(
-          CustomBeamPage(key: const ValueKey('login'), child: LoginPage()));
     }
 
     return pages;

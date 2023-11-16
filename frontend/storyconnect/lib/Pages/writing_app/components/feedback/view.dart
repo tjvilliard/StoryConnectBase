@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writing_app/components/chapter/chapter_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/feedback_list.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/feedback_selector.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/ghost_feedback_checkbox.dart';
@@ -56,10 +56,10 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                           SizedBox(
                             height: 10,
                           ),
-                          BlocListener<ChapterBloc, ChapterBlocStruct>(
-                              listener: (context, chapterState) {
+                          BlocListener<WritingBloc, WritingState>(
+                              listener: (context, writingState) {
                                 final int chapterId =
-                                    chapterState.currentChapterId;
+                                    writingState.currentChapterId;
 
                                 context
                                     .read<FeedbackBloc>()

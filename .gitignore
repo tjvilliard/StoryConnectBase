@@ -98,3 +98,5 @@ frontend/storyconnect/android/app/google-services.json
 frontend/storyconnect/android/app/google-services.json
 frontend/storyconnect/ios/Runner/GoogleService-Info.plist
 frontend/storyconnect/ios/firebase_app_id_file.json
+
+assets.zip
