@@ -55,6 +55,15 @@ class FirebaseRepository {
     return FirebaseRepository._instance;
   }
 
+  /// Verifies the uniqueness of an email address.
+  Future<bool> validateEmail(String email) async {
+    final List<String> methods =
+        await this._firebaseAuth.fetchSignInMethodsForEmail(email);
+
+    return methods.isEmpty;
+  }
+
+  ///
   Future<String> register(
       String email, String displayName, String password) async {
     try {
@@ -89,6 +98,7 @@ class FirebaseRepository {
     }
   }
 
+  ///
   Future<String?> signIn(String email, String password) async {
     try {
       await this._firebaseAuth.signInWithEmailAndPassword(
@@ -107,6 +117,17 @@ class FirebaseRepository {
       } else {
         return FirebaseCodeDescriptors.UnmappedError.message;
       }
+    }
+  }
+
+  ///
+  Future<void> updateDisplayName(String displayName) async {
+    try {
+      User? user = this._firebaseAuth.currentUser;
+
+      await user?.updateDisplayName(displayName);
+    } on Exception catch (e) {
+      print(e);
     }
   }
 }

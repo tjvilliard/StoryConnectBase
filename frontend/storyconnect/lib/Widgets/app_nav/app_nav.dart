@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/app_nav/app_menu.dart';
 import 'package:storyconnect/Widgets/app_nav/appbar_button.dart';
+import 'package:storyconnect/Widgets/custom_search_bar.dart';
 
 class CustomAppBar extends AppBar {
   final BuildContext context;
@@ -57,20 +58,8 @@ class CustomAppBar extends AppBar {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               // Search Bar Placeholder
-                              Flexible(
-                                  child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: 800,
-                                  minWidth: 100,
-                                  maxHeight: 40,
-                                  minHeight: 40,
-                                ),
-                                child: SearchBar(
-                                  leading:
-                                      Icon(FontAwesomeIcons.magnifyingGlass),
-                                  hintText: "Search",
-                                ),
-                              )),
+                              CustomSearchBar(),
+
                               // Dropdown Menu Button.
                               Flexible(
                                 child: CustomAppBarMenu(context: context),

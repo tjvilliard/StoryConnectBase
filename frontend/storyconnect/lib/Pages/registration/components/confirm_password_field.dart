@@ -19,8 +19,9 @@ class _confirmPasswordState extends State<ConfirmPasswordField> {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
         builder: (BuildContext context, RegistrationState state) {
-      final IconData eyeIcon =
-          state.showPassword ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash;
+      final IconData eyeIcon = state.showConfirmPassword
+          ? FontAwesomeIcons.eye
+          : FontAwesomeIcons.eyeSlash;
       return Container(
           constraints: BoxConstraints(minHeight: 56),
           width: LoginPageConstants.maxWidth,

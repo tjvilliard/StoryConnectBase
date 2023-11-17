@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Repositories/firebase_repository.dart';
 
 part 'register_events.dart';
@@ -10,12 +11,14 @@ typedef RegistrationEmitter = Emitter<RegistrationState>;
 
 ///
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
-  late final FirebaseRepository _repo;
+  late final FirebaseRepository _firebaseRepo;
+  late final CoreRepository _coreRepo;
 
   /// Maps Events to Event Handlers.
-  RegistrationBloc(FirebaseRepository repo)
+  RegistrationBloc(FirebaseRepository firebaseRepo, CoreRepository coreRepo)
       : super(RegistrationState.initial()) {
-    this._repo = repo;
+    this._firebaseRepo = firebaseRepo;
+    this._coreRepo = coreRepo;
     on<EmailFieldChangedEvent>(
       (event, emit) => this._emailFieldChanged(event, emit),
     );
@@ -88,15 +91,21 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   ///
   void _registerButtonPushed(
       RegisterButtonPushedEvent event, RegistrationEmitter emit) async {
-    bool emailValid = this.validateEmail(emit);
+    bool emailValid = await this.validateEmail(emit);
 
-    bool displayNameValid = false;
+    bool displayNameValid = await this.validateDisplayName(emit);
 
     bool passwordsValid = this.validatePassword(emit);
 
+    print(
+        "[DEBUG]: Email: ${emailValid}, Display Name: ${displayNameValid}, Password: ${passwordsValid}");
+
     if (emailValid & displayNameValid & passwordsValid) {
+      print("[DEBUG] Fields passed validity check.");
+
+      /*
       String response = await this
-          ._repo
+          ._firebaseRepo
           .register(state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
@@ -116,16 +125,32 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           ));
         }
       }
+      */
     } else {
+      print("[DEBUG] Field failed validity check.");
       return;
     }
   }
 
-  /// Validates the email field.
-  bool validateEmail(RegistrationEmitter emit) {
+  /// Checks the validity of the provided email field.
+  Future<bool> validateEmail(RegistrationEmitter emit) async {
     if (this.state.email.isEmpty) {
       emit(state.copyWith(
         emailError: "Email field cannot be empty.",
+        showEmailError: true,
+      ));
+      return false;
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)$")
+        .hasMatch(state.email)) {
+      emit(state.copyWith(
+        emailError: "Email format is invalid.",
+        showEmailError: true,
+      ));
+      return false;
+    } else if (!await this._firebaseRepo.validateEmail(state.email)) {
+      emit(state.copyWith(
+        emailError: "Email is already in use.",
         showEmailError: true,
       ));
       return false;
@@ -134,8 +159,27 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     }
   }
 
-  bool validateDisplayName(RegistrationEmitter emit) {
-    return false;
+  /// Checks the validity of the provided display name.
+  Future<bool> validateDisplayName(RegistrationEmitter emit) async {
+    if (this.state.displayName.isEmpty) {
+      emit(this.state.copyWith(
+            displayNameError: "Display Name field cannot be empty.",
+            showDisplayNameError: true,
+          ));
+      return false;
+    }
+
+    if (await this
+        ._coreRepo
+        .verifyDisplayNameUniqueness(this.state.displayName)) {
+      emit(this.state.copyWith(
+            displayNameError: "Display Name is already in use.",
+            showDisplayNameError: true,
+          ));
+      return false;
+    }
+
+    return true;
   }
 
   /// Validates the password fields.
@@ -170,13 +214,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     }
 
     int length = this.state.password.length;
-    if (length > 16 || length < 8) {
-      emit(state.copyWith(
-        passwordError:
-            "Password must be between 8 and 16 characters in length.",
-        showPasswordError: true,
-      ));
-    }
+    int confirmLength = this.state.confirmPassword.length;
+    bool passwordHasLength = length >= 8 && length <= 16;
+    bool confirmPasswordHasLength = confirmLength >= 8 && confirmLength <= 16;
 
     // Special Characters list.
     const List<String> specialChars = <String>[
@@ -203,36 +243,62 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       '7',
       '8',
       '9',
-      '10',
     ];
+    bool passwordHasChar =
+        specialChars.any((char) => this.state.password.contains(char));
+    bool passwordHasDigit =
+        digits.any((digit) => this.state.password.contains(digit));
+    bool confirmPasswordHasChar =
+        specialChars.any((char) => this.state.confirmPassword.contains(char));
+    bool confirmPasswordHasDigit =
+        digits.any((digit) => this.state.confirmPassword.contains(digit));
 
-    if (!specialChars.any((char) => this.state.password.contains(char)) &&
-        !digits.any((digit) => this.state.password.contains(digit))) {
-      emit(state.copyWith(
-        passwordError:
-            "Password must contain at least one of the digits 0 - 9 and " +
-                "at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",
-        showPasswordError: true,
-      ));
+    if (!passwordHasLength ||
+        !confirmPasswordHasLength ||
+        !passwordHasChar ||
+        !passwordHasDigit ||
+        !confirmPasswordHasChar ||
+        !confirmPasswordHasDigit) {
+      String passwordError = "";
+      String confirmPasswordError = "";
+
+      // Password Error messages.
+      if (!passwordHasLength)
+        passwordError +=
+            "Password must be between 8 and 16 characters in length.";
+      if (!passwordHasChar)
+        passwordError +=
+            "Password must contain one of the following special characters: . ";
+      if (!passwordHasDigit)
+        passwordError += "Password must contain at least one digit 0 - 9. ";
+      if (!confirmPasswordHasLength)
+        confirmPasswordError +=
+            "Password must be between 8 and 16 characters in length.";
+      if (!confirmPasswordHasChar)
+        confirmPasswordError +=
+            "Password must contain one of the following special characters: . ";
+      if (!confirmPasswordHasDigit)
+        confirmPasswordError +=
+            "Password must contain at least one digit 0 - 9. ";
+
+      // If our error message isn't empty, emit it.
+      if (!passwordError.isEmpty) {
+        emit(state.copyWith(
+          passwordError: passwordError,
+          showPasswordError: true,
+        ));
+      }
+
+      if (!confirmPasswordError.isEmpty) {
+        emit(state.copyWith(
+          confirmPasswordError: confirmPasswordError,
+          showConfirmPasswordError: true,
+        ));
+      }
 
       return false;
-    } else if (!digits.any((digit) => this.state.password.contains(digit))) {
-      emit(state.copyWith(
-        passwordError:
-            "Password must contain at least one of the digits 0 - 9.",
-        showPasswordError: true,
-      ));
-      return false;
-    } else if (!specialChars
-        .any((char) => this.state.password.contains(char))) {
-      emit(state.copyWith(
-        passwordError:
-            "Password must contain at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",
-        showPasswordError: true,
-      ));
-      return false;
+    } else {
+      return true;
     }
-
-    return true;
   }
 }

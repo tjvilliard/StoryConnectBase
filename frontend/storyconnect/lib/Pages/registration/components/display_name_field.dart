@@ -30,15 +30,17 @@ class _displayNameState extends State<DisplayNameField> {
                 controller: this._displayNameController,
                 obscureText: false,
                 onChanged: (_) {
-
-                  
+                  context.read<RegistrationBloc>().add(DisplayNameChangedEvent(
+                      displayName: this._displayNameController.text));
                 },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                     prefixIcon: Icon(FontAwesomeIcons.pen),
                     labelText: 'Display Name',
-                    errorText: null)));
+                    errorText: state.showDisplayNameError
+                        ? state.displayNameError
+                        : null)));
       },
     );
   }
