@@ -27,31 +27,28 @@ class BioTextEditorState extends State<BioTextEditor> {
               padding: EdgeInsets.all(10),
               child: TextField(
                   onChanged: (String value) {
-                    context
-                        .read<WriterProfileBloc>()
-                        .add(EditBioStateEvent(bio: value));
+                    context.read<WriterProfileBloc>().add(EditBioStateEvent(bio: value));
                   },
-                  maxLines: 5,
+                  maxLines: 4,
                   controller: _controller,
                   decoration: InputDecoration(
-                      hintText: "Body",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5)))))),
+                      hintText: "Body", border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)))))),
       SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          FilledButton(
+          FilledButton.tonal(
               onPressed: () {
                 context.read<WriterProfileBloc>().add(CancelBioEvent());
               },
               child: Text("Cancel")),
           SizedBox(width: 10),
-          FilledButton(
+          FilledButton.icon(
               onPressed: () {
                 context.read<WriterProfileBloc>().add(SaveBioEvent());
               },
-              child: Text("Save")),
+              icon: Icon(Icons.save),
+              label: Text("Save")),
         ],
       )
     ]);

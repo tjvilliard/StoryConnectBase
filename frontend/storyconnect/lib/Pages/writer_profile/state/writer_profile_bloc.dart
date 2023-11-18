@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
@@ -35,6 +38,10 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
     on<SaveBioEvent>((event, emit) => saveBio(event, emit));
     on<CancelBioEvent>((event, emit) => cancelBio(event, emit));
     on<EditBioStateEvent>((event, emit) => editBioState(event, emit));
+    on<SaveProfileImageEvent>((event, emit) => saveProfileImage(event, emit));
+    on<SelectProfileImageEvent>((event, emit) => selectProfileImage(event, emit));
+    on<ClearProfileImageEvent>((event, emit) => clearProfileImage(event, emit));
+    on<DeleteProfileImageEvent>((event, emit) => deleteProfileImage(event, emit));
   }
 
   load(WriterProfileLoadEvent event, WriterProfileEmitter emit) async {
@@ -46,25 +53,15 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
       activitiesLoadingStruct: LoadingStruct.message("Loading activities"),
     )));
 
-    _repo
-        .getBooksByUser(event.uid)
-        .then((value) => add(RecievedBooks(books: value)));
-    _repo
-        .getAnnouncements(event.uid)
-        .then((value) => add(RecievedAnnouncementsEvent(announcements: value)));
+    _repo.getBooksByUser(event.uid).then((value) => add(RecievedBooks(books: value)));
+    _repo.getAnnouncements(event.uid).then((value) => add(RecievedAnnouncementsEvent(announcements: value)));
 
-    _repo
-        .getActivities(event.uid)
-        .then((value) => add(RecievedActivitiesEvent(activities: value)));
-    _repo
-        .getProfile(event.uid)
-        .then((value) => add(RecievedProfileEvent(profile: value)));
+    _repo.getActivities(event.uid).then((value) => add(RecievedActivitiesEvent(activities: value)));
+    _repo.getProfile(event.uid).then((value) => add(RecievedProfileEvent(profile: value)));
   }
 
-  makeAnnouncement(
-      MakeAnnouncementEvent event, WriterProfileEmitter emit) async {
-    final Announcement? response =
-        await _repo.makeAnnouncement(event.title, event.content);
+  makeAnnouncement(MakeAnnouncementEvent event, WriterProfileEmitter emit) async {
+    final Announcement? response = await _repo.makeAnnouncement(event.title, event.content);
 
     if (response != null) {
       emit(state.copyWith(
@@ -81,23 +78,19 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   recievedProfile(RecievedProfileEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         profile: event.profile,
-        loadingStructs: state.loadingStructs
-            .copyWith(profileLoadingStruct: LoadingStruct.loading(false))));
+        loadingStructs: state.loadingStructs.copyWith(profileLoadingStruct: LoadingStruct.loading(false))));
   }
 
   recievedBooks(RecievedBooks event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         books: event.books,
-        loadingStructs: state.loadingStructs
-            .copyWith(booksLoadingStruct: LoadingStruct.loading(false))));
+        loadingStructs: state.loadingStructs.copyWith(booksLoadingStruct: LoadingStruct.loading(false))));
   }
 
-  recievedAnnouncements(
-      RecievedAnnouncementsEvent event, WriterProfileEmitter emit) {
+  recievedAnnouncements(RecievedAnnouncementsEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         announcements: event.announcements,
-        loadingStructs: state.loadingStructs.copyWith(
-            annoucementsLoadingStruct: LoadingStruct.loading(false))));
+        loadingStructs: state.loadingStructs.copyWith(annoucementsLoadingStruct: LoadingStruct.loading(false))));
   }
 
   clear(WriterProfileEventClearEvent event, WriterProfileEmitter emit) {
@@ -114,8 +107,7 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   recievedActivities(RecievedActivitiesEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(
         activities: event.activities,
-        loadingStructs: state.loadingStructs
-            .copyWith(activitiesLoadingStruct: LoadingStruct.loading(false))));
+        loadingStructs: state.loadingStructs.copyWith(activitiesLoadingStruct: LoadingStruct.loading(false))));
   }
 
   editBio(EditBioEvent event, WriterProfileEmitter emit) {
@@ -128,8 +120,7 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
       profileLoadingStruct: LoadingStruct.message("Saving bio"),
     )));
     if (state.bioEditingState != null) {
-      final response = await _repo
-          .updateBio(state.profile.copyWith(bio: state.bioEditingState!));
+      final response = await _repo.updateBio(state.profile.copyWith(bio: state.bioEditingState!));
       if (response != null) {
         emit(state.copyWith(
           isEditingBio: false,
@@ -141,8 +132,7 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
         ));
       } else {
         emit(state.copyWith(
-          loadingStructs: state.loadingStructs
-              .copyWith(profileLoadingStruct: LoadingStruct.loading(false)),
+          loadingStructs: state.loadingStructs.copyWith(profileLoadingStruct: LoadingStruct.loading(false)),
           responseMessages: ["Failed to update bio"],
         ));
       }
@@ -156,4 +146,23 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   editBioState(EditBioStateEvent event, WriterProfileEmitter emit) {
     emit(state.copyWith(bioEditingState: event.bio));
   }
+
+  saveProfileImage(SaveProfileImageEvent event, WriterProfileEmitter emit) {}
+
+  selectProfileImage(SelectProfileImageEvent event, WriterProfileEmitter emit) async {
+    FilePicker platformFilePicker = FilePicker.platform;
+    FilePickerResult? result = await platformFilePicker.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      // get file from bytes since web doesn't support path
+      emit(state.copyWith(tempProfileImage: result.files.single.bytes));
+    }
+  }
+
+  clearProfileImage(ClearProfileImageEvent event, WriterProfileEmitter emit) {}
+
+  deleteProfileImage(DeleteProfileImageEvent event, WriterProfileEmitter emit) {}
 }

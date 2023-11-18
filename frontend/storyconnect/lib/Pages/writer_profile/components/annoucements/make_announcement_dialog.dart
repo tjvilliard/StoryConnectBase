@@ -21,42 +21,38 @@ class _MakeAnnoucementDialogState extends State<_MakeAnnoucementDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Make Announcement",
-              style: Theme.of(context).textTheme.titleLarge),
+          Text("Make Announcement", style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: 20),
           TextField(
             controller: titleEditingController,
-            decoration: InputDecoration(
-                hintText: "Title",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
+            decoration:
+                InputDecoration(hintText: "Title", border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
           ),
           SizedBox(height: 10),
           Flexible(
               child: TextField(
             maxLines: 10,
             controller: bodyEditingController,
-            decoration: InputDecoration(
-                hintText: "Body",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
+            decoration:
+                InputDecoration(hintText: "Body", border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
           )),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(
+              FilledButton.tonal(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text("Cancel"),
               ),
-              TextButton(
+              SizedBox(width: 10),
+              FilledButton.icon(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  widget.bloc.add(MakeAnnouncementEvent(
-                      title: titleEditingController.text,
-                      content: bodyEditingController.text));
+                  widget.bloc.add(
+                      MakeAnnouncementEvent(title: titleEditingController.text, content: bodyEditingController.text));
                 },
-                child: Text("Make"),
+                label: Text("Make"),
+                icon: Icon(FontAwesomeIcons.bullhorn),
               ),
             ],
           )

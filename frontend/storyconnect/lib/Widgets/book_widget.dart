@@ -50,30 +50,30 @@ class BookWidgetState extends State<BookWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          if (url != null && url!.isNotEmpty) ImageLoader(url: url!),
-          if (url == null || url!.isEmpty) _imagePlaceHolder(),
-          Flexible(
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    widget.book.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelMedium,
-                    textAlign: TextAlign.center,
-                  ))),
-          if (widget.book.owner != null)
-            DisplayNameLoaderWidget(
-                id: widget.book.owner!,
-                style: Theme.of(context).textTheme.labelSmall)
-        ],
-      ),
-    );
+    return Padding(
+        padding: EdgeInsets.all(2),
+        child: Card(
+          margin: EdgeInsets.all(0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (url != null && url!.isNotEmpty) ImageLoader(url: url!),
+              if (url == null || url!.isEmpty) _imagePlaceHolder(),
+              Flexible(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        widget.book.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelMedium,
+                        textAlign: TextAlign.center,
+                      ))),
+              if (widget.book.owner != null)
+                DisplayNameLoaderWidget(id: widget.book.owner!, style: Theme.of(context).textTheme.labelSmall)
+            ],
+          ),
+        ));
   }
 }

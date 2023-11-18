@@ -10,6 +10,8 @@ class WriterProfileState with _$WriterProfileState {
     required List<String> responseMessages,
     required bool isEditingBio,
     String? bioEditingState,
+    Uint8List? tempProfileImage,
+    required bool isUploadingProfileImage,
     required WritingProfileLoadingStructs loadingStructs,
   }) = _WriterProfileState;
 
@@ -22,6 +24,7 @@ class WriterProfileState with _$WriterProfileState {
         activities: [],
         bioEditingState: null,
         loadingStructs: WritingProfileLoadingStructs.initial(),
+        isUploadingProfileImage: false,
       );
 }
 
@@ -35,8 +38,7 @@ class WritingProfileLoadingStructs with _$WritingProfileLoadingStructs {
     required LoadingStruct makeAnnouncementLoadingStruct,
   }) = _WritingProfileLoadingStructs;
 
-  factory WritingProfileLoadingStructs.initial() =>
-      WritingProfileLoadingStructs(
+  factory WritingProfileLoadingStructs.initial() => WritingProfileLoadingStructs(
         profileLoadingStruct: LoadingStruct.loading(true),
         booksLoadingStruct: LoadingStruct.loading(true),
         annoucementsLoadingStruct: LoadingStruct.loading(true),
