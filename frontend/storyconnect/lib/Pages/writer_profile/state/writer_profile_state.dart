@@ -11,6 +11,7 @@ class WriterProfileState with _$WriterProfileState {
     required bool isEditingBio,
     String? bioEditingState,
     Uint8List? tempProfileImage,
+    required bool isUploadingProfileImage,
     required WritingProfileLoadingStructs loadingStructs,
   }) = _WriterProfileState;
 
@@ -23,6 +24,7 @@ class WriterProfileState with _$WriterProfileState {
         activities: [],
         bioEditingState: null,
         loadingStructs: WritingProfileLoadingStructs.initial(),
+        isUploadingProfileImage: false,
       );
 }
 

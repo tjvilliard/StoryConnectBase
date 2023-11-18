@@ -23,7 +23,16 @@ class _ImageUploadDialogState extends State<EditProfileImageDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Profile Image", style: Theme.of(context).textTheme.displaySmall),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Profile Image", style: Theme.of(context).textTheme.displaySmall),
+                SizedBox(width: 15),
+                Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Icon(FontAwesomeIcons.user, size: 25, color: Theme.of(context).colorScheme.secondary))
+              ],
+            ),
             BlocBuilder<WriterProfileBloc, WriterProfileState>(
               builder: (context, state) {
                 Widget toReturn;
@@ -85,7 +94,10 @@ class _ImageUploadDialogState extends State<EditProfileImageDialog> {
                     context.read<WriterProfileBloc>().add(SaveProfileImageEvent());
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(FontAwesomeIcons.floppyDisk),
+                  icon: Icon(
+                    Icons.save,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                  ),
                   label: Text("Save"),
                 ),
               ],

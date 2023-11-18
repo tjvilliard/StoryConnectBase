@@ -21,7 +21,7 @@ class _HoverButtonState extends State<HoverButton> {
       child: Opacity(
         opacity: _isHovered ? 1.0 : 0.85, // Less transparent when hovered
         child: Center(
-          child: FilledButton.tonalIcon(onPressed: widget.onPressed, label: widget.label, icon: widget.icon),
+          child: FilledButton.icon(onPressed: widget.onPressed, label: widget.label, icon: widget.icon),
         ),
       ),
     );

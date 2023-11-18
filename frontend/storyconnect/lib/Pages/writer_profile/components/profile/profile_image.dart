@@ -85,7 +85,9 @@ class ProfileImageState extends State<ProfileImage> {
                 child: HoverButton(
                     onPressed: () => showDialog(
                         barrierDismissible: false, context: context, builder: (context) => EditProfileImageDialog()),
-                    label: Text("Edit", style: Theme.of(context).textTheme.labelMedium),
+                    label: Text(
+                      "Edit",
+                    ),
                     icon: Icon(
                       size: 10,
                       FontAwesomeIcons.pencil,
@@ -127,7 +129,7 @@ class ProfileImageState extends State<ProfileImage> {
         color: backgroundColor ?? Colors.grey[300]!,
         shape: BoxShape.circle,
       ),
-      child: Icon(FontAwesomeIcons.person, color: iconColor ?? Colors.black),
+      child: Icon(size: 50, FontAwesomeIcons.user, color: iconColor ?? Colors.black),
     );
   }
 }
