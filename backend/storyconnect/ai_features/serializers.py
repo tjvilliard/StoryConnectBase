@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class RoadUnblockerRequestSerializer(serializers.Serializer):
-    chapter = serializers.IntegerField()
+    chapter_id = serializers.IntegerField()
     selection = serializers.CharField(allow_blank=True, allow_null=True)
     question = serializers.CharField()
 
