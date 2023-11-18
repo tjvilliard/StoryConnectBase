@@ -131,7 +131,10 @@ class RoadUnblocker:
 
         try:
             self.last_response = client.chat.completions.create(
-                timeout=300, model=self.CHAT_MODEL, messages=messages
+                timeout=300,
+                model=self.CHAT_MODEL,
+                messages=messages,
+                max_tokens=self.MAX_TOKENS,
             )
             # returns first suggestion
             # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble

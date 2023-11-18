@@ -40,15 +40,15 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   }
 
   submitUnblock(SubmitUnblockEvent event, RoadUnblockerEmitter emit) async {
-    emit(
-        state.copyWith(loadingStruct: LoadingStruct.message("Building some suggestions. \n This may take a while...")));
+    final question = state.question ?? "Can I get some general help with this?";
+    emit(state.copyWith(
+        loadingStruct: LoadingStruct.message("Building some suggestions. \n This may take a while..."), question: ""));
 
-    final finalQuestion = state.question ?? "Can I get some general help with this?";
     final finalSelection = state.selection ?? "";
 
     final response = await _repo.submitUnblock(RoadUnblockerRequest(
       chapterID: event.chapterID,
-      question: finalQuestion,
+      question: question,
       selection: finalSelection,
     ));
 
