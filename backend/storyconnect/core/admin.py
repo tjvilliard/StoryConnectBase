@@ -16,4 +16,4 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "bio", "display_name", "profile_image_url")
+    list_display = ("user", "bio", "display_name", "image_url")

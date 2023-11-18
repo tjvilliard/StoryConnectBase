@@ -67,3 +67,19 @@ class SaveBioEvent extends WriterProfileEvent {
 class CancelBioEvent extends WriterProfileEvent {
   const CancelBioEvent();
 }
+
+class SelectProfileImageEvent extends WriterProfileEvent {
+  const SelectProfileImageEvent();
+}
+
+class SaveProfileImageEvent extends WriterProfileEvent {
+  const SaveProfileImageEvent();
+}
+
+class DeleteProfileImageEvent extends WriterProfileEvent {
+  const DeleteProfileImageEvent();
+}
+
+class ClearProfileImageEvent extends WriterProfileEvent {
+  const ClearProfileImageEvent();
+}

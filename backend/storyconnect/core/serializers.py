@@ -15,20 +15,20 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data: dict):
-        image = validated_data.pop("profile_image_url", None)
+        image = validated_data.pop("image_url", None)
         profile = super().create(validated_data)  # type: Profile
         if image:
-            profile.profile_image_url = ProfileSerializer.upload_to_firestore(
+            profile.image_url = ProfileSerializer.upload_to_firestore(
                 image, profile.uid
             )
             profile.save()
         return profile
 
     def update(self, instance, validated_data):
-        image = validated_data.pop("image", None)
+        image = validated_data.pop("image_url", None)
         profile = super().update(instance, validated_data)  # type: Profile
         if image:
-            profile.profile_image_url = ProfileSerializer.upload_to_firestore(
+            profile.image_url = ProfileSerializer.upload_to_firestore(
                 image, profile.uid
             )
             profile.save()
