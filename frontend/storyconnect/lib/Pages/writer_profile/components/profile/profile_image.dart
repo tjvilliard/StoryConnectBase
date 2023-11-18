@@ -83,7 +83,8 @@ class ProfileImageState extends State<ProfileImage> {
               AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn),
               Center(
                 child: HoverButton(
-                    onPressed: () => showDialog(context: context, builder: (context) => EditProfileImageDialog()),
+                    onPressed: () => showDialog(
+                        barrierDismissible: false, context: context, builder: (context) => EditProfileImageDialog()),
                     label: Text("Edit", style: Theme.of(context).textTheme.labelMedium),
                     icon: Icon(
                       size: 10,
