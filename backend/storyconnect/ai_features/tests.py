@@ -104,6 +104,9 @@ class RoadUnblockerTests(TestCase):
         self.ru = RoadUnblocker()
         self.book = Book.objects.create(title="Dorian Gray")
 
+        self.blank_bk = Book.objects.create(title="Blank Book")
+        self.blank_chapter = Chapter.objects.create(book=self.blank_bk, content="")
+
         with open("ai_features/test_files/ch_1.txt", "r") as f1, open("ai_features/test_files/ch_2.txt", "r") as f2, open("ai_features/test_files/ch_3.txt", "r") as f3:
             self.chapter1 = Chapter.objects.create(book=self.book, content=f1.read())
             self.chapter2 = Chapter.objects.create(book=self.book, content=f2.read())
@@ -118,9 +121,17 @@ class RoadUnblockerTests(TestCase):
         with open("ai_features/test_files/ru_suggestions.txt", "w") as f:
             f.write(suggestion)
 
+    def test_get_suggestion_blank_chapter(self):
+        question = "How should I start my scifi story?"
+        selection = ""
+        suggestion = self.ru.get_suggestions(selection, question, self.blank_chapter.id)
+
+        with open("ai_features/test_files/ru_suggestions_blank.txt", "w") as f:
+            f.write(suggestion)
+
         
     def test_itemize_response(sefl):
-        with(open("ai_features/test_files/ru_suggestions.txt", "r")) as f:
+        with open("ai_features/test_files/ru_suggestions.txt", "r") as f:
             response = f.read()
         # Use regular expression to extract numbered statements
         statements = re.findall(r'\d+\.\s+(.+)', response)

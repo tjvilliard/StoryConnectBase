@@ -7,6 +7,7 @@ import ai_features.utils as utils
 import logging
 
 openai.api_key = OPENAI_API_KEY
+logger = logging.getLogger(__name__)
 
 class RoadUnblocker():
     # openai parameters
@@ -61,6 +62,7 @@ class RoadUnblocker():
     #     return summary
 
     def _generate_context(self, chapter_id):
+        # print("Generating context")
         chapter = books_models.Chapter.objects.get(pk=chapter_id)
         book = chapter.book
         
@@ -70,10 +72,13 @@ class RoadUnblocker():
 
         # include summary only if more than one chapter
         if bk_chapters.count() > 1:
+            logger.info("more than one chapter")
             u_msg_summary = "Here is a summary of my book so far:\n\n"
             
             # TODO: Remember that this is now chat model
+            logger.info("summarizing book ")
             u_msg_summary += utils.summarize_book_chat(book.id)[0]
+            logger.info("summarized book")
             messages.append({"role": "user", "content": u_msg_summary})
         
         # include chapter content
@@ -98,17 +103,29 @@ class RoadUnblocker():
                     """
         messages.append({"role": "assistant", "content": assist_ex})
 
+        logger.info("Context generated")
         return messages
         
 
     def get_suggestions(self, selection, question, chapter_id):
+        # logger.info("Getting suggestions")
+        logger.info("Generating context for road unblocker")
+        
         messages = self._generate_context(chapter_id)
 
         if selection is not None and selection != "":
             content = "Heres the particular selection I want to work on:\n" + selection
             messages.append({"role": "user", "content": content})
 
+        logger.info("Sending messages to openai")
         messages.append({"role": "user", "content": "Question: " +  question})
+
+        # debug write to file 
+        with(open("ai_features/test_files/test_prints.txt", "w")) as f:
+            for m in messages:
+                f.write(str(m) + "\n")
+
+        logger.info("Sending messages to openai")
         self.last_response = openai.ChatCompletion.create(model = self.CHAT_MODEL,
                                                           messages = messages,
                                                           max_tokens = self.MAX_TOKENS

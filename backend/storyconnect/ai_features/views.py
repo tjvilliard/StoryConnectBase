@@ -21,11 +21,13 @@ class RoadUnblockerRequestView(APIView):
         if serializer.is_valid():
             question = serializer.validated_data['question']
             selection = serializer.validated_data['selection']
-            chapter_id = serializer.validated_data['chapter']
+            chapter_id = serializer.validated_data['chapter_id']
 
             ru = RoadUnblocker()
 
+            logger.info("Getting suggestions")
             response = ru.get_suggestions(selection, question, chapter_id)
+            logger.info("Got suggestions")
 
             # Use regular expression to extract numbered statements
             statements = re.findall(r'\d+\.\s+(.+)', response)
