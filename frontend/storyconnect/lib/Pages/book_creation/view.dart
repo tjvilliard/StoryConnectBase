@@ -15,8 +15,7 @@ class WritingCreationView extends StatelessWidget {
     return BlocListener<BookCreateBloc, BookCreateState>(
         listener: (context, state) {
           if (state.createdBookId != null) {
-            Beamer.of(context)
-                .beamToReplacementNamed(PageUrls.book(state.createdBookId!));
+            Beamer.of(context).beamToReplacementNamed(PageUrls.book(state.createdBookId!));
           }
         },
         child: CustomScaffold(
@@ -37,15 +36,20 @@ class WritingCreationView extends StatelessWidget {
                   alignment: WrapAlignment.center,
                 ),
                 Body(
+                    constraints: BoxConstraints(maxWidth: 600),
                     child: Card(
                         surfaceTintColor: Colors.white,
                         elevation: 4,
                         child: Container(
                             padding: EdgeInsets.all(20),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                BookCreationFormFields(),
-                                SaveBookButton()
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [BookCreationFormFields()],
+                                ),
+                                Row(mainAxisAlignment: MainAxisAlignment.center, children: [SaveBookButton()])
                               ],
                             )))),
               ],

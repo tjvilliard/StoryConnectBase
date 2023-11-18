@@ -42,8 +42,5 @@ ThemeData darkTheme = ThemeData(
         colorScheme: _darkColorScheme,
         useMaterial3: true)
     .copyWith(
-        dividerTheme: DividerThemeData(color: Colors.black),
-        iconButtonTheme: IconButtonThemeData(
-            style: ButtonStyle(
-          iconColor: MaterialStateProperty.all(_darkColorScheme.surfaceVariant),
-        )));
+  dividerTheme: DividerThemeData(color: Colors.black),
+);
