@@ -65,10 +65,14 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     final newChapterNum = sortedChapterNum.first + 1;
     final result = await _repo.createChapter(newChapterNum);
     if (result != null) {
-      state.chapterNumToID[newChapterNum] = result.id;
+      final Map<int, int> chapterNumToID =
+          Map<int, int>.from(state.chapterNumToID);
+      chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
       emit.call(state.copyWith(
-          chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
+          chapterNumToID: chapterNumToID,
+          chapters: chapters,
+          loadingStruct: LoadingStruct.loading(false)));
     } else {
       emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
     }
@@ -88,8 +92,19 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     try {
       doc = DeltaDocM.fromJson(jsonDecode(json));
     } catch (e) {
-      print("Unable to convert to Delta doc, returning as blank chapter: $e");
-      doc = DeltaDocM();
+      /// this feels really hacky, but it should work
+      try {
+        Map<String, String> intermediateJson = {"insert": "$json\n"};
+
+        final finalizedJson = jsonEncode([intermediateJson]);
+        final decodedJson = jsonDecode(finalizedJson);
+        doc = DeltaDocM.fromJson(decodedJson);
+        print("converted json to new format");
+      } catch (e) {
+        print(
+            "Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        doc = DeltaDocM();
+      }
     }
     return doc;
   }
@@ -130,12 +145,19 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[event.chapterNum] = event.text;
 
+    final doc = DeltaDocM.fromJson(jsonDecode(event.text));
+    // temporary editor to get the plain text
+
+    final EditorController editor = EditorController(document: doc);
+    final String plainText = editor.plainText.text;
+
     emit(state.copyWith(chapters: chapters));
 
     final chapterResult = await _repo.updateChapter(
       chapterId: state.chapterNumToID[event.chapterNum] ?? -1,
       number: event.chapterNum,
-      text: chapters[event.chapterNum]!,
+      content: chapters[event.chapterNum]!,
+      rawContent: plainText,
     );
 
     assert(chapterResult?.chapterContent == event.text);

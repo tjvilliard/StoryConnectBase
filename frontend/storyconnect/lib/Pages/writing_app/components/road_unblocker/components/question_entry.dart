@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/road_unblocker/state/road_unblocker_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Widgets/form_field.dart';
 
 class QuestionEntry extends StatelessWidget {
@@ -13,7 +14,8 @@ class QuestionEntry extends StatelessWidget {
       return CustomFormField(
           label: 'Question',
           onFieldSubmitted: () {
-            context.read<RoadUnblockerBloc>().add(SubmitUnblockEvent());
+            context.read<RoadUnblockerBloc>().add(SubmitUnblockEvent(
+                chapterID: context.read<WritingBloc>().state.currentChapterId));
           },
           onChanged: (value) {
             context

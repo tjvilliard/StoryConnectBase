@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writer_profile/components/bio_text_editor.dart';
-import 'package:storyconnect/Pages/writer_profile/components/edit_bio_button.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/bio_text_editor.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/edit_bio_button.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/profile_image.dart';
+
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Widgets/display_name_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -46,35 +48,23 @@ class ProfileCardState extends State<ProfileCard> {
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Aligns children at the start
+            crossAxisAlignment: CrossAxisAlignment.start, // Aligns children at the start
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
+                  ProfileImage(),
                   SizedBox(height: 8),
                   BlocBuilder<WriterProfileBloc, WriterProfileState>(
                     builder: (context, state) {
                       Widget toReturn;
-                      if (state.loadingStructs.profileLoadingStruct.isLoading ==
-                          true) {
+                      if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
                         return Container();
                       } else {
                         toReturn = DisplayNameLoaderWidget(
-                            id: state.profile.user ?? 0,
-                            style: Theme.of(context).textTheme.titleMedium);
+                            id: state.profile.user ?? 0, style: Theme.of(context).textTheme.titleMedium);
                       }
-                      return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: toReturn);
+                      return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
                     },
                   )
                 ],
@@ -85,37 +75,27 @@ class ProfileCardState extends State<ProfileCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Bio", style: Theme.of(context).textTheme.titleLarge),
-                    BlocBuilder<WriterProfileBloc, WriterProfileState>(
-                        builder: (context, state) {
+                    BlocBuilder<WriterProfileBloc, WriterProfileState>(builder: (context, state) {
                       Widget toReturn;
-                      if (state.loadingStructs.profileLoadingStruct.isLoading ==
-                          true) {
+                      if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
                         toReturn = Row(
                           key: ValueKey('loading'),
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            LoadingWidget(
-                                loadingStruct:
-                                    state.loadingStructs.profileLoadingStruct)
-                          ],
+                          children: [LoadingWidget(loadingStruct: state.loadingStructs.profileLoadingStruct)],
                         );
                       } else if (state.isEditingBio) {
                         toReturn = BioTextEditor();
                       } else {
-                        toReturn = Text(state.profile.bio,
-                            style: Theme.of(context).textTheme.labelLarge);
+                        toReturn = Text(state.profile.bio, style: Theme.of(context).textTheme.labelLarge);
                       }
                       return Padding(
                           padding: EdgeInsets.all(10),
-                          child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 200),
-                              child: toReturn));
+                          child: AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn));
                     })
                   ],
                 ),
               ),
-              BlocBuilder<WriterProfileBloc, WriterProfileState>(
-                  buildWhen: (previous, current) {
+              BlocBuilder<WriterProfileBloc, WriterProfileState>(buildWhen: (previous, current) {
                 return previous.isEditingBio != current.isEditingBio;
               }, builder: (context, state) {
                 Widget toReturn;
@@ -131,9 +111,7 @@ class ProfileCardState extends State<ProfileCard> {
                   );
                 }
 
-                return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: toReturn);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
               })
             ],
           ),

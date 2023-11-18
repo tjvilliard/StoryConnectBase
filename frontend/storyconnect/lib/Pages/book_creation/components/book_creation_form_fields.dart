@@ -23,28 +23,25 @@ class BookCreationFormFields extends StatelessWidget {
           },
           label: "Title",
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Padding(
             padding: padding,
-            child: Text("Let us know more about your book",
-                textAlign: TextAlign.left,
-                style: Theme.of(context).textTheme.titleMedium)),
+            child: Text("Help your readers get to know your book!",
+                textAlign: TextAlign.left, style: Theme.of(context).textTheme.titleMedium)),
         Wrap(
           children: [
             Padding(padding: padding, child: LanguageDropdown()),
             Padding(padding: padding, child: AudienceDropdown()),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Padding(padding: padding, child: CopyrightDropdown()),
         SizedBox(height: 20),
         ImageUpload(),
         SizedBox(height: 20),
         SynopsisFormField(
           onChanged: (value) {
-            context
-                .read<BookCreateBloc>()
-                .add(SynopsisChangedEvent(Synopsis: value));
+            context.read<BookCreateBloc>().add(SynopsisChangedEvent(Synopsis: value));
           },
           label: "Book Synopsis",
         ),

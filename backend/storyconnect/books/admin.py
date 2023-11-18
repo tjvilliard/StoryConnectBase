@@ -8,7 +8,7 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(Chapter)
 class ChapterAdmin(admin.ModelAdmin):  
-    list_display = ('book', 'chapter_title', 'chapter_number', 'content')
+    list_display = ('book', 'chapter_title', 'chapter_number', 'content', 'raw_content')
 
 @admin.register(NarrativeElementType)
 class NarrativeElementTypeAdmin(admin.ModelAdmin):

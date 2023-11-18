@@ -39,13 +39,14 @@ class BookApiProvider {
     }
   }
 
-  Future<Chapter?> updateChapter(
-      int bookId, int chapterId, int number, String text) async {
+  Future<Chapter?> updateChapter(int bookId, int chapterId, int number,
+      String content, String rawContent) async {
     try {
       Chapter toUpload = Chapter(
           id: chapterId,
           number: number,
-          chapterContent: text,
+          chapterContent: content,
+          rawContent: rawContent,
           book: bookId,
           chapterTitle: "$number");
       final url = UrlConstants.updateChapter(chapterId);
@@ -78,10 +79,13 @@ class BookProviderRepository {
   }
 
   Future<Chapter?> updateChapter(
-      {required int chapterId, required int number, required String text}) {
+      {required int chapterId,
+      required int number,
+      required String content,
+      required String rawContent}) {
     if (number == -1) {
       print("number is -1");
     }
-    return _api.updateChapter(bookId, chapterId, number, text);
+    return _api.updateChapter(bookId, chapterId, number, content, rawContent);
   }
 }
