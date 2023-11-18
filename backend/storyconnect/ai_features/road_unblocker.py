@@ -1,11 +1,11 @@
-import openai
 from storyconnect.settings import OPENAI_API_KEY
-from .exceptions import *
+from .exceptions import RoadUnblockerException
 import books.models as books_models
 import ai_features.models as ai_models
 import ai_features.utils as utils
 import logging
 from openai import OpenAI
+import threading
 
 # openai.api_key = OPENAI_API_KEY
 logger = logging.getLogger(__name__)
@@ -129,13 +129,19 @@ class RoadUnblocker:
         logger.info("Sending messages to openai")
         client = OpenAI(api_key=OPENAI_API_KEY)
 
-        logger.info(messages)
+        try:
+            self.last_response = client.chat.completions.create(
+                timeout=300, model=self.CHAT_MODEL, messages=messages
+            )
+            # returns first suggestion
+            # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
+            response_content = self.last_response.choices[0].message.content
 
-        self.last_response = client.chat.completions.create(
-            model=self.CHAT_MODEL, messages=messages
-        )
-        # returns first suggestion
-        # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
-        response_content = self.last_response.choices[0].message.content
+            logger.info("Got suggestions")
+            logger.info(response_content)
 
-        return response_content
+            return response_content
+        except Exception as e:
+            logger.error("Error in road unblocker")
+            logger.error(e)
+            raise RoadUnblockerException()

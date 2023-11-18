@@ -8,7 +8,7 @@ class RoadUnblockerApi {
 
     final result = await http
         .post(url, body: jsonEncode(request.toJson()), headers: await buildHeaders())
-        .timeout(Duration(seconds: 120));
+        .timeout(Duration(seconds: 300));
     return RoadUnblockerResponse.fromJson(jsonDecode(result.body));
   }
 }
