@@ -56,11 +56,12 @@ class RoadUnblockerRequestView(APIView):
             response_serializer = RoadUnblockerResponseSerializer(data=response_data)
 
             if response_serializer.is_valid():
+                logger.info("response serializer valid")
+                return Response(response_serializer.data, status=status.HTTP_200_OK)
+            else:
                 logger.info("response serializer error")
                 logger.info(response_serializer.errors)
                 logger.info(response_serializer.data)
-                return Response(response_serializer.data, status=status.HTTP_200_OK)
-            else:
                 return Response(response_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             logger.info("request serializer error")

@@ -117,7 +117,7 @@ class RoadUnblocker():
             content = "Heres the particular selection I want to work on:\n" + selection
             messages.append({"role": "user", "content": content})
 
-        logger.info("Sending messages to openai")
+        
         messages.append({"role": "user", "content": "Question: " +  question})
 
         # debug write to file 
