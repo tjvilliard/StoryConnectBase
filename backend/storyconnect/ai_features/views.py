@@ -37,9 +37,14 @@ class RoadUnblockerRequestView(APIView):
             statements = re.findall(r"\d+\.\s+(.+)", response)
 
             # Remove numbers from the extracted statements
-            statements = [
-                re.sub(r"\d+\.\s+", "", statement) for statement in statements
-            ]
+            if not statements:
+                # If no numbered statements are found, use the whole response as a single suggestion
+                statements = [response]
+            else:
+                # Remove numbers from the extracted statements
+                statements = [
+                    re.sub(r"\d+\.\s+", "", statement) for statement in statements
+                ]
 
             response_data = {
                 "uid": str(uuid4()),
