@@ -42,21 +42,18 @@ class RoadUnblockerRequestView(APIView):
             ]
 
             response_data = {
-                "uid": uuid4(),
+                "uid": str(uuid4()),
                 "message": "Here are some suggestions to help you get past your writer's block.",
-                "suggestions": [],
+                "suggestions": [
+                    {
+                        "uid": str(uuid4()),
+                        "offset_start": 0,
+                        "offset_end": 0,
+                        "suggestion": statement,
+                    }
+                    for statement in statements
+                ],
             }
-            for statement in statements:
-                suggestion_data = {
-                    "uid": uuid4(),
-                    "offset_start": 0,
-                    "offset_end": 0,
-                    "suggestion": "",
-                    "original": "",
-                    "suggested_change": statement,
-                }
-                response_data["suggestions"].append(suggestion_data)
-
             response_serializer = RoadUnblockerResponseSerializer(data=response_data)
 
             if response_serializer.is_valid():

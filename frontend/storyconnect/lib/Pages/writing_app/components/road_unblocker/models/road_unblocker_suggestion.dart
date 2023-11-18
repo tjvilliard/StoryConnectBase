@@ -9,7 +9,6 @@ class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
     @JsonKey(name: 'offset_end') int? offsetEnd,
     required String suggestion,
     String? original,
-    @JsonKey(name: 'suggested_change') required String suggestedChange,
   }) = _RoadUnblockerSuggestion;
   const RoadUnblockerSuggestion._();
 
@@ -17,6 +16,5 @@ class RoadUnblockerSuggestion with _$RoadUnblockerSuggestion {
     return original == null || original!.isEmpty;
   }
 
-  factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) =>
-      _$RoadUnblockerSuggestionFromJson(json);
+  factory RoadUnblockerSuggestion.fromJson(Map<String, dynamic> json) => _$RoadUnblockerSuggestionFromJson(json);
 }
