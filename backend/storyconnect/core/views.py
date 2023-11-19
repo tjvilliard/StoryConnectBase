@@ -123,7 +123,7 @@ class ProfileImageUpload(APIView):
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().prefetch_related("user")
     serializer_class = ProfileSerializer
     permission_classes = [IsOwnerOrReadOnly]
     lookup_field = "user__username"
@@ -141,7 +141,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         """
         username = self.kwargs.get("user__username")
         user = User.objects.get(username=username)
-        profile, created = Profile.objects.get_or_create(user=user)
+        profile, created = self.queryset.get_or_create(user=user)
 
         if created:
             profile.bio = "This user has not set a bio yet."
@@ -152,7 +152,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
-    queryset = Activity.objects.all()
+    queryset = Activity.objects.all().prefetch_related("user")
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -175,7 +175,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
 
 
 class AnnouncementViewSet(viewsets.ModelViewSet):
-    queryset = Announcement.objects.all()
+    queryset = Announcement.objects.all().prefetch_related("user")
     serializer_class = AnnouncementSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
