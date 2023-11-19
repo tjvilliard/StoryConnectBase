@@ -102,13 +102,13 @@ class BookWidgetState extends State<BookWidget> {
                       left: 0,
                       right: 0,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.center,
                                 end: Alignment.bottomCenter,
-                                colors: [Color.fromARGB(225, 0, 0, 0), Colors.black54],
+                                colors: [Color.fromARGB(238, 0, 0, 0), Colors.black54],
                               ),
                             ),
                             child: bookTitle()),
