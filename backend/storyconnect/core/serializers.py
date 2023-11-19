@@ -1,6 +1,7 @@
+import io
 from rest_framework import serializers
 from .models import Profile, Activity, Announcement
-from django.core.files.uploadedfile import UploadedFile
+import base64
 
 
 class UserUidConversionSerializer(serializers.Serializer):
@@ -8,64 +9,13 @@ class UserUidConversionSerializer(serializers.Serializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    profile_image_url = serializers.ImageField(required=False)
-
     class Meta:
         model = Profile
         fields = "__all__"
 
-    def create(self, validated_data: dict):
-        image = validated_data.pop("image_url", None)
-        profile = super().create(validated_data)  # type: Profile
-        if image:
-            profile.image_url = ProfileSerializer.upload_to_firestore(
-                image, profile.uid
-            )
-            profile.save()
-        return profile
 
-    def update(self, instance, validated_data):
-        image = validated_data.pop("image_url", None)
-        profile = super().update(instance, validated_data)  # type: Profile
-        if image:
-            profile.image_url = ProfileSerializer.upload_to_firestore(
-                image, profile.uid
-            )
-            profile.save()
-        return profile
-
-
-@staticmethod
-def upload_to_firestore(image_file: UploadedFile, firebase_uid: str):
-    from firebase_admin import storage
-    from django.conf import settings
-    import uuid
-
-    if not hasattr(settings, "FIREBASE_BUCKET"):
-        raise Exception("FIREBASE_BUCKET not set in settings.py")
-
-    # Determine the content type of the image
-    content_type = image_file.content_type
-
-    storage_bucket = settings.FIREBASE_BUCKET
-
-    bucket = storage.bucket(storage_bucket)
-    file_name = f"profile_images/{firebase_uid}/{uuid.uuid4()}"
-
-    # Append appropriate file extension based on content type
-    if content_type == "image/jpeg":
-        file_name += ".jpg"
-    elif content_type == "image/png":
-        file_name += ".png"
-
-    blob = bucket.blob(file_name)
-
-    # Set metadata
-    blob.metadata = {"contentType": content_type}
-
-    blob.upload_from_file(image_file, content_type=content_type)
-    blob.make_public()
-    return blob.public_url
+class ProfileImageSerializer(serializers.Serializer):
+    image = serializers.CharField()  # base64 encoded image
 
 
 class ActivitySerializer(serializers.ModelSerializer):
@@ -80,3 +30,49 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         model = Announcement
         fields = "__all__"
         extra_kwargs = {"user": {"required": False, "allow_null": True}}
+
+
+class ImageUploader:
+    @staticmethod
+    def get_content_type(image_data: bytes) -> str:
+        """Determine the content type of the image based on its byte signature."""
+        if image_data[:3] == b"\xff\xd8\xff":
+            return "image/jpeg"
+        elif image_data[:8] == b"\x89PNG\r\n\x1a\n":
+            return "image/png"
+        else:
+            raise ValueError("Unsupported image format")
+
+    @staticmethod
+    def upload_to_firestore(raw_image_file: str, firebase_uid: str):
+        from django.conf import settings
+        import uuid
+
+        if not hasattr(settings, "FIREBASE_BUCKET"):
+            raise Exception("FIREBASE_BUCKET not set in settings.py")
+        # Decode the base64 string
+        image_data = base64.b64decode(raw_image_file)
+
+        # Wrap the bytes data in a BytesIO object
+        image_stream = io.BytesIO(image_data)
+
+        # Determine the content type of the image
+        content_type = ImageUploader.get_content_type(image_data)
+
+        # Create a reference to the Firebase storage bucket
+        storage_bucket = settings.FIREBASE_BUCKET
+
+        # Create a unique file name
+        file_extension = ".jpg" if content_type == "image/jpeg" else ".png"
+        file_name = f"profile_images/{firebase_uid}/{uuid.uuid4()}{file_extension}"
+
+        # Create a blob for the image
+        blob = storage_bucket.blob(file_name)
+
+        # Upload the image data
+        blob.upload_from_file(image_stream, content_type=content_type)
+
+        # Make the image publicly accessible
+        blob.make_public()
+
+        return blob.public_url

@@ -5,34 +5,17 @@ import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writer_profile/components/profile/image_upload_dialog.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Widgets/hover_button.dart';
+import 'package:storyconnect/Widgets/image_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ProfileImage extends StatefulWidget {
   const ProfileImage({Key? key}) : super(key: key);
 
   @override
-  ProfileImageState createState() => ProfileImageState();
+  _ProfileImageState createState() => _ProfileImageState();
 }
 
-class ProfileImageState extends State<ProfileImage> {
-  bool _loadingImage = true;
-  bool _hasLoadedImage = false;
-  Image? _image;
-
-  Future<void> loadProfileImage(String imageUrl) async {
-    final image = Image.network(imageUrl);
-    await precacheImage(image.image, context);
-    setState(() {
-      _image = image;
-      _loadingImage = false;
-      _hasLoadedImage = true;
-    });
-  }
-
-  bool shouldLoadImage(WriterProfileState state) {
-    return state.profile.imageUrl != null && _loadingImage == false && _hasLoadedImage == false;
-  }
-
+class _ProfileImageState extends State<ProfileImage> {
   @override
   Widget build(BuildContext context) {
     Color iconColor;
@@ -45,38 +28,23 @@ class ProfileImageState extends State<ProfileImage> {
       backgroundColor = Colors.grey[300]!;
     }
 
-    return BlocConsumer<WriterProfileBloc, WriterProfileState>(
-      listenWhen: (previous, current) =>
-          previous.loadingStructs.profileLoadingStruct.isLoading !=
-          current.loadingStructs.profileLoadingStruct.isLoading,
-      listener: (context, state) {
-        if (shouldLoadImage(state)) {
-          setState(() {
-            _loadingImage = true;
-          });
-          loadProfileImage(state.profile.imageUrl!);
-        } else {
-          setState(() {
-            _loadingImage = false;
-          });
-        }
-      },
+    return BlocBuilder<WriterProfileBloc, WriterProfileState>(
       builder: (context, state) {
         Widget toReturn;
         if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
           toReturn = _loadingImageWidget(context, iconColor: iconColor, backgroundColor: backgroundColor);
         } else if (state.profile.imageUrl != null) {
-          toReturn = _image!;
-        } else if (_loadingImage == true) {
-          toReturn = _loadingImageWidget(context, iconColor: iconColor, backgroundColor: backgroundColor);
+          toReturn = Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipOval(child: ImageLoader(url: state.profile.imageUrl!)));
         } else {
           toReturn = _noImageWidget(context);
         }
 
         // Wrapping the display with a Stack and an edit button if isEditing is true
-        if (state.isEditingBio &&
-            state.loadingStructs.profileLoadingStruct.isLoading == false &&
-            _loadingImage == false) {
+        if (state.isEditingBio && state.loadingStructs.profileLoadingStruct.isLoading == false) {
           return Stack(
             alignment: Alignment.center,
             children: [

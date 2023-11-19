@@ -21,10 +21,8 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        buildWhen: (previous, current) {
-      final bool feedbackUIshownChanged =
-          previous.feedbackUIshown != current.feedbackUIshown;
+    return BlocBuilder<WritingUIBloc, WritingUIState>(buildWhen: (previous, current) {
+      final bool feedbackUIshownChanged = previous.feedbackUIshown != current.feedbackUIshown;
 
       return feedbackUIshownChanged;
     }, builder: (context, uiState) {
@@ -42,9 +40,7 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                         children: [
                           SidePopupHeader(
                               title: "Comments",
-                              dismiss: () =>
-                                  BlocProvider.of<WritingUIBloc>(context)
-                                      .add(ToggleFeedbackUIEvent())),
+                              dismiss: () => BlocProvider.of<WritingUIBloc>(context).add(ToggleFeedbackUIEvent())),
                           SizedBox(height: 20),
                           Column(
                             children: [
@@ -58,28 +54,19 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                           ),
                           BlocListener<WritingBloc, WritingState>(
                               listener: (context, writingState) {
-                                final int chapterId =
-                                    writingState.currentChapterId;
+                                final int chapterId = writingState.currentChapterId;
 
-                                context
-                                    .read<FeedbackBloc>()
-                                    .add(LoadChapterFeedback(chapterId));
+                                context.read<FeedbackBloc>().add(LoadChapterFeedback(chapterId));
                               },
                               child: Expanded(
                                 child: AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 500),
                                   child: state.loadingStruct.isLoading
                                       ? LoadingWidget(
-                                          loadingStruct: state
-                                              .loadingStruct) // This will show when loading.
-                                      : (state.selectedFeedbackType ==
-                                              FeedbackType.comment
-                                          ? FeedbackList(
-                                              key: commentsListKey,
-                                              feedbacks: state.comments)
-                                          : FeedbackList(
-                                              key: suggestionListKey,
-                                              feedbacks: state.suggestions)),
+                                          loadingStruct: state.loadingStruct) // This will show when loading.
+                                      : (state.selectedFeedbackType == FeedbackType.comment
+                                          ? FeedbackList(key: commentsListKey, feedbacks: state.comments)
+                                          : FeedbackList(key: suggestionListKey, feedbacks: state.suggestions)),
                                 ),
                               ))
                         ],
@@ -89,10 +76,8 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                 },
               )
             : Container(),
-        crossFadeState: uiState.feedbackUIshown
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 200),
+        crossFadeState: uiState.feedbackUIshown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        duration: Duration(milliseconds: 500),
       );
     });
   }

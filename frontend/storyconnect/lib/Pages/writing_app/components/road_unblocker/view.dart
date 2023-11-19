@@ -10,10 +10,8 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 class RoadUnblockerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        builder: (context, uiState) {
-      return BlocBuilder<RoadUnblockerBloc, RoadUnblockerState>(
-          builder: (context, writingState) {
+    return BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, uiState) {
+      return BlocBuilder<RoadUnblockerBloc, RoadUnblockerState>(builder: (context, writingState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
@@ -31,8 +29,7 @@ class RoadUnblockerWidget extends StatelessWidget {
                                 SidePopupHeader(
                                     title: "Road Unblocker",
                                     dismiss: () =>
-                                        BlocProvider.of<WritingUIBloc>(context)
-                                            .add(ToggleRoadUnblockerEvent())),
+                                        BlocProvider.of<WritingUIBloc>(context).add(ToggleRoadUnblockerEvent())),
                                 SizedBox(height: 10),
                                 Expanded(child: RoadUnblockerContent()),
                                 LayoutBuilder(
@@ -53,10 +50,8 @@ class RoadUnblockerWidget extends StatelessWidget {
                               ],
                             ))
                         : Container())),
-            crossFadeState: uiState.roadUnblockerShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+            crossFadeState: uiState.roadUnblockerShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 500));
       });
     });
   }

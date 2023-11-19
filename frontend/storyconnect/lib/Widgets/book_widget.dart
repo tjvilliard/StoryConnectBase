@@ -35,17 +35,21 @@ class BookWidgetState extends State<BookWidget> {
 
   Future<void> get_image(String? relativePath) async {
     if (relativePath == null || relativePath.isEmpty) {
-      setState(() {
-        url = "";
-      });
+      if (mounted) {
+        setState(() {
+          url = "";
+        });
+      }
+
       return;
     }
     Reference ref = FirebaseStorage.instance.ref().child(relativePath);
     final result = await ref.getDownloadURL();
-
-    setState(() {
-      url = result;
-    });
+    if (mounted) {
+      setState(() {
+        url = result;
+      });
+    }
   }
 
   @override

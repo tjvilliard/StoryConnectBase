@@ -11,8 +11,7 @@ class DisplayNameLoaderWidget extends StatefulWidget {
   DisplayNameLoaderWidget({required this.id, this.style});
 
   @override
-  _DisplayNameLoaderWidgetState createState() =>
-      _DisplayNameLoaderWidgetState();
+  _DisplayNameLoaderWidgetState createState() => _DisplayNameLoaderWidgetState();
 }
 
 class _DisplayNameLoaderWidgetState extends State<DisplayNameLoaderWidget> {
@@ -119,10 +118,8 @@ class _DisplayNameLoaderWidgetState extends State<DisplayNameLoaderWidget> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 200),
-      child: displayName == null
-          ? Text(loadingText, style: widget.style)
-          : Text(displayName!, style: widget.style),
+      duration: const Duration(milliseconds: 500),
+      child: displayName == null ? Text(loadingText, style: widget.style) : Text(displayName!, style: widget.style),
     );
   }
 }

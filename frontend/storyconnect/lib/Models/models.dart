@@ -41,6 +41,7 @@ class Book with _$Book {
 class GenericResponse with _$GenericResponse {
   const factory GenericResponse({
     required bool success,
+    String? message,
   }) = _GenericResponse;
 
   factory GenericResponse.fromJson(Map<String, dynamic> json) => _$GenericResponseFromJson(json);

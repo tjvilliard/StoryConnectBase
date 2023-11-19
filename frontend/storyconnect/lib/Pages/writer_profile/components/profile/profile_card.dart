@@ -64,7 +64,7 @@ class ProfileCardState extends State<ProfileCard> {
                         toReturn = DisplayNameLoaderWidget(
                             id: state.profile.user ?? 0, style: Theme.of(context).textTheme.titleMedium);
                       }
-                      return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
+                      return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
                     },
                   )
                 ],
@@ -90,7 +90,7 @@ class ProfileCardState extends State<ProfileCard> {
                       }
                       return Padding(
                           padding: EdgeInsets.all(10),
-                          child: AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn));
+                          child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
                     })
                   ],
                 ),
@@ -101,8 +101,8 @@ class ProfileCardState extends State<ProfileCard> {
                 Widget toReturn;
                 if (_showEditProfile == true && state.isEditingBio == false) {
                   toReturn = Column(
-                    key: ValueKey('edit_bio_button'),
-                    children: [EditBioButton()],
+                    key: ValueKey('edit_profile_button'),
+                    children: [EditProfileButton()],
                   );
                 } else {
                   toReturn = SizedBox(
@@ -111,7 +111,7 @@ class ProfileCardState extends State<ProfileCard> {
                   );
                 }
 
-                return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
               })
             ],
           ),

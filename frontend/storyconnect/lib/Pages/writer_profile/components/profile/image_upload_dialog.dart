@@ -67,15 +67,18 @@ class _ImageUploadDialogState extends State<EditProfileImageDialog> {
                               SizedBox(height: 15),
                               FilledButton.tonalIcon(
                                   onPressed: () async {
-                                    // TODO: add an 'are you sure' dialog
-                                    context.read<WriterProfileBloc>().add(DeleteProfileImageEvent());
+                                    bool confirm = await showConfirmationDialog(context);
+                                    if (confirm) {
+                                      context.read<WriterProfileBloc>().add(DeleteProfileImageEvent());
+                                      Navigator.of(context).pop();
+                                    }
                                   },
                                   icon: Icon(FontAwesomeIcons.x),
                                   label: Text(" Delete Current Image")),
                             ],
                           )));
                 }
-                return AnimatedContainer(duration: Duration(milliseconds: 200), child: toReturn);
+                return AnimatedContainer(duration: Duration(milliseconds: 500), child: toReturn);
               },
             ),
             Row(
@@ -117,5 +120,27 @@ class _ImageUploadDialogState extends State<EditProfileImageDialog> {
         ),
       ),
     ]));
+  }
+
+  Future<bool> showConfirmationDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Are you sure?"),
+        content: Text("This will delete your current profile image"),
+        actions: [
+          TextButton(
+            child: Text("No"),
+            onPressed: () => Navigator.of(context).pop(false), // passing 'false' when No is pressed
+          ),
+          TextButton(
+            child: Text("Yes"),
+            onPressed: () => Navigator.of(context).pop(true), // passing 'true' when Yes is pressed
+          ),
+        ],
+      ),
+    );
+
+    return result ?? false; // Return false if the dialog is dismissed
   }
 }

@@ -1,6 +1,8 @@
 from rest_framework import permissions
+from .authentication import FirebaseAuthentication
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
+
+class IsOwnerOrReadOnly(permissions.BasePermission, FirebaseAuthentication):
     """
     Custom permission to only allow owners of an object to edit it.
     Assumes the model instance has an 'user' attribute.
