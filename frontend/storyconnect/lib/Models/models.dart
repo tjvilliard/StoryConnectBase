@@ -24,6 +24,7 @@ class Book with _$Book {
     required int id,
     required String title,
     int? owner,
+    @JsonKey(name: 'author_name') String? authorName,
     String? language,
     @JsonKey(name: 'target_audience') int? targetAudience,
     String? cover,

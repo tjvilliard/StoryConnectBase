@@ -1,7 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Widgets/display_name_loader.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
 
 class BookWidget extends StatefulWidget {
@@ -63,7 +62,14 @@ class BookWidgetState extends State<BookWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (url != null && url!.isNotEmpty) ImageLoader(url: url!),
+              if (url != null && url!.isNotEmpty)
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ImageLoader(
+                      url: url!,
+                      fit: BoxFit.contain,
+                      constraints: BoxConstraints(maxWidth: 100, maxHeight: 150),
+                    )),
               if (url == null || url!.isEmpty) _imagePlaceHolder(),
               Flexible(
                   child: Padding(
@@ -74,8 +80,11 @@ class BookWidgetState extends State<BookWidget> {
                         style: Theme.of(context).textTheme.labelMedium,
                         textAlign: TextAlign.center,
                       ))),
-              if (widget.book.owner != null)
-                DisplayNameLoaderWidget(id: widget.book.owner!, style: Theme.of(context).textTheme.labelSmall)
+              if (widget.book.authorName != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text(widget.book.authorName ?? "No name", style: Theme.of(context).textTheme.labelSmall)],
+                )
             ],
           ),
         ));

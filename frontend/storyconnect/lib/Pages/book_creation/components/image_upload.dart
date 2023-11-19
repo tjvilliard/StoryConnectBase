@@ -13,10 +13,10 @@ class ImageUpload extends StatelessWidget {
           // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BlocBuilder<BookCreateBloc, BookCreateState>(
-                builder: (context, state) {
+            BlocBuilder<BookCreateBloc, BookCreateState>(builder: (context, state) {
               if (state.imageTitle != null) {
-                return Text(state.imageTitle!);
+                return ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200), child: Flexible(child: Text(state.imageTitle!)));
               }
 
               return Text("No Image Selected");
