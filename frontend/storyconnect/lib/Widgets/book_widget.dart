@@ -67,8 +67,8 @@ class BookWidgetState extends State<BookWidget> {
                     borderRadius: BorderRadius.circular(10),
                     child: ImageLoader(
                       url: url!,
-                      fit: BoxFit.contain,
-                      constraints: BoxConstraints(maxWidth: 100, maxHeight: 150),
+                      fit: BoxFit.cover,
+                      constraints: BoxConstraints(maxWidth: 100, maxHeight: 160),
                     )),
               if (url == null || url!.isEmpty) _imagePlaceHolder(),
               Flexible(
@@ -77,7 +77,7 @@ class BookWidgetState extends State<BookWidget> {
                       child: Text(
                         widget.book.title,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: Theme.of(context).textTheme.labelMedium!.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ))),
               if (widget.book.authorName != null)
