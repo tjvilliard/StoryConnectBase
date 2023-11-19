@@ -54,71 +54,61 @@ class _bigBookListWidgetState extends State<BigBookListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-        child: SizedBox(
-            width: 800,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(
-                        dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse
-                        }),
-                    child: SingleChildScrollView(
-                      controller: this._scrollController,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                          children: this
-                              .books
-                              .map((book) => Container(
-                                  height: 200,
-                                  width: 400.0,
-                                  child: Card(
-                                      elevation: 0,
-                                      child: BigBook(
-                                        book: book,
-                                      ))))
-                              .toList()),
-                    )),
-                Positioned(
-                    left: 1.0,
-                    child: Visibility(
-                        visible: this.showScrollLeftButton,
-                        child: Container(
-                            alignment: Alignment.centerLeft,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()),
-                                onPressed: () {
-                                  this._scrollController.animateTo(
-                                      this._scrollController.offset - 400,
-                                      duration: Duration(milliseconds: 350),
-                                      curve: Curves.easeIn);
-                                },
-                                child: Icon(Icons.arrow_left))),
-                        replacement: SizedBox.shrink())),
-                Positioned(
-                    right: 1.0,
-                    child: Visibility(
-                        visible: this.showScrollRightButton,
-                        child: Container(
-                            alignment: Alignment.centerRight,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()),
-                                onLongPress: () {},
-                                onPressed: () {
-                                  this._scrollController.animateTo(
-                                      this._scrollController.offset + 400,
-                                      duration: Duration(milliseconds: 350),
-                                      curve: Curves.easeIn);
-                                },
-                                child: Icon(Icons.arrow_right))),
-                        replacement: SizedBox.shrink()))
-              ],
-            )));
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse
+            }),
+            child: SingleChildScrollView(
+              controller: this._scrollController,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  children: this
+                      .books
+                      .map((book) => BigBook(
+                            book: book,
+                          ))
+                      .toList()),
+            )),
+        Positioned(
+            left: 1.0,
+            child: Visibility(
+                visible: this.showScrollLeftButton,
+                child: Container(
+                    width: 50,
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: CircleBorder()),
+                        onPressed: () {
+                          this._scrollController.animateTo(
+                              this._scrollController.offset - 400,
+                              duration: Duration(milliseconds: 350),
+                              curve: Curves.easeIn);
+                        },
+                        child: Icon(Icons.arrow_left))),
+                replacement: SizedBox.shrink())),
+        Positioned(
+            right: 1.0,
+            child: Visibility(
+                visible: this.showScrollRightButton,
+                child: Container(
+                    width: 50,
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: CircleBorder()),
+                        onLongPress: () {},
+                        onPressed: () {
+                          this._scrollController.animateTo(
+                              this._scrollController.offset + 400,
+                              duration: Duration(milliseconds: 350),
+                              curve: Curves.easeIn);
+                        },
+                        child: Icon(Icons.arrow_right))),
+                replacement: SizedBox.shrink()))
+      ],
+    );
   }
 }

@@ -79,59 +79,54 @@ class _libraryBookState extends State<LibraryBookItem> {
             side: BorderSide(width: 1.0),
             borderRadius: BorderRadius.circular(10))));
 
-    return Container(
-        height: 270,
-        width: (270.0 / 1.618) + 25,
-        child: Card(
-          elevation: 4,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: MouseRegion(
-                  onEnter: (_) => setState(() {
-                        this.showButtons = true;
-                      }),
-                  onExit: (_) => setState(() {
-                        this.showButtons = false;
-                      }),
-                  cursor: SystemMouseCursors.click,
-                  child: Stack(
-                    children: [
-                      child,
-                      this.showButtons
-                          ? Positioned.fill(
-                              child: Material(
-                                color: Theme.of(context).hoverColor,
-                                child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 32.0, horizontal: 16.0),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 8.0),
-                                            child: OutlinedButton(
-                                                style: _buttonStyle,
-                                                onPressed: () {
-                                                  final uri = PageUrls.readBook(
-                                                      this.bookId);
-                                                  Beamer.of(context)
-                                                      .beamToNamed(uri, data: {
-                                                    "book": this.bookId
-                                                  });
-                                                },
-                                                child: Text("Start Reading")),
-                                          ),
-                                          _removeBookButton(bookId: bookId)
-                                        ])),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ],
-                  ))),
-        ));
+    return Card(
+        elevation: 4,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: MouseRegion(
+                onEnter: (_) => setState(() {
+                      this.showButtons = true;
+                    }),
+                onExit: (_) => setState(() {
+                      this.showButtons = false;
+                    }),
+                cursor: SystemMouseCursors.click,
+                child: Stack(
+                  children: [
+                    child,
+                    this.showButtons
+                        ? Positioned.fill(
+                            child: Material(
+                              color: Theme.of(context).hoverColor,
+                              child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 32.0, horizontal: 16.0),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(bottom: 8.0),
+                                          child: OutlinedButton(
+                                              style: _buttonStyle,
+                                              onPressed: () {
+                                                final uri = PageUrls.readBook(
+                                                    this.bookId);
+                                                Beamer.of(context)
+                                                    .beamToNamed(uri, data: {
+                                                  "book": this.bookId
+                                                });
+                                              },
+                                              child: Text("Start Reading")),
+                                        ),
+                                        _removeBookButton(bookId: bookId)
+                                      ])),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ))));
   }
 }

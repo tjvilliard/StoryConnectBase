@@ -12,6 +12,13 @@ const String dummySynopsis =
 const String dummyAuthor = "The illustrius joeseph joestar....";
 
 class BigBook extends StatelessBookItem {
+  static const double sizeFactor = 1.1;
+  static const double height = 200.0 * BigBook.sizeFactor;
+  static const double width = 400.0 * BigBook.sizeFactor;
+  static const double iconSize = 175.0 * BigBook.sizeFactor;
+  static const double cardElevation = 3;
+  static const double maxColumnWidth = width / 2.0;
+  static const double synopsisBoxHeight = height / 2.0;
   final Book book;
 
   BigBook({required this.book});
@@ -24,150 +31,139 @@ class BigBook extends StatelessBookItem {
 
   @override
   Widget build(BuildContext context) {
+    double smallIconSize = Theme.of(context).textTheme.bodySmall!.fontSize! + 3;
+
     return Container(
-        height: 200.0,
-        width: 400.0,
+        height: BigBook.height,
+        width: BigBook.width,
         child: Card(
-            elevation: 3,
+            elevation: BigBook.cardElevation,
             child: Clickable(
-                onPressed: () {
-                  final uri = PageUrls.readBook(book.id);
-                  Beamer.of(context).beamToNamed(uri, data: {"book": book});
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.book,
-                          size: 175,
-                        ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Title Text Widget
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                padding:
-                                    EdgeInsets.only(top: 12.0, bottom: 0.0),
-                                constraints: BoxConstraints(
-                                  maxHeight: 40.0,
-                                  maxWidth: 190.0,
-                                ),
-                                child: Text(
-                                  this.book.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
+              onPressed: () {
+                final uri = PageUrls.readBook(book.id);
+                Beamer.of(context).beamToNamed(uri, data: {"book": book});
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.book,
+                    size: BigBook.iconSize,
+                  ),
+                  Container(
+                    constraints:
+                        BoxConstraints(maxWidth: BigBook.maxColumnWidth),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title Text Widget
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(top: 12.0, bottom: 0.0),
+                            constraints: BoxConstraints(
+                              maxHeight: 40.0,
+                            ),
+                            child: Text(
+                              this.book.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ),
+                          // Title Text Widget
+
+                          //Author Text Widget
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(vertical: 2.0),
+                              constraints: BoxConstraints(
+                                maxHeight: 30.0,
                               ),
-                              // Title Text Widget
-
-                              //Author Text Widget
-                              Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.symmetric(vertical: 2.0),
-                                  constraints: BoxConstraints(
-                                    maxHeight: 30.0,
-                                    maxWidth: 190.0,
-                                  ),
-                                  child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(children: [
-                                        WidgetSpan(
-                                            child: Padding(
-                                          padding: EdgeInsets.only(right: 4.0),
-                                          child: Icon(Icons.person_outline,
-                                              size: 16),
-                                        )),
-                                        TextSpan(
-                                          text: dummyAuthor,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        )
-                                      ]))),
-                              // Author Text Widget
-
-                              Container(
-                                constraints: BoxConstraints(
-                                  maxWidth: 190.0,
-                                  maxHeight: 20.0,
-                                ),
-                                child: Row(
-                                  children: [
-                                    // Chapter Info Text Widget
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      WidgetSpan(
-                                        child: Icon(
-                                          size: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .fontSize! +
-                                              3,
-                                          FontAwesomeIcons.list,
-                                        ),
+                              child: RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(children: [
+                                    WidgetSpan(
+                                      child: Icon(
+                                        size: smallIconSize,
+                                        Icons.person_outline,
                                       ),
-                                      TextSpan(
-                                        text: " 15",
+                                    ),
+                                    TextSpan(
+                                      text: " ${dummyAuthor}",
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    )
+                                  ]))),
+                          // Author Text Widget
+
+                          Container(
+                            constraints: BoxConstraints(
+                              maxHeight: 30.0,
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                            child: Row(
+                              children: [
+                                // Chapter Info Text Widget
+                                RichText(
+                                    text: TextSpan(children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      size: smallIconSize,
+                                      FontAwesomeIcons.list,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: " 15",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ])),
+                                // Chapter Info Text Widget
+
+                                VerticalDivider(
+                                  indent: 2.5,
+                                  endIndent: 2.5,
+                                  width: 20,
+                                ),
+
+                                // Date Widget
+                                RichText(
+                                  text: TextSpan(children: [
+                                    WidgetSpan(
+                                      child: Icon(
+                                        size: smallIconSize,
+                                        FontAwesomeIcons.pen,
+                                      ),
+                                    ),
+                                    TextSpan(
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall,
-                                      ),
-                                    ])),
-                                    // Chapter Info Text Widget
-
-                                    VerticalDivider(
-                                      width: 20,
-                                    ),
-                                    RichText(
-                                      text: TextSpan(children: [
-                                        WidgetSpan(
-                                          child: Icon(
-                                            size: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall!
-                                                    .fontSize! +
-                                                3,
-                                            FontAwesomeIcons.pen,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall,
-                                            text:
-                                                " ${this.yyMMddDateTime(this.book.modified).toString()}"),
-                                      ]),
-                                    ),
-                                  ],
+                                        text:
+                                            " ${this.yyMMddDateTime(this.book.modified)}"),
+                                  ]),
                                 ),
-                              ),
+                                // Date Widget
+                              ],
+                            ),
+                          ),
 
-                              // Synopsis Text Widget
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 4.0),
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxWidth: 190.0, maxHeight: 190.0),
-                                        child: Text(dummySynopsis,
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12)),
-                                      ))),
-                              // Synopsis Text Widget
-                            ]),
-                      ],
-                    ),
-                  ],
-                ))));
+                          // Synopsis Text Widget
+                          Container(
+                              alignment: Alignment.topLeft,
+                              padding: EdgeInsets.symmetric(vertical: 2.0),
+                              constraints: BoxConstraints(
+                                  maxHeight: BigBook.synopsisBoxHeight),
+                              child: Text(dummySynopsis,
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      Theme.of(context).textTheme.bodySmall)),
+                          // Synopsis Text Widget
+                        ]),
+                  ),
+                ],
+              ),
+            )));
   }
 }

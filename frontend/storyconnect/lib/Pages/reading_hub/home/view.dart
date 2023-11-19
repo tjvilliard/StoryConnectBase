@@ -1,8 +1,11 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/big_book_list.dart';
 import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
+import 'package:storyconnect/Pages/reading_hub/components/sample_books.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
@@ -20,8 +23,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
 
   @override
   void initState() {
-    super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialLoad) {
         initialLoad = false;
@@ -31,85 +32,72 @@ class ReadingHomeState extends State<ReadingHomeView> {
         readingHomeBloc.add(GetBooksEvent());
       }
     });
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(child:
-            BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-                builder: (BuildContext context, ReadingHomeStruct homeState) {
+        body: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(builder:
+            (BuildContext context, ReadingHomeStruct readingHomeState) {
           return BlocBuilder<LibraryBloc, LibraryStruct>(
-            builder: (BuildContext context, LibraryStruct libraryState) {
-              List<Widget> toReturn;
-              if (homeState.loadingStruct.isLoading ||
-                  libraryState.loadingStruct.isLoading) {
-                toReturn = <Widget>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor),
-                  Container(
-                    constraints: BoxConstraints(maxWidth: 800),
-                    child: Divider(
-                      height: 10,
-                      thickness: .5,
-                      color: Theme.of(context).dividerColor,
-                    ),
-                  ),
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
-                ];
-              } else {
-                /// Build scrolling paginated view of book panels
-                toReturn = <Widget>[
-                  SolidPanel(
-                    primary: Theme.of(context).canvasColor,
-                    children: [
-                      SizedBox(height: 20),
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
-                          child: Text(
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.titleLarge,
-                              "Continue Reading...")),
-                      BigBookListWidget(books: libraryState.libraryBooks)
-                    ],
-                  ),
-                  Container(
-                    constraints: BoxConstraints(maxWidth: 800),
-                    child: Divider(
-                      height: 10,
-                      thickness: .5,
-                      color: Theme.of(context).dividerColor,
-                    ),
-                  ),
-                  SolidPanel(
-                    primary: Theme.of(context).canvasColor,
-                    children: [
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
-                          child: Text(
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.titleLarge,
-                              "Latest in \'Category\'")),
-                      BigBookListWidget(books: homeState.books)
-                    ],
-                  )
-                ];
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            },
-          );
-        }))));
+              builder: (BuildContext context, LibraryStruct library) {
+            return Center(
+                child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    height: MediaQuery.of(context).size.height,
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                          addAutomaticKeepAlives: true,
+                          (BuildContext context, int index) {
+                            if (index == 0) {
+                              if (library.loadingStruct.isLoading) {
+                                return SolidPanel.loadingPanel(
+                                  primary: Theme.of(context).canvasColor,
+                                  child: library.loadingStruct,
+                                );
+                              } else {
+                                return SolidPanel(
+                                    primary: Theme.of(context).canvasColor,
+                                    children: [
+                                      SizedBox(height: 25),
+                                      Text(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium,
+                                          "Continue Reading"),
+                                      BigBookListWidget(
+                                          books: library.libraryBooks)
+                                    ]);
+                              }
+                            } else {
+                              if (((index) % 2) != 0) {
+                                return Divider();
+                              } else {
+                                return SolidPanel(
+                                    primary: Theme.of(context).canvasColor,
+                                    children: [
+                                      Text(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineMedium,
+                                          "More Books in category Steamy"),
+                                      BigBookListWidget(
+                                          books: sampleBooksData.sample())
+                                    ]);
+                              }
+                            }
+                          },
+                          childCount: 15,
+                        )),
+                      ],
+                    )));
+          });
+        }));
   }
 }
