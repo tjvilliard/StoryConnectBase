@@ -42,6 +42,7 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
     on<SelectProfileImageEvent>((event, emit) => selectProfileImage(event, emit));
     on<ClearProfileImageEvent>((event, emit) => clearProfileImage(event, emit));
     on<DeleteProfileImageEvent>((event, emit) => deleteProfileImage(event, emit));
+    on<EditDisplayNameEvent>((event, emit) => editDisplayName(event, emit));
   }
 
   load(WriterProfileLoadEvent event, WriterProfileEmitter emit) async {
@@ -111,7 +112,8 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
   }
 
   void editProfile(EditProfileEvent event, WriterProfileEmitter emit) {
-    emit(state.copyWith(isEditingBio: true));
+    emit(state.copyWith(
+        isEditingBio: true, bioEditingState: state.profile.bio, tempDisplayName: state.profile.displayName));
   }
 
   void saveProfile(SaveProfileEvent event, WriterProfileEmitter emit) async {
@@ -120,7 +122,8 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
       profileLoadingStruct: LoadingStruct.message("Saving bio"),
     )));
     if (state.bioEditingState != null) {
-      final response = await _repo.updateProfile(state.profile.copyWith(bio: state.bioEditingState!));
+      final response = await _repo
+          .updateProfile(state.profile.copyWith(bio: state.bioEditingState!, displayName: state.tempDisplayName!));
       if (response != null) {
         emit(state.copyWith(
           isEditingBio: false,
@@ -128,12 +131,12 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
           loadingStructs: state.loadingStructs.copyWith(
             profileLoadingStruct: LoadingStruct.loading(false),
           ),
-          responseMessages: ["Bio updated successfully"],
+          responseMessages: ["Profile updated successfully"],
         ));
       } else {
         emit(state.copyWith(
           loadingStructs: state.loadingStructs.copyWith(profileLoadingStruct: LoadingStruct.loading(false)),
-          responseMessages: ["Failed to update bio"],
+          responseMessages: ["Failed to update profile"],
         ));
       }
     }
@@ -215,5 +218,9 @@ class WriterProfileBloc extends Bloc<WriterProfileEvent, WriterProfileState> {
       loadingStructs: state.loadingStructs.copyWith(profileLoadingStruct: LoadingStruct.loading(false)),
       responseMessages: [results.message!],
     ));
+  }
+
+  editDisplayName(EditDisplayNameEvent event, WriterProfileEmitter emit) {
+    emit(state.copyWith(tempDisplayName: event.displayName));
   }
 }

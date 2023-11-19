@@ -51,7 +51,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
             listener: (context, state) {
               if (state.responseMessages.isNotEmpty) {
                 ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.responseMessages.last), duration: Duration(seconds: 1)));
+                    .showSnackBar(SnackBar(content: Text(state.responseMessages.last), duration: Duration(seconds: 6)));
                 // clear the messages
                 context.read<WriterProfileBloc>().add(ClearLastResponseEvent());
               }

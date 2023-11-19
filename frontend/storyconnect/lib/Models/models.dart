@@ -167,9 +167,9 @@ class Highlight with _$Highlight {
 class Profile with _$Profile {
   const factory Profile({
     required String bio,
+    @JsonKey(name: 'display_name') required String displayName,
     int? id,
     int? user,
-    @JsonKey(name: 'display_name') String? displayName,
     @JsonKey(name: 'image_url') String? imageUrl,
   }) = _Profile;
 

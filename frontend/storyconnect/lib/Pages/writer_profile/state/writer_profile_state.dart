@@ -11,6 +11,7 @@ class WriterProfileState with _$WriterProfileState {
     required bool isEditingBio,
     String? bioEditingState,
     Uint8List? tempProfileImage,
+    String? tempDisplayName,
     required bool isUploadingProfileImage,
     required WritingProfileLoadingStructs loadingStructs,
   }) = _WriterProfileState;

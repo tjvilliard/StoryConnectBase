@@ -83,3 +83,8 @@ class DeleteProfileImageEvent extends WriterProfileEvent {
 class ClearProfileImageEvent extends WriterProfileEvent {
   const ClearProfileImageEvent();
 }
+
+class EditDisplayNameEvent extends WriterProfileEvent {
+  final String displayName;
+  const EditDisplayNameEvent({required this.displayName});
+}
