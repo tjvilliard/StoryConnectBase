@@ -1,18 +1,20 @@
-import openai 
 from storyconnect.settings import OPENAI_API_KEY
-from .exceptions import *
+from .exceptions import RoadUnblockerException
 import books.models as books_models
 import ai_features.models as ai_models
 import ai_features.utils as utils
 import logging
+from openai import OpenAI
+import threading
 
-openai.api_key = OPENAI_API_KEY
+# openai.api_key = OPENAI_API_KEY
 logger = logging.getLogger(__name__)
 
-class RoadUnblocker():
+
+class RoadUnblocker:
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
-    CHAT_MODEL = "gpt-3.5-turbo-16k"
+    CHAT_MODEL = "gpt-3.5-turbo"
     MAX_TOKENS = 5000
     TEMPERATURE = 0.2
 
@@ -22,7 +24,6 @@ class RoadUnblocker():
     def __init__(self):
         self.last_response = None
         self.sys_message = {"role": "system", "content": self.SYS_ROLE}
-        
 
     # def _summarize_chapter(self, chapter_id):
     #     """Summarizes a chapter using the BASE_MODEL. Stores in ChapterSummary table"""
@@ -38,7 +39,7 @@ class RoadUnblocker():
     #                                        )
     #     summary = response.choices[0]['text']
     #     return summary
-    
+
     # def _summarize_book(self, book_id):
     #     """Summarizes a book using the BASE_MODEL. Stores in BookSummary table"""
 
@@ -65,22 +66,24 @@ class RoadUnblocker():
         # print("Generating context")
         chapter = books_models.Chapter.objects.get(pk=chapter_id)
         book = chapter.book
-        
+
         bk_chapters = book.get_chapters()
 
-        messages = [self.sys_message,]
+        messages = [
+            self.sys_message,
+        ]
 
         # include summary only if more than one chapter
         if bk_chapters.count() > 1:
             logger.info("more than one chapter")
             u_msg_summary = "Here is a summary of my book so far:\n\n"
-            
+
             # TODO: Remember that this is now chat model
             logger.info("summarizing book ")
             u_msg_summary += utils.summarize_book_chat(book.id)[0]
             logger.info("summarized book")
             messages.append({"role": "user", "content": u_msg_summary})
-        
+
         # include chapter content
         u_msg_chapter = "Here is the content of the chapter you are working on:\n\n"
         u_msg_chapter += chapter.content
@@ -88,7 +91,7 @@ class RoadUnblocker():
 
         u_ex = "Do you have any suggestions for this chapter?"
         messages.append({"role": "user", "content": u_ex})
-        
+
         assist_ex = """Chapter Suggestions:
 
                     1. Enhance the setting: Describe the studio and garden in more detail, using sensory details to immerse the reader in the environment. Expand on the scents, sounds, and visuals to create a vivid atmosphere.
@@ -105,33 +108,42 @@ class RoadUnblocker():
 
         logger.info("Context generated")
         return messages
-        
 
     def get_suggestions(self, selection, question, chapter_id):
         # logger.info("Getting suggestions")
         logger.info("Generating context for road unblocker")
-        
+
         messages = self._generate_context(chapter_id)
 
         if selection is not None and selection != "":
             content = "Heres the particular selection I want to work on:\n" + selection
             messages.append({"role": "user", "content": content})
 
-        
-        messages.append({"role": "user", "content": "Question: " +  question})
+        messages.append({"role": "user", "content": "Question: " + question})
 
-        # debug write to file 
-        with(open("ai_features/test_files/test_prints.txt", "w")) as f:
+        # debug write to file
+        with open("ai_features/test_files/test_prints.txt", "w") as f:
             for m in messages:
                 f.write(str(m) + "\n")
 
         logger.info("Sending messages to openai")
-        self.last_response = openai.ChatCompletion.create(model = self.CHAT_MODEL,
-                                                          messages = messages,
-                                                          max_tokens = self.MAX_TOKENS
-                                                          )
-        # returns first suggestion
-        # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
-        response_content = self.last_response.choices[0]['message']['content']
-        logger.info("Returning suggestions")
-        return response_content
+        client = OpenAI(api_key=OPENAI_API_KEY)
+
+        try:
+            self.last_response = client.chat.completions.create(
+                timeout=300,
+                model=self.CHAT_MODEL,
+                messages=messages,
+            )
+            # returns first suggestion
+            # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
+            response_content = self.last_response.choices[0].message.content
+
+            logger.info("Got suggestions")
+            logger.info(response_content)
+
+            return response_content
+        except Exception as e:
+            logger.error("Error in road unblocker")
+            logger.error(e)
+            raise RoadUnblockerException()

@@ -10,19 +10,19 @@ services:
       - ./config/nginx:/etc/nginx/conf.d
       - ./backend/static:/static
       - ./frontend/storyconnect/build/web:/usr/share/nginx/flutter
-
     depends_on:
       - storyconnect
 
   storyconnect:
     build: .
     container_name: storyconnect
+    tty: true
     env_file:
-      - .env       
+      - .env
     command: |-
       bash -c "python manage.py migrate && 
       python manage.py collectstatic --noinput && 
-      gunicorn storyconnect.wsgi:application --bind 0.0.0.0:8000 --reload --timeout 30"
+      gunicorn storyconnect.wsgi:application --bind 0.0.0.0:8000 --reload --timeout 300"
 
     volumes:
       - ./backend/storyconnect:/src
