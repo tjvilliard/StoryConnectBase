@@ -1,7 +1,7 @@
 from models import *
 from books.models import *
 
-def all_books_rate():
+def rating_cron_job():
     all_books = Book.objects.all()
 
     for the_book in all_books:
