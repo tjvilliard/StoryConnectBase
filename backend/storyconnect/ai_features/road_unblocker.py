@@ -133,5 +133,5 @@ class RoadUnblocker():
         # returns first suggestion
         # TODO: handle multiple suggestions, serializer and front end give multi suggest not chat bubble
         response_content = self.last_response.choices[0]['message']['content']
-        
+        logger.info("Returning suggestions")
         return response_content
