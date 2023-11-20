@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/language_constants.dart';
 import 'package:storyconnect/Constants/target_audience_constants.dart';
 
-import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Widgets/book_forms/audience_dropdown.dart';
 import 'package:storyconnect/Widgets/book_forms/copyright_dropdown.dart';
 import 'package:storyconnect/Widgets/book_forms/image_upload.dart';
 import 'package:storyconnect/Widgets/book_forms/language_dropdown.dart';
-import 'package:storyconnect/Widgets/book_forms/synopsis_form_field.dart';
 import 'package:storyconnect/Widgets/form_field.dart';
 
 part 'book_form_field.dart';
@@ -43,24 +40,55 @@ class BookFormFieldCallbacks {
   }
 }
 
+class BookFormFieldDefaults {
+  final String? title;
+  final String? synopsis;
+  final LanguageConstant? language;
+  final TargetAudience? targetAudience;
+  final String? noImageSelectedText;
+  final CopyrightOption? copyRight;
+
+  const BookFormFieldDefaults({
+    this.title,
+    this.synopsis,
+    this.language,
+    this.targetAudience,
+    this.noImageSelectedText,
+    this.copyRight,
+  });
+
+  const BookFormFieldDefaults.empty()
+      : this(
+            title: null,
+            synopsis: null,
+            language: null,
+            targetAudience: null,
+            noImageSelectedText: null,
+            copyRight: null);
+}
+
 class BookFormFields extends StatelessWidget {
   final EdgeInsets padding = EdgeInsets.all(10);
   final String? selectedImageTitle;
   final BookFormFieldCallbacks callbacks;
+  final BookFormFieldDefaults defaults;
 
-  BookFormFields({super.key, this.selectedImageTitle, required this.callbacks});
+  BookFormFields(
+      {super.key,
+      this.selectedImageTitle,
+      required this.callbacks,
+      this.defaults = const BookFormFieldDefaults.empty()});
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         BookFormField(
-          onChanged: (value) {
-            context.read<BookCreateBloc>().add(TitleChangedEvent(title: value));
-          },
+          onChanged: callbacks.onTitleChanged,
           label: "Title",
+          initialValue: defaults.title,
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 5),
         Padding(
             padding: padding,
             child: Text("Help your readers get to know your book!",
@@ -68,14 +96,17 @@ class BookFormFields extends StatelessWidget {
         Wrap(
           children: [
             Padding(
-                padding: padding,
-                child: LanguageDropdown(
-                  onSelected: (value) => callbacks.onLanguageChanged.call(value),
-                )),
+              padding: padding,
+              child: LanguageDropdown(
+                onSelected: (value) => callbacks.onLanguageChanged.call(value),
+                initialValue: defaults.language,
+              ),
+            ),
             Padding(
                 padding: padding,
                 child: AudienceDropdown(
                   onSelected: (value) => callbacks.onTargetAudienceChanged.call(value),
+                  initialValue: defaults.targetAudience,
                 )),
           ],
         ),
@@ -84,17 +115,20 @@ class BookFormFields extends StatelessWidget {
             padding: padding,
             child: CopyrightDropdown(
               onSelected: (value) => callbacks.onCopyRightChanged.call(value),
+              initialValue: defaults.copyRight,
             )),
         SizedBox(height: 20),
         ImageUpload(
           imageTitle: selectedImageTitle,
+          noneSelectedText: defaults.noImageSelectedText,
           onImageSelect: () => callbacks.onImageChanged.call(),
         ),
         SizedBox(height: 20),
-        SynopsisFormField(
-          onChanged: (String value) {
-            context.read<BookCreateBloc>().add(SynopsisChangedEvent(Synopsis: value));
-          },
+        BookFormField(
+          maxLines: 5,
+          maxLength: 500,
+          onChanged: callbacks.onSynopsisChanged,
+          initialValue: defaults.synopsis,
           label: "Book Synopsis",
         ),
       ],

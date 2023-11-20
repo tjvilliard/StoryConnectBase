@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 
 class ImageUpload extends StatelessWidget {
-  final String noneSelectedText = "No Image Selected";
+  static final String _noneSelectedText = "No image selected";
+  final String? noneSelectedText;
   final String? imageTitle;
   final VoidCallback onImageSelect;
 
-  const ImageUpload({super.key, this.imageTitle, required this.onImageSelect});
+  const ImageUpload({super.key, this.imageTitle, required this.onImageSelect, this.noneSelectedText});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +16,19 @@ class ImageUpload extends StatelessWidget {
           // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            BlocBuilder<BookCreateBloc, BookCreateState>(builder: (context, state) {
-              if (state.imageTitle != null) {
-                return ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 200), child: Flexible(child: Text(state.imageTitle!)));
-              }
-
-              return Text("No Image Selected");
-            }),
+            if (imageTitle != null)
+              Flexible(
+                  child: Text(
+                imageTitle!,
+                maxLines: 1,
+              )),
+            if (imageTitle == null)
+              Flexible(
+                  child: Text(
+                noneSelectedText ?? _noneSelectedText,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+              )),
             SizedBox(width: 15),
             ElevatedButton(onPressed: () => onImageSelect.call(), child: Text("Upload Image")),
           ],

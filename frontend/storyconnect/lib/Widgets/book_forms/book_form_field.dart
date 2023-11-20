@@ -1,7 +1,8 @@
 part of './book_form_fields.dart';
 
 class BookFormField extends CustomFormField {
-  BookFormField({required super.label, super.value, super.onChanged});
+  BookFormField(
+      {required super.label, super.value, super.onChanged, super.initialValue, super.maxLines = 1, super.maxLength});
 
   @override
   Widget build(BuildContext context) {

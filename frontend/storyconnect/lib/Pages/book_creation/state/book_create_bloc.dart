@@ -1,14 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
+import 'package:storyconnect/Services/firebase_storage_helper.dart';
 import 'package:storyconnect/Widgets/book_forms/serializers/book_form_serializer.dart';
 
 part 'book_create_bloc.freezed.dart';
@@ -64,26 +64,6 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
     }
   }
 
-  static Future<String> _uploadImage(Uint8List imageBytes) async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-
-    // handle auth here
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      throw Exception("User is not logged in.");
-    }
-
-    final relativeUrl = "images/${user.uid}/${DateTime.now().toIso8601String()}.png";
-
-    Reference ref = storage.ref().child(relativeUrl);
-    // upload the file as public
-    UploadTask uploadTask = ref.putData(imageBytes);
-    await uploadTask;
-
-    return relativeUrl;
-  }
-
   Future<void> saveBook(SaveBookEvent event, BookCreateEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Saving Book")));
 
@@ -97,7 +77,8 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
 
     // if the image is not null, upload it
     if (state.imageFile != null) {
-      emit(state.copyWith(serializer: state.serializer.copyWith(cover: await _uploadImage(state.imageFile!))));
+      emit(state.copyWith(
+          serializer: state.serializer.copyWith(cover: await uploadImageDirectlyToFirebase(state.imageFile!))));
     }
 
     final bookID = await repository.createBook(serializer: state.serializer);

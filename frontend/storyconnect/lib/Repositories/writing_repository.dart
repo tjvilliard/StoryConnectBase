@@ -152,7 +152,18 @@ class WritingRepository {
     return continuitiyResponse;
   }
 
-  Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
+  Future<Book?> updateBook({required Book book, required int bookId}) async {
+    // build serializer
+    final serializer = BookFormSerializer(
+      title: book.title,
+      language: book.language,
+      targetAudience: book.targetAudience,
+      synopsis: book.synopsis,
+      cover: book.cover,
+    );
+
     return _api.updateBook(serializer: serializer, bookId: bookId);
   }
+
+  void deleteBook(int bookId) {}
 }

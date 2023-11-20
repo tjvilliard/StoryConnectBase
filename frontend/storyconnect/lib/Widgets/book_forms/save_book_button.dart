@@ -7,13 +7,10 @@ class SaveBookButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: FilledButton.icon(
-            label: Text(
-              text,
-            ),
-            icon: Icon(Icons.add),
-            onPressed: () => onPressed.call()));
+    return FilledButton(
+        child: Text(
+          text,
+        ),
+        onPressed: () => onPressed);
   }
 }

@@ -6,28 +6,28 @@ abstract class WritingUIEvent {
 
 class UpdateAllEvent extends WritingUIEvent {
   final WritingUIState status;
-  UpdateAllEvent({required this.status});
+  const UpdateAllEvent({required this.status});
 }
 
 class ToggleChapterOutlineEvent extends WritingUIEvent {
-  ToggleChapterOutlineEvent();
+  const ToggleChapterOutlineEvent();
 }
 
 class ToggleFeedbackUIEvent extends WritingUIEvent {
-  ToggleFeedbackUIEvent();
+  const ToggleFeedbackUIEvent();
 }
 
 class ToggleRoadUnblockerEvent extends WritingUIEvent {
-  ToggleRoadUnblockerEvent();
+  const ToggleRoadUnblockerEvent();
 }
 
 class SwitchChapterEvent extends WritingUIEvent {
   final int chapterId;
-  SwitchChapterEvent({required this.chapterId});
+  const SwitchChapterEvent({required this.chapterId});
 }
 
 class ToggleContinuityCheckerEvent extends WritingUIEvent {
-  ToggleContinuityCheckerEvent();
+  const ToggleContinuityCheckerEvent();
 }
 
 class HighlightEvent extends WritingUIEvent {
@@ -50,9 +50,50 @@ class WritingLoadEvent extends WritingUIEvent {
   final int bookId;
   final WritingBloc writingBloc;
   final FeedbackBloc feedbackBloc;
-  WritingLoadEvent({
+  const WritingLoadEvent({
     required this.bookId,
     required this.writingBloc,
     required this.feedbackBloc,
   });
+}
+
+class UpdateBookEvent extends WritingUIEvent {
+  const UpdateBookEvent();
+}
+
+class DeleteBookEvent extends WritingUIEvent {
+  const DeleteBookEvent();
+}
+
+class UpdateBookTitleEvent extends WritingUIEvent {
+  final String title;
+  const UpdateBookTitleEvent({required this.title});
+}
+
+class UpdateBookSynopsisEvent extends WritingUIEvent {
+  final String synopsis;
+  const UpdateBookSynopsisEvent({required this.synopsis});
+}
+
+class UpdateBookLanguageEvent extends WritingUIEvent {
+  final String language;
+  const UpdateBookLanguageEvent({required this.language});
+}
+
+class UpdateBookTargetAudienceEvent extends WritingUIEvent {
+  final int targetAudience;
+  const UpdateBookTargetAudienceEvent({required this.targetAudience});
+}
+
+class UpdateBookCopyrightEvent extends WritingUIEvent {
+  final int copyright;
+  const UpdateBookCopyrightEvent({required this.copyright});
+}
+
+class SelectUpdatedBookCoverEvent extends WritingUIEvent {
+  SelectUpdatedBookCoverEvent();
+}
+
+class ClearUpdateBookEvent extends WritingUIEvent {
+  ClearUpdateBookEvent();
 }

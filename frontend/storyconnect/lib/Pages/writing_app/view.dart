@@ -78,17 +78,24 @@ class _WritingAppViewState extends State<WritingAppView> {
               ),
               BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
                 Widget toReturn;
-                if (state.title != null) {
-                  toReturn = Text(state.title!, style: Theme.of(context).textTheme.displaySmall);
-                } else {
+                if (state.loadingStruct.isLoading) {
                   toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                } else if (state.book == null) {
+                  toReturn = Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
+                } else {
+                  toReturn = toReturn = Text(state.book!.title, style: Theme.of(context).textTheme.displaySmall);
                 }
+
                 return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
               }),
             ],
           ),
           centerTitle: false,
-          actions: [Padding(padding: const EdgeInsets.only(right: 30, left: 10), child: BookSettingsButton())],
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 30, left: 10),
+                child: BookSettingsButton(uiBloc: context.read<WritingUIBloc>()))
+          ],
         ),
         body: ChangeNotifierProvider<ScrollController>(
           create: (context) {
