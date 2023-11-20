@@ -53,7 +53,7 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
 
     final response = await _repo.submitUnblock(RoadUnblockerRequest(
       chapterID: event.chapterID,
-      question: question,
+      question: finalQuestion,
       selection: finalSelection,
     ));
 
