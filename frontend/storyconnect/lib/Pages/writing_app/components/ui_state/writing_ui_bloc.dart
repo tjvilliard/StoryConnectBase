@@ -154,7 +154,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
     if (result != null) {
       emit(state.copyWith(book: result));
-      add(ClearUpdateBookEvent());
+    } else {
+      emit(state.copyWith(bookEditorState: BookEditorState.initial(state.book!)));
     }
   }
 
@@ -195,10 +196,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       allowMultiple: false,
     );
 
-    // convert the image to base 64
     if (result != null) {
-      // get file from bytes since web doesn't support path
-
       emit(state.copyWith(
           bookEditorState: state.bookEditorState!
               .copyWith(imageTitle: result.files.single.name, imageBytes: result.files.single.bytes)));

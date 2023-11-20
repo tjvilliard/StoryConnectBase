@@ -50,6 +50,15 @@ class WritingApiProvider {
     }
   }
 
+  Future<void> deleteBook(int bookId) async {
+    try {
+      final url = UrlConstants.books(bookId: bookId);
+      await http.delete(url, headers: await buildHeaders());
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Stream<Book> getBooks() async* {
     try {
       final url = UrlConstants.currentUserBooks();
@@ -165,5 +174,7 @@ class WritingRepository {
     return _api.updateBook(serializer: serializer, bookId: bookId);
   }
 
-  void deleteBook(int bookId) {}
+  Future<void> deleteBook(int bookId) {
+    return _api.deleteBook(bookId);
+  }
 }
