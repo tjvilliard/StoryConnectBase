@@ -55,6 +55,14 @@ class ReadingPageViewState extends State<ReadingPageView> {
                       margin: EdgeInsets.all(20),
                       padding: EdgeInsets.all(20),
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                         border: Border.all(color: Colors.grey[200]!, width: 1),
                         color: Colors.white,
                       ),
