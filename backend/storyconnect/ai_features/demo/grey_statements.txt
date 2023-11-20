@@ -1,30 +1,32 @@
 <Statements>
 <Characters>
 <Lord-Henry-Wotton>
-Lord Henry Wotton is a smoker.
-Lord Henry Wotton is a friend of Basil Hallward.
+Lord Henry Wotton is lying on a divan of Persian saddle-bags.
+Lord Henry Wotton is smoking cigarettes.
 </Lord-Henry-Wotton>
 <Basil-Hallward>
-Basil Hallward is an artist.
-Basil Hallward is the painter of the portrait.
+Basil Hallward is sitting in front of a full-length portrait.
+Basil Hallward suddenly starts up and closes his eyes.
 </Basil-Hallward>
 <Dorian-Gray>
-Dorian Gray is the subject of the portrait.
-Dorian Gray is described as an Adonis.
+Dorian Gray is the subject of the full-length portrait.
+Dorian Gray is described as a young man of extraordinary personal beauty.
 </Dorian-Gray>
 </Characters>
 <Locations>
+<The-studio>
+The studio is filled with the rich odor of roses.
+The studio has a huge window with long tussore-silk curtains.
+</The-studio>
+<The-garden>
+The garden has trees that emit the scent of lilac and pink-flowering thorn.
+The garden has a laburnum tree with honey-sweet and honey-colored blossoms.
+</The-garden>
 <London>
-London is described as having a dim roar.
-London is where the characters live.
+The dim roar of London is compared to the bourdon note of a distant organ.
 </London>
 <Tokyo>
-Tokyo is described as having pallid, jade-faced painters.
-Tokyo is where the painters are from.
+The pallid, jade-faced painters of Tokyo are mentioned.
 </Tokyo>
-<Grosvenor>
-The Grosvenor is a place where the portrait could be exhibited.
-The Grosvenor is described as the only place.
-</Grosvenor>
 </Locations>
 </Statements>

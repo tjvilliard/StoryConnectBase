@@ -2,6 +2,9 @@ from django.test import TestCase
 from .models import *
 from books.models import Book
 from .continuity_checker import ContinuityChecker
+from .road_unblocker import RoadUnblocker
+import ai_features.utils as utils
+import re
 import logging
 # Create your tests here.
 class StatementSheetTests(TestCase):
@@ -95,3 +98,81 @@ class ContinuityCheckerTests(TestCase):
         print(cc_response)
         # print("\n")
         # print(self.cc.last_response)
+
+class RoadUnblockerTests(TestCase):
+    def setUp(self):
+        self.ru = RoadUnblocker()
+        self.book = Book.objects.create(title="Dorian Gray")
+
+        self.blank_bk = Book.objects.create(title="Blank Book")
+        self.blank_chapter = Chapter.objects.create(book=self.blank_bk, content="")
+
+        with open("ai_features/test_files/ch_1.txt", "r") as f1, open("ai_features/test_files/ch_2.txt", "r") as f2, open("ai_features/test_files/ch_3.txt", "r") as f3:
+            self.chapter1 = Chapter.objects.create(book=self.book, content=f1.read())
+            self.chapter2 = Chapter.objects.create(book=self.book, content=f2.read())
+            self.chapter3 = Chapter.objects.create(book=self.book, content=f3.read())
+        
+    def test_get_suggestion(self):
+        question = "Do you have any suggestions for this chapter?"
+        selection = ""
+        suggestion = self.ru.get_suggestions(selection, question, self.chapter1.id)
+        
+
+        with open("ai_features/test_files/ru_suggestions.txt", "w") as f:
+            f.write(suggestion)
+
+    def test_get_suggestion_blank_chapter(self):
+        question = "How should I start my scifi story?"
+        selection = ""
+        suggestion = self.ru.get_suggestions(selection, question, self.blank_chapter.id)
+
+        with open("ai_features/test_files/ru_suggestions_blank.txt", "w") as f:
+            f.write(suggestion)
+
+        
+    def test_itemize_response(sefl):
+        with open("ai_features/test_files/ru_suggestions.txt", "r") as f:
+            response = f.read()
+        # Use regular expression to extract numbered statements
+        statements = re.findall(r'\d+\.\s+(.+)', response)
+
+        # Remove numbers from the extracted statements
+        statements = [re.sub(r'\d+\.\s+', '', statement) for statement in statements]
+
+        for statement in statements:
+            print(statement)
+
+class UtilsTests(TestCase):
+    def setUp(self):
+        self.book = Book.objects.create(title="Dorian Gray")
+
+        with open("ai_features/test_files/ch_1.txt", "r") as f1, open("ai_features/test_files/ch_2.txt", "r") as f2, open("ai_features/test_files/ch_3.txt", "r") as f3:
+            self.chapter1 = Chapter.objects.create(book=self.book, content=f1.read())
+            self.chapter2 = Chapter.objects.create(book=self.book, content=f2.read())
+            self.chapter3 = Chapter.objects.create(book=self.book, content=f3.read())
+        
+    def test_summarize_chapter(self):
+
+        with open("ai_features/test_files/ch_1_summary.txt", "w") as f:
+            for ch in self.book.get_chapters():
+                summary = utils.summarize_chapter_chat(ch.id)
+                f.write(summary)
+    
+    def test_summarize_book_chapters(self):
+        summary_dict = utils.summarize_book_chapters(self.book.id)
+        with open("ai_features/test_files/chapters_summary.txt", "w") as f:
+            for item in ChapterSummary.objects.all():
+                f.write(str(item.chapter.chapter_number) + "\n" + item.summary + "\n")
+    
+    def test_summarize_book(self):
+        # RETURNS A STRING AND BOOL
+        bk_sum, created = utils.summarize_book(self.book.id)
+        assert created == True
+        assert bk_sum != ""
+        with open("ai_features/test_files/book_summary.txt", "w") as f:
+            f.write(bk_sum)
+        
+
+
+        
+        

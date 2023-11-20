@@ -137,6 +137,23 @@ class ChapterViewSet(viewsets.ModelViewSet):
 
         return JsonResponse(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        book = instance.book
+        
+        chapters = book.get_chapters()
+        for chapter in chapters:
+            if chapter.chapter_number > instance.chapter_number:
+                chapter.chapter_number -= 1
+                chapter.save()
+
+        self.perform_destroy(instance)
+        serializer = self.get_serializer(chapters, many=True)
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+        
+
+        
 
 # class CharacterViewSet(viewsets.ModelViewSet):
 #     queryset = Character.objects.all()
@@ -246,6 +263,7 @@ class RoadUnblockerView(APIView):
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
+    #TODO: Potentialy change the default queryset and get rid of the get_user_library action
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -269,6 +287,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def change_entry_status(self, request):
+        #TODO: Test this
         library = self.get_object()
         # TODO: Why is there unaccesed data here?
         # book = library.book
