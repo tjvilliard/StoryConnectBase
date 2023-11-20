@@ -5,10 +5,12 @@ import 'package:storyconnect/Pages/writing_app/components/writing/chapter/update
 
 class ChapterNavigationButton extends StatefulWidget {
   final int index;
+  final int numOfChapters;
 
   const ChapterNavigationButton({
     super.key,
     required this.index,
+    required this.numOfChapters,
   });
 
   @override
@@ -74,12 +76,14 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                             icon: Icon(Icons.edit),
                             onPressed: () {
                               showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (context) => UpdateChapterDialog(
                                       title: writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] ??
                                           "Chapter ${widget.index + 1}",
                                       onDelete: onDelete,
-                                      onSaveTitle: onSaveTitle));
+                                      onSaveTitle: onSaveTitle,
+                                      numOfChapters: widget.numOfChapters));
                             },
                           )),
                     )),

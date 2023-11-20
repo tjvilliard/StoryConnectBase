@@ -20,7 +20,7 @@ class BookApiProvider {
     try {
       final ChapterUpload toUpload =
           ChapterUpload(number: number, chapterContent: "", book: bookId, chapterTitle: "$number");
-      final url = UrlConstants.createChapter(bookId);
+      final url = UrlConstants.chapters();
 
       final result = await http.post(
         url,
@@ -44,7 +44,7 @@ class BookApiProvider {
           rawContent: rawContent,
           book: bookId,
           chapterTitle: title ?? "$number");
-      final url = UrlConstants.updateChapter(chapterId);
+      final url = UrlConstants.chapters(chapterId: chapterId);
 
       final result = await http.patch(
         url,
@@ -56,6 +56,17 @@ class BookApiProvider {
       print(e);
       return null;
     }
+  }
+
+  Future<bool> deleteChapter(int chapterId) async {
+    try {
+      final url = UrlConstants.chapters(chapterId: chapterId);
+      await http.delete(url, headers: await buildHeaders());
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 }
 
@@ -83,5 +94,9 @@ class BookProviderRepository {
       print("number is -1");
     }
     return _api.updateChapter(bookId, chapterId, number, content, rawContent, title);
+  }
+
+  Future<bool> deleteChapter(int chapterId) {
+    return _api.deleteChapter(chapterId);
   }
 }

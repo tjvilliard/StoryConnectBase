@@ -46,7 +46,10 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                                           if (index == writingState.chapters.length) {
                                             return ChapterCreateButton();
                                           }
-                                          return ChapterNavigationButton(index: index);
+                                          return ChapterNavigationButton(
+                                            index: index,
+                                            numOfChapters: writingState.chapters.length,
+                                          );
                                         }))
                               ],
                             ))

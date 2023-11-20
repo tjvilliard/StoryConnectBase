@@ -92,13 +92,11 @@ class UrlConstants {
   }
 
   ///
-  static Uri createChapter(int bookId) {
-    return _urlBuilder.build('chapters');
-  }
-
-  ///
-  static Uri updateChapter(int chapterId) {
-    return _urlBuilder.build('chapters/$chapterId/');
+  static Uri chapters({int? chapterId}) {
+    if (chapterId != null) {
+      return _urlBuilder.build('chapters/$chapterId/');
+    }
+    return _urlBuilder.build('chapters/');
   }
 
   static Uri roadUnblock() {

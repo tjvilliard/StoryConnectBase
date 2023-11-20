@@ -8,8 +8,10 @@ class UpdateChapterDialog extends StatefulWidget {
   final String title;
   final VoidCallback onDelete;
   final OnSaveTitle onSaveTitle;
+  final int numOfChapters;
 
-  const UpdateChapterDialog({super.key, required this.title, required this.onDelete, required this.onSaveTitle});
+  const UpdateChapterDialog(
+      {super.key, required this.title, required this.onDelete, required this.onSaveTitle, required this.numOfChapters});
 
   @override
   _UpdateChapterDialogState createState() => _UpdateChapterDialogState();
@@ -57,7 +59,10 @@ class _UpdateChapterDialogState extends State<UpdateChapterDialog> {
                   spacing: 8.0, // Spacing between buttons
                   alignment: WrapAlignment.spaceBetween, // Aligns the button groups
                   children: [
-                    DeleteChapterButton(onDelete: widget.onDelete),
+                    DeleteChapterButton(
+                        onDelete: widget.onDelete,
+                        canDelete: widget.numOfChapters >= 1,
+                        cantDeleteReason: 'You must have at least one chapter.'),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

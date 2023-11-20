@@ -41,6 +41,8 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     on<_UpdateChapterHelperEvent>((event, emit) => _updateChapterHelper(event.event, emit), transformer: sequential());
     on<SetEditorControllerCallbackEvent>((event, emit) => setEditorControllerCallback(event, emit),
         transformer: sequential());
+
+    on<DeleteChapterEvent>((event, emit) => deleteChapter(event, emit), transformer: sequential());
   }
 
   int get currentChapterId => state.chapterNumToID[state.currentIndex]!;
@@ -197,11 +199,11 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     redo();
   }
 
-  void setEditorControllerCallback(SetEditorControllerCallbackEvent event, Emitter<WritingState> emit) {
+  void setEditorControllerCallback(SetEditorControllerCallbackEvent event, WritingEmitter emit) {
     getEditorControllerCallback = event.callback;
   }
 
-  void updateChapterTitle(UpdateChapterTitleEvent event, Emitter<WritingState> emit) async {
+  void updateChapterTitle(UpdateChapterTitleEvent event, WritingEmitter emit) async {
     final chapterId = state.chapterNumToID[event.chapterNum]!;
     Map<int, String> chapters = Map.from(state.chapters);
 
@@ -225,6 +227,27 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
       final chapterTitles = Map<int, String>.from(state.chapterIDToTitle);
       chapterTitles[chapterId] = event.title;
       emit(state.copyWith(chapterIDToTitle: chapterTitles));
+    }
+  }
+
+  void deleteChapter(DeleteChapterEvent event, WritingEmitter emit) async {
+    final chapterId = state.chapterNumToID[event.chapterNum]!;
+    final deleteResult = await _repo.deleteChapter(chapterId);
+    if (deleteResult) {
+      final chapterNumToID = Map<int, int>.from(state.chapterNumToID);
+      chapterNumToID.remove(event.chapterNum);
+      final chapters = Map<int, String>.from(state.chapters);
+      chapters.remove(event.chapterNum);
+      final chapterIDToTitle = Map<int, String>.from(state.chapterIDToTitle);
+      chapterIDToTitle.remove(chapterId);
+
+      // iteritively update the chapter numbers locally only: the server will do the same thing
+      for (int i = event.chapterNum + 1; i < state.chapters.length; i++) {
+        chapterNumToID[i - 1] = chapterNumToID[i]!;
+        chapters[i - 1] = chapters[i]!;
+      }
+
+      emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
     }
   }
 }

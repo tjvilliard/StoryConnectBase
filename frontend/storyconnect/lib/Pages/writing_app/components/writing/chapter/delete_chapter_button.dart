@@ -2,8 +2,19 @@ import 'package:flutter/material.dart';
 
 class DeleteChapterButton extends StatelessWidget {
   final VoidCallback onDelete;
+  final bool canDelete;
+  final String? cantDeleteReason;
 
-  const DeleteChapterButton({Key? key, required this.onDelete}) : super(key: key);
+  DeleteChapterButton({
+    super.key,
+    required this.onDelete,
+    required this.canDelete,
+    this.cantDeleteReason,
+  }) {
+    if (canDelete == false) {
+      assert(cantDeleteReason != null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +23,23 @@ class DeleteChapterButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(Colors.red),
       ),
       onPressed: () async {
+        // if we can't delete,
+        if (canDelete != true) {
+          // show a snackbar with the reason why
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(cantDeleteReason!),
+              duration: Duration(seconds: 6),
+            ),
+          );
+          return;
+        }
+
         final shouldDelete = await _showDeleteConfirmationDialog(context);
-        if (shouldDelete) {
+        if (shouldDelete && canDelete) {
           onDelete();
         }
+        Navigator.of(context).pop();
       },
       child: Text(
         'Delete',
