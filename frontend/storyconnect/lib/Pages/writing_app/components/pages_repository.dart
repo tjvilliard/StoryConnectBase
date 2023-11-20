@@ -6,11 +6,9 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    final result = await http.get(UrlConstants.getChapters(bookId),
-        headers: await buildHeaders());
+    final result = await http.get(UrlConstants.getChapters(bookId), headers: await buildHeaders());
 
-    final undecodedChapterList =
-        jsonDecode(utf8.decode(result.bodyBytes)) as List;
+    final undecodedChapterList = jsonDecode(utf8.decode(result.bodyBytes)) as List;
     List<Chapter> results = [];
     for (var undecodedChapter in undecodedChapterList) {
       results.add(Chapter.fromJson(undecodedChapter));
@@ -20,11 +18,8 @@ class BookApiProvider {
 
   Future<Chapter?> createChapter(int bookId, int number) async {
     try {
-      final ChapterUpload toUpload = ChapterUpload(
-          number: number,
-          chapterContent: "",
-          book: bookId,
-          chapterTitle: "$number");
+      final ChapterUpload toUpload =
+          ChapterUpload(number: number, chapterContent: "", book: bookId, chapterTitle: "$number");
       final url = UrlConstants.createChapter(bookId);
 
       final result = await http.post(
@@ -39,8 +34,8 @@ class BookApiProvider {
     }
   }
 
-  Future<Chapter?> updateChapter(int bookId, int chapterId, int number,
-      String content, String rawContent) async {
+  Future<Chapter?> updateChapter(
+      int bookId, int chapterId, int number, String content, String rawContent, String? title) async {
     try {
       Chapter toUpload = Chapter(
           id: chapterId,
@@ -48,7 +43,7 @@ class BookApiProvider {
           chapterContent: content,
           rawContent: rawContent,
           book: bookId,
-          chapterTitle: "$number");
+          chapterTitle: title ?? "$number");
       final url = UrlConstants.updateChapter(chapterId);
 
       final result = await http.patch(
@@ -82,10 +77,11 @@ class BookProviderRepository {
       {required int chapterId,
       required int number,
       required String content,
-      required String rawContent}) {
+      required String rawContent,
+      String? title}) {
     if (number == -1) {
       print("number is -1");
     }
-    return _api.updateChapter(bookId, chapterId, number, content, rawContent);
+    return _api.updateChapter(bookId, chapterId, number, content, rawContent, title);
   }
 }

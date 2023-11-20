@@ -11,6 +11,7 @@ class WritingState with _$WritingState {
     required LoadingStruct loadingStruct,
     int? caretOffset,
     @Default(<int, int>{}) Map<int, int> chapterNumToID,
+    @Default(<int, String?>{}) Map<int, String?> chapterIDToTitle,
     required EditorConfigM config,
   }) = _WritingState;
   const WritingState._();
@@ -25,17 +26,14 @@ class WritingState with _$WritingState {
         loadingStruct: LoadingStruct.loading(true),
         config: EditorConfigM(
             customStyles: EditorStylesM(
-                paragraph: TextBlockStyleM(
-                    TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    null))));
+                paragraph: TextBlockStyleM(TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
+                    VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, null))));
   }
 }
 
 class _ParsedChapterResult {
   final Map<int, String> chapters;
   final Map<int, int> chapterNumToID;
-  _ParsedChapterResult({required this.chapters, required this.chapterNumToID});
+  final Map<int, String?> chapterIDToTitle;
+  _ParsedChapterResult({required this.chapters, required this.chapterNumToID, required this.chapterIDToTitle});
 }

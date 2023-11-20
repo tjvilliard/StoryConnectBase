@@ -37,7 +37,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     on<LoadWritingEvent>((event, emit) => loadWritingEvent(event, emit), transformer: sequential());
     on<WritingUndoCommandEvent>((event, emit) => undoCommand(event, emit));
     on<WritingRedoCommandEvent>((event, emit) => redoCommand(event, emit));
-
+    on<UpdateChapterTitleEvent>((event, emit) => updateChapterTitle(event, emit), transformer: sequential());
     on<_UpdateChapterHelperEvent>((event, emit) => _updateChapterHelper(event.event, emit), transformer: sequential());
     on<SetEditorControllerCallbackEvent>((event, emit) => setEditorControllerCallback(event, emit),
         transformer: sequential());
@@ -149,11 +149,14 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   _ParsedChapterResult _parseChapters(List<Chapter> chapters) {
     final Map<int, int> chapterNumToID = {};
     Map<int, String> parsedChapters = {};
+    final Map<int, String> chapterIDToTitle = {};
     for (Chapter chapter in chapters) {
       chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
+      chapterIDToTitle[chapter.id] = chapter.chapterTitle;
     }
-    return _ParsedChapterResult(chapters: parsedChapters, chapterNumToID: chapterNumToID);
+    return _ParsedChapterResult(
+        chapters: parsedChapters, chapterNumToID: chapterNumToID, chapterIDToTitle: chapterIDToTitle);
   }
 
   void loadWritingEvent(LoadWritingEvent event, WritingEmitter emit) async {
@@ -175,6 +178,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
       emit(state.copyWith(
           chapters: result.chapters,
           chapterNumToID: result.chapterNumToID,
+          chapterIDToTitle: result.chapterIDToTitle,
           loadingStruct: LoadingStruct.loading(false)));
       clearHistory();
 
@@ -185,15 +189,42 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
 
   /// Undoes the last command. If the command is a switch chapter command, it will switch to the chapter that was switched from,
   /// and then perform the undo command. Multiple chapter switches in a row will be undone in reverse order.
-  undoCommand(WritingUndoCommandEvent event, WritingEmitter emit) {
+  void undoCommand(WritingUndoCommandEvent event, WritingEmitter emit) {
     undo();
   }
 
-  redoCommand(WritingRedoCommandEvent event, WritingEmitter emit) {
+  void redoCommand(WritingRedoCommandEvent event, WritingEmitter emit) {
     redo();
   }
 
-  setEditorControllerCallback(SetEditorControllerCallbackEvent event, Emitter<WritingState> emit) {
+  void setEditorControllerCallback(SetEditorControllerCallbackEvent event, Emitter<WritingState> emit) {
     getEditorControllerCallback = event.callback;
+  }
+
+  void updateChapterTitle(UpdateChapterTitleEvent event, Emitter<WritingState> emit) async {
+    final chapterId = state.chapterNumToID[event.chapterNum]!;
+    Map<int, String> chapters = Map.from(state.chapters);
+
+    final String chapterContent = chapters[event.chapterNum] ?? "";
+
+    final doc = DeltaDocM.fromJson(jsonDecode(chapterContent));
+    // temporary editor to get the plain text
+
+    final EditorController editor = EditorController(document: doc);
+    final String plainText = editor.plainText.text;
+
+    final chapterResult = await _repo.updateChapter(
+      chapterId: chapterId,
+      number: event.chapterNum,
+      content: chapterContent,
+      title: state.chapterIDToTitle[chapterId],
+      rawContent: plainText,
+    );
+
+    if (chapterResult != null) {
+      final chapterTitles = Map<int, String>.from(state.chapterIDToTitle);
+      chapterTitles[chapterId] = event.title;
+      emit(state.copyWith(chapterIDToTitle: chapterTitles));
+    }
   }
 }
