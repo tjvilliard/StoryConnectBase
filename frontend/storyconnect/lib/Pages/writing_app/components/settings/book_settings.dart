@@ -40,30 +40,35 @@ class BookSettings extends StatelessWidget {
             Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               SizedBox(height: 10),
               BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
-                if (state.loadingStruct.isLoading) return LoadingWidget(loadingStruct: state.loadingStruct);
-                if (state.bookEditorState == null)
+                if (state.loadingStruct.isLoading)
+                  return LoadingWidget(loadingStruct: state.loadingStruct);
+                else if (state.bookEditorState == null || state.book == null) {
                   return Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
-                return BookFormFields(
-                    defaults: BookFormFieldDefaults(
-                      title: state.bookEditorState!.book.title,
-                      noImageSelectedText: "Upload a new cover image (optional)",
-                      synopsis: state.bookEditorState!.book.synopsis,
-                      copyRight: copyrightOptionFromInt(state.bookEditorState!.book.copyright!),
-                      language: languageConstantFromString(state.bookEditorState!.book.language!),
-                    ),
-                    callbacks: BookFormFieldCallbacks(
-                      onTitleChanged: (title) => context.read<WritingUIBloc>().add(UpdateBookTitleEvent(title: title)),
-                      onSynopsisChanged: (synopsis) =>
-                          context.read<WritingUIBloc>().add(UpdateBookSynopsisEvent(synopsis: synopsis)),
-                      onLanguageChanged: (language) =>
-                          context.read<WritingUIBloc>().add(UpdateBookLanguageEvent(language: language.label)),
-                      onTargetAudienceChanged: (targetAudience) => context
-                          .read<WritingUIBloc>()
-                          .add(UpdateBookTargetAudienceEvent(targetAudience: targetAudience.index)),
-                      onCopyRightChanged: (copyright) =>
-                          context.read<WritingUIBloc>().add(UpdateBookCopyrightEvent(copyright: copyright.index)),
-                      onImageChanged: () => context.read<WritingUIBloc>().add(SelectUpdatedBookCoverEvent()),
-                    ));
+                } else {
+                  return BookFormFields(
+                      defaults: BookFormFieldDefaults(
+                        title: state.bookEditorState!.book.title,
+                        noImageSelectedText: "Upload a new cover image (optional)",
+                        synopsis: state.bookEditorState!.book.synopsis,
+                        copyRight: copyrightOptionFromInt(state.bookEditorState!.book.copyright ?? 0),
+                        language: languageConstantFromString(
+                            state.bookEditorState!.book.language ?? LanguageConstant.english.label),
+                      ),
+                      callbacks: BookFormFieldCallbacks(
+                        onTitleChanged: (title) =>
+                            context.read<WritingUIBloc>().add(UpdateBookTitleEvent(title: title)),
+                        onSynopsisChanged: (synopsis) =>
+                            context.read<WritingUIBloc>().add(UpdateBookSynopsisEvent(synopsis: synopsis)),
+                        onLanguageChanged: (language) =>
+                            context.read<WritingUIBloc>().add(UpdateBookLanguageEvent(language: language.label)),
+                        onTargetAudienceChanged: (targetAudience) => context
+                            .read<WritingUIBloc>()
+                            .add(UpdateBookTargetAudienceEvent(targetAudience: targetAudience.index)),
+                        onCopyRightChanged: (copyright) =>
+                            context.read<WritingUIBloc>().add(UpdateBookCopyrightEvent(copyright: copyright.index)),
+                        onImageChanged: () => context.read<WritingUIBloc>().add(SelectUpdatedBookCoverEvent()),
+                      ));
+                }
               }),
               SizedBox(height: 10)
             ]),
