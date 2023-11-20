@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
@@ -51,7 +53,12 @@ class WritingCreationView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     BookFormFields(
-                                      selectedImageTitle: state.imageTitle,
+                                      defaults: BookFormFieldDefaults(
+                                        title: state.serializer.title,
+                                        synopsis: state.serializer.synopsis,
+                                        language: languageConstantFromString(state.serializer.language),
+                                        targetAudience: targetAudienceFromIndex(state.serializer.targetAudience),
+                                      ),
                                       callbacks: BookFormFieldCallbacks(
                                         onCopyRightChanged: (option) {
                                           context

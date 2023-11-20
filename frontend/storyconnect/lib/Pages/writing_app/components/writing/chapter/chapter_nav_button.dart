@@ -34,6 +34,14 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
       builder: (chapterContext, WritingState writingState) {
         final selectedColor = Theme.of(context).primaryColor;
         final selectedTextColor = Colors.white;
+        String title;
+        if (writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] == null ||
+            writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]?.isEmpty == true) {
+          final int naturalIndex = widget.index + 1;
+          title = "Chapter $naturalIndex";
+        } else {
+          title = writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]!;
+        }
 
         return MouseRegion(
           onEnter: (_) => setState(() => isHovered = true),
@@ -56,8 +64,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                     child: Container(
                       width: 160,
                       child: Text(
-                        writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] ??
-                            "Chapter ${widget.index + 1}",
+                        title,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelLarge?.apply(
                             fontSizeDelta: 4,
@@ -79,8 +86,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (context) => UpdateChapterDialog(
-                                      title: writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] ??
-                                          "Chapter ${widget.index + 1}",
+                                      title: title,
                                       onDelete: onDelete,
                                       onSaveTitle: onSaveTitle,
                                       numOfChapters: widget.numOfChapters));

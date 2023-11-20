@@ -18,8 +18,11 @@ class BookApiProvider {
 
   Future<Chapter?> createChapter(int bookId, int number) async {
     try {
-      final ChapterUpload toUpload =
-          ChapterUpload(number: number, chapterContent: "", book: bookId, chapterTitle: "$number");
+      final ChapterUpload toUpload = ChapterUpload(
+        number: number,
+        chapterContent: "",
+        book: bookId,
+      );
       final url = UrlConstants.chapters();
 
       final result = await http.post(
@@ -55,6 +58,30 @@ class BookApiProvider {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  Future<bool> updateChapterTitle(
+      int bookId, int chapterId, int number, String content, String rawContent, String? title) async {
+    try {
+      Chapter toUpload = Chapter(
+          id: chapterId,
+          number: number,
+          chapterContent: content,
+          rawContent: rawContent,
+          book: bookId,
+          chapterTitle: title ?? "$number");
+      final url = UrlConstants.chapters(chapterId: chapterId);
+
+      final result = await http.patch(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(toUpload.toJson()),
+      );
+      return result.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 
@@ -94,6 +121,15 @@ class BookProviderRepository {
       print("number is -1");
     }
     return _api.updateChapter(bookId, chapterId, number, content, rawContent, title);
+  }
+
+  Future<bool> updateChapterTitle(
+      {required int chapterId,
+      required int number,
+      required String content,
+      required String rawContent,
+      String? title}) {
+    return _api.updateChapterTitle(bookId, chapterId, number, content, rawContent, title);
   }
 
   Future<bool> deleteChapter(int chapterId) {

@@ -78,7 +78,11 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   DeltaDocM convertToDeltaDoc(String json) {
     DeltaDocM doc;
     try {
-      doc = DeltaDocM.fromJson(jsonDecode(json));
+      if (json.isEmpty) {
+        doc = DeltaDocM();
+      } else {
+        doc = DeltaDocM.fromJson(jsonDecode(json));
+      }
     } catch (e) {
       /// this feels really hacky, but it should work
       try {
@@ -151,7 +155,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   _ParsedChapterResult _parseChapters(List<Chapter> chapters) {
     final Map<int, int> chapterNumToID = {};
     Map<int, String> parsedChapters = {};
-    final Map<int, String> chapterIDToTitle = {};
+    final Map<int, String?> chapterIDToTitle = {};
     for (Chapter chapter in chapters) {
       chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
@@ -209,45 +213,62 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
 
     final String chapterContent = chapters[event.chapterNum] ?? "";
 
-    final doc = DeltaDocM.fromJson(jsonDecode(chapterContent));
-    // temporary editor to get the plain text
+    String plainText = "";
+    if (chapterContent.isNotEmpty) {
+      final doc = DeltaDocM.fromJson(jsonDecode(chapterContent));
+      // temporary editor to get the plain text
 
-    final EditorController editor = EditorController(document: doc);
-    final String plainText = editor.plainText.text;
+      final EditorController editor = EditorController(document: doc);
+      plainText = editor.plainText.text;
+    }
 
-    final chapterResult = await _repo.updateChapter(
+    final chapterResult = await _repo.updateChapterTitle(
       chapterId: chapterId,
       number: event.chapterNum,
       content: chapterContent,
-      title: state.chapterIDToTitle[chapterId],
+      title: event.title,
       rawContent: plainText,
     );
 
-    if (chapterResult != null) {
-      final chapterTitles = Map<int, String>.from(state.chapterIDToTitle);
+    if (chapterResult) {
+      final chapterTitles = Map<int, String?>.from(state.chapterIDToTitle);
       chapterTitles[chapterId] = event.title;
       emit(state.copyWith(chapterIDToTitle: chapterTitles));
     }
   }
 
   void deleteChapter(DeleteChapterEvent event, WritingEmitter emit) async {
-    final chapterId = state.chapterNumToID[event.chapterNum]!;
-    final deleteResult = await _repo.deleteChapter(chapterId);
-    if (deleteResult) {
-      final chapterNumToID = Map<int, int>.from(state.chapterNumToID);
-      chapterNumToID.remove(event.chapterNum);
-      final chapters = Map<int, String>.from(state.chapters);
-      chapters.remove(event.chapterNum);
-      final chapterIDToTitle = Map<int, String>.from(state.chapterIDToTitle);
-      chapterIDToTitle.remove(chapterId);
-
-      // iteritively update the chapter numbers locally only: the server will do the same thing
-      for (int i = event.chapterNum + 1; i < state.chapters.length; i++) {
-        chapterNumToID[i - 1] = chapterNumToID[i]!;
-        chapters[i - 1] = chapters[i]!;
-      }
-
-      emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
+    final chapterId = state.chapterNumToID[event.chapterNum];
+    if (chapterId == null) {
+      // Handle the case where the chapter number does not exist.
+      return;
     }
+
+    final deleteResult = await _repo.deleteChapter(chapterId);
+    if (!deleteResult) {
+      // Handle the failure case of chapter deletion.
+      return;
+    }
+
+    final chapterNumToID = Map<int, int>.from(state.chapterNumToID)..remove(event.chapterNum);
+    final chapters = Map<int, String>.from(state.chapters)..remove(event.chapterNum);
+    final chapterIDToTitle = Map<int, String?>.from(state.chapterIDToTitle)..remove(chapterId);
+
+    // Iteratively update the chapter numbers locally only
+    for (int i = event.chapterNum + 1; i <= state.chapters.length; i++) {
+      final nextChapterId = chapterNumToID[i];
+      if (nextChapterId != null) {
+        chapterNumToID[i - 1] = nextChapterId;
+        chapters[i - 1] = chapters[i]!;
+        chapterIDToTitle[nextChapterId] = chapterIDToTitle[nextChapterId];
+      }
+    }
+
+    // Remove the last chapter's data as it has been shifted up
+    chapterNumToID.remove(state.chapters.length - 1);
+    chapters.remove(state.chapters.length - 1);
+    chapterIDToTitle.remove(chapterId);
+
+    emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
   }
 }
