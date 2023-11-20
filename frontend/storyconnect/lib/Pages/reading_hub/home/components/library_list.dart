@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/components/book_items/big_book.dart';
-import 'package:storyconnect/Pages/reading_hub/components/scroll_behavior/list.dart';
+import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_behavior_pattern.dart';
+import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/home/components/list.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryBookList extends BookList {
-  LibraryBookList({required super.behaviorState});
+  LibraryBookList();
 
   @override
-  _libraryBookListState createState() =>
-      _libraryBookListState(behaviorState: super.behaviorState);
+  _libraryBookListState createState() => _libraryBookListState();
 }
 
 class _libraryBookListState extends BookListState {
-  _libraryBookListState({required super.behaviorState});
+  _libraryBookListState();
 
   @override
   void initState() {
@@ -38,14 +39,17 @@ class _libraryBookListState extends BookListState {
 
       /// Return our list of library books.
       else {
-        return ListView.builder(
-          itemCount: libraryState.libraryBooks.length,
-          controller: super.behaviorState.scrollController,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, int index) {
-            return BigBook(book: libraryState.libraryBooks[index]);
-          },
-        );
+        return BlocBuilder<HorizontalScrollBehaviorBloc, HorizontalScrollState>(
+            builder: (BuildContext context, HorizontalScrollState state) {
+          return ListView.builder(
+            itemCount: libraryState.libraryBooks.length,
+            controller: state.scrollController,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, int index) {
+              return BigBook(book: libraryState.libraryBooks[index]);
+            },
+          );
+        });
       }
     });
   }
