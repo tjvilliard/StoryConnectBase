@@ -21,7 +21,7 @@ class RoadUnblockerResponseSerializer(serializers.Serializer):
 
 
 class ContinuityItemSerializer(serializers.Serializer):
-    uid = serializers.CharField()
+    uuid = serializers.CharField()
     content = serializers.CharField()
     chapter_id = serializers.IntegerField()
 
