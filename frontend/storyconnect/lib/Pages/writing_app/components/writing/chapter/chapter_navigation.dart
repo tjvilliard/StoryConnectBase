@@ -17,10 +17,8 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
   ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        builder: (context, uiState) {
-      return BlocBuilder<WritingBloc, WritingState>(
-          builder: (context, writingState) {
+    return BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, uiState) {
+      return BlocBuilder<WritingBloc, WritingState>(builder: (context, writingState) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
@@ -38,29 +36,23 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                                 SidePopupHeader(
                                     title: "Chapter Nav",
                                     dismiss: () =>
-                                        BlocProvider.of<WritingUIBloc>(context)
-                                            .add(ToggleChapterOutlineEvent())),
+                                        BlocProvider.of<WritingUIBloc>(context).add(ToggleChapterOutlineEvent())),
                                 SizedBox(height: 20),
                                 Expanded(
                                     child: ListView.builder(
                                         controller: _scrollController,
-                                        itemCount:
-                                            writingState.chapters.length + 1,
+                                        itemCount: writingState.chapters.length + 1,
                                         itemBuilder: (context, index) {
-                                          if (index ==
-                                              writingState.chapters.length) {
+                                          if (index == writingState.chapters.length) {
                                             return ChapterCreateButton();
                                           }
-                                          return ChapterNavigationButton(
-                                              index: index);
+                                          return ChapterNavigationButton(index: index);
                                         }))
                               ],
                             ))
                         : Container())),
-            crossFadeState: uiState.chapterOutlineShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+            crossFadeState: uiState.chapterOutlineShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 500));
       });
     });
   }

@@ -8,7 +8,10 @@ import 'package:storyconnect/Widgets/clickable.dart';
 class BookListWidget extends StatelessWidget {
   final List<Book> books;
 
-  BookListWidget({required this.books});
+  BookListWidget({
+    super.key,
+    required this.books,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +24,13 @@ class BookListWidget extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: books
                   .map((book) => Container(
+                      key: ValueKey(book.id),
                       width: 150,
                       height: 200,
                       child: Clickable(
                           onPressed: () {
                             final url = PageUrls.book(book.id);
-                            Beamer.of(context)
-                                .beamToNamed(url, data: {"book": book});
+                            Beamer.of(context).beamToNamed(url, data: {"book": book});
                           },
                           child: BookWidget(
                             book: book,

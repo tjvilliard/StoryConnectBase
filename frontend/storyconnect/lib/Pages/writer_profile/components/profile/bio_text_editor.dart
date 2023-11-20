@@ -39,13 +39,13 @@ class BioTextEditorState extends State<BioTextEditor> {
         children: [
           FilledButton.tonal(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(CancelBioEvent());
+                context.read<WriterProfileBloc>().add(CancelProfileEditEvent());
               },
               child: Text("Cancel")),
           SizedBox(width: 10),
           FilledButton.icon(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(SaveBioEvent());
+                context.read<WriterProfileBloc>().add(SaveProfileEvent());
               },
               icon: Icon(Icons.save),
               label: Text("Save")),

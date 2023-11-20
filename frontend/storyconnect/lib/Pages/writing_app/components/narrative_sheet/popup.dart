@@ -10,8 +10,7 @@ class NarrativeSheetPopup extends PopupRoute<void> {
   NarrativeSheetPopup(this.bookId);
 
   @override
-  Color? get barrierColor =>
-      Theme.of(navigator!.context).colorScheme.background;
+  Color? get barrierColor => Theme.of(navigator!.context).colorScheme.background;
 
   @override
   bool get barrierDismissible => false;
@@ -20,8 +19,7 @@ class NarrativeSheetPopup extends PopupRoute<void> {
   String? get barrierLabel => null;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return BlocProvider<NarrativeSheetBloc>(
         create: (context) => NarrativeSheetBloc(
               context.read<WritingRepository>(),
@@ -53,5 +51,5 @@ class NarrativeSheetPopup extends PopupRoute<void> {
   }
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
+  Duration get transitionDuration => Duration(milliseconds: 500);
 }

@@ -24,6 +24,7 @@ class Book with _$Book {
     required int id,
     required String title,
     int? owner,
+    @JsonKey(name: 'author_name') String? authorName,
     String? language,
     @JsonKey(name: 'target_audience') int? targetAudience,
     String? cover,
@@ -41,6 +42,7 @@ class Book with _$Book {
 class GenericResponse with _$GenericResponse {
   const factory GenericResponse({
     required bool success,
+    String? message,
   }) = _GenericResponse;
 
   factory GenericResponse.fromJson(Map<String, dynamic> json) => _$GenericResponseFromJson(json);
@@ -166,9 +168,9 @@ class Highlight with _$Highlight {
 class Profile with _$Profile {
   const factory Profile({
     required String bio,
+    @JsonKey(name: 'display_name') required String displayName,
     int? id,
     int? user,
-    @JsonKey(name: 'display_name') String? displayName,
     @JsonKey(name: 'image_url') String? imageUrl,
   }) = _Profile;
 

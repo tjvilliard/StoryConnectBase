@@ -16,17 +16,13 @@ class FeedbackWidget extends StatefulWidget {
 class _FeedbackWidgetState extends State<FeedbackWidget> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReadingUIBloc, ReadingUIState>(
-        builder: (context, uiState) {
+    return BlocBuilder<ReadingUIBloc, ReadingUIState>(builder: (context, uiState) {
       return BlocBuilder<FeedbackBloc, FeedbackState>(
         builder: (context, feedState) {
-          return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-              builder: (context, state) {
+          return BlocBuilder<ChapterBloc, ChapterBlocStruct>(builder: (context, state) {
             return AnimatedCrossFade(
-              crossFadeState: !uiState.feedbackBarShown
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              duration: Duration(milliseconds: 200),
+              crossFadeState: !uiState.feedbackBarShown ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              duration: Duration(milliseconds: 500),
               alignment: Alignment.centerRight,
               firstChild: Container(),
               secondChild: Container(
@@ -36,16 +32,12 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                     child: uiState.feedbackBarShown
                         ? Padding(
                             padding: EdgeInsets.all(16),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  FeedbackTypeSelector(),
-                                  SentimentSelectorWidget(),
-                                  Expanded(
-                                      child: FeedbackCardListWidget(
-                                          feedbackItems: [])),
-                                  FeedbackInputWidget(),
-                                ]))
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                              FeedbackTypeSelector(),
+                              SentimentSelectorWidget(),
+                              Expanded(child: FeedbackCardListWidget(feedbackItems: [])),
+                              FeedbackInputWidget(),
+                            ]))
                         : Container(),
                   )),
             );

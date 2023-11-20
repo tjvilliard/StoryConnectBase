@@ -17,8 +17,7 @@ part 'writing_ui_event.dart';
 typedef WritingUIEmiter = Emitter<WritingUIState>;
 
 class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
-  static Timer?
-      timer; // Static variable to maintain state between calls to highlight
+  static Timer? timer; // Static variable to maintain state between calls to highlight
 
   static double pageWidth = 800.0;
   static double pageHeight = 1050.0;
@@ -27,13 +26,10 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   WritingUIBloc({required this.repository}) : super(WritingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
     on<WritingLoadEvent>((event, emit) => loadEvent(event, emit));
-    on<ToggleChapterOutlineEvent>(
-        (event, emit) => toggleChapterOutline(event, emit));
+    on<ToggleChapterOutlineEvent>((event, emit) => toggleChapterOutline(event, emit));
     on<ToggleFeedbackUIEvent>((event, emit) => toggleFeedback(event, emit));
-    on<ToggleRoadUnblockerEvent>(
-        (event, emit) => toggleRoadUnblocker(event, emit));
-    on<ToggleContinuityCheckerEvent>(
-        (event, emit) => toggleContinuityChecker(event, emit));
+    on<ToggleRoadUnblockerEvent>((event, emit) => toggleRoadUnblocker(event, emit));
+    on<ToggleContinuityCheckerEvent>((event, emit) => toggleContinuityChecker(event, emit));
 
     on<HighlightEvent>((event, emit) => highlight(event, emit));
 
@@ -59,8 +55,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   Future<void> loadEvent(WritingLoadEvent event, WritingUIEmiter emit) async {
-    emit(state.copyWith(
-        loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
+    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
 
     event.writingBloc.add(LoadWritingEvent(
       event.feedbackBloc,
@@ -80,29 +75,20 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
   void toggleFeedback(WritingUIEvent event, WritingUIEmiter emit) {
     emit(state.copyWith(
-        feedbackUIshown: !state.feedbackUIshown,
-        roadUnblockerShown: false,
-        continuityCheckerShown: false));
+        feedbackUIshown: !state.feedbackUIshown, roadUnblockerShown: false, continuityCheckerShown: false));
   }
 
-  void toggleRoadUnblocker(
-      ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
+  void toggleRoadUnblocker(ToggleRoadUnblockerEvent event, Emitter<WritingUIState> emit) {
     emit(state.copyWith(
-        roadUnblockerShown: !state.roadUnblockerShown,
-        feedbackUIshown: false,
-        continuityCheckerShown: false));
+        roadUnblockerShown: !state.roadUnblockerShown, feedbackUIshown: false, continuityCheckerShown: false));
   }
 
-  void toggleContinuityChecker(
-      ToggleContinuityCheckerEvent event, Emitter<WritingUIState> emit) {
+  void toggleContinuityChecker(ToggleContinuityCheckerEvent event, Emitter<WritingUIState> emit) {
     emit(state.copyWith(
-        continuityCheckerShown: !state.continuityCheckerShown,
-        feedbackUIshown: false,
-        roadUnblockerShown: false));
+        continuityCheckerShown: !state.continuityCheckerShown, feedbackUIshown: false, roadUnblockerShown: false));
   }
 
-  Future<void> highlight(
-      HighlightEvent event, Emitter<WritingUIState> emit) async {
+  Future<void> highlight(HighlightEvent event, Emitter<WritingUIState> emit) async {
     final scrollController = state.textScrollController;
 
     if (scrollController.hasClients) {
@@ -114,16 +100,13 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
       // Calculate the offset of the feedback
       painter.layout(maxWidth: pageWidth);
-      final feedbackOffset = painter.getOffsetForCaret(
-          TextPosition(offset: event.selection.offset), Rect.zero);
+      final feedbackOffset = painter.getOffsetForCaret(TextPosition(offset: event.selection.offset), Rect.zero);
 
-      await scrollController.animateTo(feedbackOffset.dy,
-          duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      await scrollController.animateTo(feedbackOffset.dy, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
 
       // Create a temporary highlight effect on the feedback
-      final List<TextBox> boxes = painter.getBoxesForSelection(TextSelection(
-          baseOffset: event.selection.offset,
-          extentOffset: event.selection.offsetEnd));
+      final List<TextBox> boxes = painter.getBoxesForSelection(
+          TextSelection(baseOffset: event.selection.offset, extentOffset: event.selection.offsetEnd));
 
       // Map all the boxes to rects and update the state
       final rects = boxes.map((e) => e.toRect()).toList();
@@ -137,8 +120,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     }
   }
 
-  void removeHighlight(
-      RemoveHighlightEvent event, Emitter<WritingUIState> emit) {
+  void removeHighlight(RemoveHighlightEvent event, Emitter<WritingUIState> emit) {
     // if there is a timer, cancel it
     timer?.cancel();
     emit(state.copyWith(rectsToHighlight: null));

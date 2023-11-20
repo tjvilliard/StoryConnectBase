@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/components/profile/bio_text_editor.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/display_name_editor.dart';
 import 'package:storyconnect/Pages/writer_profile/components/profile/edit_bio_button.dart';
 import 'package:storyconnect/Pages/writer_profile/components/profile/profile_image.dart';
 
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
-import 'package:storyconnect/Widgets/display_name_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -60,11 +60,12 @@ class ProfileCardState extends State<ProfileCard> {
                       Widget toReturn;
                       if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
                         return Container();
+                      } else if (state.isEditingBio) {
+                        toReturn = DisplayNameEditor();
                       } else {
-                        toReturn = DisplayNameLoaderWidget(
-                            id: state.profile.user ?? 0, style: Theme.of(context).textTheme.titleMedium);
+                        toReturn = Text(state.profile.displayName, style: Theme.of(context).textTheme.titleMedium);
                       }
-                      return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
+                      return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
                     },
                   )
                 ],
@@ -90,7 +91,7 @@ class ProfileCardState extends State<ProfileCard> {
                       }
                       return Padding(
                           padding: EdgeInsets.all(10),
-                          child: AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn));
+                          child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
                     })
                   ],
                 ),
@@ -101,8 +102,8 @@ class ProfileCardState extends State<ProfileCard> {
                 Widget toReturn;
                 if (_showEditProfile == true && state.isEditingBio == false) {
                   toReturn = Column(
-                    key: ValueKey('edit_bio_button'),
-                    children: [EditBioButton()],
+                    key: ValueKey('edit_profile_button'),
+                    children: [EditProfileButton()],
                   );
                 } else {
                   toReturn = SizedBox(
@@ -111,7 +112,7 @@ class ProfileCardState extends State<ProfileCard> {
                   );
                 }
 
-                return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: toReturn);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
               })
             ],
           ),
