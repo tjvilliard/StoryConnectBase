@@ -186,36 +186,36 @@ class NarrativeElementView(APIView):
         return Response(hardcoded_narrative_elements)
 
 
-class ContinuityView(APIView):
-    def get(self, request, format=None, *args, **kwargs):
-        # Mock data for continuity (replace with actual data retrieval logic)
-        hardcoded_continuities = {
-            "message": "This is a message",
-            "items": [
-                {
-                    "content": "This is a suggestion",
-                    "uuid": "1234",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "suggestion",
-                },
-                {
-                    "content": "This is a warning",
-                    "uuid": "12345",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "warning",
-                },
-                {
-                    "content": "This is an error",
-                    "uuid": "12346",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "error",
-                },
-            ],
-        }
-        return Response(hardcoded_continuities)
+# class ContinuityView(APIView):
+#     def get(self, request, format=None, *args, **kwargs):
+#         # Mock data for continuity (replace with actual data retrieval logic)
+#         hardcoded_continuities = {
+#             "message": "This is a message",
+#             "items": [
+#                 {
+#                     "content": "This is a suggestion",
+#                     "uuid": "1234",
+#                     "chapter_id": 475,
+#                     "startChar": None,
+#                     "suggestionType": "suggestion",
+#                 },
+#                 {
+#                     "content": "This is a warning",
+#                     "uuid": "12345",
+#                     "chapter_id": 475,
+#                     "startChar": None,
+#                     "suggestionType": "warning",
+#                 },
+#                 {
+#                     "content": "This is an error",
+#                     "uuid": "12346",
+#                     "chapter_id": 475,
+#                     "startChar": None,
+#                     "suggestionType": "error",
+#                 },
+#             ],
+#         }
+#         return Response(hardcoded_continuities)
 
 
 class NarrativeElementView(APIView):
@@ -303,37 +303,6 @@ class NarrativeElementView(APIView):
         return Response(hardcoded_narrative_elements)
 
 
-class ContinuityView(APIView):
-    def get(self, request, format=None, *args, **kwargs):
-        # Mock data for continuity (replace with actual data retrieval logic)
-        hardcoded_continuities = {
-            "message": "This is a message",
-            "items": [
-                {
-                    "content": "This is a suggestion",
-                    "uuid": "1234",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "suggestion",
-                },
-                {
-                    "content": "This is a warning",
-                    "uuid": "12345",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "warning",
-                },
-                {
-                    "content": "This is an error",
-                    "uuid": "12346",
-                    "chapter_id": 475,
-                    "startChar": None,
-                    "suggestionType": "error",
-                },
-            ],
-        }
-        return Response(hardcoded_continuities)
-
 
 class ContinuityCheckerView(APIView):
     DEFAULT_RESPONSE = {"message": "Everything looks good. Greate job!", "items": []}
@@ -373,6 +342,12 @@ class ContinuityCheckerView(APIView):
         ch_num = chapter.chapter_number
 
         book = chapter.book
+
+        # Check for chapter number and content 
+        if ch_num == 0 or chapter.content == "":
+            response_data = ContinuityCheckerView.DEFAULT_RESPONSE
+            serializer = ContinuityCheckerResponseSerializer(response_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         s_sheet = StatementSheet.objects.filter(book=book).first()
 
