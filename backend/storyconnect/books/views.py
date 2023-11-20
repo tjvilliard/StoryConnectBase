@@ -137,6 +137,21 @@ class ChapterViewSet(viewsets.ModelViewSet):
 
         return JsonResponse(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        book = instance.book
+
+        for chapter in book.get_chapters():
+            if chapter.chapter_number > instance.chapter_number:
+                chapter.chapter_number -= 1
+                chapter.save()
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        
+
+        
 
 # class CharacterViewSet(viewsets.ModelViewSet):
 #     queryset = Character.objects.all()
