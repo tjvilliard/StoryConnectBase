@@ -57,7 +57,8 @@ class AnnotationChangedEvent extends FeedbackEvent {
 /// Load the comments for the chapter.
 class LoadChapterFeedbackEvent extends FeedbackEvent {
   final ChapterBloc chapterBloc;
-  const LoadChapterFeedbackEvent({
+  const LoadChapterFeedbackEvent(
+    chapterId, {
     required this.chapterBloc,
   });
 }
