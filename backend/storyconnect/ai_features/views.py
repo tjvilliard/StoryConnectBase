@@ -7,7 +7,7 @@ from .serializers import (
     RoadUnblockerSuggestionSerializer,
 )
 from .models import StatementSheet
-from .continuity_checker import ContinuityChecker
+from .continuity_checker import ContinuityCheckerChat
 from .road_unblocker import RoadUnblocker
 from books import models as books_models
 from .serializers import ContinuityCheckerResponseSerializer
@@ -334,7 +334,7 @@ class ContinuityCheckerView(APIView):
     #         return continuity_checker_helper(book, ch_num, s_sheet, 0, cc)
 
     def get(self, request, *args, **kwargs):
-        cc = ContinuityChecker()
+        cc = ContinuityCheckerChat()
 
         ch_id = kwargs.get("chapter_id")  # chapter id
         logger.info(ch_id)
