@@ -11,8 +11,7 @@ class TextHighlightWidget extends StatefulWidget {
   TextHighlightWidgetState createState() => TextHighlightWidgetState();
 }
 
-class TextHighlightWidgetState extends State<TextHighlightWidget>
-    with SingleTickerProviderStateMixin {
+class TextHighlightWidgetState extends State<TextHighlightWidget> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -32,15 +31,13 @@ class TextHighlightWidgetState extends State<TextHighlightWidget>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<WritingUIBloc, WritingUIState>(
-        listener: (context, uiState) async {
+    return BlocConsumer<WritingUIBloc, WritingUIState>(listener: (context, uiState) async {
       if (uiState.rectsToHighlight != null) {
         await _animationController.forward();
         await _animationController.reverse();
         _animationController.reset();
       }
     }, builder: (context, uiState) {
-      print(uiState.rectsToHighlight);
       return CustomPaint(
           painter: CustomHighlightPainter(
             rects: uiState.rectsToHighlight ?? [],

@@ -20,14 +20,14 @@ class BookViewSet(viewsets.ModelViewSet):
     # search_fields = ['title', 'author', 'language']
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    queryset = Book.objects.all().prefetch_related("owner")
+    queryset = Book.objects.all().prefetch_related("user")
 
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             # add the owner
-            serializer.save(owner=request.user)
+            serializer.save(user=request.user)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
 
@@ -61,11 +61,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
         if username:
             # Filter books based on the provided username
-            books = self.queryset.filter(owner__username=username)
+            books = self.queryset.filter(user__username=username)
         else:
             # Default to filtering books based on the request user
             print(request.user.id)
-            books = self.queryset.filter(owner__id=request.user.id)
+            books = self.queryset.filter(user__id=request.user.id)
 
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
@@ -94,7 +94,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
         book = serializer.validated_data["book"]
 
         # Check if the owner of the book is the current user
-        if book.owner != request.user:
+        if book.user != request.user:
             return Response(
                 {
                     "detail": "You do not have permission to create a chapter for this book."

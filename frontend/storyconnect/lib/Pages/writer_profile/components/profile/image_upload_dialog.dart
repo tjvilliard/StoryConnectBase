@@ -3,15 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 
-class EditProfileImageDialog extends StatefulWidget {
-  const EditProfileImageDialog({
-    super.key,
-  });
-  @override
-  _ImageUploadDialogState createState() => _ImageUploadDialogState();
-}
-
-class _ImageUploadDialogState extends State<EditProfileImageDialog> {
+class EditProfileImageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(

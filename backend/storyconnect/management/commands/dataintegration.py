@@ -11,32 +11,33 @@ from books.models import *
 import csv
 from django.core.management.base import BaseCommand, CommandParser
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument("csv_file", type=str)
-    
+
     def handle(self, *args: Any, **options: Any):
         csv_file = options["csv_file"]
-        with open(csv_file, 'r') as file:
+        with open(csv_file, "r") as file:
             csv_data = csv.DictReader(file)
             for row in csv_data:
                 Book.objects.create(
-                    title = row[0],
-                    author = row[1],
-                    owner = row[2],
-                    language = row[3],
-                    target_audience = row[4],
-                    book_status = row[5],
-                    tags = row[6],
-                    cover = row[7],
-                    created = row[8],
-                    modified = row[9],
-                    synopsis = row[10],
-                    copyright = row[11],
-                    titlepage = row[12]
+                    title=row[0],
+                    author=row[1],
+                    user=row[2],
+                    language=row[3],
+                    target_audience=row[4],
+                    book_status=row[5],
+                    tags=row[6],
+                    cover=row[7],
+                    created=row[8],
+                    modified=row[9],
+                    synopsis=row[10],
+                    copyright=row[11],
+                    titlepage=row[12],
                 )
         print("okok!")
+
 
 # def integrate_books(csvfile):
 #     books = []
@@ -59,7 +60,7 @@ class Command(BaseCommand):
 #             titlepage = row[12]
 #         )
 #     print("ok")
-    # book_res = Book.objects.bulk_create(books)
+# book_res = Book.objects.bulk_create(books)
 
 
 # def integrate_chapters(all_chapter):
@@ -107,8 +108,8 @@ class Command(BaseCommand):
 #         #     name = "",
 #         #     description = ""
 #         # )
-#         # locations.append(loc)  
-    
+#         # locations.append(loc)
+
 #     chapter_res = Chapter.objects.bulk_create(chapters)
 #     # library_res = Library.objects.bulk_create(libraries)
 #     # scene_res = Scene.objects.bulk_create(scenes)
@@ -118,11 +119,11 @@ class Command(BaseCommand):
 # def read_csv(csvfile):
 
 #     # opening the CSV file
-#     with open(csvfile, mode ='r') as file:   
-            
+#     with open(csvfile, mode ='r') as file:
+
 #         # reading the CSV file
 #         csvf= csv.DictReader(file)
-    
+
 #         # # displaying the contents of the CSV file
 #         # for lines in csvf:
 #         #     print(lines)
