@@ -1,18 +1,17 @@
 from django.db import models
-from books import models as book_model
-from comment import models as comment_model
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 
-# Create your models here.
+from books import models as book_model
+from comment import models as comment_model
+
 class Book_Based_Rec(models.Model):
     book = models.ForeignKey(book_model.Book, on_delete=models.CASCADE)
-    recommendations = ArrayField(models.IntegerField(max_length=50), default=list(), blank=True, null=True)
+    recommendations = ArrayField(models.IntegerField(), blank=True, null=True, default=list)
 
 class User_Based_Rec(models.Model):
-    user = models.ForeignKey(User, null=True,blank=True,  on_delete=models.CASCADE)
-    recommendations = ArrayField(models.CharField(max_length=50), default=list(), blank=True, null=True)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recommendations = ArrayField(models.IntegerField(), blank=True, null=True, default=list)
 
 class Book_Rating(models.Model):
     book = models.ForeignKey(book_model.Book, on_delete=models.CASCADE)
