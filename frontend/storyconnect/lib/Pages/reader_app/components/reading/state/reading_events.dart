@@ -16,6 +16,26 @@ class SwitchChapterEvent extends ReadingEvent {
   });
 }
 
+class DecrementChapterEvent extends SwitchChapterEvent {
+  final int currentChapter;
+
+  DecrementChapterEvent({required this.currentChapter})
+      : super(
+            chapterToSwitchFrom: currentChapter,
+            chapterToSwitchTo: currentChapter - 1,
+            storeCommand: false);
+}
+
+class IncrementChapterEvent extends SwitchChapterEvent {
+  final int currentChapter;
+
+  IncrementChapterEvent({required this.currentChapter})
+      : super(
+            chapterToSwitchFrom: currentChapter,
+            chapterToSwitchTo: currentChapter + 1,
+            storeCommand: false);
+}
+
 class LoadReadingEvent extends ReadingEvent {
   final FeedbackBloc feedbackBloc;
 
