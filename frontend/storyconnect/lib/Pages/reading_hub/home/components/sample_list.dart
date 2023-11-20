@@ -20,8 +20,8 @@ class _sampleBookListState extends BookListState {
   Widget build(BuildContext context) {
     List<Book> books = sampleBooksData.sample();
 
-    return BlocBuilder<HorizontalScrollBehaviorBloc, HorizontalScrollStateImpl>(
-        builder: (BuildContext context, HorizontalScrollStateImpl state) {
+    return BlocBuilder<HorizontalScrollBehaviorBloc, HorizontalScrollState>(
+        builder: (BuildContext context, HorizontalScrollState state) {
       return ListView.builder(
           itemCount: books.length,
           controller: state.scrollController,

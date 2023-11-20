@@ -23,9 +23,7 @@ class _bookListWidgetState extends State<BookListWidget> {
   Widget build(BuildContext context) {
     return BlocProvider<HorizontalScrollBehaviorBloc>(
         create: (context) => HorizontalScrollBehaviorBloc(
-            HorizontalScrollStateImpl(false, true, ScrollController()),
-            animationDistance: 400,
-            animationDuration_m_sec: 350),
+            animationDistance: 400, animationDuration_m_sec: 350),
         child: Container(
           height: 220,
           decoration: BoxDecoration(color: Theme.of(context).canvasColor),

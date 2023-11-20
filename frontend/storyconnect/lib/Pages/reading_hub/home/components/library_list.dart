@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/components/book_items/big_book.dart';
-import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_behavior_pattern.dart';
 import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/list.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
