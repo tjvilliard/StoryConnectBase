@@ -4,6 +4,7 @@ import 'package:storyconnect/Pages/reading_hub/library/components/book_grid_widg
 import 'package:storyconnect/Pages/reading_hub/library/components/tabbed_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryView extends StatefulWidget {
@@ -39,12 +40,8 @@ class LibraryState extends State<LibraryView> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    style: Theme.of(context).textTheme.displaySmall,
-                    "Library",
-                  ),
+                Header(
+                  title: "Library",
                 ),
                 Expanded(child: BlocBuilder<LibraryBloc, LibraryStruct>(
                     builder: (BuildContext context, LibraryStruct libState) {
@@ -70,39 +67,7 @@ class LibraryState extends State<LibraryView> {
           ),
 
           /*
-          BlocBuilder<LibraryBloc, LibraryStruct>(
-            builder: (BuildContext context, LibraryStruct libState) {
-              List<ContentPanel> toReturn;
-              if (libState.loadingStruct.isLoading) {
-                toReturn = <ContentPanel>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
-                ];
-              } else {
-                toReturn = <ContentPanel>[
-                  SolidPanel(children: [
-                    BlankPanel(height: 25),
-                    PanelHeader("My Library"),
-                    BlankPanel(height: 25),
-                    TabbedPanel(
-                      tabs: [
-                        Tab(text: "Currently Reading"),
-                        Tab(text: "Completed"),
-                        Tab(text: "To Be Read")
-                      ],
-                      children: [
-                        BookGrid(
-                          books: [],
-                        ),
-                        Container(),
-                        Container(),
-                      ],
-                    ),
-                    DividerPanel(color: Theme.of(context).dividerColor),
-                  ], primary: Theme.of(context).canvasColor)
-                ];
-              }
+          
               return AnimatedSwitcher(
                   duration: Duration(milliseconds: 500),
                   child: SingleChildScrollView(

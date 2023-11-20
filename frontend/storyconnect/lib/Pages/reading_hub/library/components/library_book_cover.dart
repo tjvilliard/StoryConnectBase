@@ -4,10 +4,10 @@ import 'package:storyconnect/Models/models.dart';
 abstract class StatelessBookItem extends StatelessWidget {}
 
 ///
-class BookCoverWidget extends StatelessBookItem {
+class LibraryBookCoverWidget extends StatelessBookItem {
   final Book book;
 
-  BookCoverWidget({required this.book});
+  LibraryBookCoverWidget({required this.book});
 
   @override
   Widget build(BuildContext context) {

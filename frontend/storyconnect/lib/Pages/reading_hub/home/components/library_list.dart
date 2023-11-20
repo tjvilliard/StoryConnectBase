@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/book_items/big_book.dart';
+import 'package:storyconnect/Pages/reading_hub/home/components/big_book.dart';
 import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/list.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
@@ -24,8 +24,6 @@ class _libraryBookListState extends BookListState {
 
   @override
   Widget build(BuildContext context) {
-    print("Building library book list");
-
     return BlocBuilder<LibraryBloc, LibraryStruct>(
         builder: (context, LibraryStruct libraryState) {
       // If our library books are still loading, return loading indicator.

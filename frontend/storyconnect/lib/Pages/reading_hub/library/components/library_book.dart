@@ -22,6 +22,38 @@ class LibraryBookItem extends StatefulWidget {
       );
 }
 
+class _detailsButton extends StatelessWidget {
+  final int bookId;
+
+  _detailsButton({required this.bookId});
+
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle? _buttonStyle = ButtonStyle(
+        textStyle:
+            MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+        overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
+        backgroundColor:
+            MaterialStatePropertyAll(Theme.of(context).canvasColor),
+        shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+            side: BorderSide(width: 4.0),
+            borderRadius: BorderRadius.circular(10))));
+
+    return BlocBuilder<LibraryBloc, LibraryStruct>(
+      builder: (BuildContext context, LibraryStruct state) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: OutlinedButton(
+            style: _buttonStyle,
+            onPressed: () {},
+            child: Text("Details"),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _removeBookButton extends StatelessWidget {
   final int bookId;
 
@@ -36,7 +68,7 @@ class _removeBookButton extends StatelessWidget {
         backgroundColor:
             MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            side: BorderSide(width: 1.0),
+            side: BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
     return BlocBuilder<LibraryBloc, LibraryStruct>(
@@ -50,7 +82,7 @@ class _removeBookButton extends StatelessWidget {
                     .read<LibraryBloc>()
                     .add(RemoveBookEvent(bookId: this.bookId));
               },
-              child: Text("Remove from Library")),
+              child: Text("Remove")),
         );
       },
     );
@@ -70,13 +102,14 @@ class _libraryBookState extends State<LibraryBookItem> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle? _buttonStyle = ButtonStyle(
-        textStyle:
-            MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
+        textStyle: MaterialStatePropertyAll(
+          Theme.of(context).textTheme.bodySmall,
+        ),
         overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
         backgroundColor:
             MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            side: BorderSide(width: 1.0),
+            side: BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
     return Card(
@@ -90,17 +123,17 @@ class _libraryBookState extends State<LibraryBookItem> {
                 onExit: (_) => setState(() {
                       this.showButtons = false;
                     }),
-                cursor: SystemMouseCursors.click,
+                cursor: MouseCursor.defer,
                 child: Stack(
                   children: [
                     child,
                     this.showButtons
                         ? Positioned.fill(
                             child: Material(
-                              color: Theme.of(context).hoverColor,
+                              color: Colors.black38.withOpacity(.25),
                               child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      vertical: 32.0, horizontal: 16.0),
+                                      vertical: 32.0, horizontal: 32.0),
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
@@ -121,6 +154,7 @@ class _libraryBookState extends State<LibraryBookItem> {
                                               },
                                               child: Text("Start Reading")),
                                         ),
+                                        _detailsButton(bookId: bookId),
                                         _removeBookButton(bookId: bookId)
                                       ])),
                             ),

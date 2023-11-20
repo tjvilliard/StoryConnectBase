@@ -24,7 +24,6 @@ class _leftButtonState extends State<NavigateLeftButton> {
 
     return BlocBuilder<HorizontalScrollBehaviorBloc, HorizontalScrollState>(
       builder: (BuildContext context, HorizontalScrollState state) {
-        print("Building left button");
         return Visibility(
             visible: state.leftScroll,
             replacement: const SizedBox.shrink(),
@@ -41,9 +40,6 @@ class _leftButtonState extends State<NavigateLeftButton> {
                             BlocProvider.of<HorizontalScrollBehaviorBloc>(
                                     context)
                                 .add(ScrollLeftEvent());
-
-                            print("Left Scroll: ${state.leftScroll}");
-                            print("Right Scroll: ${state.leftScroll}");
                           },
                           child: const Icon(FontAwesomeIcons.arrowLeft))));
             }));
@@ -73,8 +69,6 @@ class _rightButtonState extends State<NavigateRightButton> {
 
     return BlocBuilder<HorizontalScrollBehaviorBloc, HorizontalScrollState>(
       builder: (BuildContext context, HorizontalScrollState state) {
-        print("Building right button.");
-
         return Visibility(
             visible: state.rightScroll,
             replacement: const SizedBox.shrink(),
@@ -91,9 +85,6 @@ class _rightButtonState extends State<NavigateRightButton> {
                             BlocProvider.of<HorizontalScrollBehaviorBloc>(
                                     context)
                                 .add(ScrollRightEvent());
-
-                            print("Left Scroll: ${state.leftScroll}");
-                            print("Right Scroll: ${state.rightScroll}");
                           },
                           child: const Icon(FontAwesomeIcons.arrowRight))));
             }));

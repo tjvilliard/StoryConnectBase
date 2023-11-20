@@ -32,21 +32,15 @@ class HorizontalScrollBehaviorBloc
     bool rightScroll = true;
 
     if (state.scrollController.position.atEdge) {
-      print("Controller is at edge.");
       if (start) {
-        print("At Left");
         leftScroll = false;
       } else {
-        print("At Right");
         rightScroll = false;
       }
     } else {
-      print("Entered else branch.");
       leftScroll = true;
       rightScroll = true;
     }
-
-    print("Scroll State R: ${rightScroll}, L: ${leftScroll}");
 
     return HorizontalScrollState(
       leftScroll: leftScroll,
@@ -61,8 +55,6 @@ class HorizontalScrollBehaviorBloc
         duration: Duration(milliseconds: this.animationDuration_m_sec),
         curve: Curves.easeIn);
 
-    print("state changed");
-
     emit(this._handleState());
   }
 
@@ -72,8 +64,6 @@ class HorizontalScrollBehaviorBloc
         this.state.scrollController.offset + this.animationDistance,
         duration: Duration(milliseconds: this.animationDuration_m_sec),
         curve: Curves.easeIn);
-
-    print("state changed");
 
     emit(this._handleState());
   }

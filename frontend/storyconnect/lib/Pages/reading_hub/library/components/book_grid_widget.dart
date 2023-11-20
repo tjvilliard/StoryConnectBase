@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_hub/components/book_items/library_book.dart';
-import 'package:storyconnect/Pages/reading_hub/components/book_items/book_cover.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/library_book.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/library_book_cover.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 
 class BookGridWidget extends StatelessWidget {
@@ -39,7 +39,7 @@ class BookGridWidget extends StatelessWidget {
                           .books
                           .map((book) => LibraryBookItem(
                               bookId: book.id,
-                              child: BookCoverWidget(book: book)))
+                              child: LibraryBookCoverWidget(book: book)))
                           .toList(),
                     ))));
       },
