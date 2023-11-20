@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:visual_editor/controller/controllers/editor-controller.dart';
 
@@ -60,8 +61,12 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// Completes all tasks related to loading a book into the reading UI.
   Future<void> loadEvent(ReadingLoadEvent event, ReadingUIEmitter emit) async {
-    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
-    event.chapterBloc.add(LoadEvent());
+    emit(state.copyWith(
+        loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
+
+    event.readingBloc.add(LoadReadingEvent(
+      event.feedbackBloc,
+    ));
 
     final title = await _getBookTitle(event.bookId);
 

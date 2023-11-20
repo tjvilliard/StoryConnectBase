@@ -13,6 +13,14 @@ class ReadingPageView extends StatefulWidget {
 }
 
 class _readingPageViewState extends State<ReadingPageView> {
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,23 +38,32 @@ class _readingPageViewState extends State<ReadingPageView> {
               toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
             } else {
               toReturn = Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.grey[200]!, width: 1),
-                  color: Colors.white,
-                ),
-                constraints:
-                    BoxConstraints(minHeight: ReadingUIBloc.pageHeight),
-              );
+                  margin: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                    border: Border.all(color: Colors.grey[200]!, width: 1),
+                    color: Colors.white,
+                  ),
+                  constraints:
+                      BoxConstraints(minHeight: ReadingUIBloc.pageHeight),
+                  child: VisualEditor(
+                    scrollController: context
+                        .read<ReadingUIBloc>()
+                        .state
+                        .textScrollController,
+                    controller:
+                        context.read<ReadingUIBloc>().state.editorController,
+                    focusNode: focusNode,
+                    config: state.config,
+                  ));
             }
             return AnimatedSwitcher(
                 duration: Duration(milliseconds: 500), child: toReturn);
