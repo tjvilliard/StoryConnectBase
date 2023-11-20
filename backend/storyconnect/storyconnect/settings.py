@@ -79,7 +79,7 @@ INSTALLED_APPS = [
     'core',
     'ai_features',
     'features',
-
+    'book_rec',
 ]
 
 # DEBUG_TOOLBAR_ENABLED = True

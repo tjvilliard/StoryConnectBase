@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 def user_logged_out_callback(sender, user, request, **kwargs):
     logger = getLogger('__name__')
     logger.info('signal received log out')
+    print("log out")
     all_user_books = book_models.Book.objects.filter(owner=user)
     for book in all_user_books:
         book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
