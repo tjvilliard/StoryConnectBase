@@ -27,10 +27,6 @@ class ToggleAnnotationBarEvent extends ReadingUIEvent {
   ToggleAnnotationBarEvent();
 }
 
-class ToggleToolbarEvent extends ReadingUIEvent {
-  ToggleToolbarEvent();
-}
-
 class SwitchChapterEvent extends ReadingUIEvent {
   final int chapterID;
   SwitchChapterEvent({required this.chapterID});

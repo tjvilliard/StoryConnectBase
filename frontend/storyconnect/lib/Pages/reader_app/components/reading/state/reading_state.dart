@@ -24,6 +24,7 @@ class ReadingState with _$ReadingState {
         chapters: {0: ""},
         loadingStruct: LoadingStruct.loading(true),
         config: EditorConfigM(
+            readOnly: true,
             customStyles: EditorStylesM(
                 paragraph: TextBlockStyleM(
                     TextStyle(color: Colors.black, fontSize: 16, height: 1.3),

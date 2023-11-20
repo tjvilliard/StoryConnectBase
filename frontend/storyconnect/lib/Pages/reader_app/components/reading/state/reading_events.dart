@@ -21,3 +21,8 @@ class LoadReadingEvent extends ReadingEvent {
 
   LoadReadingEvent(this.feedbackBloc);
 }
+
+class SetEditorControllerCallbackEvent extends ReadingEvent {
+  final EditorController? Function() callback;
+  SetEditorControllerCallbackEvent({required this.callback});
+}

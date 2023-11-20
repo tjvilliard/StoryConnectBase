@@ -24,22 +24,27 @@ class _readingHomeState extends State<ReadingHomeView> {
           width: MediaQuery.of(context).size.width * 0.65,
           height: MediaQuery.of(context).size.height,
           child: Column(children: [
-            Header(title: "Reading Home"),
+            Header(
+                alignment: WrapAlignment.end,
+                title: "Reading Home",
+                trailing: Container(
+                  width: 250,
+                  child: SearchBar(),
+                )),
             Expanded(
                 child: ListView.builder(
-              itemCount: 15,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return BookListWidget(bookList: LibraryBookList());
-                } else {
-                  if (((index) % 2) != 0) {
-                    return Divider();
-                  } else {
-                    return BookListWidget(bookList: SampleBookList());
-                  }
-                }
-              },
-            )),
+                    itemCount: 15,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return BookListWidget(bookList: LibraryBookList());
+                      } else {
+                        if (((index) % 2) != 0) {
+                          return Divider();
+                        } else {
+                          return BookListWidget(bookList: SampleBookList());
+                        }
+                      }
+                    })),
           ]),
         )));
   }

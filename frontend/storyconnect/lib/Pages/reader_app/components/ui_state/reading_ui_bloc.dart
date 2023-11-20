@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
+import 'package:visual_editor/controller/controllers/editor-controller.dart';
 
 part 'reading_ui_event.dart';
 part 'reading_ui_state.dart';
@@ -14,6 +16,9 @@ typedef ReadingUIEmitter = Emitter<ReadingUIState>;
 /// Transforms Events related to the book reading UI and transforms the
 /// state of the book reading UI Accordingly.
 class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
+  static double pageWidth = 800.0;
+  static double pageHeight = 1050.0;
+
   /// The current state of our reading resository, which contains all
   /// the data relevant to the reading UI.
   ReadingRepository _repository = ReadingRepository();
@@ -30,7 +35,6 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
         (event, emit) => this.toggleFeedbackBar(event, emit));
     on<ToggleAnnotationBarEvent>(
         (event, emit) => this.toggleAnnotationBar(event, emit));
-    on<ToggleToolbarEvent>((event, emit) => this.toggleToolbar(event, emit));
   }
 
   /// Gets the title of the book currently loaded by the reading UI.
@@ -85,10 +89,5 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
   /// Updates the toggled state of the Annotation Widget in the reading UI.
   void toggleAnnotationBar(ReadingUIEvent event, ReadingUIEmitter emit) {
     emit(state.copyWith(annotationBarShown: !state.annotationBarShown));
-  }
-
-  /// Updates the toggled state of the Toolbar Widget in the reading UI.
-  void toggleToolbar(ReadingUIEvent event, ReadingUIEmitter emit) {
-    emit(state.copyWith(toolbarShown: !state.toolbarShown));
   }
 }
