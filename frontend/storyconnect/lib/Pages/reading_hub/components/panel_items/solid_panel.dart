@@ -29,7 +29,7 @@ class SolidPanel extends ContentPanel {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minHeight: 250),
+        constraints: BoxConstraints(minHeight: 250, maxHeight: 300),
         decoration: BoxDecoration(color: this.primary),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -59,7 +59,7 @@ class BigBook extends StatelessBookItem {
                           // Title Text Widget
                           Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(top: 12.0, bottom: 0.0),
+                            padding: EdgeInsets.only(top: 12.0),
                             constraints: BoxConstraints(
                               maxHeight: 40.0,
                             ),

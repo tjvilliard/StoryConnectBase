@@ -7,16 +7,6 @@ import 'package:storyconnect/Repositories/library_repository.dart';
 part 'library_event.dart';
 part 'library_struct.dart';
 
-/// Different Status Types of a library book.
-enum LibraryBookStatus {
-  Reading("Reading"),
-  Completed("Completed"),
-  ToBeRead("To Be Read");
-
-  const LibraryBookStatus(this.description);
-  final String description;
-}
-
 typedef LibraryEmitter = Emitter<LibraryStruct>;
 
 class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
@@ -28,19 +18,19 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
           libraryBooks: [],
           loadingStruct: LoadingStruct(isLoading: false),
         )) {
-    on<GetLibraryEvent>((event, emit) => getLibrary(event, emit));
+    on<GetLibraryEvent>((event, emit) => fetchBooks(event, emit));
     on<RemoveBookEvent>((event, emit) => removeBook(event, emit));
     on<AddBookEvent>((event, emit) => addBook(event, emit));
   }
 
-  void getLibrary(GetLibraryEvent event, LibraryEmitter emit) async {
+  ///
+  void fetchBooks(GetLibraryEvent event, LibraryEmitter emit) async {
     emit(LibraryStruct(
       libraryBooks: state.libraryBooks,
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
 
     await this._repo.getLibraryBooks();
-    print("Getting Library Books in State.");
 
     List<Book> libBooks = this._repo.libraryBookMap.values.toList();
 
@@ -50,12 +40,14 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
     ));
   }
 
+  ///
   void removeBook(RemoveBookEvent event, LibraryEmitter emit) async {
     emit(LibraryStruct(
       libraryBooks: state.libraryBooks,
       loadingStruct: LoadingStruct.loading(true),
     ));
 
+    ///
     MapEntry<Library, Book> entryToRemove = this
         ._repo
         .libraryBookMap
