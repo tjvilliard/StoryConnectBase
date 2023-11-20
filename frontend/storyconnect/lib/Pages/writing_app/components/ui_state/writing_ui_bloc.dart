@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:storyconnect/Models/loading_struct.dart';
@@ -149,13 +150,12 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   void updateBook(UpdateBookEvent event, WritingUIEmiter emit) async {
-    print(state.bookEditorState!.book);
+    final result = await repository.updateBook(bookId: state.bookId, book: state.bookEditorState!.book);
 
-    // final result = await repository.updateBook(bookId: state.bookId, book: state.bookEditorState!.book);
-
-    // if (result != null) {
-    //   emit(state.copyWith(book: state.bookEditorState!.book));
-    // }
+    if (result != null) {
+      emit(state.copyWith(book: result));
+      add(ClearUpdateBookEvent());
+    }
   }
 
   void updateBookLanguage(UpdateBookLanguageEvent event, WritingUIEmiter emit) {
@@ -188,9 +188,24 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
             state.bookEditorState!.copyWith(book: state.bookEditorState!.book.copyWith(copyright: event.copyright))));
   }
 
-  Future<void> selectUpdatedBookCover(SelectUpdatedBookCoverEvent event, WritingUIEmiter emit) async {}
+  Future<void> selectUpdatedBookCover(SelectUpdatedBookCoverEvent event, WritingUIEmiter emit) async {
+    FilePicker platformFilePicker = FilePicker.platform;
+    FilePickerResult? result = await platformFilePicker.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    // convert the image to base 64
+    if (result != null) {
+      // get file from bytes since web doesn't support path
+
+      emit(state.copyWith(
+          bookEditorState: state.bookEditorState!
+              .copyWith(imageTitle: result.files.single.name, imageBytes: result.files.single.bytes)));
+    }
+  }
 
   clearUpdateBook(ClearUpdateBookEvent event, WritingUIEmiter emit) {
-    emit(state.copyWith(bookEditorState: BookEditorState.initial(state.bookEditorState!.book)));
+    emit(state.copyWith(bookEditorState: BookEditorState.initial(state.book!)));
   }
 }

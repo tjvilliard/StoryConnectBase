@@ -38,7 +38,7 @@ class WritingApiProvider {
   Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
     try {
       final url = UrlConstants.books(bookId: bookId);
-      final result = await http.put(
+      final result = await http.patch(
         url,
         headers: await buildHeaders(),
         body: jsonEncode(serializer.toJson()),

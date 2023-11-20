@@ -11,6 +11,6 @@ class SaveBookButton extends StatelessWidget {
         child: Text(
           text,
         ),
-        onPressed: () => onPressed);
+        onPressed: onPressed);
   }
 }

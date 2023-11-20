@@ -18,45 +18,35 @@ part 'writing_events.dart';
 
 typedef WritingEmitter = Emitter<WritingState>;
 
-class WritingBloc extends Bloc<WritingEvent, WritingState>
-    with ReplayBlocMixin<WritingEvent, WritingState> {
+class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<WritingEvent, WritingState> {
   static Lock writingLock = Lock();
   EditorController? Function()? getEditorControllerCallback;
   Timer? debounceTimer;
   StreamSubscription? editorSubscription;
 
   late final BookProviderRepository _repo;
-  WritingBloc(BookProviderRepository repository)
-      : super(WritingState.initial()) {
+  WritingBloc(BookProviderRepository repository) : super(WritingState.initial()) {
     _repo = repository;
     on<AddChapterEvent>(
       (event, emit) => addChapter(event, emit),
       transformer: sequential(),
     );
-    on<RemoveChapterEvent>((event, emit) => removeChapter(event, emit),
-        transformer: sequential());
-    on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit),
-        transformer: sequential());
-    on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit),
-        transformer: sequential());
-    on<LoadWritingEvent>((event, emit) => loadWritingEvent(event, emit),
-        transformer: sequential());
+    on<RemoveChapterEvent>((event, emit) => removeChapter(event, emit), transformer: sequential());
+    on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit), transformer: sequential());
+    on<UpdateChapterEvent>((event, emit) => updateChapter(event, emit), transformer: sequential());
+    on<LoadWritingEvent>((event, emit) => loadWritingEvent(event, emit), transformer: sequential());
     on<WritingUndoCommandEvent>((event, emit) => undoCommand(event, emit));
     on<WritingRedoCommandEvent>((event, emit) => redoCommand(event, emit));
 
-    on<_UpdateChapterHelperEvent>(
-        (event, emit) => _updateChapterHelper(event.event, emit),
-        transformer: sequential());
-    on<SetEditorControllerCallbackEvent>(
-        (event, emit) => setEditorControllerCallback(event, emit),
+    on<_UpdateChapterHelperEvent>((event, emit) => _updateChapterHelper(event.event, emit), transformer: sequential());
+    on<SetEditorControllerCallbackEvent>((event, emit) => setEditorControllerCallback(event, emit),
         transformer: sequential());
   }
 
   int get currentChapterId => state.chapterNumToID[state.currentIndex]!;
 
   Future<void> addChapter(AddChapterEvent event, WritingEmitter emit) async {
-    emit.call(state.copyWith(
-        loadingStruct: LoadingStruct.message("Creating Chapter")));
+    emit.call(state.copyWith(loadingStruct: LoadingStruct.message("Creating Chapter")));
 
     Map<int, String> chapters = Map.from(state.chapters);
 
@@ -65,14 +55,11 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     final newChapterNum = sortedChapterNum.first + 1;
     final result = await _repo.createChapter(newChapterNum);
     if (result != null) {
-      final Map<int, int> chapterNumToID =
-          Map<int, int>.from(state.chapterNumToID);
+      final Map<int, int> chapterNumToID = Map<int, int>.from(state.chapterNumToID);
       chapterNumToID[newChapterNum] = result.id;
       chapters[newChapterNum] = "";
       emit.call(state.copyWith(
-          chapterNumToID: chapterNumToID,
-          chapters: chapters,
-          loadingStruct: LoadingStruct.loading(false)));
+          chapterNumToID: chapterNumToID, chapters: chapters, loadingStruct: LoadingStruct.loading(false)));
     } else {
       emit.call(state.copyWith(loadingStruct: LoadingStruct.loading(false)));
     }
@@ -82,8 +69,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     Map<int, String> chapters = Map.from(state.chapters);
     chapters.remove(event.chapterNum);
     emit(
-      state.copyWith(
-          chapters: chapters, loadingStruct: LoadingStruct.loading(false)),
+      state.copyWith(chapters: chapters, loadingStruct: LoadingStruct.loading(false)),
     );
   }
 
@@ -101,8 +87,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
         doc = DeltaDocM.fromJson(decodedJson);
         print("converted json to new format");
       } catch (e) {
-        print(
-            "Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        print("Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
         doc = DeltaDocM();
       }
     }
@@ -123,9 +108,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
       editorSubscription = editor.changes$.listen((docEvent) async {
         await writingLock.synchronized(() {
           add(UpdateChapterEvent(
-              chapterNum: event.chapterToSwitchTo,
-              text: jsonEncode(docEvent.docDelta.toJson()),
-              storeCommand: false));
+              chapterNum: event.chapterToSwitchTo, text: jsonEncode(docEvent.docDelta.toJson()), storeCommand: false));
         });
       });
     }
@@ -140,8 +123,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     });
   }
 
-  void _updateChapterHelper(
-      UpdateChapterEvent event, WritingEmitter emit) async {
+  void _updateChapterHelper(UpdateChapterEvent event, WritingEmitter emit) async {
     Map<int, String> chapters = Map.from(state.chapters);
     chapters[event.chapterNum] = event.text;
 
@@ -171,15 +153,13 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
       chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
     }
-    return _ParsedChapterResult(
-        chapters: parsedChapters, chapterNumToID: chapterNumToID);
+    return _ParsedChapterResult(chapters: parsedChapters, chapterNumToID: chapterNumToID);
   }
 
   void loadWritingEvent(LoadWritingEvent event, WritingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
     final unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
-    print("we should only be calling this once");
     final editor = getEditorControllerCallback?.call();
     if (editor != null) {
       await editorSubscription?.cancel();
@@ -188,10 +168,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
       editor.update(doc.delta);
       editorSubscription = editor.changes$.listen((event) async {
         await writingLock.synchronized(() {
-          add(UpdateChapterEvent(
-              chapterNum: 0,
-              text: jsonEncode(event.docDelta.toJson()),
-              storeCommand: false));
+          add(UpdateChapterEvent(chapterNum: 0, text: jsonEncode(event.docDelta.toJson()), storeCommand: false));
         });
       });
 
@@ -216,8 +193,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState>
     redo();
   }
 
-  setEditorControllerCallback(
-      SetEditorControllerCallbackEvent event, Emitter<WritingState> emit) {
+  setEditorControllerCallback(SetEditorControllerCallbackEvent event, Emitter<WritingState> emit) {
     getEditorControllerCallback = event.callback;
   }
 }

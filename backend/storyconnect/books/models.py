@@ -35,7 +35,7 @@ class Book(models.Model):
     STATUS = [(1, "Complete"), (2, "In progress")]
 
     title = models.CharField(max_length=100)
-    owner = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     language = models.CharField(max_length=20, null=True, blank=True)
     target_audience = models.IntegerField(
         choices=TARGET_AUDIENCES, null=True, blank=True
@@ -54,7 +54,7 @@ class Book(models.Model):
     def author_name(self):
         # prefetch the profile to avoid extra queries
         return (
-            Profile.objects.filter(user=self.owner)
+            Profile.objects.filter(user=self.user)
             .prefetch_related("user")
             .first()
             .display_name
