@@ -13,19 +13,6 @@ class ReadingHomeView extends StatefulWidget {
 }
 
 class _readingHomeState extends State<ReadingHomeView> {
-  bool initialLoad = true;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (initialLoad) {
-        initialLoad = false;
-      }
-    });
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

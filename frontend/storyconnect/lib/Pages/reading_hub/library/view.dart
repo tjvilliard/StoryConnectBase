@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/tabbed_item.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/book_grid_widget.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/tabbed_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryView extends StatefulWidget {
   const LibraryView({Key? key}) : super(key: key);
@@ -32,8 +32,45 @@ class LibraryState extends State<LibraryView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(
-          child: BlocBuilder<LibraryBloc, LibraryStruct>(
+        body: Center(
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width * 0.65,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    style: Theme.of(context).textTheme.displaySmall,
+                    "Library",
+                  ),
+                ),
+                Expanded(child: BlocBuilder<LibraryBloc, LibraryStruct>(
+                    builder: (BuildContext context, LibraryStruct libState) {
+                  if (libState.loadingStruct.isLoading) {
+                    return LoadingWidget(loadingStruct: libState.loadingStruct);
+                  } else {
+                    return TabbedBookDisplayWidget(
+                      tabs: [
+                        Tab(text: "Currently Reading"),
+                        Tab(text: "Completed"),
+                        Tab(text: "To Be Read")
+                      ],
+                      children: [
+                        BookGridWidget(books: libState.libraryBooks),
+                        BookGridWidget(books: []),
+                        BookGridWidget(books: []),
+                      ],
+                    );
+                  }
+                }))
+              ],
+            ),
+          ),
+
+          /*
+          BlocBuilder<LibraryBloc, LibraryStruct>(
             builder: (BuildContext context, LibraryStruct libState) {
               List<ContentPanel> toReturn;
               if (libState.loadingStruct.isLoading) {
@@ -56,7 +93,7 @@ class LibraryState extends State<LibraryView> {
                       ],
                       children: [
                         BookGrid(
-                          books: libState.libraryBooks,
+                          books: [],
                         ),
                         Container(),
                         Container(),
@@ -74,7 +111,7 @@ class LibraryState extends State<LibraryView> {
                     child: Column(children: toReturn),
                   ));
             },
-          ),
-        )));
+          ), */
+        ));
   }
 }
