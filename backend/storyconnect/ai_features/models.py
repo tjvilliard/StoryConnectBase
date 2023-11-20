@@ -37,6 +37,8 @@ class StatementSheet(models.Model):
             self.s_tree = StatementSheet._validate(self.s_tree)
         except etree.XMLSyntaxError as e:
             logger.info(e)
+            with(open("ai_features/test_files/invalid_sheet.txt", "w")) as f:
+                f.write(self.document)
             raise StatementSheetInvalidDocumentError()
         # self.logger = logging.getLogger(__name__)
 
@@ -46,6 +48,8 @@ class StatementSheet(models.Model):
             etree.SubElement(tree, "Characters")
         if tree.find("Locations") is None:
             etree.SubElement(tree, "Locations")
+
+        # TODO: make valid with open ai 
         
         return tree
 

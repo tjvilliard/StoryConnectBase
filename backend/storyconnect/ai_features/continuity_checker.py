@@ -6,6 +6,7 @@ from .exceptions import ContinuityCheckerNullTextError
 import lxml.etree as etree
 import re
 from openai import OpenAI
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 class ContinuityChecker:
@@ -49,14 +50,14 @@ class ContinuityChecker:
             raise ContinuityCheckerNullTextError()
 
         prompt = ContinuityChecker._statement_prompt(text)
-        self.last_response = openai.Completion.create(
+        self.last_response = client.completions.create(
             model=self.BASE_MODEL,
             prompt=prompt,
-            max_tokens=self.MAX_TOKENS,
+            # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE,
         )
 
-        body = self.last_response.choices[0]["text"]
+        body = self.last_response.choices[0].text
 
         formatted_text = "<Statements>\n" + body.strip() + "\n</Statements>"
         return formatted_text
@@ -68,13 +69,13 @@ class ContinuityChecker:
         Example: Given "John Doe is tall." and "John Doe is running." remove "John Doe is running."\n"""
         filter_prompt += statementsheet
 
-        self.last_response = openai.Completion.create(
+        self.last_response = client.completions.create(
             model=self.BASE_MODEL,
             prompt=filter_prompt,
-            max_tokens=self.MAX_TOKENS,
+            # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE,
         )
-        return self.last_response.choices[0]["text"].strip()
+        return self.last_response.choices[0].text.strip()
 
     def compare_statementsheets(self, s_old, s_new):
         s_old = ContinuityChecker._strip_xml(s_old)
@@ -89,14 +90,14 @@ class ContinuityChecker:
         comp_instructions_list = "List any contradictions between the descriptions in the old text versus the new. If an entity is not mentioned in the new text, ignore it. If no contradicions exist, say 'NONE'."
         prompt = comp_input + comp_instructions_list
 
-        self.last_response = openai.Completion.create(
+        self.last_response = client.completions.create(
             model=self.BASE_MODEL,
             prompt=prompt,
-            max_tokens=self.MAX_TOKENS,
+            # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE * 2,
         )
 
-        response = self.last_response.choices[0]["text"].strip()
+        response = self.last_response.choices[0].text.strip()
         pattern = re.compile(r"(\d+\. )")
         return re.sub(pattern, "", response)
 
@@ -149,6 +150,8 @@ class ContinuityCheckerChat:
         )
 
         body = self.last_response.choices[0].message.content
+        with open("ai_features/test_files/test_prints.txt", "w") as f:
+            f.write(str(self.last_response))
 
         formatted_text = "<Statements>\n" + body.strip() + "\n</Statements>"
         return formatted_text
