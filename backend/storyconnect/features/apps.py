@@ -6,4 +6,4 @@ class FeaturesConfig(AppConfig):
     name = 'features'
 
     def ready(self):
-        import features.signal
+        import features.cron

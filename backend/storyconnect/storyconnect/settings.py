@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'django_extensions',
+    'django_crontab',
     'rest_framework',
     'rest_framework_json_api',
     'rest_framework.authtoken',
@@ -92,6 +93,9 @@ INSTALLED_APPS = [
 #     'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 # }
 
+CRONJOBS = [
+    ('59 23 1,8,15,22,30 * 6', 'features.cron.ct_cron_job')
+]
 
 INTERNAL_IPS = [
     '127.0.0.1'
