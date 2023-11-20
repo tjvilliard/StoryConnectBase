@@ -95,6 +95,15 @@ class BookSettings extends StatelessWidget {
           ],
         ),
       ),
+      Positioned(
+          top: 10,
+          right: 20,
+          child: IconButton.filledTonal(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.read<WritingUIBloc>().add(ClearUpdateBookEvent());
+              },
+              icon: Icon(FontAwesomeIcons.x)))
     ]));
   }
 }
