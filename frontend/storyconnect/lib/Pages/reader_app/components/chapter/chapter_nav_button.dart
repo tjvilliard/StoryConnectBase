@@ -30,8 +30,6 @@ class ChapterNavButton extends StatelessWidget {
                 context.read<ChapterBloc>().add(SwitchChapter(
                     chapterToSwitchTo: index,
                     chapterToSwitchFrom: chapterState.currentChapterIndex));
-                context.read<FeedbackBloc>().add(LoadChapterFeedbackEvent(
-                    chapterBloc: context.read<ChapterBloc>()));
               },
               child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
