@@ -6,11 +6,9 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class BookApiProvider {
   Future<List<Chapter>> getChapters(int bookId) async {
-    final result = await http.get(UrlConstants.getChapters(bookId),
-        headers: await buildHeaders());
+    final result = await http.get(UrlConstants.getChapters(bookId), headers: await buildHeaders());
 
-    final undecodedChapterList =
-        jsonDecode(utf8.decode(result.bodyBytes)) as List;
+    final undecodedChapterList = jsonDecode(utf8.decode(result.bodyBytes)) as List;
     List<Chapter> results = [];
     for (var undecodedChapter in undecodedChapterList) {
       results.add(Chapter.fromJson(undecodedChapter));
@@ -21,11 +19,11 @@ class BookApiProvider {
   Future<Chapter?> createChapter(int bookId, int number) async {
     try {
       final ChapterUpload toUpload = ChapterUpload(
-          number: number,
-          chapterContent: "",
-          book: bookId,
-          chapterTitle: "$number");
-      final url = UrlConstants.createChapter(bookId);
+        number: number,
+        chapterContent: "",
+        book: bookId,
+      );
+      final url = UrlConstants.chapters();
 
       final result = await http.post(
         url,
@@ -39,8 +37,8 @@ class BookApiProvider {
     }
   }
 
-  Future<Chapter?> updateChapter(int bookId, int chapterId, int number,
-      String content, String rawContent) async {
+  Future<Chapter?> updateChapter(
+      int bookId, int chapterId, int number, String content, String rawContent, String? title) async {
     try {
       Chapter toUpload = Chapter(
           id: chapterId,
@@ -48,8 +46,8 @@ class BookApiProvider {
           chapterContent: content,
           rawContent: rawContent,
           book: bookId,
-          chapterTitle: "$number");
-      final url = UrlConstants.updateChapter(chapterId);
+          chapterTitle: title ?? "$number");
+      final url = UrlConstants.chapters(chapterId: chapterId);
 
       final result = await http.patch(
         url,
@@ -61,6 +59,41 @@ class BookApiProvider {
       print(e);
       return null;
     }
+  }
+
+  Future<bool> updateChapterTitle(
+      int bookId, int chapterId, int number, String content, String rawContent, String? title) async {
+    try {
+      Chapter toUpload = Chapter(
+          id: chapterId,
+          number: number,
+          chapterContent: content,
+          rawContent: rawContent,
+          book: bookId,
+          chapterTitle: title ?? "$number");
+      final url = UrlConstants.chapters(chapterId: chapterId);
+
+      final result = await http.patch(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(toUpload.toJson()),
+      );
+      return result.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> deleteChapter(int chapterId) async {
+    try {
+      final url = UrlConstants.chapters(chapterId: chapterId);
+      await http.delete(url, headers: await buildHeaders());
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 }
 
@@ -82,10 +115,24 @@ class BookProviderRepository {
       {required int chapterId,
       required int number,
       required String content,
-      required String rawContent}) {
+      required String rawContent,
+      String? title}) {
     if (number == -1) {
       print("number is -1");
     }
-    return _api.updateChapter(bookId, chapterId, number, content, rawContent);
+    return _api.updateChapter(bookId, chapterId, number, content, rawContent, title);
+  }
+
+  Future<bool> updateChapterTitle(
+      {required int chapterId,
+      required int number,
+      required String content,
+      required String rawContent,
+      String? title}) {
+    return _api.updateChapterTitle(bookId, chapterId, number, content, rawContent, title);
+  }
+
+  Future<bool> deleteChapter(int chapterId) {
+    return _api.deleteChapter(chapterId);
   }
 }

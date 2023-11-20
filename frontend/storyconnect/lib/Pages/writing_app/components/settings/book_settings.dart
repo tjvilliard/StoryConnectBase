@@ -50,9 +50,8 @@ class BookSettings extends StatelessWidget {
                         title: state.bookEditorState!.book.title,
                         noImageSelectedText: "Upload a new cover image (optional)",
                         synopsis: state.bookEditorState!.book.synopsis,
-                        copyRight: copyrightOptionFromInt(state.bookEditorState!.book.copyright ?? 0),
-                        language: languageConstantFromString(
-                            state.bookEditorState!.book.language ?? LanguageConstant.english.label),
+                        copyRight: copyrightOptionFromInt(state.bookEditorState!.book.copyright),
+                        language: languageConstantFromString(state.bookEditorState!.book.language),
                       ),
                       callbacks: BookFormFieldCallbacks(
                         onTitleChanged: (title) =>

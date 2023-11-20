@@ -91,7 +91,7 @@ class Library(models.Model):
 class Chapter(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter_number = models.IntegerField(default=0)
-    chapter_title = models.CharField(max_length=100, blank=True)
+    chapter_title = models.CharField(max_length=100, blank=True, null=True)
     content = models.TextField(blank=True)
     raw_content = models.TextField(blank=True)
 

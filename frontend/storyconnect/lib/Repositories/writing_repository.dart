@@ -164,12 +164,12 @@ class WritingRepository {
   Future<Book?> updateBook({required Book book, required int bookId}) async {
     // build serializer
     final serializer = BookFormSerializer(
-      title: book.title,
-      language: book.language,
-      targetAudience: book.targetAudience,
-      synopsis: book.synopsis,
-      cover: book.cover,
-    );
+        title: book.title,
+        language: book.language,
+        targetAudience: book.targetAudience,
+        synopsis: book.synopsis,
+        cover: book.cover,
+        copyright: book.copyright);
 
     return _api.updateBook(serializer: serializer, bookId: bookId);
   }

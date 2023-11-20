@@ -5,6 +5,7 @@ import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapte
 import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_nav_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/side_popup_header.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 class ChapterNavigation extends StatefulWidget {
   const ChapterNavigation({super.key});
@@ -46,7 +47,19 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                                           if (index == writingState.chapters.length) {
                                             return ChapterCreateButton();
                                           }
-                                          return ChapterNavigationButton(index: index);
+                                          Uuid uuid = Uuid();
+                                          String keyString;
+                                          if (writingState.chapterNumToID.containsKey(index)) {
+                                            keyString = writingState.chapterNumToID[index].toString();
+                                          } else {
+                                            keyString = uuid.v4();
+                                          }
+
+                                          return ChapterNavigationButton(
+                                            key: Key(keyString),
+                                            index: index,
+                                            numOfChapters: writingState.chapters.length,
+                                          );
                                         }))
                               ],
                             ))

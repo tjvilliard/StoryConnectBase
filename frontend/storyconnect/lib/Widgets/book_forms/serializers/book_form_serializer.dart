@@ -9,10 +9,10 @@ part 'book_form_serializer.g.dart';
 class BookFormSerializer with _$BookFormSerializer {
   const factory BookFormSerializer({
     required String title,
-    required String? language,
-    @JsonKey(name: 'target_audience') int? targetAudience,
+    required String language,
+    @JsonKey(name: 'target_audience') required int targetAudience,
     String? synopsis,
-    int? copyright,
+    required int copyright,
     String? cover,
   }) = _BookFormSerializer;
   const BookFormSerializer._();
@@ -22,10 +22,10 @@ class BookFormSerializer with _$BookFormSerializer {
   factory BookFormSerializer.initial() {
     return BookFormSerializer(
         title: "",
-        // author: "",
         language: LanguageConstant.english.label,
         synopsis: "",
         cover: "",
+        targetAudience: 0,
         copyright: CopyrightOption.allRightsReserved.index);
   }
 
@@ -36,19 +36,12 @@ class BookFormSerializer with _$BookFormSerializer {
     // if (author.isEmpty) {
     //   return false;
     // }
-    if (language == null) {
-      return false;
-    }
-    if (targetAudience == null) {
-      return false;
-    }
+
     // Synopsis can be an empty String, but it shouldn't be null.
     if (synopsis == null) {
       return false;
     }
-    if (copyright == null) {
-      return false;
-    }
+
     return true;
   }
 }
