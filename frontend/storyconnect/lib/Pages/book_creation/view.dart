@@ -1,24 +1,26 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/book_creation/components/book_creation_form_fields.dart';
-import 'package:storyconnect/Pages/book_creation/components/save_book_button.dart';
+
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
+import 'package:storyconnect/Widgets/book_forms/book_form_fields.dart';
+import 'package:storyconnect/Widgets/book_forms/save_book_button.dart';
 import 'package:storyconnect/Widgets/custom_scaffold.dart';
 import 'package:storyconnect/Widgets/header.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingCreationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BookCreateBloc, BookCreateState>(
+    return BlocConsumer<BookCreateBloc, BookCreateState>(
         listener: (context, state) {
           if (state.createdBookId != null) {
             Beamer.of(context).beamToReplacementNamed(PageUrls.book(state.createdBookId!));
           }
         },
-        child: CustomScaffold(
+        builder: (context, state) => CustomScaffold(
             appBar: AppBar(),
             navigateBackFunction: () {
               final beamed = Beamer.of(context).beamBack();
@@ -47,9 +49,50 @@ class WritingCreationView extends StatelessWidget {
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [BookCreationFormFields()],
+                                  children: [
+                                    BookFormFields(
+                                      selectedImageTitle: state.imageTitle,
+                                      callbacks: BookFormFieldCallbacks(
+                                        onCopyRightChanged: (option) {
+                                          context
+                                              .read<BookCreateBloc>()
+                                              .add(CopyrightChangedEvent(copyrightOption: option));
+                                        },
+                                        onLanguageChanged: (language) {
+                                          context
+                                              .read<BookCreateBloc>()
+                                              .add(LanguageChangedEvent(language: language.label));
+                                        },
+                                        onTargetAudienceChanged: (audience) {
+                                          context
+                                              .read<BookCreateBloc>()
+                                              .add(TargetAudienceChangedEvent(targetAudience: audience));
+                                        },
+                                        onTitleChanged: (title) {
+                                          context.read<BookCreateBloc>().add(TitleChangedEvent(title: title));
+                                        },
+                                        onSynopsisChanged: (synopsis) {
+                                          context.read<BookCreateBloc>().add(SynopsisChangedEvent(Synopsis: synopsis));
+                                        },
+                                        onImageChanged: () {
+                                          context.read<BookCreateBloc>().add(UploadImageEvent());
+                                        },
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Row(mainAxisAlignment: MainAxisAlignment.center, children: [SaveBookButton()])
+                                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                  if (state.loadingStruct.isLoading) LoadingWidget(loadingStruct: state.loadingStruct),
+                                  if (state.loadingStruct.message != null && state.loadingStruct.isLoading == false)
+                                    Padding(padding: EdgeInsets.all(10), child: Text(state.loadingStruct.message!)),
+                                  if (state.loadingStruct.isLoading == false)
+                                    SaveBookButton(
+                                      text: "Create Book",
+                                      onPressed: () {
+                                        context.read<BookCreateBloc>().add(SaveBookEvent());
+                                      },
+                                    )
+                                ])
                               ],
                             )))),
               ],

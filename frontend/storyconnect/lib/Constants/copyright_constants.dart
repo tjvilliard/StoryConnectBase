@@ -6,3 +6,16 @@ enum CopyrightOption {
   const CopyrightOption(this.description);
   final String description;
 }
+
+CopyrightOption? copyrightOptionFromInt(int index) {
+  switch (index) {
+    case 0:
+      return CopyrightOption.allRightsReserved;
+    case 1:
+      return CopyrightOption.publicDomain;
+    case 2:
+      return CopyrightOption.creativeCommons;
+    default:
+      return null;
+  }
+}

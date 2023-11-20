@@ -2,27 +2,25 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/language_constants.dart';
 
-part 'book_creation_serializer.freezed.dart';
-part 'book_creation_serializer.g.dart';
+part 'book_form_serializer.freezed.dart';
+part 'book_form_serializer.g.dart';
 
 @freezed
-class BookCreationSerializer with _$BookCreationSerializer {
-  const factory BookCreationSerializer({
+class BookFormSerializer with _$BookFormSerializer {
+  const factory BookFormSerializer({
     required String title,
-    // required String author,
     required String? language,
     @JsonKey(name: 'target_audience') int? targetAudience,
     String? synopsis,
     int? copyright,
     String? cover,
-  }) = _BookCreationSerializer;
-  const BookCreationSerializer._();
-  factory BookCreationSerializer.fromJson(Map<String, dynamic> json) =>
-      _$BookCreationSerializerFromJson(json);
+  }) = _BookFormSerializer;
+  const BookFormSerializer._();
+  factory BookFormSerializer.fromJson(Map<String, dynamic> json) => _$BookFormSerializerFromJson(json);
 
   // initial constructor
-  factory BookCreationSerializer.initial() {
-    return BookCreationSerializer(
+  factory BookFormSerializer.initial() {
+    return BookFormSerializer(
         title: "",
         // author: "",
         language: LanguageConstant.english.label,
