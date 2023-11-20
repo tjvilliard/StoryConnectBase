@@ -9,7 +9,7 @@ import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
-import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
+import 'package:storyconnect/Widgets/book_forms/serializers/book_form_serializer.dart';
 
 part 'book_create_bloc.freezed.dart';
 part 'book_create_state.dart';
@@ -21,29 +21,23 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
   final WritingRepository repository;
   BookCreateBloc(this.repository) : super(BookCreateState.initial()) {
     on<TitleChangedEvent>((event, emit) {
-      emit(state.copyWith(
-          serializer: state.serializer.copyWith(title: event.title)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(title: event.title)));
     });
 
     on<LanguageChangedEvent>((event, emit) {
-      emit(state.copyWith(
-          serializer: state.serializer.copyWith(language: event.language)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(language: event.language)));
     });
 
     on<TargetAudienceChangedEvent>((event, emit) {
-      emit(state.copyWith(
-          serializer:
-              state.serializer.copyWith(targetAudience: event.targetAudience)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(targetAudience: event.targetAudience)));
     });
 
     on<CopyrightChangedEvent>((event, emit) {
-      emit(state.copyWith(
-          serializer: state.serializer.copyWith(copyright: event.copyright)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(copyright: event.copyright)));
     });
 
     on<SynopsisChangedEvent>((event, emit) {
-      emit(state.copyWith(
-          serializer: state.serializer.copyWith(synopsis: event.Synopsis)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(synopsis: event.Synopsis)));
     });
 
     on<SaveBookEvent>((event, emit) => saveBook(event, emit));
@@ -51,14 +45,11 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
 
     on<ResetEvent>((event, emit) {
       emit(state.copyWith(
-          createdBookId: null,
-          serializer: BookCreationSerializer.initial(),
-          loadingStruct: LoadingStruct.loading(false)));
+          createdBookId: null, serializer: BookFormSerializer.initial(), loadingStruct: LoadingStruct.loading(false)));
     });
   }
 
-  Future<void> uploadImage(
-      UploadImageEvent event, BookCreateEmitter emit) async {
+  Future<void> uploadImage(UploadImageEvent event, BookCreateEmitter emit) async {
     FilePicker platformFilePicker = FilePicker.platform;
     FilePickerResult? result = await platformFilePicker.pickFiles(
       type: FileType.image,
@@ -69,9 +60,7 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
     if (result != null) {
       // get file from bytes since web doesn't support path
 
-      emit(state.copyWith(
-          imageTitle: result.files.single.name,
-          imageFile: result.files.single.bytes));
+      emit(state.copyWith(imageTitle: result.files.single.name, imageFile: result.files.single.bytes));
     }
   }
 
@@ -85,8 +74,7 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
       throw Exception("User is not logged in.");
     }
 
-    final relativeUrl =
-        "images/${user.uid}/${DateTime.now().toIso8601String()}.png";
+    final relativeUrl = "images/${user.uid}/${DateTime.now().toIso8601String()}.png";
 
     Reference ref = storage.ref().child(relativeUrl);
     // upload the file as public
@@ -103,29 +91,22 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
 
     // if verify fails, add a message to the loading struct and return
     if (!verified) {
-      emit(state.copyWith(
-          loadingStruct: LoadingStruct.errorMessage(
-              "Please fill out all fields before saving.")));
+      emit(state.copyWith(loadingStruct: LoadingStruct.errorMessage("Please fill out all fields before saving.")));
       return;
     }
 
     // if the image is not null, upload it
     if (state.imageFile != null) {
-      emit(state.copyWith(
-          serializer: state.serializer
-              .copyWith(cover: await _uploadImage(state.imageFile!))));
+      emit(state.copyWith(serializer: state.serializer.copyWith(cover: await _uploadImage(state.imageFile!))));
     }
 
     final bookID = await repository.createBook(serializer: state.serializer);
     // bool success = false;
 
     if (bookID != null) {
-      emit(state.copyWith(
-          loadingStruct: LoadingStruct.loading(false), createdBookId: bookID));
+      emit(state.copyWith(loadingStruct: LoadingStruct.loading(false), createdBookId: bookID));
     } else {
-      emit(state.copyWith(
-          loadingStruct: LoadingStruct.errorMessage(
-              "There was an error creating the book.")));
+      emit(state.copyWith(loadingStruct: LoadingStruct.errorMessage("There was an error creating the book.")));
     }
   }
 }

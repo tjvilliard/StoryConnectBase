@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:storyconnect/Pages/writing_app/components/menu_bar/rich_text_menu.dart';
+import 'package:storyconnect/Pages/writing_app/components/settings/writer_settings_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_navigation.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/view.dart';
@@ -35,8 +36,7 @@ class _WritingAppViewState extends State<WritingAppView> {
       firstLoaded = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         WritingBloc writingBloc = context.read<WritingBloc>();
-        writingBloc.add(
-            SetEditorControllerCallbackEvent(callback: getEditorController));
+        writingBloc.add(SetEditorControllerCallbackEvent(callback: getEditorController));
 
         if (widget.bookId == null) {
           Beamer.of(context).beamToNamed(PageUrls.writerHome);
@@ -76,21 +76,19 @@ class _WritingAppViewState extends State<WritingAppView> {
               SizedBox(
                 width: 10,
               ),
-              BlocBuilder<WritingUIBloc, WritingUIState>(
-                  builder: (context, state) {
+              BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
                 Widget toReturn;
                 if (state.title != null) {
-                  toReturn = Text(state.title!,
-                      style: Theme.of(context).textTheme.displaySmall);
+                  toReturn = Text(state.title!, style: Theme.of(context).textTheme.displaySmall);
                 } else {
                   toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
                 }
-                return AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500), child: toReturn);
+                return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
               }),
             ],
           ),
           centerTitle: false,
+          actions: [Padding(padding: const EdgeInsets.only(right: 30, left: 10), child: BookSettingsButton())],
         ),
         body: ChangeNotifierProvider<ScrollController>(
           create: (context) {
@@ -117,11 +115,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                   Flexible(child: WritingPageView()),
 
                   Row(
-                    children: [
-                      FeedbackWidget(),
-                      RoadUnblockerWidget(),
-                      ContinuityWidget()
-                    ],
+                    children: [FeedbackWidget(), RoadUnblockerWidget(), ContinuityWidget()],
                   )
                 ],
               ))

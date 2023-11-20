@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 
 class ImageUpload extends StatelessWidget {
-  const ImageUpload({Key? key}) : super(key: key);
+  final String noneSelectedText = "No Image Selected";
+  final String? imageTitle;
+  final VoidCallback onImageSelect;
+
+  const ImageUpload({super.key, this.imageTitle, required this.onImageSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +26,7 @@ class ImageUpload extends StatelessWidget {
               return Text("No Image Selected");
             }),
             SizedBox(width: 15),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<BookCreateBloc>().add(UploadImageEvent());
-                },
-                child: Text("Upload Image")),
+            ElevatedButton(onPressed: () => onImageSelect.call(), child: Text("Upload Image")),
           ],
         ));
   }

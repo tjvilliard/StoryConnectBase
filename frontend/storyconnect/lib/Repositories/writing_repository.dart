@@ -7,10 +7,10 @@ import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Models/text_annotation/text_selection.dart';
-import 'package:storyconnect/Pages/book_creation/serializers/book_creation_serializer.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/models/continuity_models.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
+import 'package:storyconnect/Widgets/book_forms/serializers/book_form_serializer.dart';
 
 class WritingApiProvider {
   Future<ContinuityResponse> getContinuities(int chapterId) async {
@@ -20,13 +20,28 @@ class WritingApiProvider {
     return ContinuityResponse.fromJson(jsonDecode(result.body));
   }
 
-  Future<Book?> createBook({required BookCreationSerializer serialzer}) async {
+  Future<Book?> createBook({required BookFormSerializer serialzer}) async {
     try {
       final url = UrlConstants.books();
       final result = await http.post(
         url,
         headers: await buildHeaders(),
         body: jsonEncode(serialzer.toJson()),
+      );
+      return Book.fromJson(jsonDecode(result.body));
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
+    try {
+      final url = UrlConstants.books(bookId: bookId);
+      final result = await http.put(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(serializer.toJson()),
       );
       return Book.fromJson(jsonDecode(result.body));
     } catch (e) {
@@ -72,12 +87,8 @@ class WritingApiProvider {
         id: 1,
         userId: 1,
         chapterId: chapterId,
-        selection: AnnotatedTextSelection(
-            floating: false,
-            text: "This is a test",
-            chapterId: 1,
-            offset: 10,
-            offsetEnd: 20),
+        selection:
+            AnnotatedTextSelection(floating: false, text: "This is a test", chapterId: 1, offset: 10, offsetEnd: 20),
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
@@ -88,7 +99,7 @@ class WritingRepository {
   List<Book> books = [];
   WritingApiProvider _api = WritingApiProvider();
   Future<int?> createBook({
-    required BookCreationSerializer serializer,
+    required BookFormSerializer serializer,
   }) async {
     final output = await _api.createBook(serialzer: serializer);
     if (output != null) {
@@ -139,5 +150,9 @@ class WritingRepository {
   Future<ContinuityResponse?> getContinuities(int chapterId) async {
     final continuitiyResponse = await _api.getContinuities(chapterId);
     return continuitiyResponse;
+  }
+
+  Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
+    return _api.updateBook(serializer: serializer, bookId: bookId);
   }
 }

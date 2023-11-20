@@ -71,9 +71,12 @@ class UrlConstants {
     return _urlBuilder.build('books/$bookId/get_chapters');
   }
 
-  static Uri books({String? uid}) {
+  static Uri books({String? uid, int? bookId}) {
     if (uid != null) {
       return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
+    }
+    if (bookId != null) {
+      return _urlBuilder.build('books/$bookId/');
     }
     return _urlBuilder.build('books/');
   }

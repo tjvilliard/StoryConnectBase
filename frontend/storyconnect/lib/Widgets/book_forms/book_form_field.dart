@@ -1,7 +1,7 @@
-part of 'book_creation_form_fields.dart';
+part of './book_form_fields.dart';
 
-class BookCreationFormField extends CustomFormField {
-  BookCreationFormField({required super.label, super.value, super.onChanged});
+class BookFormField extends CustomFormField {
+  BookFormField({required super.label, super.value, super.onChanged});
 
   @override
   Widget build(BuildContext context) {
