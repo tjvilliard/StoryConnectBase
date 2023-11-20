@@ -71,6 +71,14 @@ class WritingHomeWidgetState extends State<WritingHomeWidget> {
                     Widget toReturn;
                     if (state.loadingStruct.isLoading) {
                       toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                    } else if (state.searchingBooks.isNotEmpty) {
+                      toReturn = BookListWidget(
+                        books: state.searchingBooks,
+                      );
+                    } else if (state.query?.isNotEmpty == false && state.searchingBooks.isEmpty) {
+                      toReturn = Center(
+                        child: Text("No Books Found", style: Theme.of(context).textTheme.displaySmall),
+                      );
                     } else {
                       toReturn = BookListWidget(
                         books: state.books,

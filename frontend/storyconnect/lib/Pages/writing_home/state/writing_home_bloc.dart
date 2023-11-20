@@ -26,7 +26,10 @@ class WritingHomeBloc extends Bloc<WritingHomeEvent, WritingHomeState> {
 
   void searchBooks(SearchBooksEvent event, WritingHomeEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
-    List<Book> searchingBooks = state.books.where((Book book) => book.title.contains(event.query)).toList();
-    emit(state.copyWith(searchingBooks: searchingBooks, loadingStruct: LoadingStruct.loading(false)));
+    List<Book> searchingBooks = state.books
+        .where((Book book) => book.title.toLowerCase().trim().startsWith(event.query.toLowerCase().trim()))
+        .toList();
+    emit(state.copyWith(
+        query: event.query, searchingBooks: searchingBooks, loadingStruct: LoadingStruct.loading(false)));
   }
 }

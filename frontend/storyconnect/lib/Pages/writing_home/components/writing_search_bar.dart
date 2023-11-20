@@ -32,7 +32,7 @@ class WritingSearchBarState extends State<WritingSearchBar> {
         child: BlocBuilder<WritingHomeBloc, WritingHomeState>(builder: (context, state) {
           return AutoCompleteSearchBar(
             hintText: "Search",
-            searchableItems: state.books.map((Book book) => book.title).toList(),
+            searchableItems: state.books.map((Book book) => book.title.toLowerCase().trim()).toList(),
             searchCallback: (String value) {
               context.read<WritingHomeBloc>().add(SearchBooksEvent(value));
             },

@@ -16,11 +16,42 @@ class AutoCompleteSearchBar extends StatefulWidget {
 class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  late final List<String> searchableItems;
+
+  static List<String> wordsToNotCapitalize = [
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "but",
+    "nor",
+    "for",
+    "so",
+    "yet",
+    "at",
+    "by",
+    "in",
+    "of",
+    "on",
+    "to",
+    "up",
+    "as",
+    "it",
+    "is"
+  ];
+
+  String capitalizeTitle(String string) {
+    final List<String> splitString = string.split(" ");
+    for (int i = 0; i < splitString.length; i++) {
+      if (!wordsToNotCapitalize.contains(splitString[i]) || i == 0) {
+        splitString[i] = splitString[i][0].toUpperCase() + splitString[i].substring(1);
+      }
+    }
+    return splitString.join(" ");
+  }
 
   @override
   void initState() {
-    searchableItems = widget.searchableItems.map((String value) => value.toLowerCase().trim()).toList();
     super.initState();
   }
 
@@ -48,7 +79,7 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                       return const Iterable<String>.empty();
                     }
                     return widget.searchableItems.where((String option) {
-                      return option.contains(textEditingValue.text.toLowerCase().trim());
+                      return option.startsWith(textEditingValue.text.toLowerCase().trim());
                     });
                   },
                   fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
@@ -72,6 +103,7 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                       alignment: Alignment.topLeft,
                       child: Material(
                         child: Container(
+                          color: theme.colorScheme.secondaryContainer,
                           width: 200,
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(vertical: 5),
@@ -79,16 +111,18 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                             itemCount: options.length,
                             itemBuilder: (BuildContext context, int index) {
                               final String option = options.elementAt(index);
+                              final formattedOption = capitalizeTitle(option);
                               return Container(
                                   padding: EdgeInsets.only(right: 20),
                                   child: Clickable(
                                       onPressed: () {
                                         onSelected(option);
+                                        widget.searchCallback?.call(capitalizeTitle(option));
                                       },
                                       child: Padding(
                                           padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
                                           child: Text(
-                                            option,
+                                            formattedOption,
                                             style: Theme.of(context).textTheme.labelLarge,
                                           ))));
                             },
@@ -98,7 +132,7 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                     );
                   },
                   onSelected: (String value) {
-                    widget.searchCallback?.call(value);
+                    widget.searchCallback?.call(capitalizeTitle(value));
                   },
                 ),
               ),
