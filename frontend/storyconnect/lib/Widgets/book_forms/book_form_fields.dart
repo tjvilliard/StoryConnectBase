@@ -11,6 +11,9 @@ import 'package:storyconnect/Widgets/form_field.dart';
 
 part 'book_form_field.dart';
 
+/// A collection of callbacks for the book form fields.
+///
+/// This is used to pass callbacks to the book form fields.
 class BookFormFieldCallbacks {
   final Function(String) onTitleChanged;
   final Function(String) onSynopsisChanged;
@@ -40,6 +43,7 @@ class BookFormFieldCallbacks {
   }
 }
 
+/// A collection of default values for the book form fields.
 class BookFormFieldDefaults {
   final String? title;
   final String? synopsis;
@@ -67,6 +71,7 @@ class BookFormFieldDefaults {
             copyRight: null);
 }
 
+/// A collection of form fields for creating or updating a book.
 class BookFormFields extends StatelessWidget {
   final EdgeInsets padding = EdgeInsets.all(10);
   final String? selectedImageTitle;

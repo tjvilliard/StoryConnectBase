@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A header for a form.
 class Header extends StatelessWidget {
   final String title;
   final String? subtitle;

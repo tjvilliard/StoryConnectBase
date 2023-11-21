@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 
+/// A widget for displaying a loading indicator.
+///
+/// This widget is used to display a loading indicator with an optional message.
 class LoadingWidget extends StatelessWidget {
   final LoadingStruct loadingStruct;
   final bool short;

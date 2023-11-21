@@ -4,6 +4,7 @@ import 'package:storyconnect/Widgets/custom_dropdown.dart';
 
 typedef OnCopyrightSelected = void Function(CopyrightOption);
 
+/// A dropdown for the copyright book form.
 class CopyrightDropdown extends StatelessWidget {
   final OnCopyrightSelected onSelected;
   final CopyrightOption? initialValue;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A button with a filled background.
 class ImageLoader extends StatelessWidget {
   final String url;
   final BoxConstraints? constraints;

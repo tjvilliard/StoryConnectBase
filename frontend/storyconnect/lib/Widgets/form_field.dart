@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A custom form field.
+///
+/// This is a wrapper around a [TextFormField] with stylistic changes.
 class CustomFormField extends StatelessWidget {
   final String label;
   final String? value;

@@ -4,6 +4,7 @@ import 'package:storyconnect/Widgets/custom_dropdown.dart';
 
 typedef OnSelected = void Function(LanguageConstant language);
 
+/// A dropdown for the language book form.
 class LanguageDropdown extends StatelessWidget {
   final OnSelected onSelected;
   final LanguageConstant? initialValue;

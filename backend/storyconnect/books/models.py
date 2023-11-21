@@ -105,8 +105,6 @@ class Chapter(models.Model):
             if last_chapter:
                 self.chapter_number = last_chapter.chapter_number + 1
 
-            if self.chapter_title == "":
-                self.chapter_title = f"Chapter {self.chapter_number}"
         super().save(*args, **kwargs)
 
     # What are these for?

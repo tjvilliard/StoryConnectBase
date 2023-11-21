@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A dropdown for the copyright book form.
 class ImageUpload extends StatelessWidget {
   static final String _noneSelectedText = "No image selected";
   final String? noneSelectedText;
@@ -13,7 +14,6 @@ class ImageUpload extends StatelessWidget {
     return Container(
         constraints: BoxConstraints(maxWidth: 400),
         child: Row(
-          // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             if (imageTitle != null)
