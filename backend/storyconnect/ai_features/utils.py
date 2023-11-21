@@ -116,6 +116,7 @@ def summarize_chapter_chat(
                 messages=[{"role": "system", "content": prompt2}],
                 temperature=temp,
                 max_tokens=max_tokens,
+                timeout=300,
             )
 
     # get the first summary no matter what
@@ -124,6 +125,7 @@ def summarize_chapter_chat(
         messages=[{"role": "system", "content": prompt}],
         temperature=temp,
         max_tokens=max_tokens,
+        timeout=300,
     )
 
     if do_two_prompts:
@@ -139,6 +141,7 @@ def summarize_chapter_chat(
             messages=[{"role": "system", "content": prompt3}],
             temperature=temp,
             max_tokens=max_tokens,
+            timeout=300,
         )
         summary = final_response.choices[0].message.content
     else:
@@ -196,6 +199,7 @@ def compile_book_summary(
             prompt=prompt,
             max_tokens=max_tokens,
             temperature=temp,
+            timeout=300,
         )
         new_book_sum = gpt_response.choices[0]["text"]
 
@@ -230,6 +234,7 @@ def compile_book_summary_chat(
             messages=[{"role": "system", "content": prompt}],
             max_tokens=max_tokens,
             temperature=temp,
+            timeout=300,
         )
         new_book_sum = gpt_response.choices[0].message.content
 
