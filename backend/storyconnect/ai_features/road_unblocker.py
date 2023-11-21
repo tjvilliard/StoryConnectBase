@@ -1,11 +1,10 @@
 from storyconnect.settings import OPENAI_API_KEY
 from .exceptions import RoadUnblockerException
 import books.models as books_models
-import ai_features.models as ai_models
 import ai_features.utils as utils
 import logging
 from openai import OpenAI
-import threading
+
 
 # openai.api_key = OPENAI_API_KEY
 logger = logging.getLogger(__name__)

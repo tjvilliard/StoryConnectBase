@@ -79,7 +79,7 @@ class WritingCreationView extends StatelessWidget {
                                           context.read<BookCreateBloc>().add(TitleChangedEvent(title: title));
                                         },
                                         onSynopsisChanged: (synopsis) {
-                                          context.read<BookCreateBloc>().add(SynopsisChangedEvent(Synopsis: synopsis));
+                                          context.read<BookCreateBloc>().add(SynopsisChangedEvent(synopsis: synopsis));
                                         },
                                         onImageChanged: () {
                                           context.read<BookCreateBloc>().add(UploadImageEvent());
