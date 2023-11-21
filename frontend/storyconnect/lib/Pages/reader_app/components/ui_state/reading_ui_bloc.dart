@@ -35,7 +35,6 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
     on<ToggleFeedbackBarEvent>((event, emit) => toggleFeedbackBar(event, emit));
     on<ToggleAnnotationBarEvent>(
         (event, emit) => toggleAnnotationBar(event, emit));
-    on<ToggleToolbarEvent>((event, emit) => toggleToolbar(event, emit));
   }
 
   /// Gets the title of the book currently loaded by the reading UI.

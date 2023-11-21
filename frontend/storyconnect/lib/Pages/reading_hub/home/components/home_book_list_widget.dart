@@ -7,31 +7,30 @@ import 'package:storyconnect/Pages/reading_hub/home/components/scroll_buttons.da
 class BookListWidget extends StatefulWidget {
   final BookList bookList;
 
-  BookListWidget({required this.bookList});
+  const BookListWidget({super.key, required this.bookList});
 
   @override
-  _bookListWidgetState createState() =>
-      _bookListWidgetState(bookList: this.bookList);
+  BookListWidgetState createState() => BookListWidgetState(bookList: bookList);
 }
 
-class _bookListWidgetState extends State<BookListWidget> {
+class BookListWidgetState extends State<BookListWidget> {
   final BookList bookList;
 
-  _bookListWidgetState({required this.bookList});
+  BookListWidgetState({required this.bookList});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HorizontalScrollBehaviorBloc>(
         create: (context) => HorizontalScrollBehaviorBloc(
-            animationDistance: 400, animationDuration_m_sec: 350),
+            animationDistance: 400, animationDurationMsec: 350),
         child: Container(
           height: 220,
           decoration: BoxDecoration(color: Theme.of(context).canvasColor),
           child: Stack(
             children: [
-              this.bookList,
-              NavigateLeftButton(),
-              NavigateRightButton(),
+              bookList,
+              const NavigateLeftButton(),
+              const NavigateRightButton(),
             ],
           ),
         ));

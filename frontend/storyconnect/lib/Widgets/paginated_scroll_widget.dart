@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 
 class PaginatedScrollViewWidget extends StatefulWidget {
+  const PaginatedScrollViewWidget({super.key});
+
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
+  State<StatefulWidget> createState() => PaginatedScrollViewWidgetState();
 }
 
-class _paginatedScrollViewWidgetState extends State<PaginatedScrollViewWidget> {
+class PaginatedScrollViewWidgetState extends State<PaginatedScrollViewWidget> {
   late final ScrollController _paginatedScrollController;
 
   @override
   void initState() {
-    this._paginatedScrollController = ScrollController();
-    this._paginatedScrollController.addListener(() {});
+    _paginatedScrollController = ScrollController();
+    _paginatedScrollController.addListener(() {});
     super.initState();
   }
 

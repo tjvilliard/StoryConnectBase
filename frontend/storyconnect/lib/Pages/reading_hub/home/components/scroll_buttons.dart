@@ -4,11 +4,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_bloc.dart';
 
 class NavigateLeftButton extends StatefulWidget {
+  const NavigateLeftButton({super.key});
+
   @override
-  State<StatefulWidget> createState() => _leftButtonState();
+  State<StatefulWidget> createState() => LeftButtonState();
 }
 
-class _leftButtonState extends State<NavigateLeftButton> {
+class LeftButtonState extends State<NavigateLeftButton> {
   @override
   Widget build(BuildContext context) {
     ButtonStyle buttonShape = ButtonStyle(
@@ -49,11 +51,13 @@ class _leftButtonState extends State<NavigateLeftButton> {
 }
 
 class NavigateRightButton extends StatefulWidget {
+  const NavigateRightButton({super.key});
+
   @override
-  _rightButtonState createState() => _rightButtonState();
+  RightButtonState createState() => RightButtonState();
 }
 
-class _rightButtonState extends State<NavigateRightButton> {
+class RightButtonState extends State<NavigateRightButton> {
   @override
   Widget build(BuildContext context) {
     ButtonStyle buttonShape = ButtonStyle(

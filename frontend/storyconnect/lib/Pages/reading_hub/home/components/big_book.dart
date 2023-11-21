@@ -21,7 +21,7 @@ class BigBook extends StatelessBookItem {
   static const double synopsisBoxHeight = height / 2.0;
   final Book book;
 
-  BigBook({required this.book});
+  const BigBook({super.key, required this.book});
 
   String yyMMddDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat.yMd();
@@ -33,7 +33,7 @@ class BigBook extends StatelessBookItem {
   Widget build(BuildContext context) {
     double smallIconSize = Theme.of(context).textTheme.bodySmall!.fontSize! + 3;
 
-    return Container(
+    return SizedBox(
         height: BigBook.height,
         width: BigBook.width,
         child: Card(
@@ -46,25 +46,25 @@ class BigBook extends StatelessBookItem {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.book,
                     size: BigBook.iconSize,
                   ),
                   Container(
                     constraints:
-                        BoxConstraints(maxWidth: BigBook.maxColumnWidth),
+                        const BoxConstraints(maxWidth: BigBook.maxColumnWidth),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Title Text Widget
                           Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(top: 12.0),
-                            constraints: BoxConstraints(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            constraints: const BoxConstraints(
                               maxHeight: 40.0,
                             ),
                             child: Text(
-                              this.book.title,
+                              book.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleLarge,
@@ -75,8 +75,9 @@ class BigBook extends StatelessBookItem {
                           //Author Text Widget
                           Container(
                               alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.symmetric(vertical: 2.0),
-                              constraints: BoxConstraints(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              constraints: const BoxConstraints(
                                 maxHeight: 30.0,
                               ),
                               child: RichText(
@@ -89,7 +90,7 @@ class BigBook extends StatelessBookItem {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: " ${dummyAuthor}",
+                                      text: " $dummyAuthor",
                                       style:
                                           Theme.of(context).textTheme.bodySmall,
                                     )
@@ -97,10 +98,10 @@ class BigBook extends StatelessBookItem {
                           // Author Text Widget
 
                           Container(
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                               maxHeight: 30.0,
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
                             child: Row(
                               children: [
                                 // Chapter Info Text Widget
@@ -120,7 +121,7 @@ class BigBook extends StatelessBookItem {
                                 ])),
                                 // Chapter Info Text Widget
 
-                                VerticalDivider(
+                                const VerticalDivider(
                                   indent: 2.5,
                                   endIndent: 2.5,
                                   width: 20,
@@ -140,7 +141,7 @@ class BigBook extends StatelessBookItem {
                                             .textTheme
                                             .bodySmall,
                                         text:
-                                            " ${this.yyMMddDateTime(this.book.modified)}"),
+                                            " ${yyMMddDateTime(book.modified)}"),
                                   ]),
                                 ),
                                 // Date Widget
@@ -151,8 +152,9 @@ class BigBook extends StatelessBookItem {
                           // Synopsis Text Widget
                           Container(
                               alignment: Alignment.topLeft,
-                              padding: EdgeInsets.symmetric(vertical: 2.0),
-                              constraints: BoxConstraints(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              constraints: const BoxConstraints(
                                   maxHeight: BigBook.synopsisBoxHeight),
                               child: Text(dummySynopsis,
                                   maxLines: 5,

@@ -17,8 +17,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   /// Maps Events to Event Handlers.
   RegistrationBloc(FirebaseRepository firebaseRepo, CoreRepository coreRepo)
       : super(RegistrationState.initial()) {
-    this._firebaseRepo = firebaseRepo;
-    this._coreRepo = coreRepo;
+    _firebaseRepo = firebaseRepo;
+    _coreRepo = coreRepo;
     on<EmailFieldChangedEvent>(
       (event, emit) => _emailFieldChanged(event, emit),
     );
@@ -93,19 +93,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       RegisterButtonPushedEvent event, RegistrationEmitter emit) async {
     bool emailValid = await validateEmail(emit);
 
-    bool displayNameValid = await this.validateDisplayName(emit);
+    bool displayNameValid = await validateDisplayName(emit);
 
     bool passwordsValid = validatePassword(emit);
 
-    print(
-        "[DEBUG]: Email: ${emailValid}, Display Name: ${displayNameValid}, Password: ${passwordsValid}");
-
-    print(
-        "[DEBUG]: Email: ${emailValid}, Display Name: ${displayNameValid}, Password: ${passwordsValid}");
-
     if (emailValid & displayNameValid & passwordsValid) {
-      String response = await _repo
-      print("[DEBUG] Fields passed validity check.");
+      //String response = await _repo
 
       /*
       String response = await this
@@ -131,14 +124,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       */
     } else {
-      print("[DEBUG] Field failed validity check.");
+      // print("[DEBUG] Field failed validity check.");
       return;
     }
   }
 
   /// Checks the validity of the provided email field.
   Future<bool> validateEmail(RegistrationEmitter emit) async {
-    if (this.state.email.isEmpty) {
+    if (state.email.isEmpty) {
       emit(state.copyWith(
         emailError: "Email field cannot be empty.",
         showEmailError: true,
@@ -152,7 +145,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         showEmailError: true,
       ));
       return false;
-    } else if (!await this._firebaseRepo.validateEmail(state.email)) {
+    } else if (!await _firebaseRepo.validateEmail(state.email)) {
       emit(state.copyWith(
         emailError: "Email is already in use.",
         showEmailError: true,
@@ -165,21 +158,19 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Checks the validity of the provided display name.
   Future<bool> validateDisplayName(RegistrationEmitter emit) async {
-    if (this.state.displayName.isEmpty) {
-      emit(this.state.copyWith(
-            displayNameError: "Display Name field cannot be empty.",
-            showDisplayNameError: true,
-          ));
+    if (state.displayName.isEmpty) {
+      emit(state.copyWith(
+        displayNameError: "Display Name field cannot be empty.",
+        showDisplayNameError: true,
+      ));
       return false;
     }
 
-    if (await this
-        ._coreRepo
-        .verifyDisplayNameUniqueness(this.state.displayName)) {
-      emit(this.state.copyWith(
-            displayNameError: "Display Name is already in use.",
-            showDisplayNameError: true,
-          ));
+    if (await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
+      emit(state.copyWith(
+        displayNameError: "Display Name is already in use.",
+        showDisplayNameError: true,
+      ));
       return false;
     }
 
@@ -217,8 +208,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    int length = this.state.password.length;
-    int confirmLength = this.state.confirmPassword.length;
+    int length = state.password.length;
+    int confirmLength = state.confirmPassword.length;
     bool passwordHasLength = length >= 8 && length <= 16;
     bool confirmPasswordHasLength = confirmLength >= 8 && confirmLength <= 16;
 
@@ -249,13 +240,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       '9',
     ];
     bool passwordHasChar =
-        specialChars.any((char) => this.state.password.contains(char));
+        specialChars.any((char) => state.password.contains(char));
     bool passwordHasDigit =
-        digits.any((digit) => this.state.password.contains(digit));
+        digits.any((digit) => state.password.contains(digit));
     bool confirmPasswordHasChar =
-        specialChars.any((char) => this.state.confirmPassword.contains(char));
+        specialChars.any((char) => state.confirmPassword.contains(char));
     bool confirmPasswordHasDigit =
-        digits.any((digit) => this.state.confirmPassword.contains(digit));
+        digits.any((digit) => state.confirmPassword.contains(digit));
 
     if (!passwordHasLength ||
         !confirmPasswordHasLength ||
@@ -267,26 +258,32 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       String confirmPasswordError = "";
 
       // Password Error messages.
-      if (!passwordHasLength)
+      if (!passwordHasLength) {
         passwordError +=
             "Password must be between 8 and 16 characters in length.";
-      if (!passwordHasChar)
+      }
+      if (!passwordHasChar) {
         passwordError +=
             "Password must contain one of the following special characters: . ";
-      if (!passwordHasDigit)
+      }
+      if (!passwordHasDigit) {
         passwordError += "Password must contain at least one digit 0 - 9. ";
-      if (!confirmPasswordHasLength)
+      }
+      if (!confirmPasswordHasLength) {
         confirmPasswordError +=
             "Password must be between 8 and 16 characters in length.";
-      if (!confirmPasswordHasChar)
+      }
+      if (!confirmPasswordHasChar) {
         confirmPasswordError +=
             "Password must contain one of the following special characters: . ";
-      if (!confirmPasswordHasDigit)
+      }
+      if (!confirmPasswordHasDigit) {
         confirmPasswordError +=
             "Password must contain at least one digit 0 - 9. ";
+      }
 
       // If our error message isn't empty, emit it.
-      if (!passwordError.isEmpty) {
+      if (passwordError.isNotEmpty) {
         emit(state.copyWith(
           passwordError: passwordError,
           showPasswordError: true,
@@ -294,7 +291,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
 
       return false;
-    } else if (!digits.any((digit) => this.state.password.contains(digit))) {
+    } else if (!digits.any((digit) => state.password.contains(digit))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the digits 0 - 9.",

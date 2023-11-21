@@ -9,6 +9,6 @@ class SearchState with _$SearchState {
   /// 'Initial' or 'default' state of
   /// the Search - BLOC.
   factory SearchState.initial() {
-    return SearchState();
+    return const SearchState();
   }
 }

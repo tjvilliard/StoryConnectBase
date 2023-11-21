@@ -9,10 +9,10 @@ class ReadingPageView extends StatefulWidget {
   const ReadingPageView({super.key});
 
   @override
-  _readingPageViewState createState() => _readingPageViewState();
+  ReadingPageViewState createState() => ReadingPageViewState();
 }
 
-class _readingPageViewState extends State<ReadingPageView> {
+class ReadingPageViewState extends State<ReadingPageView> {
   final FocusNode focusNode = FocusNode();
 
   @override
@@ -24,7 +24,7 @@ class _readingPageViewState extends State<ReadingPageView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: 800.0,
         ),
         child: BlocBuilder<ReadingBloc, ReadingState>(
@@ -38,15 +38,15 @@ class _readingPageViewState extends State<ReadingPageView> {
               toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
             } else {
               toReturn = Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 5,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                     border: Border.all(color: Colors.grey[200]!, width: 1),
@@ -66,7 +66,7 @@ class _readingPageViewState extends State<ReadingPageView> {
                   ));
             }
             return AnimatedSwitcher(
-                duration: Duration(milliseconds: 500), child: toReturn);
+                duration: const Duration(milliseconds: 500), child: toReturn);
           },
         ));
   }

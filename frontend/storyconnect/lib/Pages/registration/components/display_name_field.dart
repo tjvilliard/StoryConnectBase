@@ -33,7 +33,7 @@ class DisplayNameState extends State<DisplayNameField> {
                 obscureText: false,
                 onChanged: (_) {
                   context.read<RegistrationBloc>().add(DisplayNameChangedEvent(
-                      displayName: this._displayNameController.text));
+                      displayName: _displayNameController.text));
                 },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(

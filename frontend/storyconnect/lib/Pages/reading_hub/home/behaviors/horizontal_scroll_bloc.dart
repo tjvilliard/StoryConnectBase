@@ -13,17 +13,17 @@ class HorizontalScrollBehaviorBloc
   final int animationDistance;
 
   /// Duration of animation in milliseconds
-  final int animationDuration_m_sec;
+  final int animationDurationMsec;
 
   ///
   HorizontalScrollBehaviorBloc(
-      {required this.animationDistance, required this.animationDuration_m_sec})
+      {required this.animationDistance, required this.animationDurationMsec})
       : super(HorizontalScrollState(
             leftScroll: false,
             rightScroll: true,
             scrollController: ScrollController())) {
-    on<ScrollLeftEvent>((event, emit) => AnimateLeft(event, emit));
-    on<ScrollRightEvent>((event, emit) => AnimateRight(event, emit));
+    on<ScrollLeftEvent>((event, emit) => animateLeft(event, emit));
+    on<ScrollRightEvent>((event, emit) => animateRight(event, emit));
   }
 
   HorizontalScrollState _handleState() {
@@ -49,22 +49,22 @@ class HorizontalScrollBehaviorBloc
     );
   }
 
-  void AnimateLeft(HorizontalScrollEvent event, ScrollStateEmitter emit) async {
-    await this.state.scrollController.animateTo(
-        this.state.scrollController.offset - this.animationDistance,
-        duration: Duration(milliseconds: this.animationDuration_m_sec),
+  void animateLeft(HorizontalScrollEvent event, ScrollStateEmitter emit) async {
+    await state.scrollController.animateTo(
+        state.scrollController.offset - animationDistance,
+        duration: Duration(milliseconds: animationDurationMsec),
         curve: Curves.easeIn);
 
-    emit(this._handleState());
+    emit(_handleState());
   }
 
-  void AnimateRight(
+  void animateRight(
       HorizontalScrollEvent event, ScrollStateEmitter emit) async {
-    await this.state.scrollController.animateTo(
-        this.state.scrollController.offset + this.animationDistance,
-        duration: Duration(milliseconds: this.animationDuration_m_sec),
+    await state.scrollController.animateTo(
+        state.scrollController.offset + animationDistance,
+        duration: Duration(milliseconds: animationDurationMsec),
         curve: Curves.easeIn);
 
-    emit(this._handleState());
+    emit(_handleState());
   }
 }

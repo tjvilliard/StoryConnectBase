@@ -61,7 +61,7 @@ class FirebaseRepository {
   /// Verifies the uniqueness of an email address.
   Future<bool> validateEmail(String email) async {
     final List<String> methods =
-        await this._firebaseAuth.fetchSignInMethodsForEmail(email);
+        await _firebaseAuth.fetchSignInMethodsForEmail(email);
 
     return methods.isEmpty;
   }
@@ -128,11 +128,11 @@ class FirebaseRepository {
   ///
   Future<void> updateDisplayName(String displayName) async {
     try {
-      User? user = this._firebaseAuth.currentUser;
+      User? user = _firebaseAuth.currentUser;
 
       await user?.updateDisplayName(displayName);
     } on Exception catch (e) {
-      print(e);
+      // print(e);
     }
   }
 }

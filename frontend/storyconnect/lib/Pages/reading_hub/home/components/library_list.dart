@@ -7,14 +7,14 @@ import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryBookList extends BookList {
-  LibraryBookList();
+  const LibraryBookList({super.key});
 
   @override
-  _libraryBookListState createState() => _libraryBookListState();
+  LibraryBookListState createState() => LibraryBookListState();
 }
 
-class _libraryBookListState extends BookListState {
-  _libraryBookListState();
+class LibraryBookListState extends BookListState {
+  LibraryBookListState();
 
   @override
   void initState() {

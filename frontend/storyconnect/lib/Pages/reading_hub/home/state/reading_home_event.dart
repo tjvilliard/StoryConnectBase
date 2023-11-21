@@ -2,14 +2,14 @@ part of 'reading_home_bloc.dart';
 
 ///
 abstract class ReadingHomeEvent {
-  bool isLoading;
-  ReadingHomeEvent({required this.isLoading});
+  final bool isLoading;
+  const ReadingHomeEvent({required this.isLoading});
 }
 
 class GetBooksEvent extends ReadingHomeEvent {
-  GetBooksEvent() : super(isLoading: true);
+  const GetBooksEvent() : super(isLoading: true);
 }
 
 class InitialLoadEvent extends ReadingHomeEvent {
-  InitialLoadEvent() : super(isLoading: true);
+  const InitialLoadEvent() : super(isLoading: true);
 }

@@ -40,7 +40,7 @@ class LibraryState extends State<LibraryView> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                Header(
+                const Header(
                   title: "Library",
                 ),
                 Expanded(child: BlocBuilder<LibraryBloc, LibraryStruct>(
@@ -49,15 +49,15 @@ class LibraryState extends State<LibraryView> {
                     return LoadingWidget(loadingStruct: libState.loadingStruct);
                   } else {
                     return TabbedBookDisplayWidget(
-                      tabs: [
+                      tabs: const [
                         Tab(text: "Currently Reading"),
                         Tab(text: "Completed"),
                         Tab(text: "To Be Read")
                       ],
                       children: [
                         BookGridWidget(books: libState.libraryBooks),
-                        BookGridWidget(books: []),
-                        BookGridWidget(books: []),
+                        const BookGridWidget(books: []),
+                        const BookGridWidget(books: []),
                       ],
                     );
                   }

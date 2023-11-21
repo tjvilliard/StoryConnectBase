@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
 class SearchView extends StatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
+  const SearchView({super.key});
 
   @override
-  _searchViewState createState() => _searchViewState();
+  SearchViewState createState() => SearchViewState();
 }
 
-class _searchViewState extends State<SearchView> {
+class SearchViewState extends State<SearchView> {
   @override
   void initState() {
     super.initState();

@@ -16,37 +16,37 @@ class LibraryBookItem extends StatefulWidget {
   });
 
   @override
-  _libraryBookState createState() => _libraryBookState(
-        child: this.child,
-        bookId: this.bookId,
+  LibraryBookState createState() => LibraryBookState(
+        child: child,
+        bookId: bookId,
       );
 }
 
-class _detailsButton extends StatelessWidget {
+class DetailsButton extends StatelessWidget {
   final int bookId;
 
-  _detailsButton({required this.bookId});
+  const DetailsButton({super.key, required this.bookId});
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle? _buttonStyle = ButtonStyle(
+    final ButtonStyle buttonStyle = ButtonStyle(
         textStyle:
             MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
         overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
         backgroundColor:
             MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            side: BorderSide(width: 4.0),
+            side: const BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
     return BlocBuilder<LibraryBloc, LibraryStruct>(
       builder: (BuildContext context, LibraryStruct state) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: OutlinedButton(
-            style: _buttonStyle,
+            style: buttonStyle,
             onPressed: () {},
-            child: Text("Details"),
+            child: const Text("Details"),
           ),
         );
       },
@@ -54,35 +54,35 @@ class _detailsButton extends StatelessWidget {
   }
 }
 
-class _removeBookButton extends StatelessWidget {
+class RemoveBookButton extends StatelessWidget {
   final int bookId;
 
-  _removeBookButton({required this.bookId});
+  const RemoveBookButton({super.key, required this.bookId});
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle? _buttonStyle = ButtonStyle(
+    final ButtonStyle buttonStyle = ButtonStyle(
         textStyle:
             MaterialStatePropertyAll(Theme.of(context).textTheme.bodySmall),
         overlayColor: MaterialStatePropertyAll(Theme.of(context).hoverColor),
         backgroundColor:
             MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            side: BorderSide(width: 4.0),
+            side: const BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
     return BlocBuilder<LibraryBloc, LibraryStruct>(
       builder: (BuildContext context, LibraryStruct state) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: OutlinedButton(
-              style: _buttonStyle,
+              style: buttonStyle,
               onPressed: () {
                 context
                     .read<LibraryBloc>()
-                    .add(RemoveBookEvent(bookId: this.bookId));
+                    .add(RemoveBookEvent(bookId: bookId));
               },
-              child: Text("Remove")),
+              child: const Text("Remove")),
         );
       },
     );
@@ -90,18 +90,18 @@ class _removeBookButton extends StatelessWidget {
 }
 
 ///
-class _libraryBookState extends State<LibraryBookItem> {
+class LibraryBookState extends State<LibraryBookItem> {
   bool showButtons = false;
   final int bookId;
   final Widget child;
-  _libraryBookState({
+  LibraryBookState({
     required this.bookId,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle? _buttonStyle = ButtonStyle(
+    final ButtonStyle buttonStyle = ButtonStyle(
         textStyle: MaterialStatePropertyAll(
           Theme.of(context).textTheme.bodySmall,
         ),
@@ -109,7 +109,7 @@ class _libraryBookState extends State<LibraryBookItem> {
         backgroundColor:
             MaterialStatePropertyAll(Theme.of(context).canvasColor),
         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-            side: BorderSide(width: 4.0),
+            side: const BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
     return Card(
@@ -118,21 +118,21 @@ class _libraryBookState extends State<LibraryBookItem> {
             borderRadius: BorderRadius.circular(10),
             child: MouseRegion(
                 onEnter: (_) => setState(() {
-                      this.showButtons = true;
+                      showButtons = true;
                     }),
                 onExit: (_) => setState(() {
-                      this.showButtons = false;
+                      showButtons = false;
                     }),
                 cursor: MouseCursor.defer,
                 child: Stack(
                   children: [
                     child,
-                    this.showButtons
+                    showButtons
                         ? Positioned.fill(
                             child: Material(
                               color: Colors.black38.withOpacity(.25),
                               child: Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       vertical: 32.0, horizontal: 32.0),
                                   child: Column(
                                       crossAxisAlignment:
@@ -141,21 +141,22 @@ class _libraryBookState extends State<LibraryBookItem> {
                                           MainAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(bottom: 8.0),
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
                                           child: OutlinedButton(
-                                              style: _buttonStyle,
+                                              style: buttonStyle,
                                               onPressed: () {
-                                                final uri = PageUrls.readBook(
-                                                    this.bookId);
-                                                Beamer.of(context)
-                                                    .beamToNamed(uri, data: {
-                                                  "book": this.bookId
-                                                });
+                                                final uri =
+                                                    PageUrls.readBook(bookId);
+                                                Beamer.of(context).beamToNamed(
+                                                    uri,
+                                                    data: {"book": bookId});
                                               },
-                                              child: Text("Start Reading")),
+                                              child:
+                                                  const Text("Start Reading")),
                                         ),
-                                        _detailsButton(bookId: bookId),
-                                        _removeBookButton(bookId: bookId)
+                                        DetailsButton(bookId: bookId),
+                                        RemoveBookButton(bookId: bookId)
                                       ])),
                             ),
                           )

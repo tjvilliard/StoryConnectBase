@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomSearchBar extends StatefulWidget {
+  const CustomSearchBar({super.key});
+
   @override
-  _customSearchBarState createState() => _customSearchBarState();
+  CustomSearchBarState createState() => CustomSearchBarState();
 }
 
-class _customSearchBarState extends State<CustomSearchBar> {
+class CustomSearchBarState extends State<CustomSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4.0),
-      constraints: BoxConstraints(
+      padding: const EdgeInsets.all(4.0),
+      constraints: const BoxConstraints(
         minWidth: 100,
         maxWidth: 400,
         minHeight: 40,
         maxHeight: 40,
       ),
-      child: Row(
+      child: const Row(
         children: [
           Icon(FontAwesomeIcons.magnifyingGlass),
           Expanded(

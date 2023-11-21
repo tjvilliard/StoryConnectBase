@@ -45,14 +45,10 @@ class LoginLocations extends BeamLocation<BeamState> {
                   create: (_) => CoreRepository()),
             ],
             child: BlocProvider<RegistrationBloc>(
-              create: (context) =>
-                  RegistrationBloc(context.read<FirebaseRepository>()),
-              child: const RegistrationPageView(),
               create: (context) => RegistrationBloc(
-                context.read<FirebaseRepository>(),
-                context.read<CoreRepository>(),
-              ),
-              child: RegistrationPageView(),
+                  context.read<FirebaseRepository>(),
+                  context.read<CoreRepository>()),
+              child: const RegistrationPageView(),
             ),
           )));
     } else if (url.contains('recover')) {

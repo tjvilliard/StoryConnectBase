@@ -29,16 +29,14 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   StreamSubscription? editorSubscription;
 
   late final BookProviderRepository _repo;
-  ReadingBloc(BookProviderRepository repository)
-      : super(ReadingState.initial()) {
-    this._repo = repository;
+  ReadingBloc(BookProviderRepository repo) : super(ReadingState.initial()) {
+    _repo = repo;
   }
 
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
     final unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
-    print("we should only be calling this once");
     final editor = getEditorControllerCallback?.call();
     if (editor != null) {
       await editorSubscription?.cancel();
@@ -51,8 +49,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
           chapterNumToID: result.chapterNumToID,
           loadingStruct: LoadingStruct.loading(false)));
 
-      final chapterId = state.chapterNumToID[state.currentIndex]!;
-      //event.feedbackBloc.add(LoadChapterFeedback(chapterId));
+      //final chapterId = state.chapterNumToID[state.currentIndex]!;
     }
   }
 
@@ -87,7 +84,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     try {
       doc = DeltaDocM.fromJson(jsonDecode(json));
     } catch (e) {
-      print("Unable to convert to Delta doc, returning as blank chapter: $e");
+      // print("Unable to convert to Delta doc, returning as blank chapter: $e");
       doc = DeltaDocM();
     }
     return doc;

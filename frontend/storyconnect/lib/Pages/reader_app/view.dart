@@ -1,7 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
@@ -88,11 +87,15 @@ class ReadingAppViewState extends State<ReadingAppView> {
                               toReturn = Text(state.title!,
                                   maxLines: 1,
                                   overflow: TextOverflow.fade,
-                                  style: Theme.of(context).textTheme.displaySmall);
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall);
                             } else {
-                              toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                              toReturn = LoadingWidget(
+                                  loadingStruct: state.loadingStruct);
                             }
-                            return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
+                            return AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                child: toReturn);
                           },
                         )))
               ],
@@ -125,67 +128,5 @@ class ReadingAppViewState extends State<ReadingAppView> {
             ReadingMenuBar(bookId: widget.bookId!),
           ],
         ));
-          title: Row(
-            children: [
-              IconButton(
-                icon: Icon(FontAwesomeIcons.house),
-                onPressed: () {
-                  final beamed = Beamer.of(context).beamBack();
-                  if (!beamed) {
-                    Beamer.of(context).beamToNamed(PageUrls.readerHome);
-                  }
-                },
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              BlocBuilder<ReadingUIBloc, ReadingUIState>(
-                  builder: (context, state) {
-                Widget toReturn;
-                if (state.title != null) {
-                  toReturn = Text(state.title!,
-                      style: Theme.of(context).textTheme.displaySmall);
-                } else {
-                  toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
-                }
-                return AnimatedSwitcher(
-                    duration: Duration(milliseconds: 500), child: toReturn);
-              })
-            ],
-          ),
-          centerTitle: false,
-        ),
-        body: ChangeNotifierProvider<ScrollController>(
-            create: (context) {
-              return ScrollController();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                    fit: FlexFit.loose,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned.fill(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: ReadingPageView(),
-                        )),
-                        Positioned.fill(
-                            child: Align(
-                          alignment: Alignment.topLeft,
-                          child: ChapterNavigation(),
-                        )),
-                        Positioned.fill(
-                            child: Align(
-                          alignment: Alignment.topRight,
-                          child: FeedbackWidget(),
-                        ))
-                      ],
-                    )),
-                Row(children: [ReadingMenuBar(bookId: widget.bookId!)]),
-              ],
-            )));
   }
 }

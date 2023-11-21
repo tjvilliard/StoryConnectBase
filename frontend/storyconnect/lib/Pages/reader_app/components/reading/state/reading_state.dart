@@ -25,7 +25,7 @@ class ReadingState with _$ReadingState {
         loadingStruct: LoadingStruct.loading(true),
         config: EditorConfigM(
             readOnly: true,
-            customStyles: EditorStylesM(
+            customStyles: const EditorStylesM(
                 paragraph: TextBlockStyleM(
                     TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
                     VERTICAL_SPACING_EMPTY,

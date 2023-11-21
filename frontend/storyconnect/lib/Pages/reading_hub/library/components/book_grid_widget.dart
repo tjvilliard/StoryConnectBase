@@ -12,14 +12,15 @@ class BookGridWidget extends StatelessWidget {
 
   final bool descript = false;
 
-  BookGridWidget({required List<Book> this.books});
+  const BookGridWidget({super.key, required this.books});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LibraryBloc, LibraryStruct>(
       builder: (BuildContext context, state) {
         return Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
             child: ScrollConfiguration(
                 behavior: ScrollConfiguration.of(context).copyWith(
                     dragDevices: {
@@ -27,7 +28,7 @@ class BookGridWidget extends StatelessWidget {
                       PointerDeviceKind.mouse
                     }),
                 child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 40,
                     ),
@@ -35,8 +36,7 @@ class BookGridWidget extends StatelessWidget {
                       spacing: 30,
                       runSpacing: 30,
                       alignment: WrapAlignment.center,
-                      children: this
-                          .books
+                      children: books
                           .map((book) => LibraryBookItem(
                               bookId: book.id,
                               child: LibraryBookCoverWidget(book: book)))

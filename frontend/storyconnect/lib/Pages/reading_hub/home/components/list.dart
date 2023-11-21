@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 abstract class BookList extends StatefulWidget {
-  BookList();
+  const BookList({super.key});
 }
 
 abstract class BookListState extends State<BookList> {
