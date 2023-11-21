@@ -24,7 +24,7 @@ class LoadingWidget extends StatelessWidget {
                 width: 100,
                 child: LinearProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               )
             : CircularProgressIndicator(),

@@ -89,7 +89,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                   toReturn = toReturn = Text(state.book!.title, style: Theme.of(context).textTheme.displaySmall);
                 }
 
-                return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+                return Flexible(child: AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn));
               }),
             ],
           ),
