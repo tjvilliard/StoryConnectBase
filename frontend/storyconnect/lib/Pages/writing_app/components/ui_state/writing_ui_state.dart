@@ -30,19 +30,20 @@ class WritingUIState with _$WritingUIState {
     BookEditorState? bookEditorState,
     List<Rect>? rectsToHighlight,
     required LoadingStruct loadingStruct,
+    @Default(false) bool isSaving,
   }) = _WritingUIState;
 
   // initial state
   factory WritingUIState.initial() {
     return WritingUIState(
-      editorController: EditorController(),
-      bookId: 0,
-      chapterOutlineShown: false,
-      feedbackUIshown: false,
-      roadUnblockerShown: false,
-      continuityCheckerShown: false,
-      textScrollController: ScrollController(),
-      loadingStruct: LoadingStruct.loading(true),
-    );
+        editorController: EditorController(),
+        bookId: 0,
+        chapterOutlineShown: false,
+        feedbackUIshown: false,
+        roadUnblockerShown: false,
+        continuityCheckerShown: false,
+        textScrollController: ScrollController(),
+        loadingStruct: LoadingStruct.loading(true),
+        isSaving: false);
   }
 }

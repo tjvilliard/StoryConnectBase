@@ -23,7 +23,7 @@ class Book with _$Book {
   const factory Book({
     required int id,
     required String title,
-    int? owner,
+    int? user,
     @JsonKey(name: 'author_name') String? authorName,
     required String language,
     @JsonKey(name: 'target_audience') required int targetAudience,

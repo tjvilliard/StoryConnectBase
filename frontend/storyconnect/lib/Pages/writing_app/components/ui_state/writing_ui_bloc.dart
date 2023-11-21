@@ -150,6 +150,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   void updateBook(UpdateBookEvent event, WritingUIEmiter emit) async {
+    emit(state.copyWith(isSaving: true));
     final result = await repository.updateBook(bookId: state.bookId, book: state.bookEditorState!.book);
 
     if (result != null) {
@@ -157,6 +158,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     } else {
       emit(state.copyWith(bookEditorState: BookEditorState.initial(state.book!)));
     }
+    emit(state.copyWith(isSaving: false));
   }
 
   void updateBookLanguage(UpdateBookLanguageEvent event, WritingUIEmiter emit) {

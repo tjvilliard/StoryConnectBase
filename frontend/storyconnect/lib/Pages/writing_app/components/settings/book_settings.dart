@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
 import 'package:storyconnect/Constants/language_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Pages/writing_app/components/settings/delete_book_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/settings/update_book_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
@@ -52,6 +53,7 @@ class BookSettings extends StatelessWidget {
                         synopsis: state.bookEditorState!.book.synopsis,
                         copyRight: copyrightOptionFromInt(state.bookEditorState!.book.copyright),
                         language: languageConstantFromString(state.bookEditorState!.book.language),
+                        targetAudience: targetAudienceFromIndex(state.bookEditorState!.book.targetAudience),
                       ),
                       callbacks: BookFormFieldCallbacks(
                         onTitleChanged: (title) =>

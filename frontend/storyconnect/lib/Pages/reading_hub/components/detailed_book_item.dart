@@ -74,7 +74,7 @@ class newDescriptBookItem extends StatelessWidget {
                         text: TextSpan(children: [
                           WidgetSpan(child: Icon(FontAwesomeIcons.person, size: 16)),
                           TextSpan(
-                              text: this.book.owner?.toString() ?? "",
+                              text: this.book.authorName ?? "No Author Name",
                               style: TextStyle(fontFamily: GoogleFonts.ramabhadra().fontFamily))
                         ]))),
                 this._rightHandDetail(

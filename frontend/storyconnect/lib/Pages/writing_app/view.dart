@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/components/menu_bar/rich_text_menu.dart';
 import 'package:storyconnect/Pages/writing_app/components/settings/writer_settings_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
@@ -80,6 +81,8 @@ class _WritingAppViewState extends State<WritingAppView> {
                 Widget toReturn;
                 if (state.loadingStruct.isLoading) {
                   toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                } else if (state.isSaving) {
+                  toReturn = LoadingWidget(loadingStruct: LoadingStruct.message("Saving"), short: true);
                 } else if (state.book == null) {
                   toReturn = Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
                 } else {
