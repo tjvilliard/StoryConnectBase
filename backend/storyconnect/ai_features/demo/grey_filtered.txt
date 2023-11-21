@@ -1,0 +1,30 @@
+<Statements>
+<Characters>
+<Lord-Henry-Wotton>
+Lord Henry Wotton is lying on a divan of Persian saddle-bags.
+</Lord-Henry-Wotton>
+<Basil-Hallward>
+Basil Hallward is sitting in front of a full-length portrait.
+</Basil-Hallward>
+<Dorian-Gray>
+Dorian Gray is the subject of the full-length portrait.
+Dorian Gray is described as a young man of extraordinary personal beauty.
+</Dorian-Gray>
+</Characters>
+<Locations>
+<The-studio>
+The studio is filled with the rich odor of roses.
+The studio has a huge window with long tussore-silk curtains.
+</The-studio>
+<The-garden>
+The garden has trees that emit the scent of lilac and pink-flowering thorn.
+The garden has a laburnum tree with honey-sweet and honey-colored blossoms.
+</The-garden>
+<London>
+The dim roar of London is compared to the bourdon note of a distant organ.
+</London>
+<Tokyo>
+The pallid, jade-faced painters of Tokyo are mentioned.
+</Tokyo>
+</Locations>
+</Statements>
