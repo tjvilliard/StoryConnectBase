@@ -15,10 +15,10 @@ class ChapterNavigationButton extends StatefulWidget {
   });
 
   @override
-  _ChapterNavigationButtonState createState() => _ChapterNavigationButtonState();
+  ChapterNavigationButtonState createState() => ChapterNavigationButtonState();
 }
 
-class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
+class ChapterNavigationButtonState extends State<ChapterNavigationButton> {
   bool isHovered = false;
 
   onDelete() {
@@ -51,7 +51,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
           onEnter: (_) => setState(() => isHovered = true),
           onExit: (_) => setState(() => isHovered = false),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Stack(
               fit: StackFit.passthrough,
               children: [
@@ -63,8 +63,8 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                     context.read<WritingBloc>().add(SwitchChapterEvent(chapterToSwitchTo: widget.index));
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SizedBox(
                       width: 160,
                       child: ChapterTextWidget(index: widget.index),
                     ),
@@ -75,9 +75,9 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                     child: Opacity(
                       opacity: isHovered ? 1.0 : 0.4, // High opacity when hovered, low otherwise
                       child: Padding(
-                          padding: EdgeInsets.only(right: 6),
+                          padding: const EdgeInsets.only(right: 6),
                           child: IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             onPressed: () {
                               showDialog(
                                   barrierDismissible: false,

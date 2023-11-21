@@ -19,23 +19,23 @@ class WritingMenuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(top: 15, bottom: 15, left: 15),
+        padding: const EdgeInsets.only(top: 15, bottom: 15, left: 15),
         child: MenuBar(children: [
           MenuItemButton(
-            leadingIcon: Icon(FontAwesomeIcons.list),
-            child: Text("Chapters"),
+            leadingIcon: const Icon(FontAwesomeIcons.list),
+            child: const Text("Chapters"),
             onPressed: () {
-              BlocProvider.of<WritingUIBloc>(context).add(ToggleChapterOutlineEvent());
+              BlocProvider.of<WritingUIBloc>(context).add(const ToggleChapterOutlineEvent());
             },
           ),
           MenuItemButton(
-            leadingIcon: Icon(FontAwesomeIcons.comment),
-            child: Text("Feedback"),
+            leadingIcon: const Icon(FontAwesomeIcons.comment),
+            child: const Text("Feedback"),
             onPressed: () {
-              BlocProvider.of<WritingUIBloc>(context).add(ToggleFeedbackUIEvent());
+              BlocProvider.of<WritingUIBloc>(context).add(const ToggleFeedbackUIEvent());
             },
           ),
-          AIDropdown()
+          const AIDropdown()
         ]));
   }
 }

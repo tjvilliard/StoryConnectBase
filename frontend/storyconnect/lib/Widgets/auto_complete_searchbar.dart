@@ -10,10 +10,10 @@ class AutoCompleteSearchBar extends StatefulWidget {
   const AutoCompleteSearchBar({super.key, this.hintText, required this.searchableItems, this.searchCallback});
 
   @override
-  _AutoCompleteSearchBarState createState() => _AutoCompleteSearchBarState();
+  AutoCompleteSearchBarState createState() => AutoCompleteSearchBarState();
 }
 
-class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
+class AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -62,13 +62,13 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
     return Material(
         color: theme.colorScheme.secondaryContainer,
         elevation: 5,
-        shape: StadiumBorder(),
+        shape: const StadiumBorder(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
               // Leading Icon
-              Icon(Icons.search),
+              const Icon(Icons.search),
               const SizedBox(width: 10),
 
               // AutoComplete TextField
@@ -106,21 +106,21 @@ class _AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                           color: theme.colorScheme.secondaryContainer,
                           width: 200,
                           child: ListView.builder(
-                            padding: EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             shrinkWrap: true,
                             itemCount: options.length,
                             itemBuilder: (BuildContext context, int index) {
                               final String option = options.elementAt(index);
                               final formattedOption = capitalizeTitle(option);
                               return Container(
-                                  padding: EdgeInsets.only(right: 20),
+                                  padding: const EdgeInsets.only(right: 20),
                                   child: Clickable(
                                       onPressed: () {
                                         onSelected(option);
                                         widget.searchCallback?.call(capitalizeTitle(option));
                                       },
                                       child: Padding(
-                                          padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                                          padding: const EdgeInsets.only(left: 10, top: 10, bottom: 10),
                                           child: Text(
                                             formattedOption,
                                             style: Theme.of(context).textTheme.labelLarge,

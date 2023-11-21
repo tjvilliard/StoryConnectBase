@@ -5,7 +5,7 @@ part 'models.freezed.dart';
 part 'models.g.dart';
 
 String localUuidFromJson(String json) {
-  return Uuid().v8();
+  return const Uuid().v8();
 }
 
 @freezed
@@ -176,7 +176,7 @@ class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
-  factory Profile.initial() => Profile(
+  factory Profile.initial() => const Profile(
         id: 0,
         bio: '',
         user: 0,

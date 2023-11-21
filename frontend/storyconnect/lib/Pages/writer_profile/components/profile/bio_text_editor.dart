@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 
 class BioTextEditor extends StatefulWidget {
+  const BioTextEditor({super.key});
+
   @override
   BioTextEditorState createState() => BioTextEditorState();
 }
 
 class BioTextEditorState extends State<BioTextEditor> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -24,7 +26,7 @@ class BioTextEditorState extends State<BioTextEditor> {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Flexible(
           child: Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: TextField(
                   onChanged: (String value) {
                     context.read<WriterProfileBloc>().add(EditBioStateEvent(bio: value));
@@ -33,22 +35,22 @@ class BioTextEditorState extends State<BioTextEditor> {
                   controller: _controller,
                   decoration: InputDecoration(
                       hintText: "Body", border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)))))),
-      SizedBox(height: 10),
+      const SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FilledButton.tonal(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(CancelProfileEditEvent());
+                context.read<WriterProfileBloc>().add(const CancelProfileEditEvent());
               },
-              child: Text("Cancel")),
-          SizedBox(width: 10),
+              child: const Text("Cancel")),
+          const SizedBox(width: 10),
           FilledButton.icon(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(SaveProfileEvent());
+                context.read<WriterProfileBloc>().add(const SaveProfileEvent());
               },
-              icon: Icon(Icons.save),
-              label: Text("Save")),
+              icon: const Icon(Icons.save),
+              label: const Text("Save")),
         ],
       )
     ]);

@@ -6,7 +6,7 @@ import 'package:storyconnect/Widgets/image_loader.dart';
 class BookWidget extends StatefulWidget {
   final Book book;
 
-  BookWidget({required this.book});
+  const BookWidget({super.key, required this.book});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,14 +19,14 @@ class BookWidgetState extends State<BookWidget> {
 
   @override
   void initState() {
-    get_image(widget.book.cover);
+    getImage(widget.book.cover);
     super.initState();
   }
 
   // build a rectangular placeholder for the book cover
   Widget _imagePlaceHolder() {
     return Column(children: [
-      SizedBox(
+      const SizedBox(
         height: 150,
         width: 100,
         child: Icon(Icons.book, size: 100),
@@ -35,7 +35,7 @@ class BookWidgetState extends State<BookWidget> {
     ]);
   }
 
-  Future<void> get_image(String? relativePath) async {
+  Future<void> getImage(String? relativePath) async {
     if (relativePath == null || relativePath.isEmpty) {
       if (mounted) {
         setState(() {
@@ -77,7 +77,7 @@ class BookWidgetState extends State<BookWidget> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -93,7 +93,7 @@ class BookWidgetState extends State<BookWidget> {
                       child: ImageLoader(
                         url: url!,
                         fit: BoxFit.cover,
-                        constraints: BoxConstraints.expand(),
+                        constraints: const BoxConstraints.expand(),
                       )),
                 if (url == null || url!.isEmpty) _imagePlaceHolder(),
                 if (url != null && url!.isNotEmpty)
@@ -102,9 +102,9 @@ class BookWidgetState extends State<BookWidget> {
                       left: 0,
                       right: 0,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.center,
                                 end: Alignment.bottomCenter,

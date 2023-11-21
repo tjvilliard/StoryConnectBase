@@ -24,10 +24,10 @@ class WritingAppView extends StatefulWidget {
   const WritingAppView({super.key, required this.bookId});
 
   @override
-  _WritingAppViewState createState() => _WritingAppViewState();
+  WritingAppViewState createState() => WritingAppViewState();
 }
 
-class _WritingAppViewState extends State<WritingAppView> {
+class WritingAppViewState extends State<WritingAppView> {
   bool firstLoaded = true;
   String? title;
   @override
@@ -66,7 +66,7 @@ class _WritingAppViewState extends State<WritingAppView> {
           title: Row(
             children: [
               IconButton(
-                icon: Icon(FontAwesomeIcons.house),
+                icon: const Icon(FontAwesomeIcons.house),
                 onPressed: () {
                   final beamed = Beamer.of(context).beamBack();
                   if (!beamed) {
@@ -74,7 +74,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                   }
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
@@ -89,7 +89,7 @@ class _WritingAppViewState extends State<WritingAppView> {
                   toReturn = toReturn = Text(state.book!.title, style: Theme.of(context).textTheme.displaySmall);
                 }
 
-                return Flexible(child: AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn));
+                return Flexible(child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
               }),
             ],
           ),
@@ -104,7 +104,7 @@ class _WritingAppViewState extends State<WritingAppView> {
           create: (context) {
             return ScrollController();
           },
-          child: Column(
+          child: const Column(
             children: [
               Row(
                 children: [

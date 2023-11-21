@@ -6,31 +6,31 @@ class TabbedPanel extends PanelItem {
 
   final List<Widget> children;
 
-  TabbedPanel({required this.tabs, required this.children});
+  const TabbedPanel({super.key, required this.tabs, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(maxWidth: 800.0, maxHeight: 800),
+        constraints: const BoxConstraints(maxWidth: 800.0, maxHeight: 800),
         child: DefaultTabController(
           initialIndex: 0,
-          length: this.tabs.length,
+          length: tabs.length,
           child: Scaffold(
             appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60),
+                preferredSize: const Size.fromHeight(60),
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       border:
                           Border.symmetric(horizontal: BorderSide(width: 1.0))),
                   child: TabBar(
                     isScrollable: false,
-                    padding: EdgeInsets.symmetric(horizontal: 4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     tabAlignment: TabAlignment.fill,
-                    tabs: this.tabs,
+                    tabs: tabs,
                   ),
                 )),
             body: TabBarView(
-              children: this.children,
+              children: children,
             ),
           ),
         ));

@@ -7,7 +7,7 @@ import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
 class LibraryView extends StatefulWidget {
-  const LibraryView({Key? key}) : super(key: key);
+  const LibraryView({super.key});
 
   @override
   LibraryState createState() => LibraryState();
@@ -32,49 +32,41 @@ class LibraryState extends State<LibraryView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(
-          child: BlocBuilder<LibraryBloc, LibraryStruct>(
-            builder: (BuildContext context, LibraryStruct libState) {
-              List<ContentPanel> toReturn;
-              if (libState.loadingStruct.isLoading) {
-                toReturn = <ContentPanel>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
-                ];
-              } else {
-                toReturn = <ContentPanel>[
-                  SolidPanel(children: [
-                    BlankPanel(height: 25),
-                    PanelHeader("My Library"),
-                    BlankPanel(height: 25),
-                    TabbedPanel(
-                      tabs: [
-                        Tab(text: "Currently Reading"),
-                        Tab(text: "Completed"),
-                        Tab(text: "To Be Read")
-                      ],
-                      children: [
-                        BookGrid(
-                          books: libState.libraryBooks,
-                        ),
-                        Container(),
-                        Container(),
-                      ],
-                    ),
-                    DividerPanel(color: Theme.of(context).dividerColor),
-                  ], primary: Theme.of(context).canvasColor)
-                ];
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            },
-          ),
+        body: Center(child: BlocBuilder<LibraryBloc, LibraryStruct>(
+          builder: (BuildContext context, LibraryStruct libState) {
+            List<ContentPanel> toReturn;
+            if (libState.loadingStruct.isLoading) {
+              toReturn = <ContentPanel>[
+                SolidPanel(primary: Theme.of(context).canvasColor, children: const [LoadingItem()])
+              ];
+            } else {
+              toReturn = <ContentPanel>[
+                SolidPanel(primary: Theme.of(context).canvasColor, children: [
+                  const BlankPanel(height: 25),
+                  PanelHeader("My Library"),
+                  const BlankPanel(height: 25),
+                  TabbedPanel(
+                    tabs: const [Tab(text: "Currently Reading"), Tab(text: "Completed"), Tab(text: "To Be Read")],
+                    children: [
+                      BookGrid(
+                        books: libState.libraryBooks,
+                      ),
+                      Container(),
+                      Container(),
+                    ],
+                  ),
+                  DividerPanel(color: Theme.of(context).dividerColor),
+                ])
+              ];
+            }
+            return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  reverse: false,
+                  child: Column(children: toReturn),
+                ));
+          },
         )));
   }
 }

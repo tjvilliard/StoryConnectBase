@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
@@ -32,7 +33,9 @@ class BookApiProvider {
       );
       return Chapter.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -56,7 +59,9 @@ class BookApiProvider {
       );
       return Chapter.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -80,7 +85,9 @@ class BookApiProvider {
       );
       return result.statusCode == 200;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return false;
     }
   }
@@ -91,14 +98,16 @@ class BookApiProvider {
       await http.delete(url, headers: await buildHeaders());
       return true;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     return false;
   }
 }
 
 class BookProviderRepository {
-  BookApiProvider _api = BookApiProvider();
+  final BookApiProvider _api = BookApiProvider();
   final int bookId;
 
   BookProviderRepository({required this.bookId});
@@ -118,7 +127,9 @@ class BookProviderRepository {
       required String rawContent,
       String? title}) {
     if (number == -1) {
-      print("number is -1");
+      if (kDebugMode) {
+        print("number is -1");
+      }
     }
     return _api.updateChapter(bookId, chapterId, number, content, rawContent, title);
   }

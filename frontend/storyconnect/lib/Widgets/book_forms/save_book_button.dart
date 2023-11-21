@@ -9,9 +9,9 @@ class SaveBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
+        onPressed: onPressed,
         child: Text(
           text,
-        ),
-        onPressed: onPressed);
+        ));
   }
 }

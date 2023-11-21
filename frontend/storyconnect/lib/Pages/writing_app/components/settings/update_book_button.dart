@@ -14,7 +14,7 @@ class UpdateBookButton extends StatelessWidget {
           onPressed: state.bookEditorState == null
               ? () {}
               : () => {
-                    context.read<WritingUIBloc>().add(UpdateBookEvent()),
+                    context.read<WritingUIBloc>().add(const UpdateBookEvent()),
                     Navigator.of(context).pop(),
                   });
     });

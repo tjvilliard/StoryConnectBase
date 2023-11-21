@@ -17,20 +17,20 @@ class LoadingWidget extends StatelessWidget {
       children: [
         if (loadingStruct.message != null)
           Padding(
-              padding: short ? EdgeInsets.symmetric(vertical: 10) : EdgeInsets.symmetric(vertical: 15),
+              padding: short ? const EdgeInsets.symmetric(vertical: 10) : const EdgeInsets.symmetric(vertical: 15),
               child: Text(
                 loadingStruct.message!,
                 textAlign: TextAlign.center,
               )),
         short
-            ? Container(
+            ? SizedBox(
                 width: 100,
                 child: LinearProgressIndicator(
                   color: Theme.of(context).colorScheme.secondary,
                   borderRadius: BorderRadius.circular(10),
                 ),
               )
-            : CircularProgressIndicator(),
+            : const CircularProgressIndicator(),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:http/http.dart' as http;
@@ -24,8 +25,8 @@ class LibraryApiProvider {
       for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
         LibraryBook decode = LibraryBook.fromJson(map);
 
-        yield new MapEntry<Library, Book>(
-          new Library(
+        yield MapEntry<Library, Book>(
+          Library(
             id: decode.id,
             status: decode.status,
           ),
@@ -33,7 +34,9 @@ class LibraryApiProvider {
         );
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -49,7 +52,9 @@ class LibraryApiProvider {
           },
           body: (jsonEncode(serializer.toJson())));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -66,29 +71,31 @@ class LibraryApiProvider {
         },
       );
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
 
 class LibraryRepository {
   Map<Library, Book> libraryBookMap = {};
-  LibraryApiProvider _api = LibraryApiProvider();
+  final LibraryApiProvider _api = LibraryApiProvider();
 
   Future<void> getLibraryBooks() async {
-    this.libraryBookMap.clear();
-    await for (MapEntry<Library, Book> entry in this._api.getLibraryBooks()) {
-      this.libraryBookMap.addEntries([entry]);
+    libraryBookMap.clear();
+    await for (MapEntry<Library, Book> entry in _api.getLibraryBooks()) {
+      libraryBookMap.addEntries([entry]);
     }
   }
 
   Future<void> removeLibraryBook(LibraryEntrySerializer serialzier) async {
-    await this._api.removeBookFromLibrary(serialzier);
-    await this.getLibraryBooks();
+    await _api.removeBookFromLibrary(serialzier);
+    await getLibraryBooks();
   }
 
   Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
-    await this._api.addBooktoLibrary(serialzier);
-    await this.getLibraryBooks();
+    await _api.addBooktoLibrary(serialzier);
+    await getLibraryBooks();
   }
 }

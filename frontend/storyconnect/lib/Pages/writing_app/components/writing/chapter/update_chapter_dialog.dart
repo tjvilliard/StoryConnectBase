@@ -14,10 +14,10 @@ class UpdateChapterDialog extends StatefulWidget {
       {super.key, required this.title, required this.onDelete, required this.onSaveTitle, required this.numOfChapters});
 
   @override
-  _UpdateChapterDialogState createState() => _UpdateChapterDialogState();
+  UpdateChapterDialogState createState() => UpdateChapterDialogState();
 }
 
-class _UpdateChapterDialogState extends State<UpdateChapterDialog> {
+class UpdateChapterDialogState extends State<UpdateChapterDialog> {
   late String title;
 
   @override
@@ -33,12 +33,12 @@ class _UpdateChapterDialogState extends State<UpdateChapterDialog> {
         clipBehavior: Clip.none, // Allows elements to be positioned outside the Dialog box
         children: [
           Container(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               maxWidth: 400,
               minHeight: 250,
               maxHeight: 300,
             ),
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,15 +68,15 @@ class _UpdateChapterDialogState extends State<UpdateChapterDialog> {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Cancel'),
+                          child: const Text('Cancel'),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         FilledButton(
                           onPressed: () {
                             widget.onSaveTitle(title);
                             Navigator.of(context).pop();
                           },
-                          child: Text('Save'),
+                          child: const Text('Save'),
                         ),
                       ],
                     ),
@@ -89,7 +89,7 @@ class _UpdateChapterDialogState extends State<UpdateChapterDialog> {
             right: 15,
             top: 10,
             child: IconButton.filledTonal(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),

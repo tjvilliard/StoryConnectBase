@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
@@ -30,7 +31,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
       // If the url contains home, send the reader home.
       if (url.contains('home')) {
         pages.add(CustomBeamPage(
-            key: ValueKey('reader'),
+            key: const ValueKey('reader'),
             child: MultiRepositoryProvider(
               providers: [
                 RepositoryProvider(create: (_) => LibraryRepository()),
@@ -38,19 +39,19 @@ class ReaderLocations extends BeamLocation<BeamState> {
               child: MultiBlocProvider(providers: [
                 BlocProvider(create: (context) => ReadingHomeBloc(context.read<ReadingRepository>())),
                 BlocProvider(create: (context) => LibraryBloc(context.read<LibraryRepository>())),
-              ], child: ReadingHomeView()),
+              ], child: const ReadingHomeView()),
             )));
       }
       // If the url contains library, send the reader to the library.
       else if (url.contains('library')) {
         pages.add(CustomBeamPage(
-            key: ValueKey('library'),
+            key: const ValueKey('library'),
             child: RepositoryProvider(
                 lazy: false,
                 create: (_) => LibraryRepository(),
                 child: BlocProvider(
                   create: (context) => LibraryBloc(context.read<LibraryRepository>()),
-                  child: LibraryView(),
+                  child: const LibraryView(),
                 ))));
       }
       // If the url contains a path parameter 'bookId'
@@ -85,7 +86,9 @@ class ReaderLocations extends BeamLocation<BeamState> {
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
       } else {
-        print("Not Found: Reader");
+        if (kDebugMode) {
+          print("Not Found: Reader");
+        }
       }
     }
 

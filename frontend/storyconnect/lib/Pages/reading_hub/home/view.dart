@@ -9,7 +9,7 @@ import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 
 /// The Reading Home View: Displays a curated set of book content for the readers.
 class ReadingHomeView extends StatefulWidget {
-  const ReadingHomeView({Key? key}) : super(key: key);
+  const ReadingHomeView({super.key});
 
   @override
   ReadingHomeState createState() => ReadingHomeState();
@@ -37,29 +37,23 @@ class ReadingHomeState extends State<ReadingHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(child:
-            BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-                builder: (BuildContext context, ReadingHomeStruct homeState) {
+        body: Center(child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+            builder: (BuildContext context, ReadingHomeStruct homeState) {
           return BlocBuilder<LibraryBloc, LibraryStruct>(
             builder: (BuildContext context, LibraryStruct libraryState) {
               List<Widget> toReturn;
-              if (homeState.loadingStruct.isLoading ||
-                  libraryState.loadingStruct.isLoading) {
+              if (homeState.loadingStruct.isLoading || libraryState.loadingStruct.isLoading) {
                 toReturn = <Widget>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor),
+                  SolidPanel(primary: Theme.of(context).canvasColor, children: const [LoadingItem()]),
                   Container(
-                    constraints: BoxConstraints(maxWidth: 800),
+                    constraints: const BoxConstraints(maxWidth: 800),
                     child: Divider(
                       height: 10,
                       thickness: .5,
                       color: Theme.of(context).dividerColor,
                     ),
                   ),
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
+                  SolidPanel(primary: Theme.of(context).canvasColor, children: const [LoadingItem()])
                 ];
               } else {
                 /// Build scrolling paginated view of book panels
@@ -67,10 +61,10 @@ class ReadingHomeState extends State<ReadingHomeView> {
                   SolidPanel(
                     primary: Theme.of(context).canvasColor,
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Container(
                           alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
+                          constraints: const BoxConstraints(maxWidth: 800),
                           child: Text(
                               textAlign: TextAlign.left,
                               style: Theme.of(context).textTheme.titleLarge,
@@ -79,7 +73,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                     ],
                   ),
                   Container(
-                    constraints: BoxConstraints(maxWidth: 800),
+                    constraints: const BoxConstraints(maxWidth: 800),
                     child: Divider(
                       height: 10,
                       thickness: .5,
@@ -91,18 +85,18 @@ class ReadingHomeState extends State<ReadingHomeView> {
                     children: [
                       Container(
                           alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
+                          constraints: const BoxConstraints(maxWidth: 800),
                           child: Text(
                               textAlign: TextAlign.left,
                               style: Theme.of(context).textTheme.titleLarge,
-                              "Latest in \'Category\'")),
+                              "Latest in 'Category'")),
                       BigBookListWidget(books: homeState.books)
                     ],
                   )
                 ];
               }
               return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     reverse: false,
@@ -110,6 +104,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                   ));
             },
           );
-        }))));
+        })));
   }
 }

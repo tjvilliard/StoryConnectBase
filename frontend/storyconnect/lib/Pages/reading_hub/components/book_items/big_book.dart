@@ -14,7 +14,7 @@ const String dummyAuthor = "The illustrius joeseph joestar....";
 class BigBook extends StatelessBookItem {
   final Book book;
 
-  BigBook({required this.book});
+  const BigBook({super.key, required this.book});
 
   String yyMMddDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat.yMd();
@@ -24,7 +24,7 @@ class BigBook extends StatelessBookItem {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: 200.0,
         width: 400.0,
         child: Card(
@@ -40,131 +40,106 @@ class BigBook extends StatelessBookItem {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.book,
                           size: 175,
                         ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Title Text Widget
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                padding:
-                                    EdgeInsets.only(top: 12.0, bottom: 0.0),
-                                constraints: BoxConstraints(
-                                  maxHeight: 40.0,
-                                  maxWidth: 190.0,
-                                ),
-                                child: Text(
-                                  this.book.title,
-                                  maxLines: 1,
+                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          // Title Text Widget
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(top: 12.0, bottom: 0.0),
+                            constraints: const BoxConstraints(
+                              maxHeight: 40.0,
+                              maxWidth: 190.0,
+                            ),
+                            child: Text(
+                              book.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                            ),
+                          ),
+                          // Title Text Widget
+
+                          //Author Text Widget
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.symmetric(vertical: 2.0),
+                              constraints: const BoxConstraints(
+                                maxHeight: 30.0,
+                                maxWidth: 190.0,
+                              ),
+                              child: RichText(
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
-                                ),
-                              ),
-                              // Title Text Widget
+                                  text: TextSpan(children: [
+                                    const WidgetSpan(
+                                        child: Padding(
+                                      padding: EdgeInsets.only(right: 4.0),
+                                      child: Icon(Icons.person_outline, size: 16),
+                                    )),
+                                    TextSpan(
+                                      text: dummyAuthor,
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    )
+                                  ]))),
+                          // Author Text Widget
 
-                              //Author Text Widget
-                              Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.symmetric(vertical: 2.0),
-                                  constraints: BoxConstraints(
-                                    maxHeight: 30.0,
-                                    maxWidth: 190.0,
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxWidth: 190.0,
+                              maxHeight: 20.0,
+                            ),
+                            child: Row(
+                              children: [
+                                // Chapter Info Text Widget
+                                RichText(
+                                    text: TextSpan(children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      size: Theme.of(context).textTheme.bodySmall!.fontSize! + 3,
+                                      FontAwesomeIcons.list,
+                                    ),
                                   ),
-                                  child: RichText(
-                                      overflow: TextOverflow.ellipsis,
-                                      text: TextSpan(children: [
-                                        WidgetSpan(
-                                            child: Padding(
-                                          padding: EdgeInsets.only(right: 4.0),
-                                          child: Icon(Icons.person_outline,
-                                              size: 16),
-                                        )),
-                                        TextSpan(
-                                          text: dummyAuthor,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        )
-                                      ]))),
-                              // Author Text Widget
+                                  TextSpan(
+                                    text: " 15",
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ])),
+                                // Chapter Info Text Widget
 
-                              Container(
-                                constraints: BoxConstraints(
-                                  maxWidth: 190.0,
-                                  maxHeight: 20.0,
+                                const VerticalDivider(
+                                  width: 20,
                                 ),
-                                child: Row(
-                                  children: [
-                                    // Chapter Info Text Widget
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      WidgetSpan(
-                                        child: Icon(
-                                          size: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .fontSize! +
-                                              3,
-                                          FontAwesomeIcons.list,
-                                        ),
+                                RichText(
+                                  text: TextSpan(children: [
+                                    WidgetSpan(
+                                      child: Icon(
+                                        size: Theme.of(context).textTheme.bodySmall!.fontSize! + 3,
+                                        FontAwesomeIcons.pen,
                                       ),
-                                      TextSpan(
-                                        text: " 15",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                    ])),
-                                    // Chapter Info Text Widget
-
-                                    VerticalDivider(
-                                      width: 20,
                                     ),
-                                    RichText(
-                                      text: TextSpan(children: [
-                                        WidgetSpan(
-                                          child: Icon(
-                                            size: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall!
-                                                    .fontSize! +
-                                                3,
-                                            FontAwesomeIcons.pen,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall,
-                                            text:
-                                                " ${this.yyMMddDateTime(this.book.modified).toString()}"),
-                                      ]),
-                                    ),
-                                  ],
+                                    TextSpan(
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                        text: " ${yyMMddDateTime(book.modified).toString()}"),
+                                  ]),
                                 ),
-                              ),
+                              ],
+                            ),
+                          ),
 
-                              // Synopsis Text Widget
-                              Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 4.0),
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxWidth: 190.0, maxHeight: 190.0),
-                                        child: Text(dummySynopsis,
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12)),
-                                      ))),
-                              // Synopsis Text Widget
-                            ]),
+                          // Synopsis Text Widget
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(maxWidth: 190.0, maxHeight: 190.0),
+                                    child: const Text(dummySynopsis,
+                                        maxLines: 4, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)),
+                                  ))),
+                          // Synopsis Text Widget
+                        ]),
                       ],
                     ),
                   ],

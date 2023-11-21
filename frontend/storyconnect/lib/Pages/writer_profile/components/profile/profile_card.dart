@@ -19,7 +19,7 @@ class ProfileCard extends StatefulWidget {
 
 class ProfileCardState extends State<ProfileCard> {
   String get uid => widget.uid;
-  bool? _showEditProfile = null;
+  bool? _showEditProfile;
 
   @override
   void initState() {
@@ -41,27 +41,27 @@ class ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         maxWidth: 700,
       ),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start, // Aligns children at the start
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ProfileImage(),
-                  SizedBox(height: 8),
+                  const ProfileImage(),
+                  const SizedBox(height: 8),
                   BlocBuilder<WriterProfileBloc, WriterProfileState>(
                     builder: (context, state) {
                       Widget toReturn;
                       if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
                         return Container();
                       } else if (state.isEditingBio) {
-                        toReturn = DisplayNameEditor();
+                        toReturn = const DisplayNameEditor();
                       } else {
                         toReturn = Text(state.profile.displayName, style: Theme.of(context).textTheme.titleMedium);
                       }
@@ -70,7 +70,7 @@ class ProfileCardState extends State<ProfileCard> {
                   )
                 ],
               ),
-              SizedBox(width: 20), // some spacing between columns
+              const SizedBox(width: 20), // some spacing between columns
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,17 +80,17 @@ class ProfileCardState extends State<ProfileCard> {
                       Widget toReturn;
                       if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
                         toReturn = Row(
-                          key: ValueKey('loading'),
+                          key: const ValueKey('loading'),
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [LoadingWidget(loadingStruct: state.loadingStructs.profileLoadingStruct)],
                         );
                       } else if (state.isEditingBio) {
-                        toReturn = BioTextEditor();
+                        toReturn = const BioTextEditor();
                       } else {
                         toReturn = Text(state.profile.bio, style: Theme.of(context).textTheme.labelLarge);
                       }
                       return Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
                     })
                   ],
@@ -101,12 +101,12 @@ class ProfileCardState extends State<ProfileCard> {
               }, builder: (context, state) {
                 Widget toReturn;
                 if (_showEditProfile == true && state.isEditingBio == false) {
-                  toReturn = Column(
+                  toReturn = const Column(
                     key: ValueKey('edit_profile_button'),
                     children: [EditProfileButton()],
                   );
                 } else {
-                  toReturn = SizedBox(
+                  toReturn = const SizedBox(
                     width: 40,
                     key: ValueKey('empty_space'),
                   );

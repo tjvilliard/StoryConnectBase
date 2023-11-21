@@ -25,7 +25,7 @@ class ChapterBlocStruct {
     Map<int, int>? chapterNumToID,
   }) {
     final struct = ChapterBlocStruct(
-      currentChapterIndex: chapterIndex ?? this.currentChapterIndex,
+      currentChapterIndex: chapterIndex ?? currentChapterIndex,
       chapters: chapters ?? this.chapters,
       loadingStruct: loadingStruct ?? this.loadingStruct,
       caretOffset: caretOffset ?? this.caretOffset,
@@ -36,9 +36,6 @@ class ChapterBlocStruct {
   }
 
   factory ChapterBlocStruct.initial() {
-    return ChapterBlocStruct(
-        currentChapterIndex: 0,
-        chapters: {0: ""},
-        loadingStruct: LoadingStruct.loading(false));
+    return ChapterBlocStruct(currentChapterIndex: 0, chapters: {0: ""}, loadingStruct: LoadingStruct.loading(false));
   }
 }

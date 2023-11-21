@@ -16,10 +16,10 @@ class ReadingAppView extends StatefulWidget {
   const ReadingAppView({super.key, required this.bookId});
 
   @override
-  _ReadingAppViewState createState() => _ReadingAppViewState();
+  ReadingAppViewState createState() => ReadingAppViewState();
 }
 
-class _ReadingAppViewState extends State<ReadingAppView> {
+class ReadingAppViewState extends State<ReadingAppView> {
   bool firstLoaded = true;
   String? title;
   @override
@@ -49,7 +49,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
             title: Row(
               children: [
                 IconButton(
-                  icon: Icon(FontAwesomeIcons.house),
+                  icon: const Icon(FontAwesomeIcons.house),
                   onPressed: () {
                     BeamerDelegate beamer = Beamer.of(context);
                     if (beamer.canBeamBack) {
@@ -59,7 +59,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                     }
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
@@ -72,15 +72,11 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                               toReturn = Text(state.title!,
                                   maxLines: 1,
                                   overflow: TextOverflow.fade,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall);
+                                  style: Theme.of(context).textTheme.displaySmall);
                             } else {
-                              toReturn = LoadingWidget(
-                                  loadingStruct: state.loadingStruct);
+                              toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
                             }
-                            return AnimatedSwitcher(
-                                duration: Duration(milliseconds: 500),
-                                child: toReturn);
+                            return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
                           },
                         )))
               ],
@@ -88,7 +84,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
+            const Flexible(
                 fit: FlexFit.loose,
                 child: Stack(
                   alignment: Alignment.center,

@@ -15,22 +15,22 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   /// Maps Events to Event Handlers.
   RegistrationBloc(FirebaseRepository repo)
       : super(RegistrationState.initial()) {
-    this._repo = repo;
+    _repo = repo;
     on<EmailFieldChangedEvent>(
-      (event, emit) => this._emailFieldChanged(event, emit),
+      (event, emit) => _emailFieldChanged(event, emit),
     );
     on<DisplayNameChangedEvent>(
-        (event, emit) => this._displayNameFieldChanged(event, emit));
+        (event, emit) => _displayNameFieldChanged(event, emit));
     on<PasswordFieldChangedEvent>(
-        (event, emit) => this._passwordFieldChanged(event, emit));
+        (event, emit) => _passwordFieldChanged(event, emit));
     on<PasswordConfirmFieldChangedEvent>(
-        (event, emit) => this._passwordConfirmFieldChanged(event, emit));
+        (event, emit) => _passwordConfirmFieldChanged(event, emit));
     on<ShowPasswordClickedEvent>(
-        (event, emit) => this._showPasswordClicked(event, emit));
+        (event, emit) => _showPasswordClicked(event, emit));
     on<ShowPasswordConfirmClickedEvent>(
-        (event, emit) => this._showPasswordConfirmClicked(event, emit));
+        (event, emit) => _showPasswordConfirmClicked(event, emit));
     on<RegisterButtonPushedEvent>(
-        (event, emit) => this._registerButtonPushed(event, emit));
+        (event, emit) => _registerButtonPushed(event, emit));
   }
 
   /// Event handler for an EmailFieldChangedEvent, alters the state of the email text field.
@@ -88,15 +88,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   ///
   void _registerButtonPushed(
       RegisterButtonPushedEvent event, RegistrationEmitter emit) async {
-    bool emailValid = this.validateEmail(emit);
+    bool emailValid = validateEmail(emit);
 
     bool displayNameValid = false;
 
-    bool passwordsValid = this.validatePassword(emit);
+    bool passwordsValid = validatePassword(emit);
 
     if (emailValid & displayNameValid & passwordsValid) {
-      String response = await this
-          ._repo
+      String response = await _repo
           .register(state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
@@ -123,7 +122,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Validates the email field.
   bool validateEmail(RegistrationEmitter emit) {
-    if (this.state.email.isEmpty) {
+    if (state.email.isEmpty) {
       emit(state.copyWith(
         emailError: "Email field cannot be empty.",
         showEmailError: true,
@@ -140,15 +139,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Validates the password fields.
   bool validatePassword(RegistrationEmitter emit) {
-    if (this.state.password.isEmpty || this.state.confirmPassword.isEmpty) {
-      if (this.state.password.isEmpty) {
+    if (state.password.isEmpty || state.confirmPassword.isEmpty) {
+      if (state.password.isEmpty) {
         emit(state.copyWith(
           passwordError: "Password field cannot be empty.",
           showPasswordError: true,
         ));
       }
 
-      if (this.state.confirmPassword.isEmpty) {
+      if (state.confirmPassword.isEmpty) {
         emit(state.copyWith(
           confirmPasswordError: "Confirmation field cannot be empty.",
           showConfirmPasswordError: true,
@@ -158,7 +157,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    if (this.state.password != this.state.confirmPassword) {
+    if (state.password != state.confirmPassword) {
       emit(state.copyWith(
         passwordError: "Password must be equal to confirmation password.",
         confirmPasswordError:
@@ -169,7 +168,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    int length = this.state.password.length;
+    int length = state.password.length;
     if (length > 16 || length < 8) {
       emit(state.copyWith(
         passwordError:
@@ -206,17 +205,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       '10',
     ];
 
-    if (!specialChars.any((char) => this.state.password.contains(char)) &&
-        !digits.any((digit) => this.state.password.contains(digit))) {
+    if (!specialChars.any((char) => state.password.contains(char)) &&
+        !digits.any((digit) => state.password.contains(digit))) {
       emit(state.copyWith(
         passwordError:
-            "Password must contain at least one of the digits 0 - 9 and " +
-                "at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",
+            "Password must contain at least one of the digits 0 - 9 and " "at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",
         showPasswordError: true,
       ));
 
       return false;
-    } else if (!digits.any((digit) => this.state.password.contains(digit))) {
+    } else if (!digits.any((digit) => state.password.contains(digit))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the digits 0 - 9.",
@@ -224,7 +222,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       ));
       return false;
     } else if (!specialChars
-        .any((char) => this.state.password.contains(char))) {
+        .any((char) => state.password.contains(char))) {
       emit(state.copyWith(
         passwordError:
             "Password must contain at least one of the following special characters: !, @, #, \$, %, ^, &, *, (, ).",

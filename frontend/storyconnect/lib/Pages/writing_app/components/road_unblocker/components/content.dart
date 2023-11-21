@@ -12,11 +12,13 @@ class RoadUnblockerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RoadUnblockerBloc, RoadUnblockerState>(
       builder: (context, state) {
-        if (state.loadingStruct.isLoading && state.responses.isEmpty)
+        if (state.loadingStruct.isLoading && state.responses.isEmpty) {
           return LoadingWidget(loadingStruct: state.loadingStruct);
-        if (state.responses.isEmpty)
-          return Column(
+        }
+        if (state.responses.isEmpty) {
+          return const Column(
               mainAxisSize: MainAxisSize.min, children: [EmptyContent()]);
+        }
 
         // if there is already a response and we are loading, add the loading widget to the end of the list
         final responses = state.loadingStruct.isLoading

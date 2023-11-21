@@ -9,11 +9,13 @@ import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_blo
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
 class FeedbackWidget extends StatefulWidget {
+  const FeedbackWidget({super.key});
+
   @override
-  _FeedbackWidgetState createState() => _FeedbackWidgetState();
+  FeedbackWidgetState createState() => FeedbackWidgetState();
 }
 
-class _FeedbackWidgetState extends State<FeedbackWidget> {
+class FeedbackWidgetState extends State<FeedbackWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(builder: (context, uiState) {
@@ -22,15 +24,15 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
           return BlocBuilder<ChapterBloc, ChapterBlocStruct>(builder: (context, state) {
             return AnimatedCrossFade(
               crossFadeState: !uiState.feedbackBarShown ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               alignment: Alignment.centerRight,
               firstChild: Container(),
-              secondChild: Container(
+              secondChild: SizedBox(
                   width: 350,
                   child: Card(
                     elevation: 3,
                     child: uiState.feedbackBarShown
-                        ? Padding(
+                        ? const Padding(
                             padding: EdgeInsets.all(16),
                             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                               FeedbackTypeSelector(),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:replay_bloc/replay_bloc.dart';
@@ -91,9 +92,13 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
         final finalizedJson = jsonEncode([intermediateJson]);
         final decodedJson = jsonDecode(finalizedJson);
         doc = DeltaDocM.fromJson(decodedJson);
-        print("converted json to new format");
+        if (kDebugMode) {
+          print("converted json to new format");
+        }
       } catch (e) {
-        print("Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        if (kDebugMode) {
+          print("Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        }
         doc = DeltaDocM();
       }
     }
@@ -125,7 +130,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     if (debounceTimer != null && debounceTimer!.isActive) {
       debounceTimer!.cancel();
     }
-    debounceTimer = Timer(Duration(milliseconds: 250), () {
+    debounceTimer = Timer(const Duration(milliseconds: 250), () {
       add(_UpdateChapterHelperEvent(event: event));
     });
   }

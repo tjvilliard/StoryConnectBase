@@ -30,9 +30,9 @@ class ChapterNavigationList extends StatelessWidget {
                 itemCount: writingState.chapters.length + 1,
                 itemBuilder: (context, index) {
                   if (index == writingState.chapters.length) {
-                    return ChapterCreateButton();
+                    return const ChapterCreateButton();
                   }
-                  Uuid uuid = Uuid();
+                  Uuid uuid = const Uuid();
                   String keyString;
                   if (writingState.chapterNumToID.containsKey(index)) {
                     keyString = writingState.chapterNumToID[index].toString();
@@ -47,7 +47,7 @@ class ChapterNavigationList extends StatelessWidget {
                   );
                 });
           }
-          return AnimatedSwitcher(duration: Duration(milliseconds: 300), child: toReturn);
+          return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: toReturn);
         });
   }
 }

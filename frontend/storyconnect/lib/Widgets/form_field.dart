@@ -12,8 +12,8 @@ class CustomFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final VoidCallback? onFieldSubmitted;
   final TextEditingController? controller;
-  CustomFormField(
-      {required this.label,
+  const CustomFormField(
+      {super.key, required this.label,
       this.value,
       this.onChanged,
       this.onFieldSubmitted,

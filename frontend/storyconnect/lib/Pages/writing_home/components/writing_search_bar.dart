@@ -6,8 +6,8 @@ import 'package:storyconnect/Widgets/auto_complete_searchbar.dart';
 
 class WritingSearchBar extends StatefulWidget {
   const WritingSearchBar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() {

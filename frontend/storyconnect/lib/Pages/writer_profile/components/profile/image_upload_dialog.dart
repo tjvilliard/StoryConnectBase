@@ -4,13 +4,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 
 class EditProfileImageDialog extends StatelessWidget {
+  const EditProfileImageDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
         child: Stack(children: [
       Container(
-        constraints: BoxConstraints(maxWidth: 550, minHeight: 500),
-        padding: EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 550, minHeight: 500),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
@@ -19,9 +21,9 @@ class EditProfileImageDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Profile Image", style: Theme.of(context).textTheme.displaySmall),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Padding(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 5),
                     child: Icon(FontAwesomeIcons.user, size: 25, color: Theme.of(context).colorScheme.secondary))
               ],
             ),
@@ -32,7 +34,7 @@ class EditProfileImageDialog extends StatelessWidget {
                   toReturn = Container(
                     width: 300,
                     height: 300,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                     ),
                     child: ClipOval(
@@ -45,32 +47,34 @@ class EditProfileImageDialog extends StatelessWidget {
                 } else {
                   toReturn = Card(
                       child: Padding(
-                          padding: EdgeInsets.all(50),
+                          padding: const EdgeInsets.all(50),
                           child: Column(
                             children: [
                               FilledButton.icon(
                                   onPressed: () async {
-                                    context.read<WriterProfileBloc>().add(SelectProfileImageEvent());
+                                    context.read<WriterProfileBloc>().add(const SelectProfileImageEvent());
                                   },
-                                  icon: Icon(FontAwesomeIcons.upload),
-                                  label: Text("Upload Image")),
-                              SizedBox(height: 15),
+                                  icon: const Icon(FontAwesomeIcons.upload),
+                                  label: const Text("Upload Image")),
+                              const SizedBox(height: 15),
                               Text("or", style: Theme.of(context).textTheme.titleMedium),
-                              SizedBox(height: 15),
+                              const SizedBox(height: 15),
                               FilledButton.tonalIcon(
                                   onPressed: () async {
                                     bool confirm = await showConfirmationDialog(context);
                                     if (confirm) {
-                                      context.read<WriterProfileBloc>().add(DeleteProfileImageEvent());
+                                      // ignore: use_build_context_synchronously
+                                      context.read<WriterProfileBloc>().add(const DeleteProfileImageEvent());
+                                      // ignore: use_build_context_synchronously
                                       Navigator.of(context).pop();
                                     }
                                   },
-                                  icon: Icon(FontAwesomeIcons.x),
-                                  label: Text(" Delete Current Image")),
+                                  icon: const Icon(FontAwesomeIcons.x),
+                                  label: const Text(" Delete Current Image")),
                             ],
                           )));
                 }
-                return AnimatedContainer(duration: Duration(milliseconds: 500), child: toReturn);
+                return AnimatedContainer(duration: const Duration(milliseconds: 500), child: toReturn);
               },
             ),
             Row(
@@ -78,22 +82,22 @@ class EditProfileImageDialog extends StatelessWidget {
               children: [
                 FilledButton.tonal(
                   onPressed: () {
-                    context.read<WriterProfileBloc>().add(ClearProfileImageEvent());
+                    context.read<WriterProfileBloc>().add(const ClearProfileImageEvent());
                     Navigator.of(context).pop();
                   },
-                  child: Text("Cancel"),
+                  child: const Text("Cancel"),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 FilledButton.icon(
                   onPressed: () {
-                    context.read<WriterProfileBloc>().add(SaveProfileImageEvent());
+                    context.read<WriterProfileBloc>().add(const SaveProfileImageEvent());
                     Navigator.of(context).pop();
                   },
                   icon: Icon(
                     Icons.save,
                     color: Theme.of(context).colorScheme.surfaceVariant,
                   ),
-                  label: Text("Save"),
+                  label: const Text("Save"),
                 ),
               ],
             )
@@ -105,10 +109,10 @@ class EditProfileImageDialog extends StatelessWidget {
         right: 20,
         child: IconButton.filledTonal(
           onPressed: () {
-            context.read<WriterProfileBloc>().add(ClearProfileImageEvent());
+            context.read<WriterProfileBloc>().add(const ClearProfileImageEvent());
             Navigator.of(context).pop();
           },
-          icon: Icon(FontAwesomeIcons.x),
+          icon: const Icon(FontAwesomeIcons.x),
         ),
       ),
     ]));
@@ -118,15 +122,15 @@ class EditProfileImageDialog extends StatelessWidget {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Are you sure?"),
-        content: Text("This will delete your current profile image"),
+        title: const Text("Are you sure?"),
+        content: const Text("This will delete your current profile image"),
         actions: [
           TextButton(
-            child: Text("No"),
+            child: const Text("No"),
             onPressed: () => Navigator.of(context).pop(false), // passing 'false' when No is pressed
           ),
           TextButton(
-            child: Text("Yes"),
+            child: const Text("Yes"),
             onPressed: () => Navigator.of(context).pop(true), // passing 'true' when Yes is pressed
           ),
         ],

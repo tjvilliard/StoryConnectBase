@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of 'writing_bloc.dart';
 
 const VERTICAL_SPACING_EMPTY = VerticalSpacing(top: 0, bottom: 0);
@@ -35,7 +37,7 @@ class WritingState with _$WritingState {
         chapters: {0: ""},
         loadingStruct: LoadingStruct.loading(true),
         config: EditorConfigM(
-            customStyles: EditorStylesM(
+            customStyles: const EditorStylesM(
                 paragraph: TextBlockStyleM(TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
                     VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, null))));
   }

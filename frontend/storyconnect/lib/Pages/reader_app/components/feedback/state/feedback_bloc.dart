@@ -22,7 +22,7 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
   ///
   FeedbackBloc(ReadingRepository repo) : super(FeedbackState.initial()) {
-    this._repo = repo;
+    _repo = repo;
 
     // Map incoming events to state transformations with methods.
     on<FeedbackTypeChangedEvent>((event, emit) => feedbackTypeChanged(event, emit));
@@ -40,13 +40,11 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
     final currentFeedbackSet = Map<int, List<WriterFeedback>>.from(state.feedbackSet);
 
-    print("Getting Chapter Bloc");
-
     ChapterBloc bloc = event.chapterBloc;
 
     bloc.currentChapterId;
 
-    final List<WriterFeedback> newFeedbackSet = await this._repo.getChapterFeedback(event.chapterBloc.currentChapterId);
+    final List<WriterFeedback> newFeedbackSet = await _repo.getChapterFeedback(event.chapterBloc.currentChapterId);
 
     currentFeedbackSet.remove(event.chapterBloc.currentChapterId);
 
@@ -71,9 +69,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
       chapterId: event.chapterBloc.currentChapterId,
       text: event.text,
     ))));
-
-    print("[DEBUG]: Serializer State:\n");
-    print("${state.serializer}");
   }
 
   void feedbackTypeChanged(FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
@@ -134,12 +129,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
           )),
       loadingStruct: LoadingStruct.message(loadingMessage),
     ));
-
-    print("Submitting Feedback");
-
-    print("Feedback State: \n");
-
-    print(state.serializer);
 
     //this._repo.createChapterFeedback(serializer: state.serializer);
   }

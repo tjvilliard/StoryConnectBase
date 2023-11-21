@@ -24,7 +24,7 @@ class SignOutService {
   /// Returns an exception message or a success message.
   Future<String?> signOut() async {
     try {
-      await this._firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
       return success;
     } on FirebaseAuthException catch (error) {
       return error.code;

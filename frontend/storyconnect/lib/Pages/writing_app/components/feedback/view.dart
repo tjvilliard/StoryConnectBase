@@ -10,6 +10,8 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class FeedbackWidget extends StatefulWidget {
+  const FeedbackWidget({super.key});
+
   @override
   FeedbackWidgetState createState() => FeedbackWidgetState();
 }
@@ -33,23 +35,23 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                 builder: (context, state) {
                   return Card(
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: 400, minWidth: 300),
-                      padding: EdgeInsets.all(16),
+                      constraints: const BoxConstraints(maxWidth: 400, minWidth: 300),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SidePopupHeader(
                               title: "Comments",
-                              dismiss: () => BlocProvider.of<WritingUIBloc>(context).add(ToggleFeedbackUIEvent())),
-                          SizedBox(height: 20),
-                          Column(
+                              dismiss: () => BlocProvider.of<WritingUIBloc>(context).add(const ToggleFeedbackUIEvent())),
+                          const SizedBox(height: 20),
+                          const Column(
                             children: [
                               FeedbackTypeSelector(),
                             ],
                           ),
-                          SizedBox(height: 10),
-                          GhostFeedbackCheckbox(),
-                          SizedBox(
+                          const SizedBox(height: 10),
+                          const GhostFeedbackCheckbox(),
+                          const SizedBox(
                             height: 10,
                           ),
                           BlocListener<WritingBloc, WritingState>(
@@ -60,7 +62,7 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                               },
                               child: Expanded(
                                 child: AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 500),
+                                  duration: const Duration(milliseconds: 500),
                                   child: state.loadingStruct.isLoading
                                       ? LoadingWidget(
                                           loadingStruct: state.loadingStruct) // This will show when loading.
@@ -77,7 +79,7 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
               )
             : Container(),
         crossFadeState: uiState.feedbackUIshown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
       );
     });
   }

@@ -6,13 +6,13 @@ import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing
 import 'package:storyconnect/Widgets/form_field.dart';
 
 class QuestionEntry extends StatefulWidget {
-  const QuestionEntry({Key? key}) : super(key: key);
+  const QuestionEntry({super.key});
 
   @override
-  _QuestionEntryState createState() => _QuestionEntryState();
+  QuestionEntryState createState() => QuestionEntryState();
 }
 
-class _QuestionEntryState extends State<QuestionEntry> {
+class QuestionEntryState extends State<QuestionEntry> {
   late TextEditingController _textController;
 
   @override

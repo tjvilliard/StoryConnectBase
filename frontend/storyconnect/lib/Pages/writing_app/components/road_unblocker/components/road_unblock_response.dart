@@ -12,7 +12,7 @@ class RoadUnblockResponseWidget extends StatelessWidget {
         elevation: 5,
         child: Column(children: [
           Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 response.message,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -23,7 +23,7 @@ class RoadUnblockResponseWidget extends StatelessWidget {
                   responseLocalId: response.uid, suggestion: suggestion),
               // don't add if it's the last suggestion
               if (suggestion != response.suggestions.last)
-                Padding(
+                const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Divider())
             ])

@@ -29,7 +29,7 @@ class LoginLocations extends BeamLocation<BeamState> {
             create: (_) => FirebaseRepository(),
             child: BlocProvider<LoginBloc>(
               create: (context) => LoginBloc(context.read<FirebaseRepository>()),
-              child: LoginPageView(),
+              child: const LoginPageView(),
             ),
           )));
     } else if (url.contains('register')) {
@@ -39,7 +39,7 @@ class LoginLocations extends BeamLocation<BeamState> {
             create: (_) => FirebaseRepository(),
             child: BlocProvider<RegistrationBloc>(
               create: (context) => RegistrationBloc(context.read<FirebaseRepository>()),
-              child: RegistrationPageView(),
+              child: const RegistrationPageView(),
             ),
           )));
     } else if (url.contains('recover')) {

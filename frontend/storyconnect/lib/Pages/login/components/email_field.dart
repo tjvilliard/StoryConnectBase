@@ -5,42 +5,37 @@ import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/login/state/login_bloc.dart';
 
 class EmailField extends StatefulWidget {
-  const EmailField();
+  const EmailField({super.key});
 
   @override
-  _emailState createState() => _emailState();
+  EmailState createState() => EmailState();
 }
 
-class _emailState extends State<EmailField> {
+class EmailState extends State<EmailField> {
   final TextEditingController _emailController = TextEditingController();
-
-  _emailState();
 
   @override
   void dispose() {
-    this._emailController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-        builder: (BuildContext context, LoginState state) {
+    return BlocBuilder<LoginBloc, LoginState>(builder: (BuildContext context, LoginState state) {
       return Container(
-          constraints: BoxConstraints(minHeight: 56),
+          constraints: const BoxConstraints(minHeight: 56),
           width: LoginPageConstants.maxWidth,
           padding: LoginPageConstants.verticalPadding,
           child: TextField(
-            controller: this._emailController,
+            controller: _emailController,
             obscureText: false,
             onChanged: (_) {
-              context.read<LoginBloc>().add(
-                  EmailFieldChangedEvent(email: this._emailController.text));
+              context.read<LoginBloc>().add(EmailFieldChangedEvent(email: _emailController.text));
             },
             decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                prefixIcon: Icon(FontAwesomeIcons.envelope),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                prefixIcon: const Icon(FontAwesomeIcons.envelope),
                 labelText: 'Email',
                 errorText: state.showEmailError ? state.emailError : null),
           ));

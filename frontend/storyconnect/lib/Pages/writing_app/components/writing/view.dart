@@ -22,7 +22,7 @@ class WritingPageViewState extends State<WritingPageView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final uiBloc = context.read<WritingUIBloc>();
       uiBloc.state.textScrollController.addListener(() {
-        uiBloc.add(RemoveHighlightEvent());
+        uiBloc.add(const RemoveHighlightEvent());
       });
     });
   }
@@ -55,15 +55,15 @@ class WritingPageViewState extends State<WritingPageView> {
             );
           } else {
             toReturn = Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                   border: Border.all(color: Colors.grey[200]!, width: 1),
@@ -78,7 +78,7 @@ class WritingPageViewState extends State<WritingPageView> {
                   config: state.config,
                 )));
           }
-          return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+          return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
         }),
       ),
     );

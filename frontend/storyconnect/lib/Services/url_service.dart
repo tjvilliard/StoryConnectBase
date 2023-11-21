@@ -9,7 +9,7 @@ class _UrlBuilder {
     Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
     // if we don't have a trailing slash, add one
     if (!partialURI.path.endsWith('/')) {
-      partialURI = partialURI.replace(path: partialURI.path + '/');
+      partialURI = partialURI.replace(path: '${partialURI.path}/');
     }
     if (queryParameters != null) {
       partialURI = partialURI.replace(queryParameters: queryParameters);

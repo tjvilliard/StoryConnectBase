@@ -8,42 +8,39 @@ import 'package:storyconnect/Pages/reading_hub/components/book_items/big_book.da
 class BigBookListWidget extends StatefulWidget {
   final List<Book> books;
 
-  BigBookListWidget({required this.books});
+  const BigBookListWidget({super.key, required this.books});
 
   @override
-  _bigBookListWidgetState createState() =>
-      _bigBookListWidgetState(books: this.books);
+  BigBookListWidgetState createState() => BigBookListWidgetState();
 }
 
 ///
-class _bigBookListWidgetState extends State<BigBookListWidget> {
-  final List<Book> books;
+class BigBookListWidgetState extends State<BigBookListWidget> {
+  List<Book> get books => widget.books;
 
   final ScrollController _scrollController = ScrollController();
   bool showScrollLeftButton = false;
   bool showScrollRightButton = true;
 
-  _bigBookListWidgetState({required this.books});
-
   @override
   void initState() {
-    if (this.books.length < 3) {
-      this.showScrollRightButton = false;
+    if (books.length < 3) {
+      showScrollRightButton = false;
     } else {
-      this.showScrollRightButton = true;
+      showScrollRightButton = true;
     }
 
-    this._scrollController.addListener(() {
+    _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         bool isTop = _scrollController.position.pixels == 0;
         if (isTop) {
-          this.showScrollLeftButton = false;
+          showScrollLeftButton = false;
         } else {
-          this.showScrollRightButton = false;
+          showScrollRightButton = false;
         }
       } else {
-        this.showScrollRightButton = true;
-        this.showScrollLeftButton = true;
+        showScrollRightButton = true;
+        showScrollLeftButton = true;
       }
 
       setState(() {});
@@ -55,25 +52,21 @@ class _bigBookListWidgetState extends State<BigBookListWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
         child: SizedBox(
             width: 800,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(
-                        dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse
-                        }),
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse}),
                     child: SingleChildScrollView(
-                      controller: this._scrollController,
+                      controller: _scrollController,
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                          children: this
-                              .books
-                              .map((book) => Container(
+                          children: books
+                              .map((book) => SizedBox(
                                   height: 200,
                                   width: 400.0,
                                   child: Card(
@@ -86,38 +79,32 @@ class _bigBookListWidgetState extends State<BigBookListWidget> {
                 Positioned(
                     left: 1.0,
                     child: Visibility(
-                        visible: this.showScrollLeftButton,
+                        visible: showScrollLeftButton,
+                        replacement: const SizedBox.shrink(),
                         child: Container(
                             alignment: Alignment.centerLeft,
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()),
+                                style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                                 onPressed: () {
-                                  this._scrollController.animateTo(
-                                      this._scrollController.offset - 400,
-                                      duration: Duration(milliseconds: 350),
-                                      curve: Curves.easeIn);
+                                  _scrollController.animateTo(_scrollController.offset - 400,
+                                      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
                                 },
-                                child: Icon(Icons.arrow_left))),
-                        replacement: SizedBox.shrink())),
+                                child: const Icon(Icons.arrow_left))))),
                 Positioned(
                     right: 1.0,
                     child: Visibility(
-                        visible: this.showScrollRightButton,
+                        visible: showScrollRightButton,
+                        replacement: const SizedBox.shrink(),
                         child: Container(
                             alignment: Alignment.centerRight,
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder()),
+                                style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                                 onLongPress: () {},
                                 onPressed: () {
-                                  this._scrollController.animateTo(
-                                      this._scrollController.offset + 400,
-                                      duration: Duration(milliseconds: 350),
-                                      curve: Curves.easeIn);
+                                  _scrollController.animateTo(_scrollController.offset + 400,
+                                      duration: const Duration(milliseconds: 350), curve: Curves.easeIn);
                                 },
-                                child: Icon(Icons.arrow_right))),
-                        replacement: SizedBox.shrink()))
+                                child: const Icon(Icons.arrow_right)))))
               ],
             )));
   }

@@ -6,6 +6,8 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 
 class SendUnblockRequest extends StatelessWidget {
+  const SendUnblockRequest({super.key});
+
   @override
   Widget build(BuildContext context) {
     return IconButton.filledTonal(
@@ -20,6 +22,6 @@ class SendUnblockRequest extends StatelessWidget {
               .read<RoadUnblockerBloc>()
               .add(SubmitUnblockEvent(selection: selectedText, chapterID: writingBloc.state.currentChapterId));
         },
-        icon: Icon(FontAwesomeIcons.paperPlane));
+        icon: const Icon(FontAwesomeIcons.paperPlane));
   }
 }

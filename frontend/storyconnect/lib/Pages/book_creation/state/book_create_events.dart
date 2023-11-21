@@ -16,7 +16,7 @@ class LanguageChangedEvent extends BookCreateEvent {
 
 class TargetAudienceChangedEvent extends BookCreateEvent {
   final int targetAudience;
-  TargetAudienceChangedEvent({required TargetAudience targetAudience}) : this.targetAudience = targetAudience.index;
+  TargetAudienceChangedEvent({required TargetAudience targetAudience}) : targetAudience = targetAudience.index;
 }
 
 class UploadImageEvent extends BookCreateEvent {
@@ -25,12 +25,12 @@ class UploadImageEvent extends BookCreateEvent {
 
 class SynopsisChangedEvent extends BookCreateEvent {
   final String? synopsis;
-  SynopsisChangedEvent({required String? this.synopsis});
+  SynopsisChangedEvent({required this.synopsis});
 }
 
 class CopyrightChangedEvent extends BookCreateEvent {
   final int copyright;
-  CopyrightChangedEvent({required CopyrightOption copyrightOption}) : this.copyright = copyrightOption.index;
+  CopyrightChangedEvent({required CopyrightOption copyrightOption}) : copyright = copyrightOption.index;
 }
 
 class SaveBookEvent extends BookCreateEvent {

@@ -7,7 +7,9 @@ import 'package:storyconnect/Pages/registration/components/password_field.dart';
 import 'package:storyconnect/Pages/registration/components/register_button.dart';
 
 class RegistrationPageView extends StatelessWidget {
-  static Color charcoalBlue = Color(0xFF28536B);
+  static Color charcoalBlue = const Color(0xFF28536B);
+
+  const RegistrationPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,38 +21,38 @@ class RegistrationPageView extends StatelessWidget {
             Center(
                 child: Container(
               constraints:
-                  BoxConstraints(maxWidth: LoginPageConstants.maxWidth),
+                  const BoxConstraints(maxWidth: LoginPageConstants.maxWidth),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       style: TextStyle(fontSize: 42, color: charcoalBlue),
                       "StoryConnect",
                     ),
                   ),
                   Container(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                           style:
                               Theme.of(context).textTheme.titleMedium!.apply(),
                           "Get Started With A Free Account!")),
 
                   Container(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                           style: Theme.of(context).textTheme.bodySmall!.apply(),
                           "Start discovering new stories or write some of your own.")),
                   // Options for registering with:
                   // Google, Facebook, Apple, etc...
 
-                  EmailField(),
-                  DisplayNameField(),
-                  PasswordField(),
-                  ConfirmPasswordField(),
-                  RegistrationButton(),
+                  const EmailField(),
+                  const DisplayNameField(),
+                  const PasswordField(),
+                  const ConfirmPasswordField(),
+                  const RegistrationButton(),
                 ],
               ),
             ))

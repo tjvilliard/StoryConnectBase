@@ -6,7 +6,7 @@ class ImageLoader extends StatelessWidget {
   final BoxConstraints? constraints;
   final BoxFit? fit;
 
-  ImageLoader({required this.url, this.constraints, this.fit});
+  const ImageLoader({super.key, required this.url, this.constraints, this.fit});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ImageLoader extends StatelessWidget {
           },
           errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
             // You can add your custom error widget here
-            return Text('Error loading image');
+            return const Text('Error loading image');
           },
         ));
   }

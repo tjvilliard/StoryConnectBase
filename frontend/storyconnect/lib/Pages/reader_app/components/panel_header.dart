@@ -21,7 +21,7 @@ class SidePopupHeader extends StatelessWidget {
             onPressed: () {
               dismiss();
             },
-            icon: Icon(FontAwesomeIcons.x))
+            icon: const Icon(FontAwesomeIcons.x))
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
@@ -17,7 +18,9 @@ class FirebaseHelper {
       final result = await http.get(url, headers: await buildHeaders());
       return UsernameIdConversionSerializer.fromJson(jsonDecode(utf8.decode(result.bodyBytes))).username;
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }

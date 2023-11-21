@@ -12,18 +12,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   late final FirebaseRepository _repo;
 
   LoginBloc(FirebaseRepository repo) : super(LoginState.initial()) {
-    this._repo = repo;
+    _repo = repo;
 
-    on<EmailFieldChangedEvent>(
-        (event, emit) => _emailFieldChanged(event, emit));
-    on<PasswordFieldChangedEvent>(
-        (event, emit) => _passwordFieldChanged(event, emit));
-    on<ShowPasswordClickedEvent>(
-        (event, emit) => _showPasswordClicked(event, emit));
-    on<LoginButtonPushedEvent>(
-        (event, emit) => _loginButtonPushed(event, emit));
-    on<StayLoggedInCheckedEvent>(
-        (event, emit) => _stayLoggedInChecked(event, emit));
+    on<EmailFieldChangedEvent>((event, emit) => _emailFieldChanged(event, emit));
+    on<PasswordFieldChangedEvent>((event, emit) => _passwordFieldChanged(event, emit));
+    on<ShowPasswordClickedEvent>((event, emit) => _showPasswordClicked(event, emit));
+    on<LoginButtonPushedEvent>((event, emit) => _loginButtonPushed(event, emit));
+    on<StayLoggedInCheckedEvent>((event, emit) => _stayLoggedInChecked(event, emit));
   }
 
   _emailFieldChanged(EmailFieldChangedEvent event, LoginEmitter emit) {
@@ -49,8 +44,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   _loginButtonPushed(LoginButtonPushedEvent event, LoginEmitter emit) async {
-    bool emailValid = !state.email.isEmpty;
-    bool passwordValid = !state.password.isEmpty;
+    bool emailValid = state.email.isNotEmpty;
+    bool passwordValid = state.password.isNotEmpty;
 
     if (!emailValid) {
       emit(state.copyWith(
@@ -69,23 +64,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (!emailValid || !passwordValid) {
       return;
     } else {
-      String? message = await this._repo.signIn(state.email, state.password);
+      String? message = await _repo.signIn(state.email, state.password);
 
       if (message == FirebaseRepository.SUCCESS) {
-        print(message);
-
         emit(state.copyWith(success: true));
-        print("State Success Set");
         return;
       } else if (message!.toLowerCase().contains("email")) {
-        print(message);
         emit(state.copyWith(
           emailError: message,
           showEmailError: true,
         ));
       } else {
         // password error.
-        print(message);
       }
 
       return;

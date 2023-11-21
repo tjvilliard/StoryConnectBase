@@ -6,6 +6,8 @@ import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 class RegistrationButton extends StatelessWidget {
+  const RegistrationButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RegistrationBloc, RegistrationState>(
@@ -18,7 +20,7 @@ class RegistrationButton extends StatelessWidget {
             padding: LoginPageConstants.verticalPadding,
             child: OutlinedButton(
               style: ButtonStyle(
-                  textStyle: MaterialStatePropertyAll(
+                  textStyle: const MaterialStatePropertyAll(
                       TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -28,7 +30,7 @@ class RegistrationButton extends StatelessWidget {
                     .read<RegistrationBloc>()
                     .add(RegisterButtonPushedEvent());
               },
-              child: Text("Register"),
+              child: const Text("Register"),
             ));
       },
     );

@@ -73,12 +73,12 @@ class BookFormFieldDefaults {
 
 /// A collection of form fields for creating or updating a book.
 class BookFormFields extends StatelessWidget {
-  final EdgeInsets padding = EdgeInsets.all(10);
+  final EdgeInsets padding = const EdgeInsets.all(10);
   final String? selectedImageTitle;
   final BookFormFieldCallbacks callbacks;
   final BookFormFieldDefaults defaults;
 
-  BookFormFields(
+  const BookFormFields(
       {super.key,
       this.selectedImageTitle,
       required this.callbacks,
@@ -93,7 +93,7 @@ class BookFormFields extends StatelessWidget {
           label: "Title",
           initialValue: defaults.title,
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Padding(
             padding: padding,
             child: Text("Help your readers get to know your book!",
@@ -115,20 +115,20 @@ class BookFormFields extends StatelessWidget {
                 )),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Padding(
             padding: padding,
             child: CopyrightDropdown(
               onSelected: (value) => callbacks.onCopyRightChanged.call(value),
               initialValue: defaults.copyRight,
             )),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         ImageUpload(
           imageTitle: selectedImageTitle,
           noneSelectedText: defaults.noImageSelectedText,
           onImageSelect: () => callbacks.onImageChanged.call(),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         BookFormField(
           maxLines: 5,
           maxLength: 500,

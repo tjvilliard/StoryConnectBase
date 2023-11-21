@@ -11,7 +11,7 @@ import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class WritingHomeWidget extends StatefulWidget {
-  const WritingHomeWidget({Key? key}) : super(key: key);
+  const WritingHomeWidget({super.key});
 
   @override
   //Initialize view state
@@ -46,11 +46,11 @@ class WritingHomeWidgetState extends State<WritingHomeWidget> {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 800),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Header(
+              const Header(
                 title: "Writing Home",
                 subtitle: "",
                 leading: ViewProfileButton(),
@@ -60,11 +60,11 @@ class WritingHomeWidgetState extends State<WritingHomeWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 500, minWidth: 250, maxHeight: 50),
-                      child: WritingSearchBar()),
+                      constraints: const BoxConstraints(maxWidth: 500, minWidth: 250, maxHeight: 50),
+                      child: const WritingSearchBar()),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Flexible(
                 child: BlocBuilder<WritingHomeBloc, WritingHomeState>(
                   builder: (context, state) {
@@ -84,7 +84,7 @@ class WritingHomeWidgetState extends State<WritingHomeWidget> {
                         books: state.books,
                       );
                     }
-                    return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+                    return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
                   },
                 ),
               )

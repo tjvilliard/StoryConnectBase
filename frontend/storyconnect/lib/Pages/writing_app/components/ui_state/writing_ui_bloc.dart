@@ -121,7 +121,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       painter.layout(maxWidth: pageWidth);
       final feedbackOffset = painter.getOffsetForCaret(TextPosition(offset: event.selection.offset), Rect.zero);
 
-      await scrollController.animateTo(feedbackOffset.dy, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      await scrollController.animateTo(feedbackOffset.dy, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
 
       // Create a temporary highlight effect on the feedback
       final List<TextBox> boxes = painter.getBoxesForSelection(
@@ -133,8 +133,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
       // Remove the highlight after a second
       timer?.cancel(); // Cancel the existing timer if there is one
-      await Timer(Duration(milliseconds: 1000), () {
-        add(RemoveHighlightEvent());
+      Timer(const Duration(milliseconds: 1000), () {
+        add(const RemoveHighlightEvent());
       });
     }
   }

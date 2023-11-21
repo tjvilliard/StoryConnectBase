@@ -27,13 +27,13 @@ class NarrativeSheetPopup extends PopupRoute<void> {
             ),
         child: Material(
             child: SafeArea(
-                minimum: EdgeInsets.all(20),
+                minimum: const EdgeInsets.all(20),
                 child: Stack(
                   children: [
                     Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             FontAwesomeIcons.x,
                           ),
                           onPressed: () {
@@ -44,12 +44,12 @@ class NarrativeSheetPopup extends PopupRoute<void> {
                         alignment: Alignment.topCenter,
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height,
-                          child: NarrativeSheetView(),
+                          child: const NarrativeSheetView(),
                         )),
                   ],
                 ))));
   }
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 500);
+  Duration get transitionDuration => const Duration(milliseconds: 500);
 }
