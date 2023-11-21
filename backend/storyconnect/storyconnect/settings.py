@@ -94,8 +94,8 @@ INSTALLED_APPS = [
 # }
 
 CRONJOBS = [
-    ('05 19 * * 1', 'features.cron.ct_cron_job'),
-    ('05 19 * * 1', 'book_rec.cron.rating_cron_job')
+    ('59 23 * * 1', 'features.cron.ct_cron_job'),
+    ('59 23 * * 1', 'book_rec.cron.rating_cron_job')
 ]
 
 INTERNAL_IPS = [
