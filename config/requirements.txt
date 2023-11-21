@@ -21,5 +21,5 @@ pandas==1.5.3
 numpy==1.26.2
 nltk==3.8.1
 sklearn-pandas==2.2.0
-django_crontab==0.7.1numpy==1.26.2
+django_crontab==0.7.1
 sentence-transformers==2.2.2
