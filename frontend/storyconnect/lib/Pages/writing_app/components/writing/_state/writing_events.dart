@@ -5,12 +5,10 @@ abstract class WritingEvent extends ReplayEvent {
 }
 
 class SwitchChapterEvent extends WritingEvent {
-  final int chapterToSwitchFrom;
   final int chapterToSwitchTo;
   final bool storeCommand;
 
   SwitchChapterEvent({
-    required this.chapterToSwitchFrom,
     required this.chapterToSwitchTo,
     this.storeCommand = true,
   });

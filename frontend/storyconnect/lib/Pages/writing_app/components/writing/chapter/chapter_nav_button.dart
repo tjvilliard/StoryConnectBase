@@ -60,8 +60,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                     backgroundColor: writingState.currentIndex == widget.index ? selectedColor : Colors.transparent,
                   ),
                   onPressed: () {
-                    context.read<WritingBloc>().add(SwitchChapterEvent(
-                        chapterToSwitchTo: widget.index, chapterToSwitchFrom: writingState.currentIndex));
+                    context.read<WritingBloc>().add(SwitchChapterEvent(chapterToSwitchTo: widget.index));
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),

@@ -107,6 +107,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     editorSubscription?.cancel();
     emit(state.copyWith(
       currentIndex: event.chapterToSwitchTo,
+      isDeletingAChapter: false,
     ));
     if (editor != null) {
       await editorSubscription?.cancel();
@@ -242,6 +243,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   }
 
   void deleteChapter(DeleteChapterEvent event, WritingEmitter emit) async {
+    emit(state.copyWith(isDeletingAChapter: true));
     final chapterId = state.chapterNumToID[event.chapterNum];
     if (chapterId == null) {
       // Handle the case where the chapter number does not exist.
@@ -273,10 +275,8 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     chapters.remove(state.chapters.length - 1);
     chapterIDToTitle.remove(chapterId);
 
-    emit(state.copyWith(
-        currentIndex: state.currentIndex - 1,
-        chapterNumToID: chapterNumToID,
-        chapters: chapters,
-        chapterIDToTitle: chapterIDToTitle));
+    add(SwitchChapterEvent(chapterToSwitchTo: 0)); // switch to the first chapter
+
+    emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
   }
 }
