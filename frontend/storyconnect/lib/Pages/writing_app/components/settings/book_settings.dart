@@ -47,6 +47,7 @@ class BookSettings extends StatelessWidget {
                   return Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
                 } else {
                   return BookFormFields(
+                      selectedImageTitle: state.bookEditorState!.imageTitle,
                       defaults: BookFormFieldDefaults(
                         title: state.bookEditorState!.book.title,
                         noImageSelectedText: "Upload a new cover image (optional)",
