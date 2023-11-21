@@ -115,7 +115,7 @@ def all_books_recommend(book_pivot, similarity_score):
     book_based_rec = book_based_rec.iloc[1:, :]
     return book_based_rec
 
-def book_rec_book_based(book_id):
+def book_rec_book_based():
     df_books = pd.read_csv('backend/storyconnect/book_rec/general_book_rec_dataset/general_books.csv', sep = ',',on_bad_lines= 'skip', encoding ='latin-1')
     df_users = pd.read_csv('/content/drive/MyDrive/Fall2023/CS4500/general_book_rec_dataset/general_users.csv',sep = ',',on_bad_lines = 'skip',encoding ='latin-1')
     df_ratings = pd.read_csv('/content/drive/MyDrive/Fall2023/CS4500/general_book_rec_dataset/general_ratings.csv', sep = ',', on_bad_lines = 'skip', encoding = 'latin-1')
