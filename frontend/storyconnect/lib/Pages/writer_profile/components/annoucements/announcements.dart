@@ -13,18 +13,17 @@ part 'make_announcement_dialog.dart';
 class AnnouncementsCard extends StatefulWidget {
   final List<Announcement> announcements;
   final String uid;
-  const AnnouncementsCard(
-      {super.key, required this.announcements, required this.uid});
+  const AnnouncementsCard({super.key, required this.announcements, required this.uid});
 
   @override
-  _AnnouncementsCardState createState() => _AnnouncementsCardState();
+  AnnouncementsCardState createState() => AnnouncementsCardState();
 }
 
-class _AnnouncementsCardState extends State<AnnouncementsCard> {
+class AnnouncementsCardState extends State<AnnouncementsCard> {
   List<Announcement> get announcements => widget.announcements;
   String get uid => widget.uid;
 
-  bool? _showMakeAnnouncementDialog = null;
+  bool? _showMakeAnnouncementDialog;
 
   @override
   void initState() {
@@ -47,11 +46,10 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-        constraints:
-            BoxConstraints(maxWidth: 550, minWidth: 350, minHeight: 250),
+        constraints: const BoxConstraints(maxWidth: 550, minWidth: 350, minHeight: 250),
         child: Card(
             child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -59,21 +57,17 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
                       "Annoucements",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    SizedBox(height: 20),
-                    BlocBuilder<WriterProfileBloc, WriterProfileState>(
-                        builder: (context, state) {
+                    const SizedBox(height: 20),
+                    BlocBuilder<WriterProfileBloc, WriterProfileState>(builder: (context, state) {
                       Widget toReturn;
-                      if (state
-                          .loadingStructs.annoucementsLoadingStruct.isLoading) {
-                        toReturn = LoadingWidget(
-                            loadingStruct:
-                                state.loadingStructs.annoucementsLoadingStruct);
+                      if (state.loadingStructs.annoucementsLoadingStruct.isLoading) {
+                        toReturn = LoadingWidget(loadingStruct: state.loadingStructs.annoucementsLoadingStruct);
                       } else {
                         if (state.announcements.isEmpty) {
-                          toReturn = Text("No announcements found");
+                          toReturn = const Text("No announcements found");
                         } else {
                           toReturn = ConstrainedBox(
-                              constraints: BoxConstraints(maxHeight: 250),
+                              constraints: const BoxConstraints(maxHeight: 250),
                               child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: state.announcements.length,
@@ -84,13 +78,10 @@ class _AnnouncementsCardState extends State<AnnouncementsCard> {
                                   }));
                         }
                       }
-                      return AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 500),
-                          child: toReturn);
+                      return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
                     }),
-                    SizedBox(height: 20),
-                    if (_showMakeAnnouncementDialog == true)
-                      _MakeAnnouncementButton()
+                    const SizedBox(height: 20),
+                    if (_showMakeAnnouncementDialog == true) _MakeAnnouncementButton()
                   ],
                 ))));
   }

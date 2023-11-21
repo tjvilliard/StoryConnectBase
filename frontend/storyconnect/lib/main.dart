@@ -21,7 +21,7 @@ final routerDelegate = BeamerDelegate(
       ProfileLocations(),
       ReaderLocations(),
     ],
-  ),
+  ).call,
 );
 
 Future<void> main() async {

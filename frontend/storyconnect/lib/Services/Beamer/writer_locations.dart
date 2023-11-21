@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
@@ -32,10 +33,10 @@ class WriterLocations extends BeamLocation<BeamState> {
       if (url.contains('create_book')) {
         pages.add(
           CustomBeamPage(
-            key: ValueKey('create_book'),
+            key: const ValueKey('create_book'),
             child: BlocProvider(
               create: (context) => BookCreateBloc(context.read<WritingRepository>()),
-              child: WritingCreationView(),
+              child: const WritingCreationView(),
             ),
           ),
         );
@@ -72,15 +73,17 @@ class WriterLocations extends BeamLocation<BeamState> {
       } else if (url.contains('home')) {
         pages.add(
           CustomBeamPage(
-            key: ValueKey('writer'),
+            key: const ValueKey('writer'),
             child: BlocProvider(
               create: (context) => WritingHomeBloc(context.read<WritingRepository>()),
-              child: WritingHomeWidget(),
+              child: const WritingHomeWidget(),
             ),
           ),
         );
       } else {
-        print("Not Found");
+        if (kDebugMode) {
+          print("Not Found");
+        }
       }
     }
 

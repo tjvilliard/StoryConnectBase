@@ -4,12 +4,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 
 class EditProfileButton extends StatelessWidget {
+  const EditProfileButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return IconButton.filled(
         onPressed: () {
-          context.read<WriterProfileBloc>().add(EditProfileEvent());
+          context.read<WriterProfileBloc>().add(const EditProfileEvent());
         },
-        icon: Icon(FontAwesomeIcons.pencil));
+        icon: const Icon(FontAwesomeIcons.pencil));
   }
 }

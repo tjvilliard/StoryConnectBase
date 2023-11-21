@@ -20,7 +20,7 @@ class NarrativeSheetBloc
     _repo = repo;
     on<LoadNarrativeElements>(
         (event, emit) => loadNarrativeElements(event, emit));
-    add(LoadNarrativeElements());
+    add(const LoadNarrativeElements());
   }
 
   loadNarrativeElements(

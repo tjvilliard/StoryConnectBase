@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
@@ -18,8 +19,10 @@ class ReadingPageViewState extends State<ReadingPageView> {
 
   @override
   void initState() {
-    this._focusNode.addListener(() {
-      print("[INFO]: Has Focus: ${this._focusNode.hasFocus}");
+    _focusNode.addListener(() {
+      if (kDebugMode) {
+        print("[INFO]: Has Focus: ${_focusNode.hasFocus}");
+      }
     });
 
     super.initState();
@@ -27,7 +30,7 @@ class ReadingPageViewState extends State<ReadingPageView> {
 
   @override
   void dispose() {
-    this._focusNode.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -35,8 +38,7 @@ class ReadingPageViewState extends State<ReadingPageView> {
   Widget build(BuildContext context) {
     return Container(
         constraints: BoxConstraints(maxWidth: RenderPageSliver.pageWidth),
-        child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(
-            listener: (context, state) {
+        child: BlocConsumer<ChapterBloc, ChapterBlocStruct>(listener: (context, state) {
           textController.text = state.chapters[state.currentChapterIndex] ?? "";
         }, buildWhen: (previous, current) {
           return previous.currentChapterIndex != current.currentChapterIndex ||
@@ -48,44 +50,37 @@ class ReadingPageViewState extends State<ReadingPageView> {
               loadingStruct: state.loadingStruct,
             );
           } else {
-            toReturn = BlocBuilder<FeedbackBloc, FeedbackState>(
-                builder: (context, feedbackState) {
+            toReturn = BlocBuilder<FeedbackBloc, FeedbackState>(builder: (context, feedbackState) {
               return SingleChildScrollView(
                   child: Container(
-                      margin: EdgeInsets.all(20),
-                      padding: EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey[200]!, width: 1),
                         color: Colors.white,
                       ),
-                      constraints: BoxConstraints(
-                          minHeight: RenderPageSliver.pageHeight),
+                      constraints: BoxConstraints(minHeight: RenderPageSliver.pageHeight),
                       child: Listener(
                         onPointerUp: (details) {
-                          if (this._focusNode.hasFocus) {
+                          if (_focusNode.hasFocus) {
                             details.position;
 
                             int offset = textController.selection.baseOffset;
                             int offsetEnd = textController.selection.end;
                             String textSelection = textController.text
-                                .substring(textController.selection.baseOffset,
-                                    textController.selection.end);
+                                .substring(textController.selection.baseOffset, textController.selection.end);
 
-                            context.read<FeedbackBloc>().add(
-                                AnnotationChangedEvent(
-                                    chapterBloc: context.read<ChapterBloc>(),
-                                    offset: offset,
-                                    offsetEnd: offsetEnd,
-                                    text: textSelection));
+                            context.read<FeedbackBloc>().add(AnnotationChangedEvent(
+                                chapterBloc: context.read<ChapterBloc>(),
+                                offset: offset,
+                                offsetEnd: offsetEnd,
+                                text: textSelection));
                           }
                         },
                         child: TextField(
-                          focusNode: this._focusNode,
+                          focusNode: _focusNode,
                           decoration: null,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: Colors.black, fontSize: 16),
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black, fontSize: 16),
                           controller: textController,
                           readOnly: true,
                           maxLines: null,
@@ -94,8 +89,7 @@ class ReadingPageViewState extends State<ReadingPageView> {
                       )));
             });
           }
-          return AnimatedSwitcher(
-              duration: Duration(milliseconds: 500), child: toReturn);
+          return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
         }));
   }
 }

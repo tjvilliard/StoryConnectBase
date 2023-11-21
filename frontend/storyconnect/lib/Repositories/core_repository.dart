@@ -15,11 +15,13 @@ class CoreApiProvider {
       final url = UrlConstants.getBooksByUser(uid: uid);
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var book in jsonDecode(result.body)) {
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -27,9 +29,11 @@ class CoreApiProvider {
     try {
       final url = UrlConstants.verifyDisplayNameUniqueness();
       final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
-      return GenericResponse.fromJson(jsonDecode(result.body));
+      return GenericResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -39,12 +43,14 @@ class CoreApiProvider {
       final url = UrlConstants.announcements(uid: uid);
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var announcement in jsonDecode(result.body)) {
+      for (var announcement in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Announcement.fromJson(announcement);
       }
     } catch (e) {
-      print(e);
-      throw e;
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
     }
   }
 
@@ -52,10 +58,12 @@ class CoreApiProvider {
     try {
       final url = UrlConstants.profiles(uid: uid);
       final result = await http.get(url, headers: await buildHeaders());
-      return Profile.fromJson(jsonDecode(result.body));
+      return Profile.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
-      throw e;
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
     }
   }
 
@@ -65,9 +73,11 @@ class CoreApiProvider {
       final url = UrlConstants.announcements();
       final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
 
-      return Announcement.fromJson(jsonDecode(result.body));
+      return Announcement.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -77,63 +87,63 @@ class CoreApiProvider {
       final url = UrlConstants.activities(uid: uid);
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var activity in jsonDecode(result.body)) {
-        yield Activity.fromJson(jsonDecode(activity));
+      for (var activity in jsonDecode(utf8.decode(result.bodyBytes))) {
+        yield Activity.fromJson(activity);
       }
     } catch (e) {
-      print(e);
-      throw e;
+      if (kDebugMode) {
+        print(e);
+      }
+      rethrow;
     }
   }
 
   Future<Profile?> updateProfile(Profile profile) async {
     try {
-      final String? uid = FirebaseAuth.instance.currentUser!.uid;
-      if (uid == null) throw Exception("User not logged in");
+      final String uid = FirebaseAuth.instance.currentUser!.uid;
 
       final url = UrlConstants.profiles(uid: uid);
       final response = await http.patch(url, headers: await buildHeaders(), body: jsonEncode(profile.toJson()));
-      return Profile.fromJson(jsonDecode(response.body));
+      return Profile.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
 
   Future<Profile?> updateProfileImage(String encodedImage) async {
     try {
-      final String? uid = FirebaseAuth.instance.currentUser!.uid;
-      if (uid == null) throw Exception("User not logged in");
-
       final serializer = ProfileImageSerializer(image: encodedImage);
 
       final url = UrlConstants.updateProfileImage();
-      return http
-          .post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()))
-          .then((value) => Profile.fromJson(jsonDecode(value.body)));
+      final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
+      return Profile.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
 
   Future<GenericResponse> deleteProfileImage() async {
     try {
-      final String? uid = FirebaseAuth.instance.currentUser!.uid;
-      if (uid == null) throw Exception("User not logged in");
-
       final url = UrlConstants.updateProfileImage();
       final result = await http.delete(url, headers: await buildHeaders());
-      return GenericResponse.fromJson(jsonDecode(result.body));
+      return GenericResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
-      return GenericResponse(success: false, message: "Failed to delete profile image");
+      if (kDebugMode) {
+        print(e);
+      }
+      return const GenericResponse(success: false, message: "Failed to delete profile image");
     }
   }
 }
 
 class CoreRepository {
-  CoreApiProvider _api = CoreApiProvider();
+  final CoreApiProvider _api = CoreApiProvider();
 
   Future<List<Book>> getBooksByUser(String uid) async {
     return _api.getBooksByUser(uid).toList();

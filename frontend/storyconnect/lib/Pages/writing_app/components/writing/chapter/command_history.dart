@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 enum CommandType {
-  SwitchChapter,
-  UpdateChapter,
+  switchChapter,
+  updateChapter,
 }
 
 class Command {
@@ -11,8 +11,7 @@ class Command {
   const Command({required this.chapterNum, required this.commandType});
 }
 
-final class CommandEntry<T extends Command>
-    extends LinkedListEntry<CommandEntry<T>> {
+final class CommandEntry<T extends Command> extends LinkedListEntry<CommandEntry<T>> {
   T value;
   CommandEntry(this.value);
 }

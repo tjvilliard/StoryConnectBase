@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Pages/writing_app/components/menu_bar/rich_text_menu.dart';
 import 'package:storyconnect/Pages/writing_app/components/settings/writer_settings_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
@@ -23,10 +24,10 @@ class WritingAppView extends StatefulWidget {
   const WritingAppView({super.key, required this.bookId});
 
   @override
-  _WritingAppViewState createState() => _WritingAppViewState();
+  WritingAppViewState createState() => WritingAppViewState();
 }
 
-class _WritingAppViewState extends State<WritingAppView> {
+class WritingAppViewState extends State<WritingAppView> {
   bool firstLoaded = true;
   String? title;
   @override
@@ -65,7 +66,7 @@ class _WritingAppViewState extends State<WritingAppView> {
           title: Row(
             children: [
               IconButton(
-                icon: Icon(FontAwesomeIcons.house),
+                icon: const Icon(FontAwesomeIcons.house),
                 onPressed: () {
                   final beamed = Beamer.of(context).beamBack();
                   if (!beamed) {
@@ -73,20 +74,22 @@ class _WritingAppViewState extends State<WritingAppView> {
                   }
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
                 Widget toReturn;
                 if (state.loadingStruct.isLoading) {
                   toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                } else if (state.isSaving) {
+                  toReturn = LoadingWidget(loadingStruct: LoadingStruct.message("Saving"), short: true);
                 } else if (state.book == null) {
                   toReturn = Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
                 } else {
                   toReturn = toReturn = Text(state.book!.title, style: Theme.of(context).textTheme.displaySmall);
                 }
 
-                return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+                return Flexible(child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
               }),
             ],
           ),
@@ -101,7 +104,7 @@ class _WritingAppViewState extends State<WritingAppView> {
           create: (context) {
             return ScrollController();
           },
-          child: Column(
+          child: const Column(
             children: [
               Row(
                 children: [

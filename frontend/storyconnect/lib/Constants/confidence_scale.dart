@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 enum ConfidenceScale {
   low("Low"),
-  semi_low("Semi-Low"),
-  semi_high("Semi-High"),
+  semiLow("Semi-Low"),
+  semiHigh("Semi-High"),
   high("High");
 
   const ConfidenceScale(this.description);
@@ -11,10 +11,10 @@ enum ConfidenceScale {
 }
 
 class ConfidenceChecker {
-  static final _condidence_intervals = [.25, .5, .75, 1];
+  static final condidenceIntervals = [.25, .5, .75, 1];
   static ConfidenceScale getConfidence(double confidence) {
-    for (int i = 0; i < _condidence_intervals.length; i++) {
-      if (confidence <= _condidence_intervals[i]) {
+    for (int i = 0; i < condidenceIntervals.length; i++) {
+      if (confidence <= condidenceIntervals[i]) {
         return ConfidenceScale.values[i];
       }
     }
@@ -24,7 +24,7 @@ class ConfidenceChecker {
 
 final Map<ConfidenceScale, Color> confidenceColors = {
   ConfidenceScale.low: Colors.red,
-  ConfidenceScale.semi_low: Colors.red[300]!,
-  ConfidenceScale.semi_high: Colors.green[300]!,
+  ConfidenceScale.semiLow: Colors.red[300]!,
+  ConfidenceScale.semiHigh: Colors.green[300]!,
   ConfidenceScale.high: Colors.green,
 };

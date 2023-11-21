@@ -5,18 +5,17 @@ import 'package:storyconnect/Pages/writing_app/components/continuity_checker/mod
 class ContinuityList extends StatefulWidget {
   final List<ContinuitySuggestion> continuities;
 
-  const ContinuityList({Key? key, required this.continuities})
-      : super(key: key);
+  const ContinuityList({super.key, required this.continuities});
 
   @override
-  _ContinuityListState createState() => _ContinuityListState();
+  ContinuityListState createState() => ContinuityListState();
 }
 
-class _ContinuityListState extends State<ContinuityList> {
+class ContinuityListState extends State<ContinuityList> {
   @override
   Widget build(BuildContext context) {
     if (widget.continuities.isEmpty) {
-      return Column(children: [
+      return const Column(children: [
         Card(
             child: Padding(
                 padding: EdgeInsets.all(16),

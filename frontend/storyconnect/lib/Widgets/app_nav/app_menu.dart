@@ -6,7 +6,7 @@ import 'package:storyconnect/Services/Authentication/sign_out_service.dart';
 class CustomAppBarMenu extends StatelessWidget {
   final BuildContext context;
 
-  CustomAppBarMenu({Key? key, required this.context}) : super(key: key);
+  const CustomAppBarMenu({super.key, required this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,8 @@ class CustomAppBarMenu extends StatelessWidget {
       style: ButtonStyle(
         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       ),
-      label: Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Text("Sign Out")),
-      icon: Icon(FontAwesomeIcons.rightFromBracket),
+      label: const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Text("Sign Out")),
+      icon: const Icon(FontAwesomeIcons.rightFromBracket),
       onPressed: () {
         SignOutService().signOut();
         Beamer.of(context).beamToNamed("/");

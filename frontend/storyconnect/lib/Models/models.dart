@@ -5,7 +5,7 @@ part 'models.freezed.dart';
 part 'models.g.dart';
 
 String localUuidFromJson(String json) {
-  return Uuid().v8();
+  return const Uuid().v8();
 }
 
 @freezed
@@ -23,15 +23,15 @@ class Book with _$Book {
   const factory Book({
     required int id,
     required String title,
-    int? owner,
+    int? user,
     @JsonKey(name: 'author_name') String? authorName,
-    String? language,
-    @JsonKey(name: 'target_audience') int? targetAudience,
+    required String language,
+    @JsonKey(name: 'target_audience') required int targetAudience,
     String? cover,
     @JsonKey(name: 'created') required DateTime created,
     @JsonKey(name: 'modified') required DateTime modified,
     String? synopsis,
-    int? copyright,
+    required int copyright,
     String? titlepage,
   }) = _Book;
 
@@ -78,7 +78,7 @@ class Chapter with _$Chapter {
   const factory Chapter({
     required int id,
     required int book,
-    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'chapter_title') String? chapterTitle,
     @JsonKey(name: 'content') required String chapterContent,
     @JsonKey(name: 'chapter_number') required int number,
     @JsonKey(name: 'raw_content') required String rawContent,
@@ -91,7 +91,7 @@ class Chapter with _$Chapter {
 class ChapterUpload with _$ChapterUpload {
   const factory ChapterUpload({
     required int book,
-    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'chapter_title') String? chapterTitle,
     @JsonKey(name: 'content') required String chapterContent,
     @JsonKey(name: 'chapter_number') required int number,
   }) = _ChapterUpload;
@@ -176,7 +176,7 @@ class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
-  factory Profile.initial() => Profile(
+  factory Profile.initial() => const Profile(
         id: 0,
         bio: '',
         user: 0,

@@ -4,6 +4,7 @@ import 'package:storyconnect/Widgets/custom_dropdown.dart';
 
 typedef OnSelected = void Function(TargetAudience audience);
 
+/// A dropdown for the target audience book form.
 class AudienceDropdown extends StatelessWidget {
   final OnSelected onSelected;
   final TargetAudience? initialValue;

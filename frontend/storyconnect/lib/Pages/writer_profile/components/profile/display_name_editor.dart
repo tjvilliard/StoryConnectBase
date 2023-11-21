@@ -6,10 +6,10 @@ class DisplayNameEditor extends StatefulWidget {
   const DisplayNameEditor({super.key});
 
   @override
-  _DisplayNameEditorState createState() => _DisplayNameEditorState();
+  DisplayNameEditorState createState() => DisplayNameEditorState();
 }
 
-class _DisplayNameEditorState extends State<DisplayNameEditor> {
+class DisplayNameEditorState extends State<DisplayNameEditor> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -25,7 +25,7 @@ class _DisplayNameEditorState extends State<DisplayNameEditor> {
   Widget build(BuildContext context) {
     return BlocBuilder<WriterProfileBloc, WriterProfileState>(builder: (context, state) {
       return ConstrainedBox(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxWidth: 200,
           ),
           child: TextField(
@@ -33,7 +33,7 @@ class _DisplayNameEditorState extends State<DisplayNameEditor> {
             onChanged: (String value) {
               context.read<WriterProfileBloc>().add(EditDisplayNameEvent(displayName: value));
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Display Name",
             ),
           ));

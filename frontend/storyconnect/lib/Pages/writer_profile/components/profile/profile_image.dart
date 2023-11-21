@@ -9,13 +9,13 @@ import 'package:storyconnect/Widgets/image_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ProfileImage extends StatefulWidget {
-  const ProfileImage({Key? key}) : super(key: key);
+  const ProfileImage({super.key});
 
   @override
-  _ProfileImageState createState() => _ProfileImageState();
+  ProfileImageState createState() => ProfileImageState();
 }
 
-class _ProfileImageState extends State<ProfileImage> {
+class ProfileImageState extends State<ProfileImage> {
   @override
   Widget build(BuildContext context) {
     Color iconColor;
@@ -37,7 +37,7 @@ class _ProfileImageState extends State<ProfileImage> {
           toReturn = Container(
               width: 100,
               height: 100,
-              decoration: BoxDecoration(shape: BoxShape.circle),
+              decoration: const BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(child: ImageLoader(url: state.profile.imageUrl!)));
         } else {
           toReturn = _noImageWidget(context);
@@ -48,15 +48,17 @@ class _ProfileImageState extends State<ProfileImage> {
           return Stack(
             alignment: Alignment.center,
             children: [
-              AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn),
+              AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn),
               Center(
                 child: HoverButton(
                     onPressed: () => showDialog(
-                        barrierDismissible: false, context: context, builder: (context) => EditProfileImageDialog()),
-                    label: Text(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) => const EditProfileImageDialog()),
+                    label: const Text(
                       "Edit",
                     ),
-                    icon: Icon(
+                    icon: const Icon(
                       size: 10,
                       FontAwesomeIcons.pencil,
                       color: Colors.white,
@@ -65,7 +67,7 @@ class _ProfileImageState extends State<ProfileImage> {
             ],
           );
         } else {
-          return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+          return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
         }
       },
     );

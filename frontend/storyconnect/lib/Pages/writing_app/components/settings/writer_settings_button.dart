@@ -7,9 +7,9 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 class BookSettingsButton extends StatelessWidget {
   final WritingUIBloc uiBloc;
   const BookSettingsButton({
-    Key? key,
+    super.key,
     required this.uiBloc,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class BookSettingsButton extends StatelessWidget {
         showDialog(
             barrierDismissible: false,
             context: context,
-            builder: (context) => BlocProvider.value(value: uiBloc, child: BookSettings()));
+            builder: (context) => BlocProvider.value(value: uiBloc, child: const BookSettings()));
       },
       icon: Icon(
         FontAwesomeIcons.gear,

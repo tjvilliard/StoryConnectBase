@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class GenerateContinuitiesButton extends StatelessWidget {
   const GenerateContinuitiesButton({
-    Key? key,
+    super.key,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
 

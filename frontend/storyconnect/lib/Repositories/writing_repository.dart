@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
 
@@ -17,7 +18,7 @@ class WritingApiProvider {
     final url = UrlConstants.continuities(chapterId);
 
     final result = await http.get(url, headers: await buildHeaders());
-    return ContinuityResponse.fromJson(jsonDecode(result.body));
+    return ContinuityResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
   }
 
   Future<Book?> createBook({required BookFormSerializer serialzer}) async {
@@ -28,9 +29,11 @@ class WritingApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(serialzer.toJson()),
       );
-      return Book.fromJson(jsonDecode(result.body));
+      return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -43,9 +46,11 @@ class WritingApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(serializer.toJson()),
       );
-      return Book.fromJson(jsonDecode(result.body));
+      return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -55,7 +60,9 @@ class WritingApiProvider {
       final url = UrlConstants.books(bookId: bookId);
       await http.delete(url, headers: await buildHeaders());
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -64,11 +71,13 @@ class WritingApiProvider {
       final url = UrlConstants.currentUserBooks();
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var book in jsonDecode(result.body)) {
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -77,18 +86,20 @@ class WritingApiProvider {
       final url = UrlConstants.getNarrativeElements(bookId);
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var element in jsonDecode(result.body)) {
+      for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield NarrativeElement.fromJson(element);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
-    for (var feedback in jsonDecode(result.body)) {
+    for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
       yield WriterFeedback.fromJson(feedback);
     }
     // test object
@@ -96,8 +107,8 @@ class WritingApiProvider {
         id: 1,
         userId: 1,
         chapterId: chapterId,
-        selection:
-            AnnotatedTextSelection(floating: false, text: "This is a test", chapterId: 1, offset: 10, offsetEnd: 20),
+        selection: const AnnotatedTextSelection(
+            floating: false, text: "This is a test", chapterId: 1, offset: 10, offsetEnd: 20),
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
@@ -106,7 +117,7 @@ class WritingApiProvider {
 
 class WritingRepository {
   List<Book> books = [];
-  WritingApiProvider _api = WritingApiProvider();
+  final WritingApiProvider _api = WritingApiProvider();
   Future<int?> createBook({
     required BookFormSerializer serializer,
   }) async {
@@ -119,7 +130,7 @@ class WritingRepository {
   }
 
   Future<List<Book>> getBooks() async {
-    final result = await _api.getBooks();
+    final result = _api.getBooks();
     // convert stream to future list and return
     return result.toList();
   }
@@ -164,12 +175,12 @@ class WritingRepository {
   Future<Book?> updateBook({required Book book, required int bookId}) async {
     // build serializer
     final serializer = BookFormSerializer(
-      title: book.title,
-      language: book.language,
-      targetAudience: book.targetAudience,
-      synopsis: book.synopsis,
-      cover: book.cover,
-    );
+        title: book.title,
+        language: book.language,
+        targetAudience: book.targetAudience,
+        synopsis: book.synopsis,
+        cover: book.cover,
+        copyright: book.copyright);
 
     return _api.updateBook(serializer: serializer, bookId: bookId);
   }

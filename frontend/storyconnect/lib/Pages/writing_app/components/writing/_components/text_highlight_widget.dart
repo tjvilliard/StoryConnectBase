@@ -6,7 +6,7 @@ import 'package:storyconnect/Pages/writing_app/components/writing/_components/te
 class TextHighlightWidget extends StatefulWidget {
   final Widget child;
 
-  const TextHighlightWidget({Key? key, required this.child}) : super(key: key);
+  const TextHighlightWidget({super.key, required this.child});
   @override
   TextHighlightWidgetState createState() => TextHighlightWidgetState();
 }
@@ -20,7 +20,7 @@ class TextHighlightWidgetState extends State<TextHighlightWidget> with SingleTic
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
 
     _animation = Tween<double>(begin: 1, end: 1.1).animate(_animationController)

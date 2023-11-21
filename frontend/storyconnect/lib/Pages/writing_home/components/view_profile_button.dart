@@ -10,9 +10,9 @@ class ViewProfileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton.filledTonal(
-        icon: Icon(FontAwesomeIcons.user),
+        icon: const Icon(FontAwesomeIcons.user),
         onPressed: () async {
-          final uid = await FirebaseAuth.instance.currentUser?.uid;
+          final uid = FirebaseAuth.instance.currentUser?.uid;
           if (uid == null) {
             return;
           }

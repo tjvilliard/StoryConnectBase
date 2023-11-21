@@ -4,17 +4,15 @@ import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models
 
 class NarrativeElementsList extends StatelessWidget {
   final List<NarrativeElement> narrativeElements;
-  const NarrativeElementsList({Key? key, required this.narrativeElements});
+  const NarrativeElementsList({super.key, required this.narrativeElements});
 
   @override
   Widget build(BuildContext context) {
     if (narrativeElements.isEmpty) {
-      return Center(
+      return const Center(
           child: Card(
               margin: EdgeInsets.all(16),
-              child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('No narrative elements available.'))));
+              child: Padding(padding: EdgeInsets.all(16), child: Text('No narrative elements available.'))));
     }
 
     return ListView.separated(
@@ -23,21 +21,19 @@ class NarrativeElementsList extends StatelessWidget {
         final element = narrativeElements[index];
 
         if (index == narrativeElements.length - 1) {
-          return SizedBox.shrink();
-        } else if (narrativeElements[index + 1].elementType !=
-            element.elementType) {
-          return SizedBox(
+          return const SizedBox.shrink();
+        } else if (narrativeElements[index + 1].elementType != element.elementType) {
+          return const SizedBox(
             height: 20,
           );
         } else {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
       },
       itemBuilder: (context, index) {
         final element = narrativeElements[index];
 
-        if (index == 0 ||
-            narrativeElements[index - 1].elementType != element.elementType) {
+        if (index == 0 || narrativeElements[index - 1].elementType != element.elementType) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [

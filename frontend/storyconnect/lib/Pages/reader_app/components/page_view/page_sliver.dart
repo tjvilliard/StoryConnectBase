@@ -35,6 +35,6 @@ class PageSliver extends SliverMultiBoxAdaptorWidget {
   @override
   void updateRenderObject(
       BuildContext context, RenderSliverFixedExtentList renderObject) {
-    renderObject.itemExtent = this.itemExtent;
+    renderObject.itemExtent = itemExtent;
   }
 }

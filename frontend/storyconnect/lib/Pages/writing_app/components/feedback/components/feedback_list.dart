@@ -7,7 +7,7 @@ import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedbac
 class FeedbackList extends StatelessWidget {
   final List<WriterFeedback> feedbacks;
 
-  FeedbackList({
+  const FeedbackList({
     required this.feedbacks,
     super.key,
   });
@@ -21,11 +21,11 @@ class FeedbackList extends StatelessWidget {
           Card(
             elevation: 4,
             child: Container(
-              padding: EdgeInsets.all(16),
-              child: Text("No feedback has been provived yet"),
+              padding: const EdgeInsets.all(16),
+              child: const Text("No feedback has been provived yet"),
             ),
           ),
-          Spacer()
+          const Spacer()
         ]);
       }
 
@@ -36,7 +36,7 @@ class FeedbackList extends StatelessWidget {
         },
         separatorBuilder: (context, index) {
           if (index != feedbacks.length - 1) {
-            return Divider();
+            return const Divider();
           } else {
             return Container();
           }

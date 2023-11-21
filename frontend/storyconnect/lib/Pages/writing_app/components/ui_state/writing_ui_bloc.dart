@@ -121,7 +121,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       painter.layout(maxWidth: pageWidth);
       final feedbackOffset = painter.getOffsetForCaret(TextPosition(offset: event.selection.offset), Rect.zero);
 
-      await scrollController.animateTo(feedbackOffset.dy, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      await scrollController.animateTo(feedbackOffset.dy, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
 
       // Create a temporary highlight effect on the feedback
       final List<TextBox> boxes = painter.getBoxesForSelection(
@@ -133,8 +133,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
 
       // Remove the highlight after a second
       timer?.cancel(); // Cancel the existing timer if there is one
-      await Timer(Duration(milliseconds: 1000), () {
-        add(RemoveHighlightEvent());
+      Timer(const Duration(milliseconds: 1000), () {
+        add(const RemoveHighlightEvent());
       });
     }
   }
@@ -150,6 +150,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
   }
 
   void updateBook(UpdateBookEvent event, WritingUIEmiter emit) async {
+    emit(state.copyWith(isSaving: true));
     final result = await repository.updateBook(bookId: state.bookId, book: state.bookEditorState!.book);
 
     if (result != null) {
@@ -157,6 +158,7 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     } else {
       emit(state.copyWith(bookEditorState: BookEditorState.initial(state.book!)));
     }
+    emit(state.copyWith(isSaving: false));
   }
 
   void updateBookLanguage(UpdateBookLanguageEvent event, WritingUIEmiter emit) {

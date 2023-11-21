@@ -18,9 +18,9 @@ class ChapterNavButton extends StatelessWidget {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (BuildContext context, ChapterBlocStruct chapterState) {
         final selectedColor = Theme.of(context).primaryColor;
-        final selectedTextColor = Colors.white;
+        const selectedTextColor = Colors.white;
         return Padding(
-            padding: EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                   backgroundColor: chapterState.currentChapterIndex == index
@@ -34,7 +34,7 @@ class ChapterNavButton extends StatelessWidget {
                     chapterBloc: context.read<ChapterBloc>()));
               },
               child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text("Chapter ${index + 1}",
                       style: Theme.of(context).textTheme.labelLarge?.apply(
                           fontSizeDelta: 4,

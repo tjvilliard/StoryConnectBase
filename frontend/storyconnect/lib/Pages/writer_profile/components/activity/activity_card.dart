@@ -15,8 +15,8 @@ class _ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(16),

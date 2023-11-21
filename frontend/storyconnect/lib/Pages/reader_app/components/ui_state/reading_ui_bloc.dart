@@ -16,34 +16,31 @@ typedef ReadingUIEmitter = Emitter<ReadingUIState>;
 class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
   /// The current state of our reading resository, which contains all
   /// the data relevant to the reading UI.
-  ReadingRepository _repository = ReadingRepository();
+  final ReadingRepository _repository;
 
   ///
   ReadingUIBloc({required ReadingRepository repository})
-      : this._repository = repository,
+      : _repository = repository,
         super(ReadingUIState.initial()) {
-    on<UpdateAllEvent>((event, emit) => this.updateUI(event, emit));
-    on<ReadingLoadEvent>((event, emit) => this.loadEvent(event, emit));
-    on<ToggleChapterOutlineEvent>(
-        (event, emit) => toggleChapterOutline(event, emit));
-    on<ToggleFeedbackBarEvent>(
-        (event, emit) => this.toggleFeedbackBar(event, emit));
-    on<ToggleAnnotationBarEvent>(
-        (event, emit) => this.toggleAnnotationBar(event, emit));
-    on<ToggleToolbarEvent>((event, emit) => this.toggleToolbar(event, emit));
+    on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
+    on<ReadingLoadEvent>((event, emit) => loadEvent(event, emit));
+    on<ToggleChapterOutlineEvent>((event, emit) => toggleChapterOutline(event, emit));
+    on<ToggleFeedbackBarEvent>((event, emit) => toggleFeedbackBar(event, emit));
+    on<ToggleAnnotationBarEvent>((event, emit) => toggleAnnotationBar(event, emit));
+    on<ToggleToolbarEvent>((event, emit) => toggleToolbar(event, emit));
   }
 
   /// Gets the title of the book currently loaded by the reading UI.
   Future<String> _getBookTitle(int bookID) async {
     // Search the current state of our repository for our book.
-    for (final book in this._repository.books) {
+    for (final book in _repository.books) {
       if (book.id == bookID) {
         return book.title;
       }
     }
 
     // Call the api again, and search the result for books.
-    final List<Book> books = await this._repository.getBooks();
+    final List<Book> books = await _repository.getBooks();
     for (final book in books) {
       if (book.id == bookID) {
         return book.title;

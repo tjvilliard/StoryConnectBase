@@ -9,9 +9,8 @@ class CustomAppBar extends AppBar {
 
   static const double height = 56.0;
 
-  CustomAppBar({Key? key, required this.context})
+  CustomAppBar({super.key, required this.context})
       : super(
-            key: key,
             surfaceTintColor: Colors.white70,
             centerTitle: true,
             elevation: 5,
@@ -22,7 +21,7 @@ class CustomAppBar extends AppBar {
 
             // The Central set of AppBar widgets
             title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Flexible(
+              const Flexible(
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(children: [

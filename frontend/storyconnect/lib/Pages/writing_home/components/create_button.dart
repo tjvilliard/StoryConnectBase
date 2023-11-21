@@ -9,8 +9,8 @@ class CreateBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton.icon(
-      icon: Icon(FontAwesomeIcons.plus),
-      label: Text("Create Book"),
+      icon: const Icon(FontAwesomeIcons.plus),
+      label: const Text("Create Book"),
       onPressed: () {
         Beamer.of(context).beamToNamed(PageUrls.createBook);
       },

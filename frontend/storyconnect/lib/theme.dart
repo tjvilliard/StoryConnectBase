@@ -20,19 +20,19 @@ const ColorScheme myColorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-final offWhite = Color.fromARGB(255, 250, 249, 249);
+const offWhite = Color.fromARGB(255, 250, 249, 249);
 
 ThemeData lightTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
         colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue).copyWith(background: offWhite),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: offWhite,
           surfaceTintColor: Colors.transparent,
         ),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
-        cardTheme: CardTheme(surfaceTintColor: Color.fromARGB(255, 198, 198, 198), elevation: 2),
+        cardTheme: const CardTheme(surfaceTintColor: Color.fromARGB(255, 198, 198, 198), elevation: 2),
         useMaterial3: true)
-    .copyWith(dividerTheme: DividerThemeData(color: Colors.black));
+    .copyWith(dividerTheme: const DividerThemeData(color: Colors.black));
 
 final _darkColorScheme = ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.dark);
 
@@ -42,5 +42,5 @@ ThemeData darkTheme = ThemeData(
         colorScheme: _darkColorScheme,
         useMaterial3: true)
     .copyWith(
-  dividerTheme: DividerThemeData(color: Colors.black),
+  dividerTheme: const DividerThemeData(color: Colors.black),
 );

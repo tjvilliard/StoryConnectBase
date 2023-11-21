@@ -4,8 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class CustomScaffold extends Scaffold {
   final VoidCallback? navigateBackFunction;
 
-  CustomScaffold(
-      {super.body,
+  const CustomScaffold(
+      {super.key, super.body,
       super.appBar,
       super.floatingActionButton,
       super.floatingActionButtonLocation,
@@ -47,7 +47,7 @@ class CustomScaffold extends Scaffold {
             top: 0,
             left: 0,
             child: IconButton(
-              icon: Icon(FontAwesomeIcons.arrowLeft),
+              icon: const Icon(FontAwesomeIcons.arrowLeft),
               onPressed: navigateBackFunction!,
             ),
           ),

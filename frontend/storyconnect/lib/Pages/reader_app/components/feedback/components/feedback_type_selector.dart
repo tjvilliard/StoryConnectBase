@@ -4,7 +4,7 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback
 
 /// Widget selecting the type of feedback selected.
 class FeedbackTypeSelector extends StatelessWidget {
-  const FeedbackTypeSelector({Key? key}) : super(key: key);
+  const FeedbackTypeSelector({super.key});
 
   @override
   Widget build(BuildContext context) {

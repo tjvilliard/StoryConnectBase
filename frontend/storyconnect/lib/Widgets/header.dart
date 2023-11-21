@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A header for a form.
 class Header extends StatelessWidget {
   final String title;
   final String? subtitle;
@@ -8,8 +9,8 @@ class Header extends StatelessWidget {
   final Widget? child;
   final WrapAlignment alignment;
 
-  Header(
-      {required this.title,
+  const Header(
+      {super.key, required this.title,
       this.subtitle,
       this.leading,
       this.trailing,
@@ -19,7 +20,7 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       child: Wrap(
         alignment: alignment,
         children: [
@@ -27,7 +28,7 @@ class Header extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (leading != null) Padding(padding: EdgeInsets.only(top: 5, right: 10), child: leading!),
+              if (leading != null) Padding(padding: const EdgeInsets.only(top: 5, right: 10), child: leading!),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -38,7 +39,7 @@ class Header extends StatelessWidget {
             ],
           ),
           if (trailing == null) Container(),
-          if (trailing != null) Padding(padding: EdgeInsets.only(top: 5, left: 10), child: trailing!),
+          if (trailing != null) Padding(padding: const EdgeInsets.only(top: 5, left: 10), child: trailing!),
         ],
       ),
     );

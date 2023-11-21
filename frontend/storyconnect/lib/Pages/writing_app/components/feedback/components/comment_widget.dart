@@ -7,16 +7,16 @@ import 'package:storyconnect/Pages/writing_app/components/feedback/components/na
 class CommentWidget extends StatelessWidget {
   final WriterFeedback comment;
 
-  CommentWidget({required this.comment});
+  const CommentWidget({super.key, required this.comment});
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minHeight: 150),
+        constraints: const BoxConstraints(minHeight: 150),
         child: Card(
-            margin: EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             elevation: 5,
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class CommentWidget extends StatelessWidget {
                     Container(
                       alignment: Alignment.center,
                       constraints:
-                          BoxConstraints(minHeight: 10, maxHeight: 100),
+                          const BoxConstraints(minHeight: 10, maxHeight: 100),
                       child: Text(comment.sentiment.description,
                           style: Theme.of(context).textTheme.titleSmall),
                     ),
@@ -48,7 +48,7 @@ class CommentWidget extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: FilledButton.tonalIcon(
                             onPressed: () {},
-                            icon: Icon(FontAwesomeIcons.x),
+                            icon: const Icon(FontAwesomeIcons.x),
                             label: Text("Dismiss",
                                 style:
                                     Theme.of(context).textTheme.labelMedium))),

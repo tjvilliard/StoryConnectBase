@@ -1,8 +1,6 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bloc.dart';
-import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/book_forms/save_book_button.dart';
 
 class UpdateBookButton extends StatelessWidget {
@@ -16,8 +14,8 @@ class UpdateBookButton extends StatelessWidget {
           onPressed: state.bookEditorState == null
               ? () {}
               : () => {
-                    context.read<WritingUIBloc>().add(UpdateBookEvent()),
-                    Beamer.of(context).beamToReplacementNamed(PageUrls.writerHome)
+                    context.read<WritingUIBloc>().add(const UpdateBookEvent()),
+                    Navigator.of(context).pop(),
                   });
     });
   }

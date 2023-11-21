@@ -6,22 +6,22 @@ import 'package:storyconnect/Pages/writing_app/components/continuity_checker/sta
 class ContinuityCard extends StatelessWidget {
   final ContinuitySuggestion continuity;
 
-  const ContinuityCard({Key? key, required this.continuity}) : super(key: key);
+  const ContinuityCard({super.key, required this.continuity});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minHeight: 150),
+        constraints: const BoxConstraints(minHeight: 150),
         child: Card(
-            margin: EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             elevation: 5,
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Align(
+                      const Align(
                         alignment: Alignment.topCenter,
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +37,7 @@ class ContinuityCard extends StatelessWidget {
                       Container(
                         alignment: Alignment.center,
                         constraints:
-                            BoxConstraints(minHeight: 10, maxHeight: 100),
+                            const BoxConstraints(minHeight: 10, maxHeight: 100),
                         child: Text(continuity.content,
                             style: Theme.of(context).textTheme.titleSmall),
                       ),
@@ -48,7 +48,7 @@ class ContinuityCard extends StatelessWidget {
                                 BlocProvider.of<ContinuityBloc>(context).add(
                                     DismissContinuityEvent(continuity.uuid));
                               },
-                              icon: Icon(Icons.close),
+                              icon: const Icon(Icons.close),
                               label: Text("Dismiss",
                                   style: Theme.of(context)
                                       .textTheme

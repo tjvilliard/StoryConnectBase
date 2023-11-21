@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,22 +9,22 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class DeleteBookButton extends StatelessWidget {
   const DeleteBookButton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   Future<bool> showConfirmationDialog(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Are you sure?"),
-        content: Text("This will irretrievably delete your book."),
+        title: const Text("Are you sure?"),
+        content: const Text("This will irretrievably delete your book."),
         actions: [
           TextButton(
-            child: Text("No"),
+            child: const Text("No"),
             onPressed: () => Navigator.of(context).pop(false), // passing 'false' when No is pressed
           ),
           TextButton(
-            child: Text("Yes"),
+            child: const Text("Yes"),
             onPressed: () => Navigator.of(context).pop(true), // passing 'true' when Yes is pressed
           ),
         ],
@@ -38,7 +40,7 @@ class DeleteBookButton extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.red),
       ),
-      label: Text("Delete book"),
+      label: const Text("Delete book"),
       icon: const Icon(FontAwesomeIcons.solidTrashCan),
       onPressed: () async {
         final value = await showConfirmationDialog(context);
@@ -46,7 +48,7 @@ class DeleteBookButton extends StatelessWidget {
           Navigator.of(context).pop(); // pop the dialog
           Beamer.of(context).beamToNamed(PageUrls.writerHome); // go to the home page
 
-          context.read<WritingUIBloc>().add(DeleteBookEvent());
+          context.read<WritingUIBloc>().add(const DeleteBookEvent());
         }
       },
     );

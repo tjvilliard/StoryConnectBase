@@ -5,16 +5,18 @@ import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/registration/state/register_bloc.dart';
 
 class DisplayNameField extends StatefulWidget {
+  const DisplayNameField({super.key});
+
   @override
-  _displayNameState createState() => _displayNameState();
+  DisplayNameState createState() => DisplayNameState();
 }
 
-class _displayNameState extends State<DisplayNameField> {
+class DisplayNameState extends State<DisplayNameField> {
   final TextEditingController _displayNameController = TextEditingController();
 
   @override
   void dispose() {
-    this._displayNameController.dispose();
+    _displayNameController.dispose();
     super.dispose();
   }
 
@@ -23,20 +25,16 @@ class _displayNameState extends State<DisplayNameField> {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       builder: (BuildContext context, RegistrationState state) {
         return Container(
-            constraints: BoxConstraints(minHeight: 56),
+            constraints: const BoxConstraints(minHeight: 56),
             width: LoginPageConstants.maxWidth,
             padding: LoginPageConstants.verticalPadding,
             child: TextField(
-                controller: this._displayNameController,
+                controller: _displayNameController,
                 obscureText: false,
-                onChanged: (_) {
-
-                  
-                },
+                onChanged: (_) {},
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    prefixIcon: Icon(FontAwesomeIcons.pen),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    prefixIcon: const Icon(FontAwesomeIcons.pen),
                     labelText: 'Display Name',
                     errorText: null)));
       },

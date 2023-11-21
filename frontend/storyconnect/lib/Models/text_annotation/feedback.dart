@@ -25,8 +25,8 @@ class WriterFeedback with _$WriterFeedback {
   const WriterFeedback._();
 
   bool get isGhost => selection.floating;
+  @override
   int get chapterId => selection.chapterId;
 
-  factory WriterFeedback.fromJson(Map<String, dynamic> json) =>
-      _$WriterFeedbackFromJson(json);
+  factory WriterFeedback.fromJson(Map<String, dynamic> json) => _$WriterFeedbackFromJson(json);
 }

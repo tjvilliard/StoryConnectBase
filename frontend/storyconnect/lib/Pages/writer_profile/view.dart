@@ -35,7 +35,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
     super.dispose();
   }
 
-  static final duration = const Duration(milliseconds: 500);
+  static const duration = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +50,17 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
             listenWhen: (previous, current) => previous.responseMessages != current.responseMessages,
             listener: (context, state) {
               if (state.responseMessages.isNotEmpty) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(state.responseMessages.last), duration: Duration(seconds: 6)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.responseMessages.last), duration: const Duration(seconds: 6)));
                 // clear the messages
-                context.read<WriterProfileBloc>().add(ClearLastResponseEvent());
+                context.read<WriterProfileBloc>().add(const ClearLastResponseEvent());
               }
             },
             builder: (context, state) => LayoutBuilder(
                   builder: (context, constraints) {
-                    return Container(
-                        child: ListView(children: [
+                    return ListView(children: [
                       Column(mainAxisSize: MainAxisSize.min, children: [
-                        Header(
+                        const Header(
                           title: "Profile Page",
                           subtitle: "",
                         ),
@@ -70,18 +69,18 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             ProfileCard(uid: widget.uid),
-                            CurrentWorksCard(),
+                            const CurrentWorksCard(),
                             Wrap(
                               alignment: WrapAlignment.center,
                               children: [
                                 AnnouncementsCard(uid: widget.uid, announcements: state.announcements),
-                                RecentActivityCard(),
+                                const RecentActivityCard(),
                               ],
                             )
                           ],
                         ))
                       ])
-                    ]));
+                    ]);
                   },
                 )));
   }

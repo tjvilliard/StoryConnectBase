@@ -4,11 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:storyconnect/Models/models.dart';
 
-class newDescriptBookItem extends StatelessWidget {
+class NewDescriptBookItem extends StatelessWidget {
   final Book book;
 
   /// Creates a clickable book item filled in with details based on the provided book.
-  newDescriptBookItem({required this.book});
+  const NewDescriptBookItem({super.key, required this.book});
 
   String yyMMddDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat.yMd();
@@ -20,9 +20,9 @@ class newDescriptBookItem extends StatelessWidget {
     return Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-            padding: EdgeInsets.only(top: 12.0, bottom: 0.0),
+            padding: const EdgeInsets.only(top: 12.0, bottom: 0.0),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 190.0, maxHeight: 190.0),
+              constraints: const BoxConstraints(maxWidth: 190.0, maxHeight: 190.0),
               child: textItem,
             )));
   }
@@ -31,9 +31,9 @@ class newDescriptBookItem extends StatelessWidget {
     return Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 190.0, maxHeight: 190.0),
+              constraints: const BoxConstraints(maxWidth: 190.0, maxHeight: 190.0),
               child: textItem,
             )));
   }
@@ -52,7 +52,7 @@ class newDescriptBookItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Row Item 1: The Book Image
-            Icon(
+            const Icon(
               Icons.book,
               size: 175,
             ),
@@ -61,81 +61,73 @@ class newDescriptBookItem extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                this._topRightHandDetail(
+                _topRightHandDetail(
                     textItem: Text(
-                  this.book.title,
+                  book.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
                 )),
-                this._rightHandDetail(
+                _rightHandDetail(
                     textItem: RichText(
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(children: [
-                          WidgetSpan(
-                              child: Icon(FontAwesomeIcons.person, size: 16)),
+                          const WidgetSpan(child: Icon(FontAwesomeIcons.person, size: 16)),
                           TextSpan(
-                              text: this.book.owner?.toString() ?? "",
-                              style: TextStyle(
-                                  fontFamily:
-                                      GoogleFonts.ramabhadra().fontFamily))
+                              text: book.authorName ?? "No Author Name",
+                              style: TextStyle(fontFamily: GoogleFonts.ramabhadra().fontFamily))
                         ]))),
-                this._rightHandDetail(
+                _rightHandDetail(
                     textItem: Text(book.synopsis == null ? "" : book.synopsis!,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12)))
+                        maxLines: 4, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12)))
               ],
             )
           ],
         ),
         Padding(
-            padding: EdgeInsets.only(left: 31.0, right: 31.0),
-            child: Container(
-                child: Wrap(
+            padding: const EdgeInsets.only(left: 31.0, right: 31.0),
+            child: Wrap(
               runSpacing: 4.0,
               spacing: 4.0,
               children: [
-                TagWidget(
+                const TagWidget(
                   tagCategory: TagCategories.genre,
                   tagText: "Tragic Romance",
                 ),
-                TagWidget(
+                const TagWidget(
                   tagCategory: TagCategories.genre,
                   tagText: "Dystopia ",
                 ),
-                TagWidget(
+                const TagWidget(
                   tagCategory: TagCategories.genre,
                   tagText: "Science Fiction ",
                 ),
-                TagWidget(
+                const TagWidget(
                   tagCategory: TagCategories.genre,
                   tagText: "Science Fantasy ",
                 ),
-                TagWidget(
+                const TagWidget(
                   tagCategory: TagCategories.genre,
                   tagText: "Drama",
                 ),
-                book.language == null
-                    ? SizedBox.shrink()
-                    : TagWidget(
-                        tagCategory: TagCategories.filter,
-                        tagText: book.language!,
-                      ),
                 TagWidget(
                   tagCategory: TagCategories.filter,
-                  tagText: "Modified: ${this.yyMMddDateTime(book.modified)}",
+                  tagText: book.language,
                 ),
                 TagWidget(
                   tagCategory: TagCategories.filter,
-                  tagText: "Created: ${this.yyMMddDateTime(book.created)}",
+                  tagText: "Modified: ${yyMMddDateTime(book.modified)}",
                 ),
                 TagWidget(
+                  tagCategory: TagCategories.filter,
+                  tagText: "Created: ${yyMMddDateTime(book.created)}",
+                ),
+                const TagWidget(
                   tagCategory: TagCategories.manual,
                   tagText: "Humor",
                 ),
               ],
-            ))), // Bottom Row Items: Tag Items
+            )), // Bottom Row Items: Tag Items
       ],
     );
   }
@@ -159,21 +151,19 @@ class TagWidget extends StatelessWidget {
   final TagCategories tagCategory;
   final String tagText;
 
-  const TagWidget({required this.tagCategory, required this.tagText});
+  const TagWidget({super.key, required this.tagCategory, required this.tagText});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minHeight: 20),
+        constraints: const BoxConstraints(minHeight: 20),
         decoration: BoxDecoration(
-          border: Border.all(width: .75, color: this.tagCategory.color),
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          border: Border.all(width: .75, color: tagCategory.color),
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3.0),
-          child: Text(this.tagText,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+          child: Text(tagText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ));
   }
 }

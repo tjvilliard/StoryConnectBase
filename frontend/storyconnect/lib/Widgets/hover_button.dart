@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A button thats hoverable and the opacity changes when hovered.
 class HoverButton extends StatefulWidget {
   final Widget label;
   final Widget icon;
@@ -7,10 +8,10 @@ class HoverButton extends StatefulWidget {
   const HoverButton({super.key, required this.label, required this.icon, required this.onPressed});
 
   @override
-  _HoverButtonState createState() => _HoverButtonState();
+  HoverButtonState createState() => HoverButtonState();
 }
 
-class _HoverButtonState extends State<HoverButton> {
+class HoverButtonState extends State<HoverButton> {
   bool _isHovered = false;
 
   @override

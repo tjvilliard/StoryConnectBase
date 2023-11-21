@@ -3,7 +3,7 @@ part of 'announcements.dart';
 class AnnouncementCard extends StatelessWidget {
   final Announcement announcement;
 
-  const AnnouncementCard({required this.announcement});
+  const AnnouncementCard({super.key, required this.announcement});
 
   // trigger popup to read entire announcement
   void _readAnnouncement(BuildContext context) {
@@ -15,7 +15,7 @@ class AnnouncementCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text("Close"),
+            child: const Text("Close"),
           )
         ],
       ),
@@ -25,8 +25,8 @@ class AnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(16),
@@ -37,8 +37,8 @@ class AnnouncementCard extends StatelessWidget {
           Text(announcement.title),
           IconButton.filledTonal(
             onPressed: () => _readAnnouncement(context),
-            padding: EdgeInsets.only(right: 2),
-            icon: Icon(
+            padding: const EdgeInsets.only(right: 2),
+            icon: const Icon(
               FontAwesomeIcons.readme,
               size: 20,
             ),

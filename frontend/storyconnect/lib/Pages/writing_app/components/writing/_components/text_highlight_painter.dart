@@ -8,6 +8,7 @@ class CustomHighlightPainter extends CustomPainter {
   CustomHighlightPainter(
       {required this.rects, required this.color, required this.scale});
 
+  @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
@@ -22,7 +23,7 @@ class CustomHighlightPainter extends CustomPainter {
         height: rect.height * scale,
       );
 
-      final radius = Radius.circular(8); // set the corner radius
+      const radius = Radius.circular(8); // set the corner radius
       final roundedRect = RRect.fromRectAndRadius(scaledRect, radius);
 
       canvas.drawRRect(roundedRect, paint);
