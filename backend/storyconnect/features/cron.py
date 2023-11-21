@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 #     logger = getLogger('__name__')
 #     logger.info('signal received log out')
 #     print("log out")
-#     all_user_books = book_models.Book.objects.filter(owner=user)
+#     all_user_books = book_models.Book.objects.filter(user=user)
 #     for book in all_user_books:
 #         book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
 #         book_genre, created = book_models.Book.objects.get_or_create(pk=book.pk)
@@ -44,7 +44,7 @@ def ct_cron_job():
     all_users = User.objects.all()
     print("ct cron job")
     for each_user in all_users:
-        all_user_books = book_models.Book.objects.filter(owner=each_user)
+        all_user_books = book_models.Book.objects.filter(user=each_user)
         for book in all_user_books:
             book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
             book_genre, created = book_models.Book.objects.get_or_create(pk=book.pk)
