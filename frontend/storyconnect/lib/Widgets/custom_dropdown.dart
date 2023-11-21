@@ -44,6 +44,7 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>> {
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<T>(
+      initialSelection: currentValue,
       requestFocusOnTap: false,
       label: Text(widget.title),
       dropdownMenuEntries: items,

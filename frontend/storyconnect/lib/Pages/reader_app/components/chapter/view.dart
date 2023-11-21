@@ -18,8 +18,7 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReadingUIBloc, ReadingUIState>(
-        builder: (BuildContext context, ReadingUIState uiState) {
+    return BlocBuilder<ReadingUIBloc, ReadingUIState>(builder: (BuildContext context, ReadingUIState uiState) {
       return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
           builder: (BuildContext context, ChapterBlocStruct chapterState) {
         return AnimatedCrossFade(
@@ -32,30 +31,23 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
                     child: uiState.chapterOutlineShown
                         ? Padding(
                             padding: EdgeInsets.all(8),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  SidePopupHeader(
-                                      title: "Chapter Nav",
-                                      dismiss: () => BlocProvider.of<
-                                              ReadingUIBloc>(context)
-                                          .add(ToggleChapterOutlineEvent())),
-                                  SizedBox(height: 20),
-                                  Expanded(
-                                      child: ListView.builder(
-                                          controller: this._scrollController,
-                                          itemCount:
-                                              chapterState.chapters.length,
-                                          itemBuilder: (context, index) {
-                                            return ChapterNavButton(
-                                                index: index);
-                                          }))
-                                ]))
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                              SidePopupHeader(
+                                  title: "Chapter Nav",
+                                  dismiss: () =>
+                                      BlocProvider.of<ReadingUIBloc>(context).add(ToggleChapterOutlineEvent())),
+                              SizedBox(height: 20),
+                              Expanded(
+                                  child: ListView.builder(
+                                      controller: this._scrollController,
+                                      itemCount: chapterState.chapters.length,
+                                      itemBuilder: (context, index) {
+                                        return ChapterNavButton(index: index);
+                                      }))
+                            ]))
                         : Container())),
-            crossFadeState: uiState.chapterOutlineShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+            crossFadeState: uiState.chapterOutlineShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 500));
       });
     });
   }

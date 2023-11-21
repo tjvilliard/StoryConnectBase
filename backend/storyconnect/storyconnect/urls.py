@@ -19,6 +19,7 @@ from rest_framework import routers
 from books import views as books_views
 from comment import views as comment_views
 from ai_features import urls as ai_features_urls
+from ai_features import views as ai_features_views
 from core import urls as core_views
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
@@ -33,7 +34,7 @@ urlpatterns += [
     # path('api/road_unblock/', ai_features.RoadUnblockerRequestView.as_view()),
     
     path('api/admin/', admin.site.urls),
-    path('api/road_unblock/', books_views.RoadUnblockerView.as_view()),
+    path('api/road_unblock/', ai_features_views.RoadUnblockerRequestView.as_view()),
 ]
 
 urlpatterns += ai_features_urls.urlpatterns

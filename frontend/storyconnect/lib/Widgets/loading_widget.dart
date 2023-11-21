@@ -12,7 +12,10 @@ class LoadingWidget extends StatelessWidget {
         if (loadingStruct.message != null)
           Padding(
               padding: EdgeInsets.symmetric(vertical: 15),
-              child: Text(loadingStruct.message!)),
+              child: Text(
+                loadingStruct.message!,
+                textAlign: TextAlign.center,
+              )),
         CircularProgressIndicator()
       ],
     );

@@ -24,13 +24,14 @@ class Book with _$Book {
     required int id,
     required String title,
     int? owner,
-    String? language,
-    @JsonKey(name: 'target_audience') int? targetAudience,
+    @JsonKey(name: 'author_name') String? authorName,
+    required String language,
+    @JsonKey(name: 'target_audience') required int targetAudience,
     String? cover,
     @JsonKey(name: 'created') required DateTime created,
     @JsonKey(name: 'modified') required DateTime modified,
     String? synopsis,
-    int? copyright,
+    required int copyright,
     String? titlepage,
   }) = _Book;
 
@@ -41,10 +42,10 @@ class Book with _$Book {
 class GenericResponse with _$GenericResponse {
   const factory GenericResponse({
     required bool success,
+    String? message,
   }) = _GenericResponse;
 
-  factory GenericResponse.fromJson(Map<String, dynamic> json) =>
-      _$GenericResponseFromJson(json);
+  factory GenericResponse.fromJson(Map<String, dynamic> json) => _$GenericResponseFromJson(json);
 }
 
 @freezed
@@ -56,8 +57,7 @@ class Library with _$Library {
     int? reader,
   }) = _Library;
 
-  factory Library.fromJson(Map<String, dynamic> json) =>
-      _$LibraryFromJson(json);
+  factory Library.fromJson(Map<String, dynamic> json) => _$LibraryFromJson(json);
 }
 
 @freezed
@@ -70,8 +70,7 @@ class LibraryBook with _$LibraryBook {
     int? reader,
   }) = _LibraryBook;
 
-  factory LibraryBook.fromJson(Map<String, dynamic> json) =>
-      _$LibraryBookFromJson(json);
+  factory LibraryBook.fromJson(Map<String, dynamic> json) => _$LibraryBookFromJson(json);
 }
 
 @freezed
@@ -79,26 +78,25 @@ class Chapter with _$Chapter {
   const factory Chapter({
     required int id,
     required int book,
-    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'chapter_title') String? chapterTitle,
     @JsonKey(name: 'content') required String chapterContent,
     @JsonKey(name: 'chapter_number') required int number,
+    @JsonKey(name: 'raw_content') required String rawContent,
   }) = _Chapter;
 
-  factory Chapter.fromJson(Map<String, dynamic> json) =>
-      _$ChapterFromJson(json);
+  factory Chapter.fromJson(Map<String, dynamic> json) => _$ChapterFromJson(json);
 }
 
 @freezed
 class ChapterUpload with _$ChapterUpload {
   const factory ChapterUpload({
     required int book,
-    @JsonKey(name: 'chapter_title') required String chapterTitle,
+    @JsonKey(name: 'chapter_title') String? chapterTitle,
     @JsonKey(name: 'content') required String chapterContent,
     @JsonKey(name: 'chapter_number') required int number,
   }) = _ChapterUpload;
 
-  factory ChapterUpload.fromJson(Map<String, dynamic> json) =>
-      _$ChapterUploadFromJson(json);
+  factory ChapterUpload.fromJson(Map<String, dynamic> json) => _$ChapterUploadFromJson(json);
 }
 
 @freezed
@@ -114,8 +112,7 @@ class Character with _$Character {
     String? attributes,
   }) = _Character;
 
-  factory Character.fromJson(Map<String, dynamic> json) =>
-      _$CharacterFromJson(json);
+  factory Character.fromJson(Map<String, dynamic> json) => _$CharacterFromJson(json);
 }
 
 @freezed
@@ -127,8 +124,7 @@ class Location with _$Location {
     String? description,
   }) = _Location;
 
-  factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
+  factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
 }
 
 @freezed
@@ -150,8 +146,7 @@ class Annotation with _$Annotation {
     int? commentId,
   }) = _Annotation;
 
-  factory Annotation.fromJson(Map<String, dynamic> json) =>
-      _$AnnotationFromJson(json);
+  factory Annotation.fromJson(Map<String, dynamic> json) => _$AnnotationFromJson(json);
 }
 
 @freezed
@@ -166,24 +161,26 @@ class Highlight with _$Highlight {
     String? color,
   }) = _Highlight;
 
-  factory Highlight.fromJson(Map<String, dynamic> json) =>
-      _$HighlightFromJson(json);
+  factory Highlight.fromJson(Map<String, dynamic> json) => _$HighlightFromJson(json);
 }
 
 @freezed
 class Profile with _$Profile {
   const factory Profile({
     required String bio,
+    @JsonKey(name: 'display_name') required String displayName,
     int? id,
     int? user,
+    @JsonKey(name: 'image_url') String? imageUrl,
   }) = _Profile;
 
-  factory Profile.fromJson(Map<String, dynamic> json) =>
-      _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
   factory Profile.initial() => Profile(
         id: 0,
         bio: '',
         user: 0,
+        displayName: '',
+        imageUrl: '',
       );
 }

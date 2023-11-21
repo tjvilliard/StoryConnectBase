@@ -27,69 +27,143 @@ from sklearn.naive_bayes import CategoricalNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
-from books.models import * 
+from books.models import *
+
+nltk.download("punkt")
+nltk.download("stopwords")
+
 
 def parse_genre_values(genre_info):
-    if genre_info == '':
+    if genre_info == "":
         return []
     genre_dict = json.loads(genre_info)
     genres = list(genre_dict.values())
     return genres
 
+
+""" def plot_genre_distribution(df):
+#     plt.figure(figsize=(10,5))
+#     sns.barplot(x=df['genre'].value_counts().index,y=df['genre'].value_counts())
+#     plt.title('Genre Count')
+#     plt.xlabel('Genres')
+#     plt.ylabel('Count')"""
+
+
 # The below function comes in handy to count the number of characters in a text
 def char_count(text):
-    charc=0
+    charc = 0
     for char in text.split():
-        charc +=len(char)
+        charc += len(char)
     return charc
+
 
 # Function to convert the combined text to lowercase.
 def convertintolist(text):
     return text.split()
 
+
 def clean_words(word_list):
-    lower_words = [word.lower() for word in word_list] # Write a list comprehension to make each word in word_list lower case.
-    no_punct = [word.translate(str.maketrans('', '', string.punctuation)) for word in lower_words]
-    return ' '.join(no_punct)
+    lower_words = [
+        word.lower() for word in word_list
+    ]  # Write a list comprehension to make each word in word_list lower case.
+    no_punct = [
+        word.translate(str.maketrans("", "", string.punctuation))
+        for word in lower_words
+    ]
+    return " ".join(no_punct)
+
 
 def remove_stopwords(text):
-    words=nltk.word_tokenize(text)
-    sws=stopwords.words('english')
+    words = nltk.word_tokenize(text)
+    sws = stopwords.words("english")
     clean_list = [word for word in words if word not in sws]
-    return ' '.join(clean_list)
+    return " ".join(clean_list)
+
 
 # Function to perform stemming on the combined text
 def stem_text(text):
-    stemmer=PorterStemmer()
-    words=nltk.word_tokenize(text)
+    stemmer = PorterStemmer()
+    words = nltk.word_tokenize(text)
     stem_texts = [stemmer.stem(word) for word in words]
 
-    return ' '.join(stem_texts)
-    
+    return " ".join(stem_texts)
+
+
 def predict_genre(book_id, chapter_num):
     # load data for training
     df=pd.read_csv('/src/scripts/data.csv',index_col='index')
 
     # load data for prediction
-    predict_books =  Book.objects.get(pk = book_id)
+    predict_books = Book.objects.get(pk=book_id)
     book_id = predict_books.pk
     book_title = predict_books.title
-    book_chapters = Chapter.objects.filter(book = predict_books)
-    predict_chapter = Chapter.objects.get(book=predict_books, chapter_number = chapter_num)
+    book_chapters = Chapter.objects.filter(book=predict_books)
+    predict_chapter = Chapter.objects.get(
+        book=predict_books, chapter_number=chapter_num
+    )
 
     chapter_df = pd.DataFrame(
-    {'book': [book_id],
-    'book_title': [book_title],
-    'chapter_number': [predict_chapter.chapter_number],
-    'content': [predict_chapter.content]})
+        {
+            "book": [book_id],
+            "book_title": [book_title],
+            "chapter_number": [predict_chapter.chapter_number],
+            "content": [predict_chapter.content],
+        }
+    )
 
-    #Generating the column title_len
-    df = df.assign(title_len = df['title'].apply(lambda x:len(x.split())))
-    chapter_df = chapter_df.assign(book_title_len = chapter_df['book_title'].apply(lambda x: len(x.split())))
+    """# if book_id == -1: # filter by the user
+    #     user_owner,created = User.objects.get_or_create(id=user_id)
+    #     predict_books = Book.objects.filter(user=user_owner)
+
+    #     for p_book in predict_books:
+    #         book_id = p_book.pk
+    #         book_title = p_book.title
+    #         book_chapters = Chapter.objects.filter(book = p_book)
+
+    #         for chapter in book_chapters:
+    #             ch = {'book': book_id,
+    #             'book_title': book_title,
+    #             'chapter_number': chapter.chapter_number,
+    #             'content': chapter.content}
+    #             chapter_df = chapter_df.append(ch, ignore_index=True)"""
+
+    # drop the dummy row
+    # chapter_df = chapter_df.iloc[1:, :]
+
+    # pre-processing data used for testing when initially
+    """data = []
+    # with open('/src/features/booksummaries.txt', 'r') as f:
+    #     reader = csv.reader(f, dialect='excel-tab')
+    #     for row in reader:
+    #         data.append(row)
+
+    # # convert data to pandas dataframe
+    # books = pd.DataFrame.from_records(data, columns=['book_id', 'freebase_id', 'book_title', 'author', 'publication_date', 'genre', 'summary'])
     
-    #Generating the column title_char_len
-    df = df.assign(title_char_len = df['title'].apply(char_count))
-    chapter_df = chapter_df.assign(title_char_len = chapter_df['book_title'].apply(char_count))
+    # books['genre'] = books['genre'].apply(parse_genre_values)
+    # books = books.drop(columns = ['freebase_id', 'author', 'publication_date','book_id'])
+
+    # # check for missing values and duplicates
+    # books['genre'] = books['genre'].apply(lambda x: np.NaN if len(x) == 0 else x)
+
+    # print(books.isnull().sum().sort_values(ascending = False))
+    # print(df.isnull().sum().sort_values(ascending = False))
+
+    # collect the ones that doesn't have genres
+    # null_genre = pd.isnull(books["genre"])
+    # null_genre = books[null_genre]"""
+
+    # Generating the column title_len
+    df = df.assign(title_len=df["title"].apply(lambda x: len(x.split())))
+    chapter_df = chapter_df.assign(
+        book_title_len=chapter_df["book_title"].apply(lambda x: len(x.split()))
+    )
+
+    # Generating the column title_char_len
+    df = df.assign(title_char_len=df["title"].apply(char_count))
+    chapter_df = chapter_df.assign(
+        title_char_len=chapter_df["book_title"].apply(char_count)
+    )
 
     #Generating the column summary_len and summary_char_len
     df = df.assign(summary_len=df['summary'].apply(lambda x:len(x.split())))
@@ -103,53 +177,55 @@ def predict_genre(book_id, chapter_num):
 
     # df.head()
     pt_lst = []
-    for text in df['Combined_Text']:
+    for text in df["Combined_Text"]:
         processed_text = stem_text(remove_stopwords(clean_words(convertintolist(text))))
         pt_lst.append(processed_text)
     
     df['Combined_Text'] = pt_lst
 
     pt_lst_test = []
-    for text in chapter_df['Combined_Text']:
+    for text in chapter_df["Combined_Text"]:
         processed_text = stem_text(remove_stopwords(clean_words(convertintolist(text))))
         pt_lst_test.append(processed_text)
-    chapter_df['Combined_Text'] = pt_lst_test
+    chapter_df["Combined_Text"] = pt_lst_test
 
-    #Encoding the genre column
-    encoder=LabelEncoder()
-    df['genre']=encoder.fit_transform(df['genre'].values)
+    # Encoding the genre column
+    encoder = LabelEncoder()
+    df["genre"] = encoder.fit_transform(df["genre"].values)
 
     # Splitting data into features(X) and targets(y)
-    X=df['Combined_Text']
-    y=df['genre'].values
-    X_train,X_test,y_train,y_test=train_test_split(X,y,test_size= 0.3, random_state= 42,stratify=y)
+    X = df["Combined_Text"]
+    y = df["genre"].values
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.3, random_state=42, stratify=y
+    )
 
-    chapter_df_test = chapter_df['Combined_Text']
+    chapter_df_test = chapter_df["Combined_Text"]
 
     """data needs to be converted into a numerical format where each word is represented by a matrix.
        Term Frequency (TF) = (Frequency of a term in the document)/(Total number of terms in documents)
        Inverse Document Frequency(IDF) = log( (total number of documents)/(number of documents with term t))"""
 
     tf_idf = TfidfVectorizer()
-    X_train=tf_idf.fit_transform(X_train).toarray()
-    X_test=tf_idf.transform(X_test).toarray()
+    X_train = tf_idf.fit_transform(X_train).toarray()
+    X_test = tf_idf.transform(X_test).toarray()
     chapter_df_test = tf_idf.transform(chapter_df_test).toarray()
 
     """ after testing several classification models, it is proven that logistic regression has the best fit for the best accuracy."""
-    lg=LogisticRegression()
+    lg = LogisticRegression()
     lg.fit(X_train, y_train)
     lg_y_pred = lg.predict(X_test)
     lg_y_pred_test = lg.predict(chapter_df_test)
-    lg_y_prob= lg.predict_proba(X_test)
-    accuracy=round(accuracy_score(y_test,lg_y_pred),3)
-    precision=round(precision_score(y_test,lg_y_pred,average='weighted'),3)
-    recall=round(recall_score(y_test,lg_y_pred,average='weighted'),3)
-    
+    lg_y_prob = lg.predict_proba(X_test)
+    accuracy = round(accuracy_score(y_test, lg_y_pred), 3)
+    precision = round(precision_score(y_test, lg_y_pred, average="weighted"), 3)
+    recall = round(recall_score(y_test, lg_y_pred, average="weighted"), 3)
+
     # Converting back from label encoded form to labels
     lg_y_pred_test = encoder.inverse_transform(lg_y_pred_test)
 
     # chapter_df = chapter_df.join(lg_y_pred_test)
-    lg_y_pred_test = pd.DataFrame(lg_y_pred_test, columns=['genre'])
+    lg_y_pred_test = pd.DataFrame(lg_y_pred_test, columns=["genre"])
     chapter_df = pd.concat([chapter_df, lg_y_pred_test], axis=1)
 
     return chapter_df

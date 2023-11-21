@@ -35,14 +35,18 @@ class WritingPageViewState extends State<WritingPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+          focusNode.requestFocus();
+        }
+      },
+      child: Container(
         constraints: BoxConstraints(
           maxWidth: WritingUIBloc.pageWidth,
         ),
-        child: BlocBuilder<WritingBloc, WritingState>(
-            buildWhen: (previous, current) {
-          return previous.currentIndex != current.currentIndex ||
-              previous.loadingStruct != current.loadingStruct;
+        child: BlocBuilder<WritingBloc, WritingState>(buildWhen: (previous, current) {
+          return previous.currentIndex != current.currentIndex || previous.loadingStruct != current.loadingStruct;
         }, builder: (context, state) {
           Widget toReturn;
           if (state.loadingStruct.isLoading) {
@@ -65,20 +69,18 @@ class WritingPageViewState extends State<WritingPageView> {
                   border: Border.all(color: Colors.grey[200]!, width: 1),
                   color: Colors.white,
                 ),
-                constraints:
-                    BoxConstraints(minHeight: WritingUIBloc.pageHeight),
+                constraints: BoxConstraints(minHeight: WritingUIBloc.pageHeight),
                 child: TextHighlightWidget(
                     child: VisualEditor(
-                  scrollController:
-                      context.read<WritingUIBloc>().state.textScrollController,
-                  controller:
-                      context.read<WritingUIBloc>().state.editorController,
+                  scrollController: context.read<WritingUIBloc>().state.textScrollController,
+                  controller: context.read<WritingUIBloc>().state.editorController,
                   focusNode: focusNode,
                   config: state.config,
                 )));
           }
-          return AnimatedSwitcher(
-              duration: Duration(milliseconds: 500), child: toReturn);
-        }));
+          return AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn);
+        }),
+      ),
+    );
   }
 }

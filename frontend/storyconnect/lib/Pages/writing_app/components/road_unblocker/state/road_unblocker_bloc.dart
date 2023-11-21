@@ -18,43 +18,41 @@ typedef RoadUnblockerEmitter = Emitter<RoadUnblockerState>;
 class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
   late final RoadUnblockerRepo _repo;
 
-  RoadUnblockerBloc(
-      {required RoadUnblockerRepo repo, required String chapterContent})
+  RoadUnblockerBloc({required RoadUnblockerRepo repo, required String chapterContent})
       : super(RoadUnblockerState.initial(currentChapterText: chapterContent)) {
     _repo = repo;
-    on<UnblockerUpdateChapterEvent>(
-        (event, emit) => updateChapter(event, emit));
-    on<OnGuidingQuestionChangedEvent>(
-        (event, emit) => onGuidingQuestionChanged(event, emit));
-    on<LoadSelectionEvent>((event, emit) => loadSelection(event, emit));
+    on<UnblockerUpdateChapterEvent>((event, emit) => updateChapter(event, emit));
     on<SubmitUnblockEvent>((event, emit) => submitUnblock(event, emit));
     on<RecieveUnblockEvent>((event, emit) => recieveUnblock(event, emit));
     on<ClearUnblockEvent>((event, emit) => clearUnblock(event, emit));
     on<AcceptSuggestionEvent>((event, emit) => acceptSuggestion(event, emit));
     on<RejectSuggestionEvent>((event, emit) => rejectSuggestion(event, emit));
+    on<OnGuidingQuestionChangedEvent>((event, emit) => updateQuestion(event, emit));
   }
 
   updateChapter(UnblockerUpdateChapterEvent event, RoadUnblockerEmitter emit) {
     emit(state.copyWith(chapter: event.chapter));
   }
 
-  onGuidingQuestionChanged(
-      OnGuidingQuestionChangedEvent event, RoadUnblockerEmitter emit) {
-    emit(state.copyWith(question: event.question));
-  }
-
   submitUnblock(SubmitUnblockEvent event, RoadUnblockerEmitter emit) async {
+    final String? savedQuestion = state.question;
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.message("Building some suggestions")));
+      loadingStruct:
+          LoadingStruct.message("Building some suggestions. \n This may take a while depending on Server load."),
+      question: null,
+    ));
 
-    final finalQuestion =
-        state.question ?? "Can I get some general help with this?";
-    final finalSelection = state.selection ?? "";
+    String finalQuestion;
+    if (savedQuestion?.isEmpty == true) {
+      finalQuestion = "Can I get some general help with this?";
+    } else {
+      finalQuestion = savedQuestion!;
+    }
 
     final response = await _repo.submitUnblock(RoadUnblockerRequest(
-      chapter: state.chapter,
+      chapterID: event.chapterID,
       question: finalQuestion,
-      selection: finalSelection,
+      selection: event.selection,
     ));
 
     add(RecieveUnblockEvent(response: response));
@@ -64,27 +62,21 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
     responses.add(event.response);
 
-    emit(state.copyWith(
-        responses: responses, loadingStruct: LoadingStruct.loading(false)));
-  }
-
-  loadSelection(LoadSelectionEvent event, RoadUnblockerEmitter emit) {
-    emit(state.copyWith(
-        selection:
-            state.chapter.substring(event.startOffset, event.endOffset)));
+    emit(state.copyWith(responses: responses, loadingStruct: LoadingStruct.loading(false)));
   }
 
   clearUnblock(ClearUnblockEvent event, RoadUnblockerEmitter emit) {
-    emit(state.copyWith(responses: [], question: null, selection: null));
+    emit(state.copyWith(
+      responses: [],
+      question: null,
+    ));
   }
 
   // for now, just remove them from the responses
   acceptSuggestion(AcceptSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response =
-        responses.firstWhere((element) => element.uid == event.responseLocalId);
-    final suggestions =
-        List<RoadUnblockerSuggestion>.from(response.suggestions);
+    final response = responses.firstWhere((element) => element.uid == event.responseLocalId);
+    final suggestions = List<RoadUnblockerSuggestion>.from(response.suggestions);
 
     // final suggestion =
     //     suggestions.firstWhere((element) => element.uid == event.localId);
@@ -105,19 +97,20 @@ class RoadUnblockerBloc extends Bloc<RoadUnblockerEvent, RoadUnblockerState> {
 
   rejectSuggestion(RejectSuggestionEvent event, RoadUnblockerEmitter emit) {
     final responses = List<RoadUnblockerResponse>.from(state.responses);
-    final response =
-        responses.firstWhere((element) => element.uid == event.responseLocalId);
-    final suggestions =
-        List<RoadUnblockerSuggestion>.from(response.suggestions);
+    final response = responses.firstWhere((element) => element.uid == event.responseLocalId);
+    final suggestions = List<RoadUnblockerSuggestion>.from(response.suggestions);
     suggestions.removeWhere((element) => element.uid == event.localId);
     responses.removeWhere((element) => element.uid == event.responseLocalId);
     responses.add(response.copyWith(suggestions: suggestions));
     emit(state.copyWith(responses: _removeEmptyResponses(responses)));
   }
 
-  List<RoadUnblockerResponse> _removeEmptyResponses(
-      List<RoadUnblockerResponse> responses) {
+  List<RoadUnblockerResponse> _removeEmptyResponses(List<RoadUnblockerResponse> responses) {
     responses.removeWhere((element) => element.suggestions.isEmpty);
     return responses;
+  }
+
+  updateQuestion(OnGuidingQuestionChangedEvent event, Emitter<RoadUnblockerState> emit) {
+    emit(state.copyWith(question: event.question));
   }
 }

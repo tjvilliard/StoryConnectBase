@@ -11,10 +11,8 @@ import 'package:storyconnect/Widgets/loading_widget.dart';
 class ContinuityWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        builder: (context, uiState) {
-      return BlocBuilder<ContinuityBloc, ContinuityState>(
-          builder: (context, state) {
+    return BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, uiState) {
+      return BlocBuilder<ContinuityBloc, ContinuityState>(builder: (context, state) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
@@ -31,39 +29,29 @@ class ContinuityWidget extends StatelessWidget {
                               children: [
                                 SidePopupHeader(
                                     title: "Continuity Checker",
-                                    dismiss: () => BlocProvider.of<
-                                            WritingUIBloc>(context)
-                                        .add(ToggleContinuityCheckerEvent())),
+                                    dismiss: () =>
+                                        BlocProvider.of<WritingUIBloc>(context).add(ToggleContinuityCheckerEvent())),
                                 SizedBox(height: 10),
                                 Text(
                                     "This tool will help you find continuity errors in your story. It will also help you find plot holes and other issues that may arise from your story.",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
+                                    style: Theme.of(context).textTheme.titleSmall),
                                 SizedBox(height: 15),
                                 Expanded(
                                     child: AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 200),
+                                        duration: Duration(milliseconds: 500),
                                         child: state.loadingStruct.isLoading
                                             ? LoadingWidget(
-                                                loadingStruct: state
-                                                    .loadingStruct) // This will show when loading.
-                                            : ContinuityList(
-                                                continuities:
-                                                    state.continuities))),
+                                                loadingStruct: state.loadingStruct) // This will show when loading.
+                                            : ContinuityList(continuities: state.continuities))),
                                 GenerateContinuitiesButton(onPressed: () {
                                   context.read<ContinuityBloc>().add(
-                                      GenerateContinuitiesEvent(context
-                                          .read<WritingBloc>()
-                                          .state
-                                          .currentChapterId));
+                                      GenerateContinuitiesEvent(context.read<WritingBloc>().state.currentChapterId));
                                 })
                               ],
                             ))
                         : Container())),
-            crossFadeState: uiState.continuityCheckerShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+            crossFadeState: uiState.continuityCheckerShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 500));
       });
     });
   }

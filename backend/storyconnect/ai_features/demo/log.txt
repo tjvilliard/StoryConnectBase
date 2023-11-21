@@ -1,57 +1,63 @@
 {
-  "id": "cmpl-8B1Zy0ClbpwQ8QN8dR5ka1OJHDTZw",
-  "object": "text_completion",
-  "created": 1697638370,
-  "model": "gpt-3.5-turbo-instruct",
+  "id": "chatcmpl-8IJhvFyxwy8dDJpLXTGVWNQ4hEmcE",
+  "object": "chat.completion",
+  "created": 1699376351,
+  "model": "gpt-3.5-turbo-16k-0613",
   "choices": [
     {
-      "text": "\n\n<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is a smoker.\nLord Henry Wotton is a friend of Basil Hallward.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is an artist.\nBasil Hallward is the painter of the portrait.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is the subject of the portrait.\nDorian Gray is described as an Adonis.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<London>\nLondon is described as having a dim roar.\nLondon is where the characters live.\n</London>\n<Tokyo>\nTokyo is described as having pallid, jade-faced painters.\nTokyo is where the painters are from.\n</Tokyo>\n<Grosvenor>\nThe Grosvenor is a place where the portrait could be exhibited.\nThe Grosvenor is described as the only place.\n</Grosvenor>\n</Locations>",
       "index": 0,
-      "logprobs": null,
+      "message": {
+        "role": "assistant",
+        "content": "<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is lying on a divan of Persian saddle-bags.\nLord Henry Wotton is smoking cigarettes.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is sitting in front of a full-length portrait.\nBasil Hallward suddenly starts up and closes his eyes.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is the subject of the full-length portrait.\nDorian Gray is described as a young man of extraordinary personal beauty.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<The-studio>\nThe studio is filled with the rich odor of roses.\nThe studio has a huge window with long tussore-silk curtains.\n</The-studio>\n<The-garden>\nThe garden has trees that emit the scent of lilac and pink-flowering thorn.\nThe garden has a laburnum tree with honey-sweet and honey-colored blossoms.\n</The-garden>\n<London>\nThe dim roar of London is compared to the bourdon note of a distant organ.\n</London>\n<Tokyo>\nThe pallid, jade-faced painters of Tokyo are mentioned.\n</Tokyo>\n</Locations>"
+      },
       "finish_reason": "stop"
     }
   ],
   "usage": {
-    "prompt_tokens": 2493,
-    "completion_tokens": 200,
-    "total_tokens": 2693
+    "prompt_tokens": 2500,
+    "completion_tokens": 253,
+    "total_tokens": 2753
   }
 }
 
 {
-  "id": "cmpl-8B1a1bUUBBAQPsvRWGxgdsfDUyUkE",
-  "object": "text_completion",
-  "created": 1697638373,
-  "model": "gpt-3.5-turbo-instruct",
+  "id": "chatcmpl-8IJilHq4nbRBexHYxRANtwFbz7D5g",
+  "object": "chat.completion",
+  "created": 1699376403,
+  "model": "gpt-3.5-turbo-16k-0613",
   "choices": [
     {
-      "text": "\n\n<Statements>\n<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is a smoker.\nLord Henry Wotton is a friend of Basil Hallward.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is an artist.\nBasil Hallward is the painter of the portrait.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is the subject of the portrait.\nDorian Gray is described as an Adonis.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<London>\nLondon is described as having a dim roar.\n</London>\n<Tokyo>\nTokyo is described as having pallid, jade-faced painters.\n</Tokyo>\n<Grosvenor>\nThe Grosvenor is a place where the portrait could be exhibited.\n</Grosvenor>\n</Locations>\n</Statements>",
       "index": 0,
-      "logprobs": null,
+      "message": {
+        "role": "assistant",
+        "content": "<Statements>\n<Characters>\n<Lord-Henry-Wotton>\nLord Henry Wotton is lying on a divan of Persian saddle-bags.\n</Lord-Henry-Wotton>\n<Basil-Hallward>\nBasil Hallward is sitting in front of a full-length portrait.\n</Basil-Hallward>\n<Dorian-Gray>\nDorian Gray is the subject of the full-length portrait.\nDorian Gray is described as a young man of extraordinary personal beauty.\n</Dorian-Gray>\n</Characters>\n<Locations>\n<The-studio>\nThe studio is filled with the rich odor of roses.\nThe studio has a huge window with long tussore-silk curtains.\n</The-studio>\n<The-garden>\nThe garden has trees that emit the scent of lilac and pink-flowering thorn.\nThe garden has a laburnum tree with honey-sweet and honey-colored blossoms.\n</The-garden>\n<London>\nThe dim roar of London is compared to the bourdon note of a distant organ.\n</London>\n<Tokyo>\nThe pallid, jade-faced painters of Tokyo are mentioned.\n</Tokyo>\n</Locations>\n</Statements>"
+      },
       "finish_reason": "stop"
     }
   ],
   "usage": {
-    "prompt_tokens": 267,
-    "completion_tokens": 179,
-    "total_tokens": 446
+    "prompt_tokens": 328,
+    "completion_tokens": 239,
+    "total_tokens": 567
   }
 }{
-  "id": "cmpl-8B1a3xFqeZtDHx9cnTgZCxIDIv0ku",
-  "object": "text_completion",
-  "created": 1697638375,
-  "model": "gpt-3.5-turbo-instruct",
+  "id": "chatcmpl-8IJjUJRbuRoQjwXH50pROIhxvECa8",
+  "object": "chat.completion",
+  "created": 1699376448,
+  "model": "gpt-3.5-turbo-16k-0613",
   "choices": [
     {
-      "text": "\n1. In the old text, Lord Henry Wotton is described as a smoker, but in the new text, it is stated that he has never smoked.\n2. In the old text, Dorian Gray is described as an Adonis, but in the new text, he is described as old and decrepit.\n3. In the old text, the garden is described as having a dim roar, but in the new text, it is described as barren.\n4. In the old text, the garden is not specifically mentioned, but in the new text, it is stated that it only has rose bushes.",
       "index": 0,
-      "logprobs": null,
+      "message": {
+        "role": "assistant",
+        "content": "Contradictions:\n- Lord Henry Wotton is described as smoking cigarettes in the old text, but it is stated in the new text that he has never smoked.\n- Dorian Gray is described as a young man of extraordinary personal beauty in the old text, but in the new text, he is described as old and decrepit.\n- The garden is described as having trees that emit the scent of lilac and pink-flowering thorn in the old text, but in the new text, it is described as barren."
+      },
       "finish_reason": "stop"
     }
   ],
   "usage": {
-    "prompt_tokens": 181,
-    "completion_tokens": 124,
-    "total_tokens": 305
+    "prompt_tokens": 256,
+    "completion_tokens": 105,
+    "total_tokens": 361
   }
 }

@@ -72,19 +72,14 @@ class newDescriptBookItem extends StatelessWidget {
                     textItem: RichText(
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(children: [
-                          WidgetSpan(
-                              child: Icon(FontAwesomeIcons.person, size: 16)),
+                          WidgetSpan(child: Icon(FontAwesomeIcons.person, size: 16)),
                           TextSpan(
                               text: this.book.owner?.toString() ?? "",
-                              style: TextStyle(
-                                  fontFamily:
-                                      GoogleFonts.ramabhadra().fontFamily))
+                              style: TextStyle(fontFamily: GoogleFonts.ramabhadra().fontFamily))
                         ]))),
                 this._rightHandDetail(
                     textItem: Text(book.synopsis == null ? "" : book.synopsis!,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12)))
+                        maxLines: 4, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12)))
               ],
             )
           ],
@@ -116,12 +111,10 @@ class newDescriptBookItem extends StatelessWidget {
                   tagCategory: TagCategories.genre,
                   tagText: "Drama",
                 ),
-                book.language == null
-                    ? SizedBox.shrink()
-                    : TagWidget(
-                        tagCategory: TagCategories.filter,
-                        tagText: book.language!,
-                      ),
+                TagWidget(
+                  tagCategory: TagCategories.filter,
+                  tagText: book.language,
+                ),
                 TagWidget(
                   tagCategory: TagCategories.filter,
                   tagText: "Modified: ${this.yyMMddDateTime(book.modified)}",
@@ -171,9 +164,7 @@ class TagWidget extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 3.0),
-          child: Text(this.tagText,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+          child: Text(this.tagText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
         ));
   }
 }

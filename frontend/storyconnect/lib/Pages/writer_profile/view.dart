@@ -2,9 +2,10 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/components/annoucements/announcements.dart';
-import 'package:storyconnect/Pages/writer_profile/components/current_works_card.dart';
-import 'package:storyconnect/Pages/writer_profile/components/profile_card.dart';
+
 import 'package:storyconnect/Pages/writer_profile/components/activity/recent_activity_card.dart';
+import 'package:storyconnect/Pages/writer_profile/components/current_works_card.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/profile_card.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
@@ -25,9 +26,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<WriterProfileBloc>()
-          .add(WriterProfileLoadEvent(uid: widget.uid));
+      context.read<WriterProfileBloc>().add(WriterProfileLoadEvent(uid: widget.uid));
     });
   }
 
@@ -48,13 +47,11 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
           }
         },
         body: BlocConsumer<WriterProfileBloc, WriterProfileState>(
-            listenWhen: (previous, current) =>
-                previous.responseMessages != current.responseMessages,
+            listenWhen: (previous, current) => previous.responseMessages != current.responseMessages,
             listener: (context, state) {
               if (state.responseMessages.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.responseMessages.last),
-                    duration: Duration(seconds: 1)));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.responseMessages.last), duration: Duration(seconds: 6)));
                 // clear the messages
                 context.read<WriterProfileBloc>().add(ClearLastResponseEvent());
               }
@@ -77,9 +74,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
                             Wrap(
                               alignment: WrapAlignment.center,
                               children: [
-                                AnnouncementsCard(
-                                    uid: widget.uid,
-                                    announcements: state.announcements),
+                                AnnouncementsCard(uid: widget.uid, announcements: state.announcements),
                                 RecentActivityCard(),
                               ],
                             )

@@ -6,7 +6,6 @@ class RoadUnblockerState with _$RoadUnblockerState {
     required LoadingStruct loadingStruct,
     required String chapter,
     String? question,
-    String? selection,
     required List<RoadUnblockerResponse> responses,
   }) = _RoadUnblockerState;
   const RoadUnblockerState._();
