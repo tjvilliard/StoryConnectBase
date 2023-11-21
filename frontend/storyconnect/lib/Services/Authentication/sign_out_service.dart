@@ -8,7 +8,7 @@ class SignOutService {
   static final SignOutService _instance = SignOutService._internal();
 
   // Success return message.
-  final String SUCCESS = "Success";
+  final String success = "Success";
 
   /// Gets the Sign-Out-Service Singleton
   factory SignOutService() {
@@ -25,7 +25,7 @@ class SignOutService {
   Future<String?> signOut() async {
     try {
       await this._firebaseAuth.signOut();
-      return SUCCESS;
+      return success;
     } on FirebaseAuthException catch (error) {
       return error.code;
     }

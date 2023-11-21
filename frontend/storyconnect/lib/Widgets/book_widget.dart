@@ -15,7 +15,7 @@ class BookWidget extends StatefulWidget {
 }
 
 class BookWidgetState extends State<BookWidget> {
-  String? url = null;
+  String? url;
 
   @override
   void initState() {

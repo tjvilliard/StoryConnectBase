@@ -1,6 +1,5 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/login/state/login_bloc.dart';
 import 'package:storyconnect/Pages/login/view.dart';
@@ -29,8 +28,7 @@ class LoginLocations extends BeamLocation<BeamState> {
           child: RepositoryProvider<FirebaseRepository>(
             create: (_) => FirebaseRepository(),
             child: BlocProvider<LoginBloc>(
-              create: (context) =>
-                  LoginBloc(context.read<FirebaseRepository>()),
+              create: (context) => LoginBloc(context.read<FirebaseRepository>()),
               child: LoginPageView(),
             ),
           )));
@@ -40,8 +38,7 @@ class LoginLocations extends BeamLocation<BeamState> {
           child: RepositoryProvider<FirebaseRepository>(
             create: (_) => FirebaseRepository(),
             child: BlocProvider<RegistrationBloc>(
-              create: (context) =>
-                  RegistrationBloc(context.read<FirebaseRepository>()),
+              create: (context) => RegistrationBloc(context.read<FirebaseRepository>()),
               child: RegistrationPageView(),
             ),
           )));

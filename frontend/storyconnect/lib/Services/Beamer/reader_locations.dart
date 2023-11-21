@@ -1,5 +1,5 @@
 import 'package:beamer/beamer.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
@@ -17,12 +17,8 @@ import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 /// Handles the beamer locations for Reader Functions.
 class ReaderLocations extends BeamLocation<BeamState> {
   @override
-  List<Pattern> get pathPatterns => [
-        '/reader/home',
-        '/reader/library',
-        '/reader/book/:bookId',
-        '/reader/book/:bookId/:chapterId'
-      ];
+  List<Pattern> get pathPatterns =>
+      ['/reader/home', '/reader/library', '/reader/book/:bookId', '/reader/book/:bookId/:chapterId'];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
@@ -40,12 +36,8 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 RepositoryProvider(create: (_) => LibraryRepository()),
               ],
               child: MultiBlocProvider(providers: [
-                BlocProvider(
-                    create: (context) =>
-                        ReadingHomeBloc(context.read<ReadingRepository>())),
-                BlocProvider(
-                    create: (context) =>
-                        LibraryBloc(context.read<LibraryRepository>())),
+                BlocProvider(create: (context) => ReadingHomeBloc(context.read<ReadingRepository>())),
+                BlocProvider(create: (context) => LibraryBloc(context.read<LibraryRepository>())),
               ], child: ReadingHomeView()),
             )));
       }
@@ -57,8 +49,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 lazy: false,
                 create: (_) => LibraryRepository(),
                 child: BlocProvider(
-                  create: (context) =>
-                      LibraryBloc(context.read<LibraryRepository>()),
+                  create: (context) => LibraryBloc(context.read<LibraryRepository>()),
                   child: LibraryView(),
                 ))));
       }
@@ -75,28 +66,20 @@ class ReaderLocations extends BeamLocation<BeamState> {
                   ),
                   RepositoryProvider(
                     lazy: false,
-                    create: (_) => BookProviderRepository(
-                        bookID: int.tryParse(bookId!) ?? 0),
+                    create: (_) => BookProviderRepository(bookID: int.tryParse(bookId!) ?? 0),
                   ),
                 ],
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider<LibraryBloc>(
-                          lazy: false,
-                          create: (context) =>
-                              LibraryBloc(context.read<LibraryRepository>())),
+                          lazy: false, create: (context) => LibraryBloc(context.read<LibraryRepository>())),
                       BlocProvider<ChapterBloc>(
-                          lazy: false,
-                          create: (context) => ChapterBloc(
-                              context.read<BookProviderRepository>())),
+                          lazy: false, create: (context) => ChapterBloc(context.read<BookProviderRepository>())),
                       BlocProvider<FeedbackBloc>(
-                          lazy: false,
-                          create: (context) =>
-                              FeedbackBloc(context.read<ReadingRepository>())),
+                          lazy: false, create: (context) => FeedbackBloc(context.read<ReadingRepository>())),
                       BlocProvider<ReadingUIBloc>(
                           lazy: false,
-                          create: (context) => ReadingUIBloc(
-                              repository: context.read<ReadingRepository>())),
+                          create: (context) => ReadingUIBloc(repository: context.read<ReadingRepository>())),
                     ],
                     child: ReadingAppView(
                       bookId: int.tryParse(bookId ?? ""),

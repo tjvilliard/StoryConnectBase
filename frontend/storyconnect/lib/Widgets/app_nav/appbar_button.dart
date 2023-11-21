@@ -8,8 +8,7 @@ class AppBarTextButton extends StatelessWidget {
   final String uri;
   static const double width = 105.0;
 
-  const AppBarTextButton(
-      {required this.text, required this.icon, required this.uri});
+  const AppBarTextButton({required this.text, required this.icon, required this.uri});
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +36,14 @@ class AppBarIconButton extends StatelessWidget {
   const AppBarIconButton({required this.icon, required this.onPressed});
 
   @override
-  Widget build(BuildContext) {
+  Widget build(BuildContext context) {
     return Container(
       height: CustomAppBar.height,
       width: CustomAppBar.height,
       child: IconButton(
           style: ButtonStyle(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0.0)))),
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)))),
           icon: this.icon,
           onPressed: this.onPressed),
     );
@@ -57,11 +55,7 @@ class AppBarMenuButton extends StatelessWidget {
   final void Function() onPressed;
   final Widget child;
 
-  AppBarMenuButton(
-      {Key? key,
-      required this.context,
-      required this.onPressed,
-      required this.child});
+  AppBarMenuButton({Key? key, required this.context, required this.onPressed, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +67,7 @@ class AppBarMenuButton extends StatelessWidget {
           child: MenuItemButton(
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0.0)))),
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)))),
             child: this.child,
             onPressed: this.onPressed,
           )),
