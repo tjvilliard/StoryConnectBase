@@ -13,7 +13,7 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   ReadingHomeBloc(this.repository)
       : super(ReadingHomeStruct(
           books: [],
-          loadingStruct: LoadingStruct(isLoading: false),
+          loadingStruct: const LoadingStruct(isLoading: false),
         )) {
     on<GetBooksEvent>((event, emit) => fetchBooks(event, emit));
   }
@@ -24,9 +24,7 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
       books: state.books,
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
-
-    ///
-    List<Book> books = await this.repository.getBooks();
+    List<Book> books = await repository.getBooks();
 
     emit(ReadingHomeStruct(
       books: books,

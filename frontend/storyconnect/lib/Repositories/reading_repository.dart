@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:storyconnect/Models/models.dart';
@@ -11,11 +12,12 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
   /// Generates HTTP: POST request for new feedback item.
-  Future<WriterFeedback?> createFeedbackItem(
-      {required FeedbackCreationSerializer serializer}) async {
+  Future<WriterFeedback?> createFeedbackItem({required FeedbackCreationSerializer serializer}) async {
     try {
       final url = UrlConstants.createWriterFeedback();
-      print("[INFO]: Getting result from post call. \n");
+      if (kDebugMode) {
+        print("[INFO]: Getting result from post call. \n");
+      }
 
       final result = await http.post(
         url,
@@ -23,11 +25,15 @@ class ReadingApiProvider {
         body: jsonEncode(serializer.toJson()),
       );
 
-      print("[DEBUG]: Json Result: \n ${result.body} \n");
+      if (kDebugMode) {
+        print("[DEBUG]: Json Result: \n ${result.body} \n");
+      }
 
-      return WriterFeedback.fromJson(jsonDecode(result.body));
+      return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -36,7 +42,7 @@ class ReadingApiProvider {
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
-    for (var feedback in jsonDecode(result.body)) {
+    for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
       yield WriterFeedback.fromJson(feedback);
     }
   }
@@ -47,11 +53,13 @@ class ReadingApiProvider {
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var book in jsonDecode(result.body)) {
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -64,11 +72,13 @@ class ReadingApiProvider {
       // get result for HTTP GET request
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var libraryEntry in jsonDecode(result.body)) {
+      for (var libraryEntry in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -79,11 +89,11 @@ class ReadingApiProvider {
       final url = UrlConstants.addLibraryBook();
 
       // send off HTTP POST request
-      await http.post(url,
-          headers: await buildHeaders(),
-          body: (jsonEncode(serializer.toJson())));
+      await http.post(url, headers: await buildHeaders(), body: (jsonEncode(serializer.toJson())));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -96,7 +106,9 @@ class ReadingApiProvider {
       // send off HTTP DELETE request
       await http.delete(url, headers: await buildHeaders());
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
@@ -104,14 +116,13 @@ class ReadingApiProvider {
 class ReadingRepository {
   Map<String, List<Book>> taggedBooks = {};
   List<Book> books = [];
-  ReadingApiProvider _api = ReadingApiProvider();
+  final ReadingApiProvider _api = ReadingApiProvider();
 
   /// Creates a new feedback item for chapter.
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
-    final WriterFeedback? output =
-        await this._api.createFeedbackItem(serializer: serializer);
+    final WriterFeedback? output = await _api.createFeedbackItem(serializer: serializer);
 
     if (output == null) {
       return null;
@@ -124,7 +135,7 @@ class ReadingRepository {
   Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
     List<WriterFeedback> feedback = [];
 
-    await for (WriterFeedback item in this._api.getFeedback(chapterId)) {
+    await for (WriterFeedback item in _api.getFeedback(chapterId)) {
       feedback.add(item);
     }
 
@@ -132,7 +143,7 @@ class ReadingRepository {
   }
 
   Future<List<Book>> getBooks() async {
-    final Stream<Book> result = await this._api.getBooks();
+    final Stream<Book> result = _api.getBooks();
     return result.toList();
   }
 }

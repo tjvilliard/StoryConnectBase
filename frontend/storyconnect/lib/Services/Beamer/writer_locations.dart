@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
@@ -11,7 +12,7 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 import 'package:storyconnect/Pages/book_creation/state/book_create_bloc.dart';
 import 'package:storyconnect/Pages/book_creation/view.dart';
 import 'package:storyconnect/Pages/writing_home/view.dart';
-import 'package:storyconnect/Pages/writing_home/writing_home_bloc.dart';
+import 'package:storyconnect/Pages/writing_home/state/writing_home_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
@@ -32,11 +33,10 @@ class WriterLocations extends BeamLocation<BeamState> {
       if (url.contains('create_book')) {
         pages.add(
           CustomBeamPage(
-            key: ValueKey('create_book'),
+            key: const ValueKey('create_book'),
             child: BlocProvider(
-              create: (context) =>
-                  BookCreateBloc(context.read<WritingRepository>()),
-              child: WritingCreationView(),
+              create: (context) => BookCreateBloc(context.read<WritingRepository>()),
+              child: const WritingCreationView(),
             ),
           ),
         );
@@ -48,8 +48,7 @@ class WriterLocations extends BeamLocation<BeamState> {
                 providers: [
                   RepositoryProvider<BookProviderRepository>(
                     lazy: false,
-                    create: (_) => BookProviderRepository(
-                        bookId: int.tryParse(bookId!) ?? 0),
+                    create: (_) => BookProviderRepository(bookId: int.tryParse(bookId!) ?? 0),
                   ),
                   RepositoryProvider<RoadUnblockerRepo>(
                     lazy: false,
@@ -59,23 +58,14 @@ class WriterLocations extends BeamLocation<BeamState> {
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                          lazy: false,
-                          create: (context) => WritingBloc(
-                              context.read<BookProviderRepository>())),
+                          lazy: false, create: (context) => WritingBloc(context.read<BookProviderRepository>())),
                       BlocProvider(
-                          lazy: false,
-                          create: (_) => WritingUIBloc(
-                              repository: context.read<WritingRepository>())),
-                      BlocProvider<FeedbackBloc>(
-                          create: (context) =>
-                              FeedbackBloc(context.read<WritingRepository>())),
+                          lazy: false, create: (_) => WritingUIBloc(repository: context.read<WritingRepository>())),
+                      BlocProvider<FeedbackBloc>(create: (context) => FeedbackBloc(context.read<WritingRepository>())),
                       BlocProvider<RoadUnblockerBloc>(
-                          create: (context) => RoadUnblockerBloc(
-                              repo: context.read<RoadUnblockerRepo>(),
-                              chapterContent: "")),
-                      BlocProvider(
-                          create: (context) => ContinuityBloc(
-                              repo: context.read<WritingRepository>()))
+                          create: (context) =>
+                              RoadUnblockerBloc(repo: context.read<RoadUnblockerRepo>(), chapterContent: "")),
+                      BlocProvider(create: (context) => ContinuityBloc(repo: context.read<WritingRepository>()))
                     ],
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),
@@ -83,16 +73,17 @@ class WriterLocations extends BeamLocation<BeamState> {
       } else if (url.contains('home')) {
         pages.add(
           CustomBeamPage(
-            key: ValueKey('writer'),
+            key: const ValueKey('writer'),
             child: BlocProvider(
-              create: (context) =>
-                  WritingHomeBloc(context.read<WritingRepository>()),
-              child: WritingHomeView(),
+              create: (context) => WritingHomeBloc(context.read<WritingRepository>()),
+              child: const WritingHomeWidget(),
             ),
           ),
         );
       } else {
-        print("Not Found");
+        if (kDebugMode) {
+          print("Not Found");
+        }
       }
     }
 

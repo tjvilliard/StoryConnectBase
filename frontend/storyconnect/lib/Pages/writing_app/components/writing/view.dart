@@ -22,7 +22,7 @@ class WritingPageViewState extends State<WritingPageView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final uiBloc = context.read<WritingUIBloc>();
       uiBloc.state.textScrollController.addListener(() {
-        uiBloc.add(RemoveHighlightEvent());
+        uiBloc.add(const RemoveHighlightEvent());
       });
     });
   }
@@ -35,14 +35,18 @@ class WritingPageViewState extends State<WritingPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        if (focusNode.canRequestFocus && !focusNode.hasFocus) {
+          focusNode.requestFocus();
+        }
+      },
+      child: Container(
         constraints: BoxConstraints(
           maxWidth: WritingUIBloc.pageWidth,
         ),
-        child: BlocBuilder<WritingBloc, WritingState>(
-            buildWhen: (previous, current) {
-          return previous.currentIndex != current.currentIndex ||
-              previous.loadingStruct != current.loadingStruct;
+        child: BlocBuilder<WritingBloc, WritingState>(buildWhen: (previous, current) {
+          return previous.currentIndex != current.currentIndex || previous.loadingStruct != current.loadingStruct;
         }, builder: (context, state) {
           Widget toReturn;
           if (state.loadingStruct.isLoading) {
@@ -51,34 +55,32 @@ class WritingPageViewState extends State<WritingPageView> {
             );
           } else {
             toReturn = Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                   border: Border.all(color: Colors.grey[200]!, width: 1),
                   color: Colors.white,
                 ),
-                constraints:
-                    BoxConstraints(minHeight: WritingUIBloc.pageHeight),
+                constraints: BoxConstraints(minHeight: WritingUIBloc.pageHeight),
                 child: TextHighlightWidget(
                     child: VisualEditor(
-                  scrollController:
-                      context.read<WritingUIBloc>().state.textScrollController,
-                  controller:
-                      context.read<WritingUIBloc>().state.editorController,
+                  scrollController: context.read<WritingUIBloc>().state.textScrollController,
+                  controller: context.read<WritingUIBloc>().state.editorController,
                   focusNode: focusNode,
                   config: state.config,
                 )));
           }
-          return AnimatedSwitcher(
-              duration: Duration(milliseconds: 500), child: toReturn);
-        }));
+          return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
+        }),
+      ),
+    );
   }
 }

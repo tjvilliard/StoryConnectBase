@@ -7,16 +7,16 @@ import 'package:storyconnect/Widgets/horizontal_divider.dart';
 class SuggestionWidget extends StatelessWidget {
   final WriterFeedback suggestion;
 
-  SuggestionWidget({required this.suggestion});
+  const SuggestionWidget({super.key, required this.suggestion});
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(minHeight: 150),
+        constraints: const BoxConstraints(minHeight: 150),
         child: Card(
-            margin: EdgeInsets.all(5),
+            margin: const EdgeInsets.all(5),
             elevation: 5,
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +39,7 @@ class SuggestionWidget extends StatelessWidget {
                     ),
                     Container(
                       constraints:
-                          BoxConstraints(minHeight: 50, maxHeight: 100),
+                          const BoxConstraints(minHeight: 50, maxHeight: 100),
                       alignment: Alignment.center,
                       child: Text(suggestion.comment!,
                           style: Theme.of(context).textTheme.titleSmall),
@@ -51,7 +51,7 @@ class SuggestionWidget extends StatelessWidget {
                             Divider(
                               color: Theme.of(context).dividerColor,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             ClipRRect(
@@ -63,17 +63,17 @@ class SuggestionWidget extends StatelessWidget {
                                     // decline button
                                     FilledButton.tonalIcon(
                                         onPressed: () {},
-                                        icon: Icon(FontAwesomeIcons.x),
+                                        icon: const Icon(FontAwesomeIcons.x),
                                         label: Text("Decline",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .labelMedium)),
-                                    HorizontalDivider(height: 30),
+                                    const HorizontalDivider(height: 30),
 
                                     // accept button
                                     FilledButton.tonalIcon(
                                         onPressed: () {},
-                                        icon: Icon(FontAwesomeIcons.check),
+                                        icon: const Icon(FontAwesomeIcons.check),
                                         label: Text("Accept",
                                             style: Theme.of(context)
                                                 .textTheme

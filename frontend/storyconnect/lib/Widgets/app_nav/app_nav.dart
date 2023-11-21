@@ -10,9 +10,8 @@ class CustomAppBar extends AppBar {
 
   static const double height = 56.0;
 
-  CustomAppBar({Key? key, required this.context})
+  CustomAppBar({super.key, required this.context})
       : super(
-            key: key,
             surfaceTintColor: Colors.white70,
             centerTitle: true,
             elevation: 5,
@@ -58,8 +57,20 @@ class CustomAppBar extends AppBar {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               // Search Bar Placeholder
-                              CustomSearchBar(),
-
+                              // Flexible(
+                              //     child: ConstrainedBox(
+                              //   constraints: BoxConstraints(
+                              //     maxWidth: 800,
+                              //     minWidth: 100,
+                              //     maxHeight: 40,
+                              //     minHeight: 40,
+                              //   ),
+                              //   child: SearchBar(
+                              //     leading:
+                              //         Icon(FontAwesomeIcons.magnifyingGlass),
+                              //     hintText: "Search",
+                              //   ),
+                              // )),
                               // Dropdown Menu Button.
                               Flexible(
                                 child: CustomAppBarMenu(context: context),

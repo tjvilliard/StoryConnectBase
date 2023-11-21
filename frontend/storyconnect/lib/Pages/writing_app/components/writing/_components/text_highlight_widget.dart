@@ -6,13 +6,12 @@ import 'package:storyconnect/Pages/writing_app/components/writing/_components/te
 class TextHighlightWidget extends StatefulWidget {
   final Widget child;
 
-  const TextHighlightWidget({Key? key, required this.child}) : super(key: key);
+  const TextHighlightWidget({super.key, required this.child});
   @override
   TextHighlightWidgetState createState() => TextHighlightWidgetState();
 }
 
-class TextHighlightWidgetState extends State<TextHighlightWidget>
-    with SingleTickerProviderStateMixin {
+class TextHighlightWidgetState extends State<TextHighlightWidget> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -21,7 +20,7 @@ class TextHighlightWidgetState extends State<TextHighlightWidget>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
     );
 
     _animation = Tween<double>(begin: 1, end: 1.1).animate(_animationController)
@@ -32,15 +31,13 @@ class TextHighlightWidgetState extends State<TextHighlightWidget>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<WritingUIBloc, WritingUIState>(
-        listener: (context, uiState) async {
+    return BlocConsumer<WritingUIBloc, WritingUIState>(listener: (context, uiState) async {
       if (uiState.rectsToHighlight != null) {
         await _animationController.forward();
         await _animationController.reverse();
         _animationController.reset();
       }
     }, builder: (context, uiState) {
-      print(uiState.rectsToHighlight);
       return CustomPaint(
           painter: CustomHighlightPainter(
             rects: uiState.rectsToHighlight ?? [],

@@ -17,7 +17,7 @@ class LoginState with _$LoginState {
   const LoginState._();
 
   factory LoginState.initial() {
-    return LoginState(
+    return const LoginState(
       email: "",
       emailError: "",
       showEmailError: false,

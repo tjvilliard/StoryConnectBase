@@ -9,61 +9,51 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class ContinuityWidget extends StatelessWidget {
+  const ContinuityWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        builder: (context, uiState) {
-      return BlocBuilder<ContinuityBloc, ContinuityState>(
-          builder: (context, state) {
+    return BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, uiState) {
+      return BlocBuilder<ContinuityBloc, ContinuityState>(builder: (context, state) {
         return AnimatedCrossFade(
             firstChild: Container(),
             secondChild: Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.all(8),
                 width: 400,
                 child: Card(
                     elevation: 3,
                     child: uiState.continuityCheckerShown
                         ? Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 SidePopupHeader(
                                     title: "Continuity Checker",
-                                    dismiss: () => BlocProvider.of<
-                                            WritingUIBloc>(context)
-                                        .add(ToggleContinuityCheckerEvent())),
-                                SizedBox(height: 10),
+                                    dismiss: () =>
+                                        BlocProvider.of<WritingUIBloc>(context).add(const ToggleContinuityCheckerEvent())),
+                                const SizedBox(height: 10),
                                 Text(
                                     "This tool will help you find continuity errors in your story. It will also help you find plot holes and other issues that may arise from your story.",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall),
-                                SizedBox(height: 15),
+                                    style: Theme.of(context).textTheme.titleSmall),
+                                const SizedBox(height: 15),
                                 Expanded(
                                     child: AnimatedSwitcher(
-                                        duration: Duration(milliseconds: 200),
+                                        duration: const Duration(milliseconds: 500),
                                         child: state.loadingStruct.isLoading
                                             ? LoadingWidget(
-                                                loadingStruct: state
-                                                    .loadingStruct) // This will show when loading.
-                                            : ContinuityList(
-                                                continuities:
-                                                    state.continuities))),
+                                                loadingStruct: state.loadingStruct) // This will show when loading.
+                                            : ContinuityList(continuities: state.continuities))),
                                 GenerateContinuitiesButton(onPressed: () {
                                   context.read<ContinuityBloc>().add(
-                                      GenerateContinuitiesEvent(context
-                                          .read<WritingBloc>()
-                                          .state
-                                          .currentChapterId));
+                                      GenerateContinuitiesEvent(context.read<WritingBloc>().state.currentChapterId));
                                 })
                               ],
                             ))
                         : Container())),
-            crossFadeState: uiState.continuityCheckerShown
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 200));
+            crossFadeState: uiState.continuityCheckerShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 500));
       });
     });
   }

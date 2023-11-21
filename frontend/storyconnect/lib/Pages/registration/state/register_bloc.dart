@@ -20,20 +20,20 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     this._firebaseRepo = firebaseRepo;
     this._coreRepo = coreRepo;
     on<EmailFieldChangedEvent>(
-      (event, emit) => this._emailFieldChanged(event, emit),
+      (event, emit) => _emailFieldChanged(event, emit),
     );
     on<DisplayNameChangedEvent>(
-        (event, emit) => this._displayNameFieldChanged(event, emit));
+        (event, emit) => _displayNameFieldChanged(event, emit));
     on<PasswordFieldChangedEvent>(
-        (event, emit) => this._passwordFieldChanged(event, emit));
+        (event, emit) => _passwordFieldChanged(event, emit));
     on<PasswordConfirmFieldChangedEvent>(
-        (event, emit) => this._passwordConfirmFieldChanged(event, emit));
+        (event, emit) => _passwordConfirmFieldChanged(event, emit));
     on<ShowPasswordClickedEvent>(
-        (event, emit) => this._showPasswordClicked(event, emit));
+        (event, emit) => _showPasswordClicked(event, emit));
     on<ShowPasswordConfirmClickedEvent>(
-        (event, emit) => this._showPasswordConfirmClicked(event, emit));
+        (event, emit) => _showPasswordConfirmClicked(event, emit));
     on<RegisterButtonPushedEvent>(
-        (event, emit) => this._registerButtonPushed(event, emit));
+        (event, emit) => _registerButtonPushed(event, emit));
   }
 
   /// Event handler for an EmailFieldChangedEvent, alters the state of the email text field.
@@ -91,16 +91,20 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   ///
   void _registerButtonPushed(
       RegisterButtonPushedEvent event, RegistrationEmitter emit) async {
-    bool emailValid = await this.validateEmail(emit);
+    bool emailValid = await validateEmail(emit);
 
     bool displayNameValid = await this.validateDisplayName(emit);
 
-    bool passwordsValid = this.validatePassword(emit);
+    bool passwordsValid = validatePassword(emit);
+
+    print(
+        "[DEBUG]: Email: ${emailValid}, Display Name: ${displayNameValid}, Password: ${passwordsValid}");
 
     print(
         "[DEBUG]: Email: ${emailValid}, Display Name: ${displayNameValid}, Password: ${passwordsValid}");
 
     if (emailValid & displayNameValid & passwordsValid) {
+      String response = await _repo
       print("[DEBUG] Fields passed validity check.");
 
       /*
@@ -184,15 +188,15 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Validates the password fields.
   bool validatePassword(RegistrationEmitter emit) {
-    if (this.state.password.isEmpty || this.state.confirmPassword.isEmpty) {
-      if (this.state.password.isEmpty) {
+    if (state.password.isEmpty || state.confirmPassword.isEmpty) {
+      if (state.password.isEmpty) {
         emit(state.copyWith(
           passwordError: "Password field cannot be empty.",
           showPasswordError: true,
         ));
       }
 
-      if (this.state.confirmPassword.isEmpty) {
+      if (state.confirmPassword.isEmpty) {
         emit(state.copyWith(
           confirmPasswordError: "Confirmation field cannot be empty.",
           showConfirmPasswordError: true,
@@ -202,7 +206,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    if (this.state.password != this.state.confirmPassword) {
+    if (state.password != state.confirmPassword) {
       emit(state.copyWith(
         passwordError: "Password must be equal to confirmation password.",
         confirmPasswordError:
@@ -289,13 +293,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         ));
       }
 
-      if (!confirmPasswordError.isEmpty) {
-        emit(state.copyWith(
-          confirmPasswordError: confirmPasswordError,
-          showConfirmPasswordError: true,
-        ));
-      }
-
+      return false;
+    } else if (!digits.any((digit) => this.state.password.contains(digit))) {
+      emit(state.copyWith(
+        passwordError:
+            "Password must contain at least one of the digits 0 - 9.",
+        showPasswordError: true,
+      ));
       return false;
     } else {
       return true;

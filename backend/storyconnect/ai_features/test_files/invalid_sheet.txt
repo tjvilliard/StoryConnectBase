@@ -1,0 +1,6 @@
+<Statements>
+<Characters>
+<Steven>
+Steven is a bad boy.
+Steven is fond
+</Statements>

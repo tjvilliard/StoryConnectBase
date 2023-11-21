@@ -19,7 +19,7 @@ class _MakeAnnouncementButton extends StatelessWidget {
                       );
                     });
               },
-              child: Text("Make Announcement"));
+              child: const Text("Make Announcement"));
         });
   }
 }

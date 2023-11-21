@@ -10,14 +10,14 @@ class UnimplementedPopup extends StatelessWidget {
   @override
   AlertDialog build(BuildContext context) {
     return AlertDialog(
-      title: Text("Unimplemented"),
+      title: const Text("Unimplemented"),
       content: Text("$featureName is not yet implemented."),
       actions: [
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("OK"))
+            child: const Text("OK"))
       ],
     );
   }

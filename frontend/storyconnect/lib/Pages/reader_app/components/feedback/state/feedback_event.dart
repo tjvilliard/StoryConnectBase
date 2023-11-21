@@ -10,7 +10,7 @@ abstract class FeedbackEvent {
 class FeedbackEditedEvent extends FeedbackEvent {
   final String? suggestion;
   const FeedbackEditedEvent({
-    required String? this.suggestion,
+    required this.suggestion,
   });
 }
 
@@ -18,7 +18,7 @@ class FeedbackEditedEvent extends FeedbackEvent {
 class CommentEditedEvent extends FeedbackEvent {
   final String? comment;
   const CommentEditedEvent({
-    required String? this.comment,
+    required this.comment,
   });
 }
 

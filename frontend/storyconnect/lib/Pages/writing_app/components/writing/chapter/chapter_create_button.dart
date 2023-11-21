@@ -10,7 +10,7 @@ class ChapterCreateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<WritingBloc, WritingState>(listener: (context, state) {
       Scrollable.ensureVisible(context,
-          duration: Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
           alignment: 1);
     }, listenWhen: (previous, current) {
@@ -23,7 +23,7 @@ class ChapterCreateButton extends StatelessWidget {
       }
       return OutlinedButton(
           onPressed: () => context.read<WritingBloc>().add(AddChapterEvent()),
-          child: Text("Add Chapter"));
+          child: const Text("Add Chapter"));
     });
   }
 }

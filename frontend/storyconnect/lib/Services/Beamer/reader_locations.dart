@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
@@ -17,12 +18,8 @@ import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 /// Handles the beamer locations for Reader Functions.
 class ReaderLocations extends BeamLocation<BeamState> {
   @override
-  List<Pattern> get pathPatterns => [
-        '/reader/home',
-        '/reader/library',
-        '/reader/book/:bookId',
-        '/reader/book/:bookId/:chapterId'
-      ];
+  List<Pattern> get pathPatterns =>
+      ['/reader/home', '/reader/library', '/reader/book/:bookId', '/reader/book/:bookId/:chapterId'];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
@@ -34,32 +31,27 @@ class ReaderLocations extends BeamLocation<BeamState> {
       // If the url contains home, send the reader home.
       if (url.contains('home')) {
         pages.add(CustomBeamPage(
-            key: ValueKey('reader'),
+            key: const ValueKey('reader'),
             child: MultiRepositoryProvider(
               providers: [
                 RepositoryProvider(create: (_) => LibraryRepository()),
               ],
               child: MultiBlocProvider(providers: [
-                BlocProvider(
-                    create: (context) =>
-                        ReadingHomeBloc(context.read<ReadingRepository>())),
-                BlocProvider(
-                    create: (context) =>
-                        LibraryBloc(context.read<LibraryRepository>())),
-              ], child: ReadingHomeView()),
+                BlocProvider(create: (context) => ReadingHomeBloc(context.read<ReadingRepository>())),
+                BlocProvider(create: (context) => LibraryBloc(context.read<LibraryRepository>())),
+              ], child: const ReadingHomeView()),
             )));
       }
       // If the url contains library, send the reader to the library.
       else if (url.contains('library')) {
         pages.add(CustomBeamPage(
-            key: ValueKey('library'),
+            key: const ValueKey('library'),
             child: RepositoryProvider(
                 lazy: false,
                 create: (_) => LibraryRepository(),
                 child: BlocProvider(
-                  create: (context) =>
-                      LibraryBloc(context.read<LibraryRepository>()),
-                  child: LibraryView(),
+                  create: (context) => LibraryBloc(context.read<LibraryRepository>()),
+                  child: const LibraryView(),
                 ))));
       }
       // If the url contains a path parameter 'bookId'
@@ -75,34 +67,28 @@ class ReaderLocations extends BeamLocation<BeamState> {
                   ),
                   RepositoryProvider(
                     lazy: false,
-                    create: (_) => BookProviderRepository(
-                        bookID: int.tryParse(bookId!) ?? 0),
+                    create: (_) => BookProviderRepository(bookID: int.tryParse(bookId!) ?? 0),
                   ),
                 ],
                 child: MultiBlocProvider(
                     providers: [
                       BlocProvider<LibraryBloc>(
-                          lazy: false,
-                          create: (context) =>
-                              LibraryBloc(context.read<LibraryRepository>())),
+                          lazy: false, create: (context) => LibraryBloc(context.read<LibraryRepository>())),
                       BlocProvider<ChapterBloc>(
-                          lazy: false,
-                          create: (context) => ChapterBloc(
-                              context.read<BookProviderRepository>())),
+                          lazy: false, create: (context) => ChapterBloc(context.read<BookProviderRepository>())),
                       BlocProvider<FeedbackBloc>(
-                          lazy: false,
-                          create: (context) =>
-                              FeedbackBloc(context.read<ReadingRepository>())),
+                          lazy: false, create: (context) => FeedbackBloc(context.read<ReadingRepository>())),
                       BlocProvider<ReadingUIBloc>(
                           lazy: false,
-                          create: (context) => ReadingUIBloc(
-                              repository: context.read<ReadingRepository>())),
+                          create: (context) => ReadingUIBloc(repository: context.read<ReadingRepository>())),
                     ],
                     child: ReadingAppView(
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
       } else {
-        print("Not Found: Reader");
+        if (kDebugMode) {
+          print("Not Found: Reader");
+        }
       }
     }
 

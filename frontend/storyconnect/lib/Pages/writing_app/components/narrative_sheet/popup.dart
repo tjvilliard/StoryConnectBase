@@ -10,8 +10,7 @@ class NarrativeSheetPopup extends PopupRoute<void> {
   NarrativeSheetPopup(this.bookId);
 
   @override
-  Color? get barrierColor =>
-      Theme.of(navigator!.context).colorScheme.background;
+  Color? get barrierColor => Theme.of(navigator!.context).colorScheme.background;
 
   @override
   bool get barrierDismissible => false;
@@ -20,8 +19,7 @@ class NarrativeSheetPopup extends PopupRoute<void> {
   String? get barrierLabel => null;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return BlocProvider<NarrativeSheetBloc>(
         create: (context) => NarrativeSheetBloc(
               context.read<WritingRepository>(),
@@ -29,13 +27,13 @@ class NarrativeSheetPopup extends PopupRoute<void> {
             ),
         child: Material(
             child: SafeArea(
-                minimum: EdgeInsets.all(20),
+                minimum: const EdgeInsets.all(20),
                 child: Stack(
                   children: [
                     Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             FontAwesomeIcons.x,
                           ),
                           onPressed: () {
@@ -46,12 +44,12 @@ class NarrativeSheetPopup extends PopupRoute<void> {
                         alignment: Alignment.topCenter,
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height,
-                          child: NarrativeSheetView(),
+                          child: const NarrativeSheetView(),
                         )),
                   ],
                 ))));
   }
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 200);
+  Duration get transitionDuration => const Duration(milliseconds: 500);
 }

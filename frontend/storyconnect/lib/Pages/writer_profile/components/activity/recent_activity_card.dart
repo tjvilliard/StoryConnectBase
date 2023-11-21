@@ -13,8 +13,8 @@ class RecentActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: Container(
-            constraints: BoxConstraints(maxWidth: 230),
-            padding: EdgeInsets.all(20),
+            constraints: const BoxConstraints(maxWidth: 230),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Text(
@@ -22,7 +22,7 @@ class RecentActivityCard extends StatelessWidget {
                   textAlign: TextAlign.start,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 BlocBuilder<WriterProfileBloc, WriterProfileState>(
                     builder: (context, state) {
                   Widget toReturn;
@@ -33,11 +33,11 @@ class RecentActivityCard extends StatelessWidget {
                             state.loadingStructs.activitiesLoadingStruct);
                   } else {
                     if (state.activities.isEmpty) {
-                      toReturn = Text("No activity found");
+                      toReturn = const Text("No activity found");
                     } else {
                       toReturn = ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.activities.length,
                           itemBuilder: (context, index) {
                             return _ActivityCard(

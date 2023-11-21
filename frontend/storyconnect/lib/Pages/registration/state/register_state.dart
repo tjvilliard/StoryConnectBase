@@ -24,7 +24,7 @@ class RegistrationState with _$RegistrationState {
   const RegistrationState._();
 
   factory RegistrationState.initial() {
-    return RegistrationState(
+    return const RegistrationState(
       email: "",
       emailError: "",
       showEmailError: false,

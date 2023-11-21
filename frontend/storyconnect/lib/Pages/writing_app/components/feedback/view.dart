@@ -10,6 +10,8 @@ import 'package:storyconnect/Pages/writing_app/components/ui_state/writing_ui_bl
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class FeedbackWidget extends StatefulWidget {
+  const FeedbackWidget({super.key});
+
   @override
   FeedbackWidgetState createState() => FeedbackWidgetState();
 }
@@ -21,10 +23,8 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WritingUIBloc, WritingUIState>(
-        buildWhen: (previous, current) {
-      final bool feedbackUIshownChanged =
-          previous.feedbackUIshown != current.feedbackUIshown;
+    return BlocBuilder<WritingUIBloc, WritingUIState>(buildWhen: (previous, current) {
+      final bool feedbackUIshownChanged = previous.feedbackUIshown != current.feedbackUIshown;
 
       return feedbackUIshownChanged;
     }, builder: (context, uiState) {
@@ -35,51 +35,40 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                 builder: (context, state) {
                   return Card(
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: 400, minWidth: 300),
-                      padding: EdgeInsets.all(16),
+                      constraints: const BoxConstraints(maxWidth: 400, minWidth: 300),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SidePopupHeader(
                               title: "Comments",
-                              dismiss: () =>
-                                  BlocProvider.of<WritingUIBloc>(context)
-                                      .add(ToggleFeedbackUIEvent())),
-                          SizedBox(height: 20),
-                          Column(
+                              dismiss: () => BlocProvider.of<WritingUIBloc>(context).add(const ToggleFeedbackUIEvent())),
+                          const SizedBox(height: 20),
+                          const Column(
                             children: [
                               FeedbackTypeSelector(),
                             ],
                           ),
-                          SizedBox(height: 10),
-                          GhostFeedbackCheckbox(),
-                          SizedBox(
+                          const SizedBox(height: 10),
+                          const GhostFeedbackCheckbox(),
+                          const SizedBox(
                             height: 10,
                           ),
                           BlocListener<WritingBloc, WritingState>(
                               listener: (context, writingState) {
-                                final int chapterId =
-                                    writingState.currentChapterId;
+                                final int chapterId = writingState.currentChapterId;
 
-                                context
-                                    .read<FeedbackBloc>()
-                                    .add(LoadChapterFeedback(chapterId));
+                                context.read<FeedbackBloc>().add(LoadChapterFeedback(chapterId));
                               },
                               child: Expanded(
                                 child: AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 200),
+                                  duration: const Duration(milliseconds: 500),
                                   child: state.loadingStruct.isLoading
                                       ? LoadingWidget(
-                                          loadingStruct: state
-                                              .loadingStruct) // This will show when loading.
-                                      : (state.selectedFeedbackType ==
-                                              FeedbackType.comment
-                                          ? FeedbackList(
-                                              key: commentsListKey,
-                                              feedbacks: state.comments)
-                                          : FeedbackList(
-                                              key: suggestionListKey,
-                                              feedbacks: state.suggestions)),
+                                          loadingStruct: state.loadingStruct) // This will show when loading.
+                                      : (state.selectedFeedbackType == FeedbackType.comment
+                                          ? FeedbackList(key: commentsListKey, feedbacks: state.comments)
+                                          : FeedbackList(key: suggestionListKey, feedbacks: state.suggestions)),
                                 ),
                               ))
                         ],
@@ -89,10 +78,8 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                 },
               )
             : Container(),
-        crossFadeState: uiState.feedbackUIshown
-            ? CrossFadeState.showSecond
-            : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 200),
+        crossFadeState: uiState.feedbackUIshown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        duration: const Duration(milliseconds: 500),
       );
     });
   }

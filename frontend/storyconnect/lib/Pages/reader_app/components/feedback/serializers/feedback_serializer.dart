@@ -25,7 +25,7 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
   factory FeedbackCreationSerializer.initial() {
     return FeedbackCreationSerializer(
       chapterId: 0,
-      selection: AnnotatedTextSelection(
+      selection: const AnnotatedTextSelection(
           chapterId: 0, floating: false, offsetEnd: 0, offset: 0, text: ""),
       sentiment: FeedbackSentiment.good.index,
       isSuggestion: true,

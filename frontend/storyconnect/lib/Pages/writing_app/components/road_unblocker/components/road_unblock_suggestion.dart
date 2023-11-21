@@ -9,8 +9,7 @@ import 'package:storyconnect/Pages/writing_app/components/road_unblocker/state/r
 class RoadUnblockerSuggestionWidget extends StatelessWidget {
   final String responseLocalId;
   final RoadUnblockerSuggestion suggestion;
-  const RoadUnblockerSuggestionWidget(
-      {super.key, required this.responseLocalId, required this.suggestion});
+  const RoadUnblockerSuggestionWidget({super.key, required this.responseLocalId, required this.suggestion});
 
   // Widget _boxedResponse(String header, String content) {
   //   return Column(
@@ -41,9 +40,9 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,9 +53,9 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
             //       ),
             // ),
 
-            SizedBox(width: 10),
-            Text(suggestion.suggestion),
-            SizedBox(height: 25),
+            const SizedBox(width: 10),
+            SelectableText(suggestion.suggestion),
+            const SizedBox(height: 25),
             // Padding(
             //     padding: EdgeInsets.symmetric(horizontal: 10),
             //     child: Divider()),
@@ -69,14 +68,14 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
               children: [
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    context.read<RoadUnblockerBloc>().add(RejectSuggestionEvent(
-                        responseLocalId: responseLocalId,
-                        localId: suggestion.uid));
+                    context
+                        .read<RoadUnblockerBloc>()
+                        .add(RejectSuggestionEvent(responseLocalId: responseLocalId, localId: suggestion.uid));
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     FontAwesomeIcons.x,
                   ),
-                  label: Text(
+                  label: const Text(
                     "Dismiss",
                   ),
                 ),

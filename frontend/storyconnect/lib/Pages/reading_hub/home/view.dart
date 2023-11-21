@@ -7,7 +7,7 @@ import 'package:storyconnect/Widgets/header.dart';
 
 ///
 class ReadingHomeView extends StatefulWidget {
-  const ReadingHomeView({Key? key}) : super(key: key);
+  const ReadingHomeView({super.key});
 
   @override
   _readingHomeState createState() => _readingHomeState();

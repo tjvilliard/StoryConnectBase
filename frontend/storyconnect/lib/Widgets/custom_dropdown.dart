@@ -12,13 +12,13 @@ class CustomDropdown<T> extends StatefulWidget {
   final OnSelectedCallback<T>? onSelected;
 
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.title,
     required this.initialValue,
     required this.items,
     required this.labelBuilder,
     this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => CustomDropdownState<T>();
@@ -44,6 +44,7 @@ class CustomDropdownState<T> extends State<CustomDropdown<T>> {
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<T>(
+      initialSelection: currentValue,
       requestFocusOnTap: false,
       label: Text(widget.title),
       dropdownMenuEntries: items,

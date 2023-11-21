@@ -20,10 +20,10 @@ class ReadingAppView extends StatefulWidget {
   const ReadingAppView({super.key, required this.bookId});
 
   @override
-  _ReadingAppViewState createState() => _ReadingAppViewState();
+  ReadingAppViewState createState() => ReadingAppViewState();
 }
 
-class _ReadingAppViewState extends State<ReadingAppView> {
+class ReadingAppViewState extends State<ReadingAppView> {
   bool firstLoaded = true;
   String? title;
   @override
@@ -60,6 +60,71 @@ class _ReadingAppViewState extends State<ReadingAppView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+            centerTitle: false,
+            title: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(FontAwesomeIcons.house),
+                  onPressed: () {
+                    BeamerDelegate beamer = Beamer.of(context);
+                    if (beamer.canBeamBack) {
+                      beamer.beamBack();
+                    } else {
+                      beamer.beamToNamed(PageUrls.readerHome);
+                    }
+                  },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: BlocBuilder<ReadingUIBloc, ReadingUIState>(
+                          builder: (context, state) {
+                            Widget toReturn;
+                            if (state.title != null) {
+                              toReturn = Text(state.title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.fade,
+                                  style: Theme.of(context).textTheme.displaySmall);
+                            } else {
+                              toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
+                            }
+                            return AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn);
+                          },
+                        )))
+              ],
+            )),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Flexible(
+                fit: FlexFit.loose,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.center,
+                      child: ReadingPageView(),
+                    )),
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.topLeft,
+                      child: ChapterNavigation(),
+                    )),
+                    Positioned.fill(
+                        child: Align(
+                      alignment: Alignment.topRight,
+                      child: FeedbackWidget(),
+                    ))
+                  ],
+                )),
+            ReadingMenuBar(bookId: widget.bookId!),
+          ],
+        ));
           title: Row(
             children: [
               IconButton(

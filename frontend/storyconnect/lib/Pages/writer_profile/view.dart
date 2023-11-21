@@ -2,9 +2,10 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/components/annoucements/announcements.dart';
-import 'package:storyconnect/Pages/writer_profile/components/current_works_card.dart';
-import 'package:storyconnect/Pages/writer_profile/components/profile_card.dart';
+
 import 'package:storyconnect/Pages/writer_profile/components/activity/recent_activity_card.dart';
+import 'package:storyconnect/Pages/writer_profile/components/current_works_card.dart';
+import 'package:storyconnect/Pages/writer_profile/components/profile/profile_card.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
@@ -25,9 +26,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<WriterProfileBloc>()
-          .add(WriterProfileLoadEvent(uid: widget.uid));
+      context.read<WriterProfileBloc>().add(WriterProfileLoadEvent(uid: widget.uid));
     });
   }
 
@@ -36,7 +35,7 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
     super.dispose();
   }
 
-  static final duration = const Duration(milliseconds: 500);
+  static const duration = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +47,20 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
           }
         },
         body: BlocConsumer<WriterProfileBloc, WriterProfileState>(
-            listenWhen: (previous, current) =>
-                previous.responseMessages != current.responseMessages,
+            listenWhen: (previous, current) => previous.responseMessages != current.responseMessages,
             listener: (context, state) {
               if (state.responseMessages.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.responseMessages.last),
-                    duration: Duration(seconds: 1)));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.responseMessages.last), duration: const Duration(seconds: 6)));
                 // clear the messages
-                context.read<WriterProfileBloc>().add(ClearLastResponseEvent());
+                context.read<WriterProfileBloc>().add(const ClearLastResponseEvent());
               }
             },
             builder: (context, state) => LayoutBuilder(
                   builder: (context, constraints) {
-                    return Container(
-                        child: ListView(children: [
+                    return ListView(children: [
                       Column(mainAxisSize: MainAxisSize.min, children: [
-                        Header(
+                        const Header(
                           title: "Profile Page",
                           subtitle: "",
                         ),
@@ -73,20 +69,18 @@ class WriterProfilePageState extends State<WriterProfileWidget> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             ProfileCard(uid: widget.uid),
-                            CurrentWorksCard(),
+                            const CurrentWorksCard(),
                             Wrap(
                               alignment: WrapAlignment.center,
                               children: [
-                                AnnouncementsCard(
-                                    uid: widget.uid,
-                                    announcements: state.announcements),
-                                RecentActivityCard(),
+                                AnnouncementsCard(uid: widget.uid, announcements: state.announcements),
+                                const RecentActivityCard(),
                               ],
                             )
                           ],
                         ))
                       ])
-                    ]));
+                    ]);
                   },
                 )));
   }

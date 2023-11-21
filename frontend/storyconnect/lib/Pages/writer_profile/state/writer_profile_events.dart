@@ -51,8 +51,8 @@ class ClearLastResponseEvent extends WriterProfileEvent {
   const ClearLastResponseEvent();
 }
 
-class EditBioEvent extends WriterProfileEvent {
-  const EditBioEvent();
+class EditProfileEvent extends WriterProfileEvent {
+  const EditProfileEvent();
 }
 
 class EditBioStateEvent extends WriterProfileEvent {
@@ -60,10 +60,31 @@ class EditBioStateEvent extends WriterProfileEvent {
   const EditBioStateEvent({required this.bio});
 }
 
-class SaveBioEvent extends WriterProfileEvent {
-  const SaveBioEvent();
+class SaveProfileEvent extends WriterProfileEvent {
+  const SaveProfileEvent();
 }
 
-class CancelBioEvent extends WriterProfileEvent {
-  const CancelBioEvent();
+class CancelProfileEditEvent extends WriterProfileEvent {
+  const CancelProfileEditEvent();
+}
+
+class SelectProfileImageEvent extends WriterProfileEvent {
+  const SelectProfileImageEvent();
+}
+
+class SaveProfileImageEvent extends WriterProfileEvent {
+  const SaveProfileImageEvent();
+}
+
+class DeleteProfileImageEvent extends WriterProfileEvent {
+  const DeleteProfileImageEvent();
+}
+
+class ClearProfileImageEvent extends WriterProfileEvent {
+  const ClearProfileImageEvent();
+}
+
+class EditDisplayNameEvent extends WriterProfileEvent {
+  final String displayName;
+  const EditDisplayNameEvent({required this.displayName});
 }

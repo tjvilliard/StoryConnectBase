@@ -6,18 +6,15 @@ import 'package:storyconnect/Widgets/loading_widget.dart';
 class LibraryMenuButton extends StatefulWidget {
   final int bookId;
 
-  LibraryMenuButton({required this.bookId});
+  const LibraryMenuButton({super.key, required this.bookId});
 
   @override
-  _libraryMenuButtonState createState() =>
-      _libraryMenuButtonState(bookId: this.bookId);
+  LibraryMenuButtonState createState() => LibraryMenuButtonState();
 }
 
-class _libraryMenuButtonState extends State<LibraryMenuButton> {
+class LibraryMenuButtonState extends State<LibraryMenuButton> {
   late bool inLibrary;
-  final int bookId;
-
-  _libraryMenuButtonState({required this.bookId});
+  int get bookId => widget.bookId;
 
   @override
   void initState() {
@@ -30,55 +27,39 @@ class _libraryMenuButtonState extends State<LibraryMenuButton> {
   Widget build(BuildContext context) {
     return BlocBuilder<LibraryBloc, LibraryStruct>(
       builder: (BuildContext context, LibraryStruct state) {
-        this.inLibrary = context
-            .read<LibraryBloc>()
-            .state
-            .libraryBooks
-            .where((element) => (element.id == this.bookId))
-            .isNotEmpty;
+        inLibrary =
+            context.read<LibraryBloc>().state.libraryBooks.where((element) => (element.id == bookId)).isNotEmpty;
 
         return Container(
             height: 40,
-            width: this.inLibrary ? 180 : 130,
+            width: inLibrary ? 180 : 130,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.0)),
             child: state.loadingStruct.isLoading
-                ? Transform.scale(
-                    scale: .6,
-                    child: LoadingWidget(loadingStruct: state.loadingStruct))
+                ? Transform.scale(scale: .6, child: LoadingWidget(loadingStruct: state.loadingStruct))
                 : InkWell(
                     customBorder: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                     onTap: () {
-                      if (this.inLibrary) {
-                        context
-                            .read<LibraryBloc>()
-                            .add(RemoveBookEvent(bookId: this.bookId));
+                      if (inLibrary) {
+                        context.read<LibraryBloc>().add(RemoveBookEvent(bookId: bookId));
                       } else {
-                        context
-                            .read<LibraryBloc>()
-                            .add(AddBookEvent(bookId: this.bookId));
+                        context.read<LibraryBloc>().add(AddBookEvent(bookId: bookId));
                       }
-                      this.inLibrary = !this.inLibrary;
+                      inLibrary = !inLibrary;
                       setState(() {});
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Checkbox.adaptive(
-                            value: this.inLibrary,
+                            value: inLibrary,
                             side: MaterialStateBorderSide.resolveWith(
-                                (states) => BorderSide(
-                                    width: 2.0,
-                                    color:
-                                        Theme.of(context).colorScheme.primary)),
+                                (states) => BorderSide(width: 2.0, color: Theme.of(context).colorScheme.primary)),
                             onChanged: (_) {}),
                         Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                            this.inLibrary
-                                ? "Remove from library"
-                                : "Add to library"),
+                            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                            inLibrary ? "Remove from library" : "Add to library"),
                       ],
                     )));
       },

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
 
 class FeedbackTypeSelector extends StatelessWidget {
-  const FeedbackTypeSelector({Key? key}) : super(key: key);
+  const FeedbackTypeSelector({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -14,15 +14,10 @@ class OnGuidingQuestionChangedEvent extends RoadUnblockerEvent {
   const OnGuidingQuestionChangedEvent({required this.question});
 }
 
-class LoadSelectionEvent extends RoadUnblockerEvent {
-  final int startOffset;
-  final int endOffset;
-  const LoadSelectionEvent(
-      {required this.startOffset, required this.endOffset});
-}
-
 class SubmitUnblockEvent extends RoadUnblockerEvent {
-  const SubmitUnblockEvent();
+  final int chapterID;
+  final String selection;
+  const SubmitUnblockEvent({required this.chapterID, required this.selection});
 }
 
 class RecieveUnblockEvent extends RoadUnblockerEvent {
@@ -34,17 +29,13 @@ class AcceptSuggestionEvent extends RoadUnblockerEvent {
   final String responseLocalId;
   final String localId;
   final WritingBloc writingBloc;
-  const AcceptSuggestionEvent(
-      {required this.responseLocalId,
-      required this.localId,
-      required this.writingBloc});
+  const AcceptSuggestionEvent({required this.responseLocalId, required this.localId, required this.writingBloc});
 }
 
 class RejectSuggestionEvent extends RoadUnblockerEvent {
   final String responseLocalId;
   final String localId;
-  const RejectSuggestionEvent(
-      {required this.responseLocalId, required this.localId});
+  const RejectSuggestionEvent({required this.responseLocalId, required this.localId});
 }
 
 class ClearUnblockEvent extends RoadUnblockerEvent {

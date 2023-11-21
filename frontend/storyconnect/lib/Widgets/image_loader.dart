@@ -1,46 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-class ImageLoader extends StatefulWidget {
+/// A button with a filled background.
+class ImageLoader extends StatelessWidget {
   final String url;
+  final BoxConstraints? constraints;
+  final BoxFit? fit;
 
-  ImageLoader({required this.url});
-
-  @override
-  _ImageLoaderState createState() => _ImageLoaderState();
-}
-
-class _ImageLoaderState extends State<ImageLoader> {
-  Image? image;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadImage();
-  }
-
-  Future<void> _loadImage() async {
-    try {
-      final response = await http.get(Uri.parse(widget.url));
-      if (response.statusCode == 200) {
-        setState(() {
-          image = Image.memory(response.bodyBytes);
-        });
-      } else {
-        // Handle the case when the image is not found or any other error
-        print('Failed to load image. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Handle any errors
-      print('Error occurred while loading image: $e');
-    }
-  }
+  const ImageLoader({super.key, required this.url, this.constraints, this.fit});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      child: image == null ? CircularProgressIndicator() : image!,
-    );
+    return Container(
+        constraints: constraints,
+        child: Image.network(
+          url,
+          fit: fit ?? BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+            // You can add your custom error widget here
+            return const Text('Error loading image');
+          },
+        ));
   }
 }

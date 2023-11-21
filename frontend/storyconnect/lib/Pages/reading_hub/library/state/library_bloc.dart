@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
@@ -16,7 +17,7 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
   LibraryBloc(this._repo)
       : super(LibraryStruct(
           libraryBooks: [],
-          loadingStruct: LoadingStruct(isLoading: false),
+          loadingStruct: const LoadingStruct(isLoading: false),
         )) {
     on<GetLibraryEvent>((event, emit) => fetchBooks(event, emit));
     on<RemoveBookEvent>((event, emit) => removeBook(event, emit));
@@ -30,9 +31,12 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
 
-    await this._repo.getLibraryBooks();
+    await _repo.getLibraryBooks();
+    if (kDebugMode) {
+      print("Getting Library Books in State.");
+    }
 
-    List<Book> libBooks = this._repo.libraryBookMap.values.toList();
+    List<Book> libBooks = _repo.libraryBookMap.values.toList();
 
     emit(LibraryStruct(
       libraryBooks: libBooks,
@@ -47,21 +51,17 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
       loadingStruct: LoadingStruct.loading(true),
     ));
 
-    ///
-    MapEntry<Library, Book> entryToRemove = this
-        ._repo
-        .libraryBookMap
-        .entries
+    MapEntry<Library, Book> entryToRemove = _repo.libraryBookMap.entries
         .where((entry) => entry.value.id == event.bookId)
         .first;
 
-    await this._repo.removeLibraryBook(LibraryEntrySerializer(
-          id: entryToRemove.key.id,
-          book: entryToRemove.value.id,
-          status: entryToRemove.key.status,
-        ));
+    await _repo.removeLibraryBook(LibraryEntrySerializer(
+      id: entryToRemove.key.id,
+      book: entryToRemove.value.id,
+      status: entryToRemove.key.status,
+    ));
 
-    List<Book> libBooks = this._repo.libraryBookMap.values.toList();
+    List<Book> libBooks = _repo.libraryBookMap.values.toList();
 
     emit(LibraryStruct(
       libraryBooks: libBooks,
@@ -75,12 +75,12 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryStruct> {
       loadingStruct: LoadingStruct.loading(true),
     ));
 
-    await this._repo.addLibraryBook(LibraryEntrySerializer(
-          book: event.bookId,
-          status: 1,
-        ));
+    await _repo.addLibraryBook(LibraryEntrySerializer(
+      book: event.bookId,
+      status: 1,
+    ));
 
-    List<Book> libBooks = this._repo.libraryBookMap.values.toList();
+    List<Book> libBooks = _repo.libraryBookMap.values.toList();
 
     emit(LibraryStruct(
       loadingStruct: LoadingStruct.loading(false),

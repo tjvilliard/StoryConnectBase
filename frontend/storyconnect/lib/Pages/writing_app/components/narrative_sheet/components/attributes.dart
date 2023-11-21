@@ -12,7 +12,7 @@ class AttributesWidget extends StatelessWidget {
     toReturn.add(Row(
       children: [
         Padding(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             child: Text(
               "Attributes",
               style: Theme.of(context).textTheme.titleLarge,
@@ -20,9 +20,9 @@ class AttributesWidget extends StatelessWidget {
       ],
     ));
 
-    toReturn.add(Divider());
+    toReturn.add(const Divider());
 
-    toReturn.add(SizedBox(height: 10));
+    toReturn.add(const SizedBox(height: 10));
 
     return toReturn;
   }
@@ -41,19 +41,19 @@ class AttributesWidget extends StatelessWidget {
       if (i == attributes.length - 1 ||
           attributes[i].attributeType != attributes[i + 1].attributeType) {
         rows.add(Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(attributes[i].attributeType.name,
                 style: Theme.of(context).textTheme.titleMedium)));
-        rows.add(SizedBox(height: 5));
+        rows.add(const SizedBox(height: 5));
         rows.add(Padding(
-            padding: EdgeInsets.only(top: 2.5, bottom: 2.5, left: 15, right: 5),
+            padding: const EdgeInsets.only(top: 2.5, bottom: 2.5, left: 15, right: 5),
             child: Wrap(
               spacing: 5,
               runSpacing: 5,
               children: currentRowItems,
             )));
 
-        rows.add(SizedBox(height: 20));
+        rows.add(const SizedBox(height: 20));
 
         currentRowItems = [];
       }

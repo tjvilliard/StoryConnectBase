@@ -5,12 +5,10 @@ abstract class WritingEvent extends ReplayEvent {
 }
 
 class SwitchChapterEvent extends WritingEvent {
-  final int chapterToSwitchFrom;
   final int chapterToSwitchTo;
   final bool storeCommand;
 
   SwitchChapterEvent({
-    required this.chapterToSwitchFrom,
     required this.chapterToSwitchTo,
     this.storeCommand = true,
   });
@@ -61,4 +59,22 @@ class _UpdateChapterHelperEvent extends WritingEvent {
 class SetEditorControllerCallbackEvent extends WritingEvent {
   final EditorController? Function() callback;
   SetEditorControllerCallbackEvent({required this.callback});
+}
+
+class UpdateChapterTitleEvent extends WritingEvent {
+  final String title;
+  final int chapterNum;
+
+  UpdateChapterTitleEvent({
+    required this.title,
+    required this.chapterNum,
+  });
+}
+
+class DeleteChapterEvent extends WritingEvent {
+  final int chapterNum;
+
+  DeleteChapterEvent({
+    required this.chapterNum,
+  });
 }

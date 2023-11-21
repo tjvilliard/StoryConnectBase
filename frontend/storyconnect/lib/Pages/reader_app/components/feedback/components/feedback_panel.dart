@@ -8,31 +8,28 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback
 ///
 class FeedbackCardListWidget extends StatefulWidget {
   final List<WriterFeedback> feedbackItems;
-  FeedbackCardListWidget({required this.feedbackItems});
+  const FeedbackCardListWidget({super.key, required this.feedbackItems});
   @override
-  _FeedbackCardListState createState() =>
-      _FeedbackCardListState(feedbackItems: this.feedbackItems);
+  FeedbackCardListState createState() => FeedbackCardListState();
 }
 
 ///
-class _FeedbackCardListState extends State<FeedbackCardListWidget> {
-  List<WriterFeedback> feedbackItems;
+class FeedbackCardListState extends State<FeedbackCardListWidget> {
+  List<WriterFeedback> get feedbackItems => widget.feedbackItems;
 
   ///
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late bool showScrollUpButton;
   late bool showScrollDownButton;
 
-  _FeedbackCardListState({required this.feedbackItems});
-
   @override
   void initState() {
-    this.showScrollUpButton = false;
+    showScrollUpButton = false;
 
-    if (this.feedbackItems.length < 2) {
-      this.showScrollDownButton = false;
+    if (feedbackItems.length < 2) {
+      showScrollDownButton = false;
     } else {
-      this.showScrollDownButton = true;
+      showScrollDownButton = true;
     }
 
     // Check out
@@ -42,13 +39,13 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
       if (_scrollController.position.atEdge) {
         bool isTop = _scrollController.position.pixels == 0;
         if (isTop) {
-          this.showScrollUpButton = false;
+          showScrollUpButton = false;
         } else {
-          this.showScrollDownButton = false;
+          showScrollDownButton = false;
         }
       } else {
-        this.showScrollDownButton = true;
-        this.showScrollUpButton = true;
+        showScrollDownButton = true;
+        showScrollUpButton = true;
       }
 
       setState(() {});
@@ -59,11 +56,10 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FeedbackBloc, FeedbackState>(
-        builder: (BuildContext context, FeedbackState feedbackState) {
-      if (this.feedbackItems.isEmpty) {
+    return BlocBuilder<FeedbackBloc, FeedbackState>(builder: (BuildContext context, FeedbackState feedbackState) {
+      if (feedbackItems.isEmpty) {
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Text(
               style: Theme.of(context).textTheme.bodySmall,
               feedbackState.selectedFeedbackType == FeedbackType.suggestion
@@ -75,51 +71,44 @@ class _FeedbackCardListState extends State<FeedbackCardListWidget> {
           children: [
             Positioned.fill(
                 child: SingleChildScrollView(
-                    controller: this._scrollController,
+                    controller: _scrollController,
                     scrollDirection: Axis.vertical,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: CommentCardWidget.buildAll(
-                            feedbackSet: this.feedbackItems)))),
+                        children: CommentCardWidget.buildAll(feedbackSet: feedbackItems)))),
             Positioned(
                 top: 1.0,
                 left: 0.0,
                 right: 0.0,
                 child: Visibility(
-                    visible: this.showScrollUpButton,
+                    visible: showScrollUpButton,
+                    replacement: const SizedBox.shrink(),
                     child: Container(
                         alignment: Alignment.topCenter,
                         child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(shape: CircleBorder()),
+                            style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                             onPressed: () {
-                              this._scrollController.animateTo(
-                                  this._scrollController.offset - 200,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.easeIn);
+                              _scrollController.animateTo(_scrollController.offset - 200,
+                                  duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                             },
-                            child: Icon(FontAwesomeIcons.arrowUp))),
-                    replacement: SizedBox.shrink())),
+                            child: const Icon(FontAwesomeIcons.arrowUp))))),
             Positioned(
                 left: 0.0,
                 right: 0.0,
                 bottom: 0.0,
                 child: Visibility(
-                    visible: this.showScrollDownButton,
+                    visible: showScrollDownButton,
+                    replacement: const SizedBox.shrink(),
                     child: Container(
                         alignment: Alignment.bottomCenter,
                         child: ElevatedButton(
-                            style:
-                                ElevatedButton.styleFrom(shape: CircleBorder()),
+                            style: ElevatedButton.styleFrom(shape: const CircleBorder()),
                             onLongPress: () {},
                             onPressed: () {
-                              this._scrollController.animateTo(
-                                  this._scrollController.offset + 200,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.easeIn);
+                              _scrollController.animateTo(_scrollController.offset + 200,
+                                  duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                             },
-                            child: Icon(FontAwesomeIcons.arrowDown))),
-                    replacement: SizedBox.shrink()))
+                            child: const Icon(FontAwesomeIcons.arrowDown)))))
           ],
         );
       }

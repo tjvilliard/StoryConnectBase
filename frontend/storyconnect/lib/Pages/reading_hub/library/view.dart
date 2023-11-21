@@ -8,7 +8,7 @@ import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryView extends StatefulWidget {
-  const LibraryView({Key? key}) : super(key: key);
+  const LibraryView({super.key});
 
   @override
   LibraryState createState() => LibraryState();
