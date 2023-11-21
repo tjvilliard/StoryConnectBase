@@ -42,7 +42,7 @@ from django.contrib.auth.models import User
 
 def ct_cron_job():
     all_users = User.objects.all()
-
+    print("ct cron job")
     for each_user in all_users:
         all_user_books = book_models.Book.objects.filter(owner=each_user)
         for book in all_user_books:

@@ -35,10 +35,3 @@ class Book_Rating(models.Model):
 
         book_rating = sum(book_chapter_ratings)/len(book_chapter_ratings)
         return book_rating
-        
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:  # check if the instance is not yet saved to the database
-    #         the_book_rating = Book_Rating.objects.filter(book=self.book).first()
-    #         if the_book_rating:
-    #             self.rating = the_book_rating.get_rating()
-    #     super().save(*args, **kwargs)

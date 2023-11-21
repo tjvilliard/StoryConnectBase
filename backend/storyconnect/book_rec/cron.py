@@ -3,7 +3,7 @@ from books.models import *
 
 def rating_cron_job():
     all_books = Book.objects.all()
-
+    print("rating cron job")
     for the_book in all_books:
         the_book_rate, created = Book_Rating.objects.get_or_create(book=the_book)
         book_rate = the_book_rate.get_rating()
