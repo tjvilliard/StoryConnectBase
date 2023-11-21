@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/chapter/chapter_text.dart';
 import 'package:storyconnect/Pages/writing_app/components/writing/chapter/update_chapter_dialog.dart';
 
 class ChapterNavigationButton extends StatefulWidget {
@@ -28,20 +29,23 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
     context.read<WritingBloc>().add(UpdateChapterTitleEvent(chapterNum: widget.index, title: title));
   }
 
+  String buildTitle(WritingState writingState) {
+    String title;
+    if (writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] == null ||
+        writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]?.isEmpty == true) {
+      final int naturalIndex = widget.index + 1;
+      title = "Chapter $naturalIndex";
+    } else {
+      title = writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]!;
+    }
+    return title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WritingBloc, WritingState>(
       builder: (chapterContext, WritingState writingState) {
         final selectedColor = Theme.of(context).primaryColor;
-        final selectedTextColor = Colors.white;
-        String title;
-        if (writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]] == null ||
-            writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]?.isEmpty == true) {
-          final int naturalIndex = widget.index + 1;
-          title = "Chapter $naturalIndex";
-        } else {
-          title = writingState.chapterIDToTitle[writingState.chapterNumToID[widget.index]]!;
-        }
 
         return MouseRegion(
           onEnter: (_) => setState(() => isHovered = true),
@@ -63,13 +67,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Container(
                       width: 160,
-                      child: Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelLarge?.apply(
-                            fontSizeDelta: 4,
-                            color: writingState.currentIndex == widget.index ? selectedTextColor : null),
-                      ),
+                      child: ChapterTextWidget(index: widget.index),
                     ),
                   ),
                 ),
@@ -86,7 +84,7 @@ class _ChapterNavigationButtonState extends State<ChapterNavigationButton> {
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (context) => UpdateChapterDialog(
-                                      title: title,
+                                      title: buildTitle(writingState),
                                       onDelete: onDelete,
                                       onSaveTitle: onSaveTitle,
                                       numOfChapters: widget.numOfChapters));

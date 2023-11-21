@@ -208,6 +208,9 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   }
 
   void updateChapterTitle(UpdateChapterTitleEvent event, WritingEmitter emit) async {
+    final Map<int, bool> updatingChapters = Map<int, bool>.from(state.updatingChapter);
+    emit(state.copyWith(updatingChapter: updatingChapters..[event.chapterNum] = true));
+
     final chapterId = state.chapterNumToID[event.chapterNum]!;
     Map<int, String> chapters = Map.from(state.chapters);
 
@@ -235,6 +238,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
       chapterTitles[chapterId] = event.title;
       emit(state.copyWith(chapterIDToTitle: chapterTitles));
     }
+    emit(state.copyWith(updatingChapter: updatingChapters..[event.chapterNum] = false));
   }
 
   void deleteChapter(DeleteChapterEvent event, WritingEmitter emit) async {
@@ -269,6 +273,10 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     chapters.remove(state.chapters.length - 1);
     chapterIDToTitle.remove(chapterId);
 
-    emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
+    emit(state.copyWith(
+        currentIndex: state.currentIndex - 1,
+        chapterNumToID: chapterNumToID,
+        chapters: chapters,
+        chapterIDToTitle: chapterIDToTitle));
   }
 }

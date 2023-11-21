@@ -12,6 +12,7 @@ class WritingState with _$WritingState {
     int? caretOffset,
     @Default(<int, int>{}) Map<int, int> chapterNumToID,
     @Default(<int, String?>{}) Map<int, String?> chapterIDToTitle,
+    @Default(<int, bool>{}) Map<int, bool> updatingChapter,
     required EditorConfigM config,
   }) = _WritingState;
   const WritingState._();

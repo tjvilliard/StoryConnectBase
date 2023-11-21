@@ -19,54 +19,60 @@ class _ChapterNavigationState extends State<ChapterNavigation> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, uiState) {
-      return BlocBuilder<WritingBloc, WritingState>(builder: (context, writingState) {
-        return AnimatedCrossFade(
-            firstChild: Container(),
-            secondChild: Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.all(8),
-                width: 300,
-                child: Card(
-                    elevation: 3,
-                    child: uiState.chapterOutlineShown
-                        ? Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                SidePopupHeader(
-                                    title: "Chapter Nav",
-                                    dismiss: () =>
-                                        BlocProvider.of<WritingUIBloc>(context).add(ToggleChapterOutlineEvent())),
-                                SizedBox(height: 20),
-                                Expanded(
-                                    child: ListView.builder(
-                                        controller: _scrollController,
-                                        itemCount: writingState.chapters.length + 1,
-                                        itemBuilder: (context, index) {
-                                          if (index == writingState.chapters.length) {
-                                            return ChapterCreateButton();
-                                          }
-                                          Uuid uuid = Uuid();
-                                          String keyString;
-                                          if (writingState.chapterNumToID.containsKey(index)) {
-                                            keyString = writingState.chapterNumToID[index].toString();
-                                          } else {
-                                            keyString = uuid.v4();
-                                          }
+      return BlocBuilder<WritingBloc, WritingState>(
+          buildWhen: (previous, current) =>
+              previous.chapters != current.chapters ||
+              previous.chapterNumToID != current.chapterNumToID ||
+              previous.chapterIDToTitle != current.chapterIDToTitle ||
+              previous.currentIndex != current.currentIndex,
+          builder: (context, writingState) {
+            return AnimatedCrossFade(
+                firstChild: Container(),
+                secondChild: Container(
+                    padding: EdgeInsets.all(8),
+                    margin: EdgeInsets.all(8),
+                    width: 300,
+                    child: Card(
+                        elevation: 3,
+                        child: uiState.chapterOutlineShown
+                            ? Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    SidePopupHeader(
+                                        title: "Chapter Nav",
+                                        dismiss: () =>
+                                            BlocProvider.of<WritingUIBloc>(context).add(ToggleChapterOutlineEvent())),
+                                    SizedBox(height: 20),
+                                    Expanded(
+                                        child: ListView.builder(
+                                            controller: _scrollController,
+                                            itemCount: writingState.chapters.length + 1,
+                                            itemBuilder: (context, index) {
+                                              if (index == writingState.chapters.length) {
+                                                return ChapterCreateButton();
+                                              }
+                                              Uuid uuid = Uuid();
+                                              String keyString;
+                                              if (writingState.chapterNumToID.containsKey(index)) {
+                                                keyString = writingState.chapterNumToID[index].toString();
+                                              } else {
+                                                keyString = uuid.v4();
+                                              }
 
-                                          return ChapterNavigationButton(
-                                            key: Key(keyString),
-                                            index: index,
-                                            numOfChapters: writingState.chapters.length,
-                                          );
-                                        }))
-                              ],
-                            ))
-                        : Container())),
-            crossFadeState: uiState.chapterOutlineShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 500));
-      });
+                                              return ChapterNavigationButton(
+                                                key: Key(keyString),
+                                                index: index,
+                                                numOfChapters: writingState.chapters.length,
+                                              );
+                                            }))
+                                  ],
+                                ))
+                            : Container())),
+                crossFadeState: uiState.chapterOutlineShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                duration: Duration(milliseconds: 500));
+          });
     });
   }
 }
