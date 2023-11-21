@@ -11,8 +11,7 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
   /// Generates HTTP: POST request for new feedback item.
-  Future<WriterFeedback?> createFeedbackItem(
-      {required FeedbackCreationSerializer serializer}) async {
+  Future<WriterFeedback?> createFeedbackItem({required FeedbackCreationSerializer serializer}) async {
     try {
       final url = UrlConstants.createWriterFeedback();
       print("[INFO]: Getting result from post call. \n");
@@ -25,7 +24,7 @@ class ReadingApiProvider {
 
       print("[DEBUG]: Json Result: \n ${result.body} \n");
 
-      return WriterFeedback.fromJson(jsonDecode(result.body));
+      return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       print(e);
       return null;
@@ -36,7 +35,7 @@ class ReadingApiProvider {
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
-    for (var feedback in jsonDecode(result.body)) {
+    for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
       yield WriterFeedback.fromJson(feedback);
     }
   }
@@ -47,7 +46,7 @@ class ReadingApiProvider {
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var book in jsonDecode(result.body)) {
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
@@ -64,7 +63,7 @@ class ReadingApiProvider {
       // get result for HTTP GET request
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var libraryEntry in jsonDecode(result.body)) {
+      for (var libraryEntry in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Library.fromJson(libraryEntry);
       }
     } catch (e) {
@@ -79,9 +78,7 @@ class ReadingApiProvider {
       final url = UrlConstants.addLibraryBook();
 
       // send off HTTP POST request
-      await http.post(url,
-          headers: await buildHeaders(),
-          body: (jsonEncode(serializer.toJson())));
+      await http.post(url, headers: await buildHeaders(), body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       print(e);
     }
@@ -110,8 +107,7 @@ class ReadingRepository {
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
-    final WriterFeedback? output =
-        await this._api.createFeedbackItem(serializer: serializer);
+    final WriterFeedback? output = await this._api.createFeedbackItem(serializer: serializer);
 
     if (output == null) {
       return null;

@@ -9,8 +9,7 @@ import 'package:storyconnect/Pages/writing_app/components/road_unblocker/state/r
 class RoadUnblockerSuggestionWidget extends StatelessWidget {
   final String responseLocalId;
   final RoadUnblockerSuggestion suggestion;
-  const RoadUnblockerSuggestionWidget(
-      {super.key, required this.responseLocalId, required this.suggestion});
+  const RoadUnblockerSuggestionWidget({super.key, required this.responseLocalId, required this.suggestion});
 
   // Widget _boxedResponse(String header, String content) {
   //   return Column(
@@ -55,7 +54,7 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
             // ),
 
             SizedBox(width: 10),
-            Text(suggestion.suggestion),
+            SelectableText(suggestion.suggestion),
             SizedBox(height: 25),
             // Padding(
             //     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -69,9 +68,9 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
               children: [
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    context.read<RoadUnblockerBloc>().add(RejectSuggestionEvent(
-                        responseLocalId: responseLocalId,
-                        localId: suggestion.uid));
+                    context
+                        .read<RoadUnblockerBloc>()
+                        .add(RejectSuggestionEvent(responseLocalId: responseLocalId, localId: suggestion.uid));
                   },
                   icon: Icon(
                     FontAwesomeIcons.x,

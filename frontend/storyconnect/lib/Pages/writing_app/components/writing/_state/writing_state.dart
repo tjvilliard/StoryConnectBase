@@ -13,12 +13,21 @@ class WritingState with _$WritingState {
     @Default(<int, int>{}) Map<int, int> chapterNumToID,
     @Default(<int, String?>{}) Map<int, String?> chapterIDToTitle,
     @Default(<int, bool>{}) Map<int, bool> updatingChapter,
+    @Default(false) bool isDeletingAChapter,
     required EditorConfigM config,
   }) = _WritingState;
   const WritingState._();
 
   String get currentChapterText => chapters[currentIndex]!;
   int get currentChapterId => chapterNumToID[currentIndex]!;
+
+  String getCurrentChapterRawText() {
+    final chapterText = chapters[currentIndex]!;
+    final EditorController controller = EditorController(
+      document: DeltaDocM.fromJson(jsonDecode(chapterText)),
+    );
+    return controller.plainText.text;
+  }
 
   factory WritingState.initial() {
     return WritingState(

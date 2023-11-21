@@ -9,8 +9,7 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class LibraryApiProvider {
   Future<String> getAuthToken() async {
-    return (await FirebaseAuth.instance.currentUser!.getIdToken(true))
-        as String;
+    return (await FirebaseAuth.instance.currentUser!.getIdToken(true)) as String;
   }
 
   Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
@@ -22,7 +21,7 @@ class LibraryApiProvider {
         'Authorization': 'Token ${await getAuthToken()}',
       });
 
-      for (var map in jsonDecode(result.body)) {
+      for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield new MapEntry<Library, Book>(

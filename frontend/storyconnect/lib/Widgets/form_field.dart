@@ -8,7 +8,7 @@ class CustomFormField extends StatelessWidget {
   final int maxLines;
   final Function(String)? onChanged;
   final VoidCallback? onFieldSubmitted;
-
+  final TextEditingController? controller;
   CustomFormField(
       {required this.label,
       this.value,
@@ -16,11 +16,13 @@ class CustomFormField extends StatelessWidget {
       this.onFieldSubmitted,
       this.initialValue,
       this.maxLength,
-      this.maxLines = 1});
+      this.maxLines = 1,
+      this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       maxLines: maxLines,
       maxLength: maxLength,
       initialValue: initialValue,

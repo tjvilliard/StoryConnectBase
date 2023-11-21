@@ -17,7 +17,7 @@ class WritingApiProvider {
     final url = UrlConstants.continuities(chapterId);
 
     final result = await http.get(url, headers: await buildHeaders());
-    return ContinuityResponse.fromJson(jsonDecode(result.body));
+    return ContinuityResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
   }
 
   Future<Book?> createBook({required BookFormSerializer serialzer}) async {
@@ -28,7 +28,7 @@ class WritingApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(serialzer.toJson()),
       );
-      return Book.fromJson(jsonDecode(result.body));
+      return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       print(e);
       return null;
@@ -43,7 +43,7 @@ class WritingApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(serializer.toJson()),
       );
-      return Book.fromJson(jsonDecode(result.body));
+      return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       print(e);
       return null;
@@ -64,7 +64,7 @@ class WritingApiProvider {
       final url = UrlConstants.currentUserBooks();
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var book in jsonDecode(result.body)) {
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
@@ -77,7 +77,7 @@ class WritingApiProvider {
       final url = UrlConstants.getNarrativeElements(bookId);
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var element in jsonDecode(result.body)) {
+      for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield NarrativeElement.fromJson(element);
       }
     } catch (e) {
@@ -88,7 +88,7 @@ class WritingApiProvider {
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
-    for (var feedback in jsonDecode(result.body)) {
+    for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
       yield WriterFeedback.fromJson(feedback);
     }
     // test object

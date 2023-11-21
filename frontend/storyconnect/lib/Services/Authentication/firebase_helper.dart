@@ -15,8 +15,7 @@ class FirebaseHelper {
       }
       final url = UrlConstants.getDisplayName(uid);
       final result = await http.get(url, headers: await buildHeaders());
-      return UsernameIdConversionSerializer.fromJson(jsonDecode(result.body))
-          .username;
+      return UsernameIdConversionSerializer.fromJson(jsonDecode(utf8.decode(result.bodyBytes))).username;
     } catch (e) {
       print(e);
       return null;

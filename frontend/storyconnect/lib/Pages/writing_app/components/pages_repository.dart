@@ -30,7 +30,7 @@ class BookApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(toUpload.toJson()),
       );
-      return Chapter.fromJson(jsonDecode(result.body));
+      return Chapter.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       print(e);
       return null;
@@ -54,7 +54,7 @@ class BookApiProvider {
         headers: await buildHeaders(),
         body: jsonEncode(toUpload.toJson()),
       );
-      return Chapter.fromJson(jsonDecode(result.body));
+      return Chapter.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       print(e);
       return null;
