@@ -102,3 +102,11 @@ frontend/storyconnect/ios/Runner/GoogleService-Info.plist
 frontend/storyconnect/ios/firebase_app_id_file.json
 
 assets.zip
+
+
+frontend/storyconnect/ios/Flutter/Generated.xcconfig
+frontend/storyconnect/ios/Flutter/flutter_export_environment.sh
+frontend/storyconnect/ios/Runner/GeneratedPluginRegistrant.h
+frontend/storyconnect/ios/Runner/GeneratedPluginRegistrant.m
+frontend/storyconnect/linux/flutter/ephemeral/*
+frontend/storyconnect/macos/Flutter/ephemeral/*
