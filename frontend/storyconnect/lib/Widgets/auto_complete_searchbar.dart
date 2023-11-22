@@ -55,12 +55,18 @@ class AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
     super.initState();
   }
 
+  bool isDarkMode(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool isDark = isDarkMode(context);
+    final Color searchBarColor = isDark ? theme.colorScheme.surfaceVariant : theme.colorScheme.surface;
 
     return Material(
-        color: theme.colorScheme.secondaryContainer,
+        color: searchBarColor,
         elevation: 5,
         shape: const StadiumBorder(),
         child: Padding(
@@ -86,7 +92,7 @@ class AutoCompleteSearchBarState extends State<AutoCompleteSearchBar> {
                     return TextField(
                       controller: textEditingController,
                       focusNode: focusNode,
-                      style: TextStyle(color: theme.textTheme.labelMedium!.color),
+                      style: theme.textTheme.titleMedium,
                       onChanged: (String value) {
                         widget.searchCallback?.call(value);
                       },

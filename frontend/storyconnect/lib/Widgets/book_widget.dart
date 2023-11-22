@@ -24,14 +24,14 @@ class BookWidgetState extends State<BookWidget> {
   }
 
   // build a rectangular placeholder for the book cover
-  Widget _imagePlaceHolder() {
+  Widget _imagePlaceHolder(String? url) {
     return Column(children: [
       const SizedBox(
         height: 150,
         width: 100,
         child: Icon(Icons.book, size: 100),
       ),
-      bookTitle()
+      bookTitle(url)
     ]);
   }
 
@@ -54,29 +54,33 @@ class BookWidgetState extends State<BookWidget> {
     }
   }
 
-  Widget bookTitle() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          widget.book.title,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-        if (widget.book.authorName != null)
-          Text(
-            widget.book.authorName ?? "No name",
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white),
-          ),
-      ],
-    );
+  Widget bookTitle(String? url) {
+    // Determine the text color based on the URL
+    Color? textColor = url != null && url.isNotEmpty ? Colors.white : null;
+
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.book.title,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: textColor, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            if (widget.book.authorName != null)
+              Text(
+                widget.book.authorName ?? "No name",
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(color: textColor),
+              ),
+          ],
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
       margin: const EdgeInsets.all(0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -95,7 +99,7 @@ class BookWidgetState extends State<BookWidget> {
                         fit: BoxFit.cover,
                         constraints: const BoxConstraints.expand(),
                       )),
-                if (url == null || url!.isEmpty) _imagePlaceHolder(),
+                if (url == null || url!.isEmpty) _imagePlaceHolder(url),
                 if (url != null && url!.isNotEmpty)
                   Positioned(
                       bottom: 0,
@@ -111,7 +115,7 @@ class BookWidgetState extends State<BookWidget> {
                                 colors: [Color.fromARGB(238, 0, 0, 0), Colors.black54],
                               ),
                             ),
-                            child: bookTitle()),
+                            child: bookTitle(url)),
                       )),
               ],
             ),

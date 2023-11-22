@@ -12,22 +12,30 @@ class Clickable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: Stack(
-              children: [
-                child,
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onPressed,
-                    ),
-                  ),
-                )
-              ],
-            )));
+    return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(2, 5),
+          )
+        ]),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Stack(
+                  children: [
+                    child,
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: onPressed,
+                        ),
+                      ),
+                    )
+                  ],
+                ))));
   }
 }

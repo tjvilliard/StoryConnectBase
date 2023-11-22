@@ -22,15 +22,19 @@ const ColorScheme myColorScheme = ColorScheme(
 
 const offWhite = Color.fromARGB(255, 250, 249, 249);
 
+final _lightColorScheme = ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.light).copyWith(
+  background: offWhite,
+);
+
 ThemeData lightTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
-        colorScheme: ColorScheme.fromSeed(seedColor: charcoalBlue).copyWith(background: offWhite),
+        colorScheme: _lightColorScheme,
         appBarTheme: const AppBarTheme(
           backgroundColor: offWhite,
           surfaceTintColor: Colors.transparent,
         ),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
-        cardTheme: const CardTheme(surfaceTintColor: Color.fromARGB(255, 198, 198, 198), elevation: 2),
+        cardTheme: CardTheme(surfaceTintColor: _lightColorScheme.primaryContainer, elevation: 2),
         useMaterial3: true)
     .copyWith(dividerTheme: const DividerThemeData(color: Colors.black));
 
