@@ -2,24 +2,26 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/view.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/view.dart';
-import 'package:storyconnect/Repositories/library_repository.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
 /// Handles the beamer locations for Reader Functions.
 class ReaderLocations extends BeamLocation<BeamState> {
   @override
-  List<Pattern> get pathPatterns =>
-      ['/reader/home', '/reader/library', '/reader/book/:bookId', '/reader/book/:bookId/:chapterId'];
+  List<Pattern> get pathPatterns => [
+        '/reader/home',
+        '/reader/library',
+        '/reader/book/:bookId',
+        '/reader/book/:bookId/:chapterId'
+      ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
@@ -34,11 +36,15 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: const ValueKey('reader'),
             child: MultiRepositoryProvider(
               providers: [
-                RepositoryProvider(create: (_) => LibraryRepository()),
+                RepositoryProvider(create: (_) => ReadingRepository()),
               ],
               child: MultiBlocProvider(providers: [
-                BlocProvider(create: (context) => ReadingHomeBloc(context.read<ReadingRepository>())),
-                BlocProvider(create: (context) => LibraryBloc(context.read<LibraryRepository>())),
+                BlocProvider(
+                    create: (context) =>
+                        ReadingHomeBloc(context.read<ReadingRepository>())),
+                BlocProvider(
+                    create: (context) =>
+                        ReadingHomeBloc(context.read<ReadingRepository>())),
               ], child: const ReadingHomeView()),
             )));
       }
@@ -48,9 +54,10 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: const ValueKey('library'),
             child: RepositoryProvider(
                 lazy: false,
-                create: (_) => LibraryRepository(),
+                create: (_) => ReadingRepository(),
                 child: BlocProvider(
-                  create: (context) => LibraryBloc(context.read<LibraryRepository>()),
+                  create: (context) =>
+                      ReadingHomeBloc(context.read<ReadingRepository>()),
                   child: const LibraryView(),
                 ))));
       }
@@ -63,24 +70,32 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 providers: [
                   RepositoryProvider(
                     lazy: false,
-                    create: (_) => LibraryRepository(),
+                    create: (_) => ReadingRepository(),
                   ),
                   RepositoryProvider(
                     lazy: false,
-                    create: (_) => BookProviderRepository(bookID: int.tryParse(bookId!) ?? 0),
+                    create: (_) => BookProviderRepository(
+                        bookID: int.tryParse(bookId!) ?? 0),
                   ),
                 ],
                 child: MultiBlocProvider(
                     providers: [
-                      BlocProvider<LibraryBloc>(
-                          lazy: false, create: (context) => LibraryBloc(context.read<LibraryRepository>())),
-                      BlocProvider<ChapterBloc>(
-                          lazy: false, create: (context) => ChapterBloc(context.read<BookProviderRepository>())),
+                      BlocProvider<ReadingHomeBloc>(
+                          lazy: false,
+                          create: (context) => ReadingHomeBloc(
+                              context.read<ReadingRepository>())),
+                      BlocProvider<ReadingBloc>(
+                          lazy: false,
+                          create: (context) => ReadingBloc(
+                              context.read<BookProviderRepository>())),
                       BlocProvider<FeedbackBloc>(
-                          lazy: false, create: (context) => FeedbackBloc(context.read<ReadingRepository>())),
+                          lazy: false,
+                          create: (context) =>
+                              FeedbackBloc(context.read<ReadingRepository>())),
                       BlocProvider<ReadingUIBloc>(
                           lazy: false,
-                          create: (context) => ReadingUIBloc(repository: context.read<ReadingRepository>())),
+                          create: (context) => ReadingUIBloc(
+                              repository: context.read<ReadingRepository>())),
                     ],
                     child: ReadingAppView(
                       bookId: int.tryParse(bookId ?? ""),

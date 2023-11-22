@@ -19,8 +19,12 @@ class _UrlBuilder {
 }
 
 Future<Map<String, String>> buildHeaders() async {
-  String authToken = await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-  return <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Token $authToken'};
+  String authToken =
+      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  return <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8',
+    'Authorization': 'Token $authToken'
+  };
 }
 
 /// URL constants and builders for app pages.
@@ -58,7 +62,9 @@ class UrlConstants {
 
   ///
   static Uri getWriterFeedback(int chapterId) {
-    return _urlBuilder.build('feedback/by_chapter/').replace(queryParameters: {'chapter': chapterId.toString()});
+    return _urlBuilder
+        .build('feedback/by_chapter/')
+        .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
   /// URI for HTTP Put request for creating writer feedback.
@@ -73,7 +79,8 @@ class UrlConstants {
 
   static Uri books({String? uid, int? bookId}) {
     if (uid != null) {
-      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
     }
     if (bookId != null) {
       return _urlBuilder.build('books/$bookId/');
@@ -88,6 +95,10 @@ class UrlConstants {
   }
 
   static Uri createBook() {
+    return _urlBuilder.build('books/');
+  }
+
+  static Uri getAllBooks() {
     return _urlBuilder.build('books/');
   }
 
@@ -132,7 +143,8 @@ class UrlConstants {
 
   static Uri getBooksByUser({String? uid}) {
     if (uid != null) {
-      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
     }
     return _urlBuilder.build('books/writer/');
   }

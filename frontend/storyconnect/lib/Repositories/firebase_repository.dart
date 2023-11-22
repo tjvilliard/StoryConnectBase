@@ -58,9 +58,20 @@ class FirebaseRepository {
     return FirebaseRepository._instance;
   }
 
-  Future<String> register(String email, String displayName, String password) async {
+  /// Verifies the uniqueness of an email address.
+  Future<bool> validateEmail(String email) async {
+    final List<String> methods =
+        await _firebaseAuth.fetchSignInMethodsForEmail(email);
+
+    return methods.isEmpty;
+  }
+
+  ///
+  Future<String> register(
+      String email, String displayName, String password) async {
     try {
-      UserCredential credential = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential credential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -77,11 +88,14 @@ class FirebaseRepository {
 
       if (firebaseError.code == FirebaseCodeDescriptors.UserNotFound.code) {
         return FirebaseCodeDescriptors.UserNotFound.message;
-      } else if (firebaseError.code == FirebaseCodeDescriptors.InvalidEmail.code) {
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.InvalidEmail.code) {
         return FirebaseCodeDescriptors.InvalidEmail.message;
-      } else if (firebaseError.code == FirebaseCodeDescriptors.WrongPassword.code) {
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.WrongPassword.code) {
         return FirebaseCodeDescriptors.WrongPassword.message;
-      } else if (firebaseError.code == FirebaseCodeDescriptors.EmailAlreadyInUse.code) {
+      } else if (firebaseError.code ==
+          FirebaseCodeDescriptors.EmailAlreadyInUse.code) {
         return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
       } else {
         return FirebaseCodeDescriptors.UnmappedError.message;
@@ -89,6 +103,7 @@ class FirebaseRepository {
     }
   }
 
+  ///
   Future<String?> signIn(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
@@ -106,6 +121,19 @@ class FirebaseRepository {
         return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
       } else {
         return FirebaseCodeDescriptors.UnmappedError.message;
+      }
+    }
+  }
+
+  ///
+  Future<void> updateDisplayName(String displayName) async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+
+      await user?.updateDisplayName(displayName);
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
       }
     }
   }

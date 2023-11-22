@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 
 /// All input Widgets ultimately should extend from the Feedback Input Widget
 class FeedbackInputWidget extends StatefulWidget {
@@ -12,7 +12,8 @@ class FeedbackInputWidget extends StatefulWidget {
 }
 
 class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
-  final TextEditingController _feedbackInputController = TextEditingController();
+  final TextEditingController _feedbackInputController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -22,25 +23,14 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FeedbackBloc, FeedbackState>(builder: (BuildContext context, FeedbackState state) {
+    return BlocBuilder<FeedbackBloc, FeedbackState>(
+        builder: (BuildContext context, FeedbackState state) {
       return Container(
           alignment: Alignment.bottomCenter,
           child: Column(
             verticalDirection: VerticalDirection.down,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add_comment),
-                          ))
-                    ],
-                  )),
               Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
@@ -53,11 +43,15 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                             maxLength: 1000,
                             minLines: 1,
                             maxLines: 5,
-                            decoration: const InputDecoration(hintText: "Write your Suggestion Here."),
+                            decoration: InputDecoration(
+                                hintText: state.serializer.isSuggestion
+                                    ? "Write your Suggestion Here."
+                                    : "Write your Comment Here."),
                             onChanged: (_) {
-                              context
-                                  .read<FeedbackBloc>()
-                                  .add(FeedbackEditedEvent(suggestion: _feedbackInputController.text));
+                              context.read<FeedbackBloc>().add(
+                                  FeedbackEditedEvent(
+                                      suggestion:
+                                          _feedbackInputController.text));
                             }),
                       )),
                       Container(
@@ -65,9 +59,10 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                           child: IconButton(
                               icon: const Icon(Icons.send),
                               onPressed: () {
-                                context
-                                    .read<FeedbackBloc>()
-                                    .add(SubmitFeedbackEvent(chapterBloc: context.read<ChapterBloc>()));
+                                context.read<FeedbackBloc>().add(
+                                    SubmitFeedbackEvent(
+                                        readingBloc:
+                                            context.read<ReadingBloc>()));
                               }))
                     ],
                   )),
