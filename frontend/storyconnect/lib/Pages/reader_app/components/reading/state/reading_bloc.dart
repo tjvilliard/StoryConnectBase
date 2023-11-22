@@ -31,6 +31,11 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   late final BookProviderRepository _repo;
   ReadingBloc(BookProviderRepository repo) : super(ReadingState.initial()) {
     _repo = repo;
+
+    on<LoadReadingEvent>((event, emit) => loadReadingEvent(event, emit));
+    on<SetEditorControllerCallbackEvent>(
+        (event, emit) => setEditorControllerCallback(event, emit));
+    on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit));
   }
 
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
@@ -49,7 +54,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
           chapterNumToID: result.chapterNumToID,
           loadingStruct: LoadingStruct.loading(false)));
 
-      //final chapterId = state.chapterNumToID[state.currentIndex]!;
+      final chapterId = state.chapterNumToID[state.currentIndex]!;
     }
   }
 

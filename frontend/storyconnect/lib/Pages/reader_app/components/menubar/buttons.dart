@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menu_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menubar.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 
 /// Navigates a chapter backward if the current chapter index isn't 1.
@@ -13,18 +13,18 @@ class NavigateBackwardButton extends ReadingIconButton {
 
   @override
   Widget buildButton(ButtonStyle defaultStyle) {
-    return BlocBuilder<ChapterBloc, ChapterBlocStruct>(builder: (BuildContext context, ChapterBlocStruct chapterState) {
+    return BlocBuilder<ReadingBloc, ReadingState>(
+        builder: (BuildContext context, ReadingState chapterState) {
       return SizedBox(
           height: ReadingMenuBar.height,
           width: ReadingMenuBar.height,
           child: IconButton(
             style: defaultStyle,
-            onPressed: chapterState.currentChapterIndex == 0
+            onPressed: super.disableCondition
                 ? null
                 : () {
-                    context
-                        .read<ChapterBloc>()
-                        .add(DecrementChapterEvent(currentChapter: chapterState.currentChapterIndex));
+                    context.read<ReadingBloc>().add(DecrementChapterEvent(
+                        currentChapter: chapterState.currentIndex));
                   },
             icon: const Icon(FontAwesomeIcons.arrowLeft),
           ));
@@ -40,7 +40,8 @@ class NavigateForwardButton extends ReadingIconButton {
 
   @override
   Widget buildButton(ButtonStyle defaultStyle) {
-    return BlocBuilder<ChapterBloc, ChapterBlocStruct>(builder: (BuildContext context, ChapterBlocStruct chapterState) {
+    return BlocBuilder<ReadingBloc, ReadingState>(
+        builder: (BuildContext context, ReadingState chapterState) {
       return SizedBox(
           height: ReadingMenuBar.height,
           width: ReadingMenuBar.height,
@@ -50,9 +51,8 @@ class NavigateForwardButton extends ReadingIconButton {
             onPressed: super.disableCondition
                 ? null
                 : () {
-                    context
-                        .read<ChapterBloc>()
-                        .add(IncrementChapterEvent(currentChapter: chapterState.currentChapterIndex));
+                    context.read<ReadingBloc>().add(IncrementChapterEvent(
+                        currentChapter: chapterState.currentIndex));
                   },
           ));
     });
@@ -62,20 +62,25 @@ class NavigateForwardButton extends ReadingIconButton {
 ///
 class ChapterNavigationBarButton extends ReadingIconButton {
   ///
-  const ChapterNavigationBarButton({super.key, required super.disableCondition});
+  const ChapterNavigationBarButton(
+      {super.key, required super.disableCondition});
 
   @override
   Widget buildButton(ButtonStyle defaultStyle) {
-    return BlocBuilder<ReadingUIBloc, ReadingUIState>(builder: (BuildContext context, ReadingUIState uiState) {
-      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
-        builder: (BuildContext context, ChapterBlocStruct chapterState) {
+    return BlocBuilder<ReadingUIBloc, ReadingUIState>(
+        builder: (BuildContext context, ReadingUIState uiState) {
+      return BlocBuilder<ReadingBloc, ReadingState>(
+        builder: (BuildContext context, ReadingState chapterState) {
           return SizedBox(
               height: ReadingMenuBar.height,
               child: TextButton.icon(
                 icon: const Icon(FontAwesomeIcons.list),
-                label: Text("Chapter ${chapterState.currentChapterIndex + 1}" "/${chapterState.chapters.length}"),
+                label: Text("Chapter ${chapterState.currentIndex + 1}"
+                    "/${chapterState.chapters.length}"),
                 onPressed: () {
-                  context.read<ReadingUIBloc>().add(ToggleChapterOutlineEvent());
+                  context
+                      .read<ReadingUIBloc>()
+                      .add(ToggleChapterOutlineEvent());
                 },
               ));
         },
@@ -119,7 +124,8 @@ class ChapterFeedbackButton extends ReadingIconButton {
             onPressed: super.disableCondition
                 ? null
                 : () {
-                    BlocProvider.of<ReadingUIBloc>(context).add(ToggleFeedbackBarEvent());
+                    BlocProvider.of<ReadingUIBloc>(context)
+                        .add(ToggleFeedbackBarEvent());
                   },
           ),
         );

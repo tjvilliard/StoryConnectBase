@@ -16,10 +16,7 @@ class LibraryBookItem extends StatefulWidget {
   });
 
   @override
-  LibraryBookState createState() => LibraryBookState(
-        child: child,
-        bookId: bookId,
-      );
+  LibraryBookState createState() => LibraryBookState();
 }
 
 class DetailsButton extends StatelessWidget {
@@ -92,12 +89,16 @@ class RemoveBookButton extends StatelessWidget {
 ///
 class LibraryBookState extends State<LibraryBookItem> {
   bool showButtons = false;
-  final int bookId;
-  final Widget child;
-  LibraryBookState({
-    required this.bookId,
-    required this.child,
-  });
+  late final int bookId;
+  late final Widget child;
+  LibraryBookState();
+
+  @override
+  void initState() {
+    bookId = widget.bookId;
+    child = widget.child;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
 part 'feedback_event.dart';
@@ -25,30 +25,37 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     _repo = repo;
 
     // Map incoming events to state transformations with methods.
-    on<FeedbackTypeChangedEvent>((event, emit) => feedbackTypeChanged(event, emit));
+    on<FeedbackTypeChangedEvent>(
+        (event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
     on<FeedbackEditedEvent>((event, emit) => feedbackEdited(event, emit));
 
     on<SubmitFeedbackEvent>((event, emit) => submitFeedback(event, emit));
     on<AnnotationChangedEvent>((event, emit) => annotationChanged(event, emit));
-    on<LoadChapterFeedbackEvent>((event, emit) => loadChapterFeedback(event, emit));
+    on<LoadChapterFeedbackEvent>(
+        (event, emit) => loadChapterFeedback(event, emit));
   }
 
   /// Loads the feedback for the current Chapter.
-  Stream<void> loadChapterFeedback(LoadChapterFeedbackEvent event, FeedbackEmitter emit) async* {
-    emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Feedback")));
+  Stream<void> loadChapterFeedback(
+      LoadChapterFeedbackEvent event, FeedbackEmitter emit) async* {
+    emit(state.copyWith(
+        loadingStruct: LoadingStruct.message("Loading Feedback")));
 
-    final currentFeedbackSet = Map<int, List<WriterFeedback>>.from(state.feedbackSet);
+    final currentFeedbackSet =
+        Map<int, List<WriterFeedback>>.from(state.feedbackSet);
 
-    ChapterBloc bloc = event.chapterBloc;
+    ReadingBloc bloc = event.readingBloc;
 
-    bloc.currentChapterId;
+    bloc.state.currentChapterId;
 
-    final List<WriterFeedback> newFeedbackSet = await _repo.getChapterFeedback(event.chapterBloc.currentChapterId);
+    final List<WriterFeedback> newFeedbackSet = await _repo
+        .getChapterFeedback(event.readingBloc.state.currentChapterId);
 
-    currentFeedbackSet.remove(event.chapterBloc.currentChapterId);
+    currentFeedbackSet.remove(event.readingBloc.state.currentChapterId);
 
-    currentFeedbackSet[event.chapterBloc.currentChapterId] = newFeedbackSet;
+    currentFeedbackSet[event.readingBloc.state.currentChapterId] =
+        newFeedbackSet;
 
     emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(false),
@@ -57,7 +64,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   }
 
   void sentimentChanged(SentimentChangedEvent event, FeedbackEmitter emit) {
-    emit(state.copyWith(serializer: state.serializer.copyWith(sentiment: event.sentiment)));
+    emit(state.copyWith(
+        serializer: state.serializer.copyWith(sentiment: event.sentiment)));
   }
 
   void annotationChanged(AnnotationChangedEvent event, FeedbackEmitter emit) {
@@ -66,12 +74,13 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
             selection: state.serializer.selection.copyWith(
       offset: event.offset,
       offsetEnd: event.offsetEnd,
-      chapterId: event.chapterBloc.currentChapterId,
+      chapterId: event.readingBloc.state.currentChapterId,
       text: event.text,
     ))));
   }
 
-  void feedbackTypeChanged(FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
+  void feedbackTypeChanged(
+      FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
     if (event.feedbackType == FeedbackType.suggestion) {
       String? commentState = state.serializer.comment;
 
@@ -116,10 +125,12 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
   /// Submits the feedback item, and emits the changed state.
   void submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
-    int chapterId = event.chapterBloc.currentChapterId;
+    int chapterId = event.readingBloc.state.currentChapterId;
 
     String loadingMessage =
-        state.selectedFeedbackType == FeedbackType.suggestion ? "Posting Suggestion" : "Posting Comment";
+        state.selectedFeedbackType == FeedbackType.suggestion
+            ? "Posting Suggestion"
+            : "Posting Comment";
 
     emit(state.copyWith(
       serializer: state.serializer.copyWith(

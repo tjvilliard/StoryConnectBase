@@ -12,7 +12,7 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   late final ReadingRepository repository;
   ReadingHomeBloc(this.repository)
       : super(ReadingHomeStruct(
-          books: [],
+          mappedBooks: {},
           loadingStruct: const LoadingStruct(isLoading: false),
         )) {
     on<GetBooksEvent>((event, emit) => fetchBooks(event, emit));
@@ -21,13 +21,12 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   ///
   void fetchBooks(ReadingHomeEvent event, ReadingHomeEmitter emit) async {
     emit(ReadingHomeStruct(
-      books: state.books,
+      mappedBooks: {},
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
-    List<Book> books = await repository.getBooks();
 
     emit(ReadingHomeStruct(
-      books: books,
+      mappedBooks: {},
       loadingStruct: LoadingStruct.loading(false),
     ));
   }
