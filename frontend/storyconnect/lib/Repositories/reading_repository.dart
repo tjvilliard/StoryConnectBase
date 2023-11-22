@@ -94,7 +94,6 @@ class ReadingApiProvider {
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
-        print("Decoding lib book");
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield MapEntry<Library, Book>(
@@ -180,20 +179,19 @@ class ReadingRepository {
   }
 
   ///
-  Future<void> getLibraryBooks() async {
-    libraryBookMap.clear();
+  Future<Map<Library, Book>> getLibraryBooks() async {
+    Map<Library, Book> libraryBookMap = {};
     await for (MapEntry<Library, Book> entry in _api.getLibraryBooks()) {
       libraryBookMap.addEntries([entry]);
     }
+    return libraryBookMap;
   }
 
   Future<void> removeLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.removeBookFromLibrary(serialzier);
-    await getLibraryBooks();
   }
 
   Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.addBooktoLibrary(serialzier);
-    await getLibraryBooks();
   }
 }

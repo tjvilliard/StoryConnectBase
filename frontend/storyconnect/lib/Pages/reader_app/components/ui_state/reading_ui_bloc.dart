@@ -22,11 +22,11 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// The current state of our reading resository, which contains all
   /// the data relevant to the reading UI.
-  final ReadingRepository _repository;
+  final ReadingRepository _repo;
 
   ///
   ReadingUIBloc({required ReadingRepository repository})
-      : _repository = repository,
+      : _repo = repository,
         super(ReadingUIState.initial()) {
     on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
     on<ReadingLoadEvent>((event, emit) => loadEvent(event, emit));
@@ -39,16 +39,13 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// Gets the title of the book currently loaded by the reading UI.
   Future<String> _getBookTitle(int bookID) async {
-    // Search the current state of our repository for our book.
-    for (final book in _repository.books) {
-      if (book.id == bookID) {
-        return book.title;
-      }
-    }
+    // Search all our books for our book.
 
-    // Call the api again, and search the result for books.
-    final List<Book> books = await _repository.getBooks();
-    for (final book in books) {
+    List<Book> allBooks = await _repo.getBooks();
+    Map<Library, Book> libBooks = await _repo.getLibraryBooks();
+    allBooks.addAll(libBooks.values);
+
+    for (final book in allBooks) {
       if (book.id == bookID) {
         return book.title;
       }

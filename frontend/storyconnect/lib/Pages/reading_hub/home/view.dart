@@ -87,7 +87,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
                                   height: 220,
                                   child: BookListWidget(
                                       bookList: BookList(
-                                    bookList: state.libraryBooks,
+                                    bookList:
+                                        state.libraryBookMap.values.toList(),
                                   ))),
                             ],
                           );

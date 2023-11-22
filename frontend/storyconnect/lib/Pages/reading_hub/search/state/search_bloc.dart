@@ -13,7 +13,7 @@ typedef SearchEmitter = Emitter<SearchState>;
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   late final ReadingRepository _repo;
 
-  SearchBloc(this._repo) : super(SearchState()) {}
+  SearchBloc(this._repo) : super(const SearchState());
 
   /// Handles the changing of the type of query.
   /// <br/> Query Types Supported?:

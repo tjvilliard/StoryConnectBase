@@ -34,50 +34,44 @@ class LibraryState extends State<LibraryView> {
     return Scaffold(
         appBar: CustomAppBar(context: context),
         body: Center(
-          child: Container(
-            alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.65,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                const Header(
-                  title: "Library",
-                ),
-                Expanded(child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-                    builder:
-                        (BuildContext context, ReadingHomeStruct libState) {
-                  if (libState.loadingStruct.isLoading) {
-                    return LoadingWidget(loadingStruct: libState.loadingStruct);
-                  } else {
-                    return TabbedBookDisplayWidget(
-                      tabs: const [
-                        Tab(text: "Currently Reading"),
-                        Tab(text: "Completed"),
-                        Tab(text: "To Be Read")
-                      ],
-                      children: [
-                        BookGridWidget(books: libState.libraryBooks),
-                        const BookGridWidget(books: []),
-                        const BookGridWidget(books: []),
-                      ],
-                    );
-                  }
-                }))
-              ],
-            ),
-          ),
+            child: Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 0.65,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    const Header(
+                      title: "Library",
+                    ),
+                    Expanded(child:
+                        BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(builder:
+                            (BuildContext context, ReadingHomeStruct libState) {
+                      Widget toReturn;
 
-          /*
-          
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            },
-          ), */
-        ));
+                      if (libState.loadingStruct.isLoading) {
+                        toReturn = LoadingWidget(
+                            loadingStruct: libState.loadingStruct);
+                      } else {
+                        toReturn = TabbedBookDisplayWidget(
+                          tabs: const [
+                            Tab(text: "Currently Reading"),
+                            Tab(text: "Completed"),
+                            Tab(text: "To Be Read")
+                          ],
+                          children: [
+                            BookGridWidget(
+                                books: libState.libraryBookMap.values.toList()),
+                            const BookGridWidget(books: []),
+                            const BookGridWidget(books: []),
+                          ],
+                        );
+                      }
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: toReturn,
+                      );
+                    }))
+                  ],
+                ))));
   }
 }
