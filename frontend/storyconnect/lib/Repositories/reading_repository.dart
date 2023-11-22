@@ -12,7 +12,8 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
   /// Generates HTTP: POST request for new feedback item.
-  Future<WriterFeedback?> createFeedbackItem({required FeedbackCreationSerializer serializer}) async {
+  Future<WriterFeedback?> createFeedbackItem(
+      {required FeedbackCreationSerializer serializer}) async {
     try {
       final url = UrlConstants.createWriterFeedback();
       if (kDebugMode) {
@@ -49,7 +50,7 @@ class ReadingApiProvider {
 
   Stream<Book> getBooks() async* {
     try {
-      final url = UrlConstants.books(uid: "uid");
+      final url = UrlConstants.books();
 
       final result = await http.get(url, headers: await buildHeaders());
 
@@ -89,7 +90,9 @@ class ReadingApiProvider {
       final url = UrlConstants.addLibraryBook();
 
       // send off HTTP POST request
-      await http.post(url, headers: await buildHeaders(), body: (jsonEncode(serializer.toJson())));
+      await http.post(url,
+          headers: await buildHeaders(),
+          body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -122,7 +125,8 @@ class ReadingRepository {
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
-    final WriterFeedback? output = await _api.createFeedbackItem(serializer: serializer);
+    final WriterFeedback? output =
+        await _api.createFeedbackItem(serializer: serializer);
 
     if (output == null) {
       return null;
