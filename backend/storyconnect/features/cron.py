@@ -59,7 +59,7 @@ def ct_cron_job():
                     chapters_genres.append(chapter_genre)
                 chapter_genre.last_chapter_len = updated_chapter_len
             
-            genres_of_the_book_from_book_model = book_genre.tags
+            # genres_of_the_book_from_book_model = book_genre.tags
             # genres_of_the_book_from_book_model = book_models.Book._meta.get_field('tags').value_from_object(book_genre)
             
             # check if the genres in both models are the same

@@ -11,17 +11,20 @@ from books import serializers as book_serializers
 
 class GenreTaggingAPIView(APIView):
 
-    def get(self, request, pk=None, *args, **kwargs):
-        intended_book = book_models.Book.objects.get(pk = pk)
+    def get(self, request, *args, **kwargs):
+        book_id = request.query_params.get('book_id')
+        intended_book = book_models.Book.objects.get(pk = book_id)
         the_book_from_tag = features_models.GenreTagging.objects.get(book=intended_book)
         serializer = features_serializers.GenreTaggingSerializer(the_book_from_tag, many=False)
 
         return Response(serializer.data)
     
 class ChapterTaggingAPIView(APIView):
-    def get(self, request, pk=None, chapter_number=None, *args, **kwargs):
-        intended_book = book_models.Book.objects.get(id = pk)
-        the_chapter_from_tag = features_models.ChapterTagging.objects.get(book=intended_book, chapter_number = chapter_number)
+    def get(self, request, *args, **kwargs):
+        book_id = request.query_params.get('book_id')
+        chapter_num = request.query_params.get('chapter_num')
+        intended_book = book_models.Book.objects.get(id = book_id)
+        the_chapter_from_tag = features_models.ChapterTagging.objects.get(book=intended_book, chapter_number = chapter_num)
         serializer = features_serializers.ChapterTagging(the_chapter_from_tag, many=False)
 
         return Response(serializer.data)
