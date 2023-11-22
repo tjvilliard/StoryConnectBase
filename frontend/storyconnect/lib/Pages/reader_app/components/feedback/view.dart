@@ -4,7 +4,7 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/components/fee
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_panel.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_sentiment_selector.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_type_selector.dart';
-import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/panel_header.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
@@ -21,39 +21,41 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
         builder: (context, uiState) {
       return BlocBuilder<FeedbackBloc, FeedbackState>(
-        builder: (context, feedState) {
-          return BlocBuilder<ReadingBloc, ReadingState>(
-              builder: (context, state) {
-            return AnimatedCrossFade(
-              crossFadeState: !uiState.feedbackBarShown
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              duration: const Duration(milliseconds: 500),
-              alignment: Alignment.centerRight,
-              firstChild: Container(),
-              secondChild: SizedBox(
-                  width: 350,
-                  child: Card(
-                    elevation: 3,
-                    child: uiState.feedbackBarShown
-                        ? const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  FeedbackTypeSelector(),
-                                  SentimentSelectorWidget(),
-                                  Expanded(
-                                      child: FeedbackCardListWidget(
-                                          feedbackItems: [])),
-                                  FeedbackInputWidget(),
-                                ]))
-                        : Container(),
-                  )),
-            );
-          });
-        },
-      );
+          builder: (context, feedState) {
+        return AnimatedCrossFade(
+          crossFadeState: !uiState.feedbackBarShown
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 500),
+          alignment: Alignment.centerRight,
+          firstChild: Container(),
+          secondChild: SizedBox(
+              width: 350,
+              child: Card(
+                elevation: 3,
+                child: uiState.feedbackBarShown
+                    ? Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SidePopupHeader(
+                                  title: "Manage Feedback",
+                                  dismiss: () =>
+                                      BlocProvider.of<ReadingUIBloc>(context)
+                                          .add(ToggleFeedbackBarEvent())),
+                              const SizedBox(height: 20),
+                              const FeedbackTypeSelector(),
+                              const SentimentSelectorWidget(),
+                              const Expanded(
+                                  child: FeedbackCardListWidget(
+                                      feedbackItems: [])),
+                              const FeedbackInputWidget(),
+                            ]))
+                    : Container(),
+              )),
+        );
+      });
     });
   }
 }

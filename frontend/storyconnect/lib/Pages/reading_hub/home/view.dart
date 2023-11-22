@@ -22,6 +22,8 @@ class ReadingHomeState extends State<ReadingHomeView> {
   void initState() {
     LibraryBloc bloc = context.read<LibraryBloc>();
     bloc.add(GetLibraryEvent());
+    ReadingHomeBloc readingHomeBloc = context.read<ReadingHomeBloc>();
+    readingHomeBloc.add(const GetBooksEvent());
     super.initState();
   }
 
@@ -47,15 +49,30 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 return ListView.builder(
 
                     // add 1 to the number of
-                    itemCount: state.mappedBooks.length + 1,
+                    itemCount: state.mappedBooks.length + 2,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return BlocBuilder<LibraryBloc, LibraryStruct>(
                           builder: (context, LibraryStruct libraryState) {
                             Widget widgetToReturn;
                             if (libraryState.loadingStruct.isLoading) {
-                              widgetToReturn = LoadingWidget(
-                                loadingStruct: libraryState.loadingStruct,
+                              widgetToReturn = Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                    "Continue Reading from your Library...",
+                                  ),
+                                  const SizedBox(height: 25),
+                                  Container(
+                                      alignment: Alignment.center,
+                                      height: 220,
+                                      child: LoadingWidget(
+                                        loadingStruct:
+                                            libraryState.loadingStruct,
+                                      )),
+                                ],
                               );
                             } else {
                               widgetToReturn = Column(
@@ -83,17 +100,61 @@ class ReadingHomeState extends State<ReadingHomeView> {
                             );
                           },
                         );
-                      } else {
-                        if (((index) % 2) != 0) {
-                          return const Divider();
+                      } else if (index == 1) {
+                        Widget toReturn;
+                        if (state.loadingStruct.isLoading) {
+                          toReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 25),
+                              const Divider(),
+                              const SizedBox(height: 25),
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "All Books from Backend...",
+                              ),
+                              const SizedBox(height: 25),
+                              Container(
+                                  alignment: Alignment.center,
+                                  height: 220,
+                                  child: LoadingWidget(
+                                    loadingStruct: state.loadingStruct,
+                                  )),
+                            ],
+                          );
                         } else {
-                          MapEntry<String, List<Book>> entry =
-                              state.mappedBooks.entries.toList()[index];
-                          String bookTag = entry.key;
-                          List<Book> bookList = entry.value;
-
-                          return BookList(bookList: bookList);
+                          toReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 25),
+                              const Divider(),
+                              const SizedBox(height: 25),
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "All Books from Backend...",
+                              ),
+                              const SizedBox(height: 25),
+                              SizedBox(
+                                  height: 220,
+                                  child: BookListWidget(
+                                    bookList: BookList(
+                                      bookList: state.allBooks,
+                                    ),
+                                  ))
+                            ],
+                          );
                         }
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: toReturn,
+                        );
+                      } else {
+                        MapEntry<String, List<Book>> entry =
+                            state.mappedBooks.entries.toList()[index];
+                        String bookTag = entry.key;
+                        List<Book> bookList = entry.value;
+
+                        return BookList(bookList: bookList);
                       }
                     });
               },

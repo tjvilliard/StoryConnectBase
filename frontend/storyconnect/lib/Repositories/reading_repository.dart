@@ -12,9 +12,17 @@ import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
   /// Generates HTTP: POST request for new feedback item.
-  Future<WriterFeedback?> createFeedbackItem({required FeedbackCreationSerializer serializer}) async {
+  Future<WriterFeedback?> createFeedbackItem(
+      {required FeedbackCreationSerializer serializer}) async {
     try {
       final url = UrlConstants.createWriterFeedback();
+
+      if (kDebugMode) {
+        print("[DEBUG]: Sending Json String to Backend:");
+        print("$serializer");
+        print("");
+      }
+
       if (kDebugMode) {
         print("[INFO]: Getting result from post call. \n");
       }
@@ -63,6 +71,22 @@ class ReadingApiProvider {
     }
   }
 
+  Stream<Book> getAllBooks() async* {
+    try {
+      final url = UrlConstants.getAllBooks();
+
+      final result = await http.get(url, headers: await buildHeaders());
+
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
+        yield Book.fromJson(book);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
   /// Gets the full set of user library entries, the book id, the reader, the book reading state, etc...
   Stream<Library> getLibrary() async* {
     try {
@@ -89,7 +113,9 @@ class ReadingApiProvider {
       final url = UrlConstants.addLibraryBook();
 
       // send off HTTP POST request
-      await http.post(url, headers: await buildHeaders(), body: (jsonEncode(serializer.toJson())));
+      await http.post(url,
+          headers: await buildHeaders(),
+          body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -122,7 +148,8 @@ class ReadingRepository {
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
   }) async {
-    final WriterFeedback? output = await _api.createFeedbackItem(serializer: serializer);
+    final WriterFeedback? output =
+        await _api.createFeedbackItem(serializer: serializer);
 
     if (output == null) {
       return null;
@@ -143,7 +170,7 @@ class ReadingRepository {
   }
 
   Future<List<Book>> getBooks() async {
-    final Stream<Book> result = _api.getBooks();
+    final Stream<Book> result = _api.getAllBooks();
     return result.toList();
   }
 }

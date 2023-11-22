@@ -61,13 +61,16 @@ class BookWidgetState extends State<BookWidget> {
         Text(
           widget.book.title,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .labelMedium!
+              .copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         if (widget.book.authorName != null)
           Text(
             widget.book.authorName ?? "No name",
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white),
+            style: Theme.of(context).textTheme.labelSmall,
           ),
       ],
     );
@@ -84,7 +87,8 @@ class BookWidgetState extends State<BookWidget> {
         children: [
           Expanded(
             child: Stack(
-              alignment: AlignmentGeometry.lerp(Alignment.center, Alignment.topCenter, 0.75)!,
+              alignment: AlignmentGeometry.lerp(
+                  Alignment.center, Alignment.topCenter, 0.75)!,
               children: [
                 // Image or Placeholder
                 if (url != null && url!.isNotEmpty)
@@ -102,13 +106,17 @@ class BookWidgetState extends State<BookWidget> {
                       left: 0,
                       right: 0,
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.center,
                                 end: Alignment.bottomCenter,
-                                colors: [Color.fromARGB(238, 0, 0, 0), Colors.black54],
+                                colors: [
+                                  Color.fromARGB(238, 0, 0, 0),
+                                  Colors.black54
+                                ],
                               ),
                             ),
                             child: bookTitle()),

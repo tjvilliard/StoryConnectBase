@@ -32,18 +32,6 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add_comment),
-                          ))
-                    ],
-                  )),
-              Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     children: [
@@ -55,8 +43,10 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                             maxLength: 1000,
                             minLines: 1,
                             maxLines: 5,
-                            decoration: const InputDecoration(
-                                hintText: "Write your Suggestion Here."),
+                            decoration: InputDecoration(
+                                hintText: state.serializer.isSuggestion
+                                    ? "Write your Suggestion Here."
+                                    : "Write your Comment Here."),
                             onChanged: (_) {
                               context.read<FeedbackBloc>().add(
                                   FeedbackEditedEvent(

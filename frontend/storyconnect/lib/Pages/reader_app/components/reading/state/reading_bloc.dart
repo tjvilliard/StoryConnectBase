@@ -55,6 +55,8 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
           loadingStruct: LoadingStruct.loading(false)));
 
       final chapterId = state.chapterNumToID[state.currentIndex]!;
+      event.feedbackBloc
+          .add(LoadChapterFeedbackEvent(chapterId, readingBloc: this));
     }
   }
 

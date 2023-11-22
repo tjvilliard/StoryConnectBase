@@ -4,6 +4,7 @@ part of 'reading_home_bloc.dart';
 /// The reading home manages a set of books mapped
 /// to different genres of tags.
 class ReadingHomeStruct {
+  final List<Book> allBooks;
   final Map<String, List<Book>> mappedBooks;
   final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
@@ -12,6 +13,7 @@ class ReadingHomeStruct {
   /// The state contains the following:
   /// -
   ReadingHomeStruct({
+    required this.allBooks,
     required this.mappedBooks,
     required this.loadingStruct,
     this.bookToNavigate,

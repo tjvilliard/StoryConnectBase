@@ -90,7 +90,8 @@ class BigBook extends StatelessBookItem {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: " $dummyAuthor",
+                                      text: book.authorName ??
+                                          "Author Name Not Set",
                                       style:
                                           Theme.of(context).textTheme.bodySmall,
                                     )
@@ -156,7 +157,7 @@ class BigBook extends StatelessBookItem {
                                   const EdgeInsets.symmetric(vertical: 2.0),
                               constraints: const BoxConstraints(
                                   maxHeight: BigBook.synopsisBoxHeight),
-                              child: Text(dummySynopsis,
+                              child: Text(book.synopsis ?? "",
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
                                   style:

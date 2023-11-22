@@ -141,6 +141,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
       loadingStruct: LoadingStruct.message(loadingMessage),
     ));
 
-    //this._repo.createChapterFeedback(serializer: state.serializer);
+    _repo.createChapterFeedback(serializer: state.serializer);
   }
 }

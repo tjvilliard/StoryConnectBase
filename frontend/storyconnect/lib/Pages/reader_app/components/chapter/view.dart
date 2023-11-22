@@ -34,7 +34,7 @@ class ChapterNavigationState extends State<ChapterNavigation> {
             alignment: Alignment.centerLeft,
             firstChild: Container(),
             secondChild: SizedBox(
-                width: 250,
+                width: 350,
                 child: Card(
                     elevation: 3,
                     child: uiState.chapterOutlineShown
