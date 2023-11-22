@@ -9,9 +9,7 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback
 import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/view.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/view.dart';
-import 'package:storyconnect/Repositories/library_repository.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
 
@@ -38,7 +36,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: const ValueKey('reader'),
             child: MultiRepositoryProvider(
               providers: [
-                RepositoryProvider(create: (_) => LibraryRepository()),
+                RepositoryProvider(create: (_) => ReadingRepository()),
               ],
               child: MultiBlocProvider(providers: [
                 BlocProvider(
@@ -46,7 +44,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
                         ReadingHomeBloc(context.read<ReadingRepository>())),
                 BlocProvider(
                     create: (context) =>
-                        LibraryBloc(context.read<LibraryRepository>())),
+                        ReadingHomeBloc(context.read<ReadingRepository>())),
               ], child: const ReadingHomeView()),
             )));
       }
@@ -56,10 +54,10 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: const ValueKey('library'),
             child: RepositoryProvider(
                 lazy: false,
-                create: (_) => LibraryRepository(),
+                create: (_) => ReadingRepository(),
                 child: BlocProvider(
                   create: (context) =>
-                      LibraryBloc(context.read<LibraryRepository>()),
+                      ReadingHomeBloc(context.read<ReadingRepository>()),
                   child: const LibraryView(),
                 ))));
       }
@@ -72,7 +70,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 providers: [
                   RepositoryProvider(
                     lazy: false,
-                    create: (_) => LibraryRepository(),
+                    create: (_) => ReadingRepository(),
                   ),
                   RepositoryProvider(
                     lazy: false,
@@ -82,10 +80,10 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 ],
                 child: MultiBlocProvider(
                     providers: [
-                      BlocProvider<LibraryBloc>(
+                      BlocProvider<ReadingHomeBloc>(
                           lazy: false,
-                          create: (context) =>
-                              LibraryBloc(context.read<LibraryRepository>())),
+                          create: (context) => ReadingHomeBloc(
+                              context.read<ReadingRepository>())),
                       BlocProvider<ReadingBloc>(
                           lazy: false,
                           create: (context) => ReadingBloc(

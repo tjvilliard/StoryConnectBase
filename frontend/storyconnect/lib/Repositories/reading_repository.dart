@@ -87,17 +87,23 @@ class ReadingApiProvider {
     }
   }
 
-  /// Gets the full set of user library entries, the book id, the reader, the book reading state, etc...
-  Stream<Library> getLibrary() async* {
+  Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
     try {
-      // get url for user library api call.
       final url = UrlConstants.getUserLibrary();
 
-      // get result for HTTP GET request
       final result = await http.get(url, headers: await buildHeaders());
 
-      for (var libraryEntry in jsonDecode(utf8.decode(result.bodyBytes))) {
-        yield Library.fromJson(libraryEntry);
+      for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
+        print("Decoding lib book");
+        LibraryBook decode = LibraryBook.fromJson(map);
+
+        yield MapEntry<Library, Book>(
+          Library(
+            id: decode.id,
+            status: decode.status,
+          ),
+          decode.book,
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -106,13 +112,11 @@ class ReadingApiProvider {
     }
   }
 
-  /// Completes API action of adding a book to user library.
+  /// API endpoint for adding a new entry to a user's library.
   Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
-      // get url for adding entry to user library api call.
       final url = UrlConstants.addLibraryBook();
 
-      // send off HTTP POST request
       await http.post(url,
           headers: await buildHeaders(),
           body: (jsonEncode(serializer.toJson())));
@@ -123,14 +127,15 @@ class ReadingApiProvider {
     }
   }
 
-  /// Completes API action of removing a book from user library.
-  Future<void> removeBookfromLibrary(LibraryEntrySerializer serializer) async {
+  /// API endpoint for removing an entry from a user's library.
+  Future<void> removeBookFromLibrary(LibraryEntrySerializer serializer) async {
     try {
-      // get url for removing entry from user library api call.
       final url = UrlConstants.removeLibraryBook(serializer.id!);
 
-      // send off HTTP DELETE request
-      await http.delete(url, headers: await buildHeaders());
+      await http.delete(
+        url,
+        headers: await buildHeaders(),
+      );
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -140,9 +145,8 @@ class ReadingApiProvider {
 }
 
 class ReadingRepository {
-  Map<String, List<Book>> taggedBooks = {};
-  List<Book> books = [];
   final ReadingApiProvider _api = ReadingApiProvider();
+  Map<Library, Book> libraryBookMap = {};
 
   /// Creates a new feedback item for chapter.
   Future<int?> createChapterFeedback({
@@ -169,8 +173,27 @@ class ReadingRepository {
     return feedback;
   }
 
+  /// Get
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = _api.getAllBooks();
     return result.toList();
+  }
+
+  ///
+  Future<void> getLibraryBooks() async {
+    libraryBookMap.clear();
+    await for (MapEntry<Library, Book> entry in _api.getLibraryBooks()) {
+      libraryBookMap.addEntries([entry]);
+    }
+  }
+
+  Future<void> removeLibraryBook(LibraryEntrySerializer serialzier) async {
+    await _api.removeBookFromLibrary(serialzier);
+    await getLibraryBooks();
+  }
+
+  Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
+    await _api.addBooktoLibrary(serialzier);
+    await getLibraryBooks();
   }
 }

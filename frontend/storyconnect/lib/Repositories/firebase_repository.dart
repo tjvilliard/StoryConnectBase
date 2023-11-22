@@ -132,7 +132,9 @@ class FirebaseRepository {
 
       await user?.updateDisplayName(displayName);
     } on Exception catch (e) {
-      // print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

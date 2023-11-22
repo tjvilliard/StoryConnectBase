@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/components/book_grid_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/library/components/tabbed_widget.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
@@ -23,8 +23,8 @@ class LibraryState extends State<LibraryView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialLoad) {
         initialLoad = false;
-        final libraryHomeBloc = context.read<LibraryBloc>();
-        libraryHomeBloc.add(GetLibraryEvent());
+        final libraryHomeBloc = context.read<ReadingHomeBloc>();
+        libraryHomeBloc.add(const FetchBooksEvent());
       }
     });
   }
@@ -43,8 +43,9 @@ class LibraryState extends State<LibraryView> {
                 const Header(
                   title: "Library",
                 ),
-                Expanded(child: BlocBuilder<LibraryBloc, LibraryStruct>(
-                    builder: (BuildContext context, LibraryStruct libState) {
+                Expanded(child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+                    builder:
+                        (BuildContext context, ReadingHomeStruct libState) {
                   if (libState.loadingStruct.isLoading) {
                     return LoadingWidget(loadingStruct: libState.loadingStruct);
                   } else {

@@ -6,10 +6,20 @@ abstract class ReadingHomeEvent {
   const ReadingHomeEvent({required this.isLoading});
 }
 
-class GetBooksEvent extends ReadingHomeEvent {
-  const GetBooksEvent() : super(isLoading: true);
+class AddLibraryBookEvent extends ReadingHomeEvent {
+  int bookId;
+  AddLibraryBookEvent({required this.bookId}) : super(isLoading: true);
+}
+
+class RemoveLibraryBookEvent extends ReadingHomeEvent {
+  int bookId;
+  RemoveLibraryBookEvent({required this.bookId}) : super(isLoading: true);
 }
 
 class InitialLoadEvent extends ReadingHomeEvent {
-  const InitialLoadEvent() : super(isLoading: true);
+  InitialLoadEvent() : super(isLoading: true);
+}
+
+class FetchBooksEvent extends ReadingHomeEvent {
+  const FetchBooksEvent() : super(isLoading: true);
 }

@@ -1,7 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
 ///
@@ -36,8 +36,8 @@ class DetailsButton extends StatelessWidget {
             side: const BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
-    return BlocBuilder<LibraryBloc, LibraryStruct>(
-      builder: (BuildContext context, LibraryStruct state) {
+    return BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+      builder: (BuildContext context, ReadingHomeStruct state) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: OutlinedButton(
@@ -68,16 +68,16 @@ class RemoveBookButton extends StatelessWidget {
             side: const BorderSide(width: 4.0),
             borderRadius: BorderRadius.circular(10))));
 
-    return BlocBuilder<LibraryBloc, LibraryStruct>(
-      builder: (BuildContext context, LibraryStruct state) {
+    return BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+      builder: (BuildContext context, ReadingHomeStruct state) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: OutlinedButton(
               style: buttonStyle,
               onPressed: () {
                 context
-                    .read<LibraryBloc>()
-                    .add(RemoveBookEvent(bookId: bookId));
+                    .read<ReadingHomeBloc>()
+                    .add(RemoveLibraryBookEvent(bookId: bookId));
               },
               child: const Text("Remove")),
         );
