@@ -61,11 +61,24 @@ def ct_cron_job():
             
             genres_of_the_book_from_book_model = book_genre.tags
             # genres_of_the_book_from_book_model = book_models.Book._meta.get_field('tags').value_from_object(book_genre)
-            tmp_lst = genres_of_the_book_from_book_model
-            for genre in chapters_genres:
-                if genre not in (book_genretag.genre or genres_of_the_book_from_book_model):
-                    tmp_lst.append(genre)
             
-            features_models.GenreTagging.objects.filter(book=book_genretag).update(genre=tmp_lst)
-            book_models.Book.objects.filter(pk=book_genre).update(tags=tmp_lst)
+            # check if the genres in both models are the same
+            genre_from_tag = book_genretag.genre
+            genre_from_book = book_genre.tags
+
+            if genre_from_book != genre_from_tag:
+                book_genre = set(genre_from_book+genre_from_tag)
+            else:
+                book_genre = genre_from_book
+
+            # collect the added genres
+            added_genres = set()
+            for genre in chapters_genres:
+                if genre not in book_genre:
+                    added_genres.add(genre)
+            book_genre = book_genre.union(added_genres)
+
+            # update the book genre with the additional genres
+            features_models.GenreTagging.objects.filter(book=book_genretag).update(genre=book_genre)
+            book_models.Book.objects.filter(pk=book_genre).update(tags=book_genre)
             print("finished.")
