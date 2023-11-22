@@ -1,6 +1,7 @@
 from models import *
 from books.models import *
 import logging
+
 def rating_cron_job():
     all_books = Book.objects.all()
     logging.info("rating cron job")
