@@ -1,6 +1,8 @@
 from django.db import models
-from books.models import *
-from features.content_tagging import *
+from books.models import  Book, Chapter
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 class Review(models.Model):
@@ -23,7 +25,7 @@ class Review(models.Model):
         thebook = Book.objects.get(pk=book_id)
         return Review.objects.filter(pk=thebook).aggregate(models.Avg("rating"))["rating__avg"] or 0
 
-class GenreTagging(models.Model):
+class GenreTag(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
 

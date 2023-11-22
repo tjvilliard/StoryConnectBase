@@ -78,8 +78,7 @@ INSTALLED_APPS = [
     'comment',
     'core',
     'ai_features',
-
-
+    'features',
 ]
 
 # DEBUG_TOOLBAR_ENABLED = True
