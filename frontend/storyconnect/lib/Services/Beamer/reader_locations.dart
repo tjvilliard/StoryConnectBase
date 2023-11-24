@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading_pages_repository.dart';
@@ -41,10 +41,10 @@ class ReaderLocations extends BeamLocation<BeamState> {
               child: MultiBlocProvider(providers: [
                 BlocProvider(
                     create: (context) =>
-                        ReadingHomeBloc(context.read<ReadingRepository>())),
+                        ReadingHubBloc(context.read<ReadingRepository>())),
                 BlocProvider(
                     create: (context) =>
-                        ReadingHomeBloc(context.read<ReadingRepository>())),
+                        ReadingHubBloc(context.read<ReadingRepository>())),
               ], child: const ReadingHomeView()),
             )));
       }
@@ -57,7 +57,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 create: (_) => ReadingRepository(),
                 child: BlocProvider(
                   create: (context) =>
-                      ReadingHomeBloc(context.read<ReadingRepository>()),
+                      ReadingHubBloc(context.read<ReadingRepository>()),
                   child: const LibraryView(),
                 ))));
       }
@@ -80,9 +80,9 @@ class ReaderLocations extends BeamLocation<BeamState> {
                 ],
                 child: MultiBlocProvider(
                     providers: [
-                      BlocProvider<ReadingHomeBloc>(
+                      BlocProvider<ReadingHubBloc>(
                           lazy: false,
-                          create: (context) => ReadingHomeBloc(
+                          create: (context) => ReadingHubBloc(
                               context.read<ReadingRepository>())),
                       BlocProvider<ReadingBloc>(
                           lazy: false,

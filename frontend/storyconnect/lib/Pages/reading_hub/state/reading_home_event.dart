@@ -1,4 +1,4 @@
-part of 'reading_home_bloc.dart';
+part of 'reading_hub_bloc.dart';
 
 ///
 abstract class ReadingHomeEvent {

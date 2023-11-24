@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryMenuButton extends StatefulWidget {
@@ -18,17 +18,17 @@ class LibraryMenuButtonState extends State<LibraryMenuButton> {
 
   @override
   void initState() {
-    context.read<ReadingHomeBloc>().add(const FetchBooksEvent());
+    context.read<ReadingHubBloc>().add(const FetchBooksEvent());
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-      builder: (BuildContext context, ReadingHomeStruct state) {
+    return BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
+      builder: (BuildContext context, ReadingHubStruct state) {
         inLibrary = context
-            .read<ReadingHomeBloc>()
+            .read<ReadingHubBloc>()
             .state
             .libraryBookMap
             .values
@@ -50,11 +50,11 @@ class LibraryMenuButtonState extends State<LibraryMenuButton> {
                     onTap: () {
                       if (inLibrary) {
                         context
-                            .read<ReadingHomeBloc>()
+                            .read<ReadingHubBloc>()
                             .add(RemoveLibraryBookEvent(bookId: bookId));
                       } else {
                         context
-                            .read<ReadingHomeBloc>()
+                            .read<ReadingHubBloc>()
                             .add(AddLibraryBookEvent(bookId: bookId));
                       }
                       inLibrary = !inLibrary;

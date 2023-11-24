@@ -7,12 +7,16 @@ import 'package:storyconnect/Repositories/reading_repository.dart';
 part 'reading_home_event.dart';
 part 'reading_home_struct.dart';
 
-typedef ReadingHomeEmitter = Emitter<ReadingHomeStruct>;
+typedef ReadingHubEmitter = Emitter<ReadingHubStruct>;
 
-class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
+///
+class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
+  ///
   late final ReadingRepository _repo;
-  ReadingHomeBloc(this._repo)
-      : super(ReadingHomeStruct(
+
+  ///
+  ReadingHubBloc(this._repo)
+      : super(ReadingHubStruct(
           allBooks: [],
           libraryBookMap: {},
           mappedBooks: {},
@@ -24,8 +28,8 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   }
 
   ///
-  void fetchBooks(ReadingHomeEvent event, ReadingHomeEmitter emit) async {
-    emit(ReadingHomeStruct(
+  void fetchBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
+    emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: state.libraryBookMap,
       mappedBooks: {},
@@ -35,7 +39,7 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
     List<Book> books = await _repo.getBooks();
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
-    emit(ReadingHomeStruct(
+    emit(ReadingHubStruct(
       allBooks: books,
       libraryBookMap: libBookMap,
       mappedBooks: {},
@@ -44,27 +48,32 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   }
 
   ///
-  void removeBook(RemoveLibraryBookEvent event, ReadingHomeEmitter emit) async {
-    emit(ReadingHomeStruct(
+  void removeBook(RemoveLibraryBookEvent event, ReadingHubEmitter emit) async {
+    //
+    emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: state.libraryBookMap,
       mappedBooks: state.mappedBooks,
       loadingStruct: LoadingStruct.loading(true),
     ));
 
+    //
     MapEntry<Library, Book> entryToRemove = state.libraryBookMap.entries
         .where((entry) => entry.value.id == event.bookId)
         .first;
 
+    //
     await _repo.removeLibraryBook(LibraryEntrySerializer(
       id: entryToRemove.key.id,
       book: entryToRemove.value.id,
       status: entryToRemove.key.status,
     ));
 
+    //
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
-    emit(ReadingHomeStruct(
+    // Emit the new home state.
+    emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: libBookMap,
       mappedBooks: state.mappedBooks,
@@ -73,8 +82,8 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
   }
 
   ///
-  void addBook(AddLibraryBookEvent event, ReadingHomeEmitter emit) async {
-    emit(ReadingHomeStruct(
+  void addBook(AddLibraryBookEvent event, ReadingHubEmitter emit) async {
+    emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: state.libraryBookMap,
       mappedBooks: state.mappedBooks,
@@ -88,7 +97,7 @@ class ReadingHomeBloc extends Bloc<ReadingHomeEvent, ReadingHomeStruct> {
 
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
-    emit(ReadingHomeStruct(
+    emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: libBookMap,
       mappedBooks: state.mappedBooks,

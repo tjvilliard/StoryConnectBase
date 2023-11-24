@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/home_book_list_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/book_list.dart';
-import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Widgets/auto_complete_searchbar.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -19,7 +20,7 @@ class ReadingHomeView extends StatefulWidget {
 class ReadingHomeState extends State<ReadingHomeView> {
   @override
   void initState() {
-    ReadingHomeBloc readingHomeBloc = context.read<ReadingHomeBloc>();
+    ReadingHubBloc readingHomeBloc = context.read<ReadingHubBloc>();
     readingHomeBloc.add(const FetchBooksEvent());
     super.initState();
   }
@@ -43,13 +44,16 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 ConstrainedBox(
                   constraints: const BoxConstraints(
                       maxWidth: 500, minWidth: 250, maxHeight: 50),
-                  child: const SearchBar(),
+                  child: const AutoCompleteSearchBar(
+                    hintText: "Search",
+                    searchableItems: [],
+                  ),
                 )
               ],
             ),
             const SizedBox(height: 20),
-            Expanded(child: BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-              builder: (BuildContext context, ReadingHomeStruct state) {
+            Expanded(child: BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
+              builder: (BuildContext context, ReadingHubStruct state) {
                 return ListView.builder(
 
                     // add 1 to the number of

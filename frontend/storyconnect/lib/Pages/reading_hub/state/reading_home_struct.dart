@@ -1,9 +1,7 @@
-part of 'reading_home_bloc.dart';
+part of 'reading_hub_bloc.dart';
 
-/// The Structure of the Reading Home.
-/// The reading home manages a set of books mapped
-/// to different genres of tags.
-class ReadingHomeStruct {
+///
+class ReadingHubStruct {
   final List<Book> allBooks;
   final Map<Library, Book> libraryBookMap;
   final Map<String, List<Book>> mappedBooks;
@@ -14,7 +12,7 @@ class ReadingHomeStruct {
   /// The state contains the following:
   ///- Library Book Map
   ///-
-  ReadingHomeStruct({
+  ReadingHubStruct({
     required this.allBooks,
     required this.libraryBookMap,
     required this.mappedBooks,

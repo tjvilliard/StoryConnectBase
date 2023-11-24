@@ -4,7 +4,7 @@ import 'package:storyconnect/Pages/reader_app/components/menubar/buttons.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/library_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 
 class ReadingMenuBar extends StatefulWidget {
   static const double height = 40;
@@ -30,7 +30,7 @@ class ReadingMenuBarState extends State<ReadingMenuBar> {
         builder: (context, uiState) {
       return BlocBuilder<ReadingBloc, ReadingState>(
           builder: (context, chapterState) {
-        return BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
+        return BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
             builder: (context, libState) {
           return Card(
               shape: widgetRadius,
