@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/menubar/buttons.dart';
+import 'package:storyconnect/Pages/reader_app/components/menubar/menu_buttons.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/library_button.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 
