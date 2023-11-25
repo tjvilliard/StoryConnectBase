@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
-import 'package:storyconnect/Widgets/book_widget.dart';
+import 'package:storyconnect/Widgets/book_widgets/book_widget.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class CurrentWorksCard extends StatelessWidget {
@@ -25,7 +25,8 @@ class CurrentWorksCard extends StatelessWidget {
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 20), // horizontally scrollable list of books
+                  const SizedBox(
+                      height: 20), // horizontally scrollable list of books
 
                   BlocBuilder<WriterProfileBloc, WriterProfileState>(
                       builder: (context, state) {
