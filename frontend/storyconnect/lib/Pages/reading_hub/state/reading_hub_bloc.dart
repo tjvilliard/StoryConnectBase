@@ -4,8 +4,8 @@ import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
-part 'reading_home_event.dart';
-part 'reading_home_struct.dart';
+part 'reading_hub_event.dart';
+part 'reading_hub_struct.dart';
 
 typedef ReadingHubEmitter = Emitter<ReadingHubStruct>;
 
@@ -29,6 +29,7 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
   ///
   void fetchBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
+    //
     emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: state.libraryBookMap,
@@ -36,9 +37,11 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
       loadingStruct: LoadingStruct.loading((event.isLoading)),
     ));
 
+    //
     List<Book> books = await _repo.getBooks();
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
+    //
     emit(ReadingHubStruct(
       allBooks: books,
       libraryBookMap: libBookMap,
@@ -83,6 +86,7 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
   ///
   void addBook(AddLibraryBookEvent event, ReadingHubEmitter emit) async {
+    //
     emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: state.libraryBookMap,
@@ -90,13 +94,16 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
       loadingStruct: LoadingStruct.loading(true),
     ));
 
+    //
     await _repo.addLibraryBook(LibraryEntrySerializer(
       book: event.bookId,
       status: 1,
     ));
 
+    //
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
+    //
     emit(ReadingHubStruct(
       allBooks: state.allBooks,
       libraryBookMap: libBookMap,

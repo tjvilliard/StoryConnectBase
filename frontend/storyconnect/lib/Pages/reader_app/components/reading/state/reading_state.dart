@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of 'reading_bloc.dart';
 
 const VERTICAL_SPACING_EMPTY = VerticalSpacing(top: 0, bottom: 0);

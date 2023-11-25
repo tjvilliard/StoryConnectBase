@@ -1,6 +1,5 @@
 part of 'reading_hub_bloc.dart';
 
-///
 abstract class ReadingHomeEvent {
   final bool isLoading;
   const ReadingHomeEvent({required this.isLoading});
