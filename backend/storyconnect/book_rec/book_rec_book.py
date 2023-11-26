@@ -177,11 +177,15 @@ def book_rec_book_based():
     similarity_score = cosine_similarity(book_pivot)
     similarity_score_test = cosine_similarity(book_pivot_test)
 
-    # book_title = Book.objects.get(pk=book_id)
-    # recommendations = recommend(book_title)
+    book_title = Book.objects.get(pk=79)
+    recommendations = recommend(book_title)
 
-    book_based_rec = all_books_recommend(book_pivot, similarity_score)
-    return book_based_rec
+    book_rec_res = pd.DataFrame({'book':book_title, 'recommendations':recommendations})
+
+    book_rec_res.to_csv('backend/storyconnect/book_rec/book_rec_res.csv',index=False)
+
+    # book_based_rec = all_books_recommend(book_pivot, similarity_score)
+    # return book_based_rec
 
 def integrate_rec_into_models():
     book_based_rec = book_rec_book_based()
@@ -195,5 +199,6 @@ def integrate_rec_into_models():
         book_rec = Book_Based_Rec.objects.get_or_create(user=row['book_id'], recommendation=recs)
 
 def run():
-    integrate_rec_into_models()
+    book_rec_book_based()
+    # integrate_rec_into_models()
 
