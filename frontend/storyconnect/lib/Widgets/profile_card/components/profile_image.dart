@@ -51,10 +51,15 @@ class ProfileImageState extends State<ProfileImage> {
               AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn),
               Center(
                 child: HoverButton(
-                    onPressed: () => showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => const EditProfileImageDialog()),
+                    onPressed: () {
+                      final bloc = context.read<ProfileCardBloc>();
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => EditProfileImageDialog(
+                                bloc: bloc,
+                              ));
+                    },
                     label: const Text(
                       "Edit",
                     ),

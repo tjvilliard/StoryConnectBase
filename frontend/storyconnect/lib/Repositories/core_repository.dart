@@ -54,16 +54,16 @@ class CoreApiProvider {
     }
   }
 
-  Future<Profile> getProfile(String uid) async {
+  Future<Profile?> getProfile(String uid) async {
     try {
       final url = UrlConstants.profiles(uid: uid);
-      final result = await http.get(url, headers: await buildHeaders());
+      final result = await http.get(url, headers: await buildHeaders(noAuth: true));
       return Profile.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      rethrow;
+      return null;
     }
   }
 
@@ -153,7 +153,7 @@ class CoreRepository {
     return _api.getAnnouncements(uid).toList();
   }
 
-  Future<Profile> getProfile(String uid) async {
+  Future<Profile?> getProfile(String uid) async {
     return _api.getProfile(uid);
   }
 

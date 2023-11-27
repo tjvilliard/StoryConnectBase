@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 import 'package:storyconnect/Widgets/profile_card/components/bio_text_editor.dart';
 import 'package:storyconnect/Widgets/profile_card/components/display_name_editor.dart';
 import 'package:storyconnect/Widgets/profile_card/components/edit_bio_button.dart';
+import 'package:storyconnect/Widgets/profile_card/components/expandable_bio.dart';
 import 'package:storyconnect/Widgets/profile_card/components/profile_image.dart';
 import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileCardWidget extends StatefulWidget {
   final String uid;
@@ -102,7 +105,9 @@ class ProfileCardWidgetState extends State<ProfileCardWidget> {
                                   } else if (state.isEditing) {
                                     toReturn = const BioTextEditor();
                                   } else {
-                                    toReturn = Text(state.profile.bio, style: Theme.of(context).textTheme.labelLarge);
+                                    toReturn = ExpandableBioWidget(
+                                      bioText: state.profile.bio,
+                                    );
                                   }
                                   return Padding(
                                       padding: const EdgeInsets.all(10),

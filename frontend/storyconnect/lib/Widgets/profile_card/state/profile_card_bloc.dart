@@ -38,7 +38,15 @@ class ProfileCardBloc extends Bloc<ProfileCardEvent, ProfileCardState> {
       loadingStruct: LoadingStruct.message("Loading profile"),
     ));
 
-    _repo.getProfile(event.uid).then((value) => add(RecievedProfileEvent(profile: value)));
+    final Profile? profile = await _repo.getProfile(event.uid);
+    if (profile == null) {
+      emit(state.copyWith(
+        loadingStruct: LoadingStruct.loading(false),
+        responseMessages: ["Failed to load profile"],
+      ));
+    } else {
+      add(RecievedProfileEvent(profile: profile));
+    }
   }
 
   void editProfile(EditProfileEvent event, ProfileCardEmitter emit) {
@@ -50,7 +58,7 @@ class ProfileCardBloc extends Bloc<ProfileCardEvent, ProfileCardState> {
     emit(state.copyWith(
       loadingStruct: LoadingStruct.message("Saving bio"),
     ));
-    if (state.bioEditingState != null) {
+    if (state.bioEditingState != null && state.tempDisplayName != null) {
       final response = await _repo
           .updateProfile(state.profile.copyWith(bio: state.bioEditingState!, displayName: state.tempDisplayName!));
       if (response != null) {
@@ -63,7 +71,7 @@ class ProfileCardBloc extends Bloc<ProfileCardEvent, ProfileCardState> {
       } else {
         emit(state.copyWith(
           loadingStruct: LoadingStruct.loading(false),
-          responseMessages: ["Failed to update profile"],
+          responseMessages: ["Failed to update profile. Please ensure you've set both a bio and a display name"],
         ));
       }
     }
@@ -77,9 +85,7 @@ class ProfileCardBloc extends Bloc<ProfileCardEvent, ProfileCardState> {
 
   editBioState(EditBioStateEvent event, ProfileCardEmitter emit) {
     emit(state.copyWith(
-      profile: state.profile.copyWith(
-        bio: event.bio,
-      ),
+      bioEditingState: event.bio,
     ));
   }
 
