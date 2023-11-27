@@ -15,6 +15,8 @@ class AboutTeamWidget extends StatefulWidget {
 class AboutTeamWidgetState extends State<AboutTeamWidget> {
   static const String dallinUid = "nyzEhr9I2hOigmkpbjaf47Gvc4C2";
   static const String davidUid = "mJjGhxkCzkYhap6YI9eWENxf7bz1";
+  static const String tannerUid = "kkajneP6kiPaWhJGrhiwkUrgeZs1";
+  static const String novellaUid = "W4RLw9vENAeb50YK9WT9ig481vu2";
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +42,14 @@ class AboutTeamWidgetState extends State<AboutTeamWidget> {
               uid: davidUid,
               forceNoEdit: true,
             ),
-
-            // Novella's
-
-            //Tanner's
-
+            ProfileCardWidget(
+              uid: tannerUid,
+              forceNoEdit: true,
+            ),
+            ProfileCardWidget(
+              uid: novellaUid,
+              forceNoEdit: true,
+            ),
             SizedBox(
               height: 50,
             )
