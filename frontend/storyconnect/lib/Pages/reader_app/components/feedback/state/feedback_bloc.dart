@@ -37,7 +37,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
         (event, emit) => loadChapterFeedback(event, emit));
   }
 
-  /// Loads the feedback for the current Chapter.
   Stream<void> loadChapterFeedback(
       LoadChapterFeedbackEvent event, FeedbackEmitter emit) async* {
     if (kDebugMode) {
@@ -84,8 +83,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     if (event.feedbackType == FeedbackType.suggestion) {
       String? commentState = state.serializer.comment;
 
-      // Set the comment field to null and set
-      // the suggestion field to the comment state.
       emit(state.copyWith(
           selectedFeedbackType: event.feedbackType,
           serializer: state.serializer.copyWith(
@@ -93,13 +90,9 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
             suggestion: commentState,
             comment: null,
           )));
-    }
-    // The new feedback type is a comment.
-    else {
-      // Get the current state of the suggestion field.
+    } else {
       String? suggestionState = state.serializer.suggestion;
 
-      // Set fields in new serializer state accordingly.
       emit(state.copyWith(
           selectedFeedbackType: event.feedbackType,
           serializer: state.serializer.copyWith(
@@ -110,7 +103,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     }
   }
 
-  /// Changes the contents of the feedback suggestion and emits the changed state.
   void feedbackEdited(FeedbackEditedEvent event, FeedbackEmitter emit) {
     if (state.selectedFeedbackType == FeedbackType.suggestion) {
       emit(state.copyWith(
@@ -123,7 +115,6 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     }
   }
 
-  /// Submits the feedback item, and emits the changed state.
   void submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
     int chapterId = event.readingBloc.state.currentChapterId;
 

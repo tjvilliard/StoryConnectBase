@@ -27,11 +27,11 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
           previous.feedbackBarShown != current.feedbackBarShown;
 
       return feedbackUIshownChanged;
-    }, builder: (context, uiState) {
+    }, builder: (context, readingUIstate) {
       return BlocBuilder<FeedbackBloc, FeedbackState>(
-          builder: (context, feedState) {
+          builder: (context, feedbackState) {
         return AnimatedCrossFade(
-          crossFadeState: !uiState.feedbackBarShown
+          crossFadeState: !readingUIstate.feedbackBarShown
               ? CrossFadeState.showFirst
               : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 500),
@@ -41,7 +41,7 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
               width: 350,
               child: Card(
                 elevation: 3,
-                child: uiState.feedbackBarShown
+                child: readingUIstate.feedbackBarShown
                     ? Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
@@ -71,19 +71,22 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                                       child: AnimatedSwitcher(
                                           duration:
                                               const Duration(milliseconds: 500),
-                                          child: feedState
+                                          child: feedbackState
                                                   .loadingStruct.isLoading
                                               ? LoadingWidget(
-                                                  loadingStruct:
-                                                      feedState.loadingStruct)
-                                              : (feedState.selectedFeedbackType ==
+                                                  loadingStruct: feedbackState
+                                                      .loadingStruct)
+                                              : (feedbackState
+                                                          .selectedFeedbackType ==
                                                       FeedbackType.suggestion
                                                   ? FeedbackList(
                                                       feedbackItems:
-                                                          feedState.suggestions)
+                                                          feedbackState
+                                                              .suggestions)
                                                   : FeedbackList(
-                                                      feedbackItems: feedState
-                                                          .comments))))),
+                                                      feedbackItems:
+                                                          feedbackState
+                                                              .comments))))),
                               const FeedbackInputWidget(),
                             ]))
                     : Container(),
