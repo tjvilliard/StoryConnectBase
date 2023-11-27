@@ -12,6 +12,16 @@ class FeedbackState with _$FeedbackState {
   }) = _FeedbackState;
   const FeedbackState._();
 
+  List<WriterFeedback> get suggestions => feedbackSet.values
+      .expand((element) => element)
+      .where((element) => element.isSuggestion)
+      .toList();
+
+  List<WriterFeedback> get comments => feedbackSet.values
+      .expand((element) => element)
+      .where((element) => !element.isSuggestion)
+      .toList();
+
   /// The inital 'State' of FeedbackState:
   factory FeedbackState.initial() {
     return FeedbackState(

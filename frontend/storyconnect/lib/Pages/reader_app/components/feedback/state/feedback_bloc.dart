@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
@@ -39,23 +40,22 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
   /// Loads the feedback for the current Chapter.
   Stream<void> loadChapterFeedback(
       LoadChapterFeedbackEvent event, FeedbackEmitter emit) async* {
+    if (kDebugMode) {
+      print("Load Chapter Feebdack Event Detected");
+    }
+
     emit(state.copyWith(
         loadingStruct: LoadingStruct.message("Loading Feedback")));
 
     final currentFeedbackSet =
         Map<int, List<WriterFeedback>>.from(state.feedbackSet);
 
-    ReadingBloc bloc = event.readingBloc;
+    final List<WriterFeedback> newFeedbackSet =
+        await _repo.getChapterFeedback(event.chapterId);
 
-    bloc.state.currentChapterId;
+    currentFeedbackSet.remove(event.chapterId);
 
-    final List<WriterFeedback> newFeedbackSet = await _repo
-        .getChapterFeedback(event.readingBloc.state.currentChapterId);
-
-    currentFeedbackSet.remove(event.readingBloc.state.currentChapterId);
-
-    currentFeedbackSet[event.readingBloc.state.currentChapterId] =
-        newFeedbackSet;
+    currentFeedbackSet[event.chapterId] = newFeedbackSet;
 
     emit(state.copyWith(
       loadingStruct: LoadingStruct.loading(false),

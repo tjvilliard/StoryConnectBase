@@ -6,6 +6,12 @@ abstract class FeedbackEvent {
   const FeedbackEvent();
 }
 
+/// Load the comments for the chapter.
+class LoadChapterFeedbackEvent extends FeedbackEvent {
+  final int chapterId;
+  const LoadChapterFeedbackEvent({required this.chapterId});
+}
+
 /// Change the entry for the suggestion field.
 class FeedbackEditedEvent extends FeedbackEvent {
   final String? suggestion;
@@ -51,15 +57,6 @@ class AnnotationChangedEvent extends FeedbackEvent {
     required this.offset,
     required this.offsetEnd,
     required this.text,
-  });
-}
-
-/// Load the comments for the chapter.
-class LoadChapterFeedbackEvent extends FeedbackEvent {
-  final ReadingBloc readingBloc;
-  const LoadChapterFeedbackEvent(
-    chapterId, {
-    required this.readingBloc,
   });
 }
 
