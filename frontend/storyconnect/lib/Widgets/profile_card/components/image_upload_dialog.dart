@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
 
 class EditProfileImageDialog extends StatelessWidget {
   const EditProfileImageDialog({super.key});
@@ -27,7 +27,7 @@ class EditProfileImageDialog extends StatelessWidget {
                     child: Icon(FontAwesomeIcons.user, size: 25, color: Theme.of(context).colorScheme.secondary))
               ],
             ),
-            BlocBuilder<WriterProfileBloc, WriterProfileState>(
+            BlocBuilder<ProfileCardBloc, ProfileCardState>(
               builder: (context, state) {
                 Widget toReturn;
                 if (state.tempProfileImage != null) {
@@ -52,7 +52,7 @@ class EditProfileImageDialog extends StatelessWidget {
                             children: [
                               FilledButton.icon(
                                   onPressed: () async {
-                                    context.read<WriterProfileBloc>().add(const SelectProfileImageEvent());
+                                    context.read<ProfileCardBloc>().add(const SelectProfileImageEvent());
                                   },
                                   icon: const Icon(FontAwesomeIcons.upload),
                                   label: const Text("Upload Image")),
@@ -64,7 +64,7 @@ class EditProfileImageDialog extends StatelessWidget {
                                     bool confirm = await showConfirmationDialog(context);
                                     if (confirm) {
                                       // ignore: use_build_context_synchronously
-                                      context.read<WriterProfileBloc>().add(const DeleteProfileImageEvent());
+                                      context.read<ProfileCardBloc>().add(const DeleteProfileImageEvent());
                                       // ignore: use_build_context_synchronously
                                       Navigator.of(context).pop();
                                     }
@@ -82,7 +82,7 @@ class EditProfileImageDialog extends StatelessWidget {
               children: [
                 FilledButton.tonal(
                   onPressed: () {
-                    context.read<WriterProfileBloc>().add(const ClearProfileImageEvent());
+                    context.read<ProfileCardBloc>().add(const ClearProfileImageEvent());
                     Navigator.of(context).pop();
                   },
                   child: const Text("Cancel"),
@@ -90,7 +90,7 @@ class EditProfileImageDialog extends StatelessWidget {
                 const SizedBox(width: 10),
                 FilledButton.icon(
                   onPressed: () {
-                    context.read<WriterProfileBloc>().add(const SaveProfileImageEvent());
+                    context.read<ProfileCardBloc>().add(const SaveProfileImageEvent());
                     Navigator.of(context).pop();
                   },
                   icon: Icon(
@@ -109,7 +109,7 @@ class EditProfileImageDialog extends StatelessWidget {
         right: 20,
         child: IconButton.filledTonal(
           onPressed: () {
-            context.read<WriterProfileBloc>().add(const ClearProfileImageEvent());
+            context.read<ProfileCardBloc>().add(const ClearProfileImageEvent());
             Navigator.of(context).pop();
           },
           icon: const Icon(FontAwesomeIcons.x),
