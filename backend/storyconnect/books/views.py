@@ -12,14 +12,13 @@ from .serializers import (
 )
 from django.db import transaction
 from rest_framework.views import APIView
-from core.permissions import IsOwnerOrReadOnly
 
 
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
     # search_fields = ['title', 'author', 'language']
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
 
     def create(self, request, *args, **kwargs):

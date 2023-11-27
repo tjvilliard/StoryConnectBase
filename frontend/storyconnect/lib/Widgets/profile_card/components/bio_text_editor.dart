@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
 
 class BioTextEditor extends StatefulWidget {
   const BioTextEditor({super.key});
@@ -15,8 +15,8 @@ class BioTextEditorState extends State<BioTextEditor> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bloc = context.read<WriterProfileBloc>();
-      _controller.text = bloc.state.bioEditingState ?? bloc.state.profile.bio;
+      final bloc = context.read<ProfileCardBloc>();
+      _controller.text = bloc.state.isEditing ? bloc.state.profile.bio : "";
     });
     super.initState();
   }
@@ -29,7 +29,7 @@ class BioTextEditorState extends State<BioTextEditor> {
               padding: const EdgeInsets.all(10),
               child: TextField(
                   onChanged: (String value) {
-                    context.read<WriterProfileBloc>().add(EditBioStateEvent(bio: value));
+                    context.read<ProfileCardBloc>().add(EditBioStateEvent(bio: value));
                   },
                   maxLines: 4,
                   controller: _controller,
@@ -41,13 +41,13 @@ class BioTextEditorState extends State<BioTextEditor> {
         children: [
           FilledButton.tonal(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(const CancelProfileEditEvent());
+                context.read<ProfileCardBloc>().add(const CancelProfileEditEvent());
               },
               child: const Text("Cancel")),
           const SizedBox(width: 10),
           FilledButton.icon(
               onPressed: () {
-                context.read<WriterProfileBloc>().add(const SaveProfileEvent());
+                context.read<ProfileCardBloc>().add(const SaveProfileEvent());
               },
               icon: const Icon(Icons.save),
               label: const Text("Save")),

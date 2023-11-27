@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
+import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
 
 class DisplayNameEditor extends StatefulWidget {
   const DisplayNameEditor({super.key});
@@ -15,7 +16,7 @@ class DisplayNameEditorState extends State<DisplayNameEditor> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bloc = context.read<WriterProfileBloc>();
+      final bloc = context.read<ProfileCardBloc>();
       _controller.text = bloc.state.profile.displayName;
     });
     super.initState();
@@ -31,7 +32,7 @@ class DisplayNameEditorState extends State<DisplayNameEditor> {
           child: TextField(
             controller: _controller,
             onChanged: (String value) {
-              context.read<WriterProfileBloc>().add(EditDisplayNameEvent(displayName: value));
+              context.read<ProfileCardBloc>().add(EditDisplayNameEvent(displayName: value));
             },
             decoration: const InputDecoration(
               labelText: "Display Name",

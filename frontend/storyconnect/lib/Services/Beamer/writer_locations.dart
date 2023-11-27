@@ -15,25 +15,30 @@ import 'package:storyconnect/Pages/writing_home/view.dart';
 import 'package:storyconnect/Pages/writing_home/state/writing_home_bloc.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 class WriterLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
-        '/writer/home',
-        '/writer/book/:bookId',
-        '/writer/create_book',
+        PageUrls.writerHome,
+        PageUrls.createBook,
+        '${PageUrls.writerBase}/book/:bookId',
       ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final pages = <CustomBeamPage>[];
     final url = state.uri.pathSegments;
+    final baseUrlString = PageUrls.writerBase.split('/').last;
 
-    if (url.contains('writer')) {
-      if (url.contains('create_book')) {
+    if (url.contains(baseUrlString)) {
+      final String createUrl = PageUrls.getLastPathSegment(PageUrls.createBook);
+      final String homeUrl = PageUrls.getLastPathSegment(PageUrls.writerHome);
+
+      if (url.contains(createUrl)) {
         pages.add(
           CustomBeamPage(
-            key: const ValueKey('create_book'),
+            key: ValueKey(createUrl),
             child: BlocProvider(
               create: (context) => BookCreateBloc(context.read<WritingRepository>()),
               child: const WritingCreationView(),
@@ -70,10 +75,10 @@ class WriterLocations extends BeamLocation<BeamState> {
                     child: WritingAppView(
                       bookId: int.tryParse(bookId ?? ""),
                     )))));
-      } else if (url.contains('home')) {
+      } else if (url.contains(homeUrl)) {
         pages.add(
           CustomBeamPage(
-            key: const ValueKey('writer'),
+            key: const ValueKey('writer-home'),
             child: BlocProvider(
               create: (context) => WritingHomeBloc(context.read<WritingRepository>()),
               child: const WritingHomeWidget(),
