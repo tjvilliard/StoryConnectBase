@@ -9,7 +9,8 @@ import 'package:storyconnect/Widgets/profile_card/components/image_upload_dialog
 import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
 
 class ProfileImage extends StatefulWidget {
-  const ProfileImage({super.key});
+  final Size? imageSize;
+  const ProfileImage({super.key, this.imageSize});
 
   @override
   ProfileImageState createState() => ProfileImageState();
@@ -35,8 +36,8 @@ class ProfileImageState extends State<ProfileImage> {
           toReturn = _loadingImageWidget(context, iconColor: iconColor, backgroundColor: backgroundColor);
         } else if (state.profile.imageUrl != null) {
           toReturn = Container(
-              width: 100,
-              height: 100,
+              width: widget.imageSize?.width ?? 100,
+              height: widget.imageSize?.height ?? 100,
               decoration: const BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(child: ImageLoader(url: state.profile.imageUrl!)));
         } else {

@@ -1,9 +1,11 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Pages/about_team/components/project_description_card.dart';
+import 'package:storyconnect/Pages/about_team/components/project_diagram.dart';
+import 'package:storyconnect/Pages/about_team/components/team_profiles.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/custom_scaffold.dart';
 import 'package:storyconnect/Widgets/header.dart';
-import 'package:storyconnect/Widgets/profile_card/view.dart';
 
 class AboutTeamWidget extends StatefulWidget {
   const AboutTeamWidget({super.key});
@@ -13,11 +15,6 @@ class AboutTeamWidget extends StatefulWidget {
 }
 
 class AboutTeamWidgetState extends State<AboutTeamWidget> {
-  static const String dallinUid = "nyzEhr9I2hOigmkpbjaf47Gvc4C2";
-  static const String davidUid = "mJjGhxkCzkYhap6YI9eWENxf7bz1";
-  static const String tannerUid = "kkajneP6kiPaWhJGrhiwkUrgeZs1";
-  static const String novellaUid = "W4RLw9vENAeb50YK9WT9ig481vu2";
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -27,30 +24,18 @@ class AboutTeamWidgetState extends State<AboutTeamWidget> {
             Beamer.of(context).beamToNamed(PageUrls.login);
           }
         },
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
             child: Column(
           children: [
             Header(
               alignment: WrapAlignment.center,
-              title: "About the Team",
+              title: "StoryConnect",
+              titleStyle: Theme.of(context).textTheme.displayMedium,
             ),
-            ProfileCardWidget(
-              uid: dallinUid,
-              forceNoEdit: true,
-            ),
-            ProfileCardWidget(
-              uid: davidUid,
-              forceNoEdit: true,
-            ),
-            ProfileCardWidget(
-              uid: tannerUid,
-              forceNoEdit: true,
-            ),
-            ProfileCardWidget(
-              uid: novellaUid,
-              forceNoEdit: true,
-            ),
-            SizedBox(
+            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDescriptionCard()),
+            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDiagramCard()),
+            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const TeamProfilesWidget()),
+            const SizedBox(
               height: 50,
             )
           ],

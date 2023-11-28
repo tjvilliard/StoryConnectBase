@@ -45,4 +45,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/diagram.png
+    - assets/team_pic.jpg
 

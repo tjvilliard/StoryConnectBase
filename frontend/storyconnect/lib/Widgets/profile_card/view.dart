@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 import 'package:storyconnect/Widgets/profile_card/components/bio_text_editor.dart';
@@ -10,12 +9,13 @@ import 'package:storyconnect/Widgets/profile_card/components/edit_bio_button.dar
 import 'package:storyconnect/Widgets/profile_card/components/expandable_bio.dart';
 import 'package:storyconnect/Widgets/profile_card/components/profile_image.dart';
 import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileCardWidget extends StatefulWidget {
   final String uid;
   final bool forceNoEdit;
-  const ProfileCardWidget({super.key, required this.uid, this.forceNoEdit = false});
+  final Size? imageSize;
+
+  const ProfileCardWidget({super.key, required this.uid, this.forceNoEdit = false, this.imageSize});
 
   @override
   ProfileCardWidgetState createState() => ProfileCardWidgetState();
@@ -70,7 +70,9 @@ class ProfileCardWidgetState extends State<ProfileCardWidget> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const ProfileImage(),
+                              ProfileImage(
+                                imageSize: widget.imageSize,
+                              ),
                               const SizedBox(height: 8),
                               BlocBuilder<ProfileCardBloc, ProfileCardState>(
                                 builder: (context, state) {
