@@ -8,7 +8,7 @@ class AnnotatedTextSelection with _$AnnotatedTextSelection {
   const factory AnnotatedTextSelection({
     required int offset,
     required int offsetEnd,
-    required int chapterId,
+    @JsonKey(name: 'chapter') required int chapterId,
     required String text,
     required bool floating,
   }) = _AnnotatedTextSelection;

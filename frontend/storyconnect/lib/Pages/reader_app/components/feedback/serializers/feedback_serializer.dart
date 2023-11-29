@@ -8,15 +8,19 @@ part 'feedback_serializer.g.dart';
 @freezed
 class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
   const factory FeedbackCreationSerializer({
-    required int chapterId,
     required AnnotatedTextSelection selection,
-    required int sentiment,
-    required bool isSuggestion,
-    required bool dismissed,
     String? comment,
-    int? parentId,
-    String? suggestion,
+    @JsonKey(name: 'parent') int? parentId,
+    required int sentiment,
+    required bool dismissed,
+    required bool isSuggestion,
   }) = _FeedbackCreationSerializer;
+
+  ///
+  bool get isGhost => selection.floating;
+
+  ///
+  int get chapterId => selection.chapterId;
 
   const FeedbackCreationSerializer._();
   factory FeedbackCreationSerializer.fromJson(Map<String, dynamic> json) =>
@@ -24,7 +28,6 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
 
   factory FeedbackCreationSerializer.initial() {
     return FeedbackCreationSerializer(
-      chapterId: 0,
       selection: const AnnotatedTextSelection(
           chapterId: 0, floating: false, offsetEnd: 0, offset: 0, text: ""),
       sentiment: FeedbackSentiment.good.index,
@@ -32,7 +35,6 @@ class FeedbackCreationSerializer with _$FeedbackCreationSerializer {
       dismissed: false,
       comment: "",
       parentId: null,
-      suggestion: "",
     );
   }
 

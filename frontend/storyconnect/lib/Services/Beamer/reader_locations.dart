@@ -33,33 +33,23 @@ class ReaderLocations extends BeamLocation<BeamState> {
       // If the url contains home, send the reader home.
       if (url.contains('home')) {
         pages.add(CustomBeamPage(
-            key: const ValueKey('reader'),
-            child: MultiRepositoryProvider(
-              providers: [
-                RepositoryProvider(create: (_) => ReadingRepository()),
-              ],
-              child: MultiBlocProvider(providers: [
-                BlocProvider(
-                    create: (context) =>
-                        ReadingHubBloc(context.read<ReadingRepository>())),
-                BlocProvider(
-                    create: (context) =>
-                        ReadingHubBloc(context.read<ReadingRepository>())),
-              ], child: const ReadingHomeView()),
-            )));
+          key: const ValueKey('reader'),
+          child: MultiBlocProvider(providers: [
+            BlocProvider(
+                create: (context) =>
+                    ReadingHubBloc(context.read<ReadingRepository>())),
+          ], child: const ReadingHomeView()),
+        ));
       }
       // If the url contains library, send the reader to the library.
       else if (url.contains('library')) {
         pages.add(CustomBeamPage(
             key: const ValueKey('library'),
-            child: RepositoryProvider(
-                lazy: false,
-                create: (_) => ReadingRepository(),
-                child: BlocProvider(
-                  create: (context) =>
-                      ReadingHubBloc(context.read<ReadingRepository>()),
-                  child: const LibraryView(),
-                ))));
+            child: BlocProvider(
+              create: (context) =>
+                  ReadingHubBloc(context.read<ReadingRepository>()),
+              child: const LibraryView(),
+            )));
       }
       // If the url contains a path parameter 'bookId'
       else if (state.pathParameters.containsKey('bookId')) {
@@ -68,10 +58,6 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: ValueKey('book-$bookId'),
             child: MultiRepositoryProvider(
                 providers: [
-                  RepositoryProvider(
-                    lazy: false,
-                    create: (_) => ReadingRepository(),
-                  ),
                   RepositoryProvider(
                     lazy: false,
                     create: (_) => BookProviderRepository(

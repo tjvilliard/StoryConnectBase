@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,19 +11,13 @@ part 'feedback_event.dart';
 part 'feedback_state.dart';
 part 'feedback_bloc.freezed.dart';
 
-///
 typedef FeedbackEmitter = Emitter<FeedbackState>;
 
-///
 class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
-  /// Feedback From Database
   late final ReadingRepository _repo;
-
-  ///
   FeedbackBloc(ReadingRepository repo) : super(FeedbackState.initial()) {
     _repo = repo;
 
-    // Map incoming events to state transformations with methods.
     on<FeedbackTypeChangedEvent>(
         (event, emit) => feedbackTypeChanged(event, emit));
     on<SentimentChangedEvent>((event, emit) => sentimentChanged(event, emit));
@@ -37,14 +29,11 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
         (event, emit) => loadChapterFeedback(event, emit));
   }
 
-  Stream<void> loadChapterFeedback(
-      LoadChapterFeedbackEvent event, FeedbackEmitter emit) async* {
-    if (kDebugMode) {
-      print("Load Chapter Feebdack Event Detected");
-    }
-
+  void loadChapterFeedback(
+      LoadChapterFeedbackEvent event, FeedbackEmitter emit) async {
     emit(state.copyWith(
-        loadingStruct: LoadingStruct.message("Loading Feedback")));
+      loadingStruct: LoadingStruct.message("Loading Feedback"),
+    ));
 
     final currentFeedbackSet =
         Map<int, List<WriterFeedback>>.from(state.feedbackSet);
@@ -52,8 +41,10 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     final List<WriterFeedback> newFeedbackSet =
         await _repo.getChapterFeedback(event.chapterId);
 
+    // Remove the current set of feedback Items from storage.
     currentFeedbackSet.remove(event.chapterId);
 
+    // Add the new set of feedback Items to storage.
     currentFeedbackSet[event.chapterId] = newFeedbackSet;
 
     emit(state.copyWith(
@@ -80,39 +71,17 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
   void feedbackTypeChanged(
       FeedbackTypeChangedEvent event, FeedbackEmitter emit) {
-    if (event.feedbackType == FeedbackType.suggestion) {
-      String? commentState = state.serializer.comment;
-
-      emit(state.copyWith(
-          selectedFeedbackType: event.feedbackType,
-          serializer: state.serializer.copyWith(
-            isSuggestion: true,
-            suggestion: commentState,
-            comment: null,
-          )));
-    } else {
-      String? suggestionState = state.serializer.suggestion;
-
-      emit(state.copyWith(
-          selectedFeedbackType: event.feedbackType,
-          serializer: state.serializer.copyWith(
-            isSuggestion: false,
-            suggestion: null,
-            comment: suggestionState,
-          )));
-    }
+    emit(state.copyWith(
+        selectedFeedbackType: event.feedbackType,
+        serializer: state.serializer.copyWith(
+          isSuggestion: !state.serializer.isSuggestion,
+        )));
   }
 
   void feedbackEdited(FeedbackEditedEvent event, FeedbackEmitter emit) {
-    if (state.selectedFeedbackType == FeedbackType.suggestion) {
-      emit(state.copyWith(
-        serializer: state.serializer.copyWith(suggestion: event.suggestion),
-      ));
-    } else {
-      emit(state.copyWith(
-        serializer: state.serializer.copyWith(comment: event.suggestion),
-      ));
-    }
+    emit(state.copyWith(
+      serializer: state.serializer.copyWith(comment: event.comment),
+    ));
   }
 
   void submitFeedback(SubmitFeedbackEvent event, FeedbackEmitter emit) {
@@ -125,13 +94,17 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
     emit(state.copyWith(
       serializer: state.serializer.copyWith(
-          chapterId: chapterId,
           selection: state.serializer.selection.copyWith(
-            chapterId: chapterId,
-          )),
+        chapterId: chapterId,
+      )),
       loadingStruct: LoadingStruct.message(loadingMessage),
     ));
 
     _repo.createChapterFeedback(serializer: state.serializer);
+
+    emit(state.copyWith(
+      serializer: FeedbackCreationSerializer.initial(),
+      loadingStruct: LoadingStruct.loading(false),
+    ));
   }
 }

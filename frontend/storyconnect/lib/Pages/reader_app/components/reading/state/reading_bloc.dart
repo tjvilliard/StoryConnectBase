@@ -58,7 +58,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
 
     final chapterId = state.chapterNumToID[state.currentIndex]!;
     if (kDebugMode) {
-      print("Getting Feedback Event on Load Reeading Event. ");
+      print("Getting Feedback Event on Load Reading Event. ");
     }
     event.feedbackBloc.add(LoadChapterFeedbackEvent(chapterId: chapterId));
   }

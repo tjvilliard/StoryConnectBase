@@ -18,6 +18,7 @@ class CreateModelMixinJson:
     def create(self, request, *args, **kwargs):
         #print("Creating Generic")
         serializer = self.get_serializer(data=request.data)
+        print(f"[INFO]: Serializer: {serializer}")
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)

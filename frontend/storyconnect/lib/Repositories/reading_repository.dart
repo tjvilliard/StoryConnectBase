@@ -40,7 +40,7 @@ class ReadingApiProvider {
       return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print("[Error]: $e");
       }
       return null;
     }
@@ -48,6 +48,10 @@ class ReadingApiProvider {
 
   /// Get feedback items associated with this chapter.
   Stream<WriterFeedback> getFeedback(int chapterId) async* {
+    if (kDebugMode) {
+      print("Getting Chapter Feedback");
+    }
+
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
     for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
