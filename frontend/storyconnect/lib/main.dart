@@ -54,15 +54,18 @@ class MainApp extends StatelessWidget {
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => WriterProfileBloc(context.read<CoreRepository>()),
+                create: (context) =>
+                    WriterProfileBloc(context.read<CoreRepository>()),
               ),
             ],
             child: MaterialApp.router(
+              debugShowCheckedModeBanner: false, //TODO: remove before pushing
               theme: lightTheme,
               darkTheme: darkTheme,
               routerDelegate: routerDelegate,
               routeInformationParser: BeamerParser(),
-              backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
+              backButtonDispatcher:
+                  BeamerBackButtonDispatcher(delegate: routerDelegate),
             )));
   }
 }

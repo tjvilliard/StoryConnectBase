@@ -113,6 +113,8 @@ class UrlConstants {
     return _urlBuilder.build('road_unblock/');
   }
 
+  // Library Endpoints
+
   /// library/get_user/library/ for getting user library.
   static Uri getUserLibrary() {
     return _urlBuilder.build('library/get_user_library/');
@@ -127,6 +129,8 @@ class UrlConstants {
   static Uri removeLibraryBook(int entryId) {
     return _urlBuilder.build('library/$entryId/change_entry_status/');
   }
+
+  // Library Endpoints
 
   static Uri continuities(int chapterId) {
     return _urlBuilder.build('continuities/$chapterId');
