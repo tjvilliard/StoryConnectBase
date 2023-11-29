@@ -5,6 +5,7 @@ from rest_framework import status
 from django.urls import reverse
 
 from .models import Book, NarrativeElement, NarrativeElementType, NarrativeElementAttributeType, NarrativeElementAttribute
+from ai_features.models import StatementSheet
 import books.utils as utils
 # from .models import Chapter, Character, Location, Scene
 
@@ -214,7 +215,7 @@ class NarrativeElementTests(APITestCase):
         self.elem_type_char = NarrativeElementType.objects.create(user=self.user, name="Characters")
         self.elem_alex = NarrativeElement.objects.create(user=self.user, name="Alexander", element_type=self.elem_type_char, book=self.test_book)
 
-        self.sheet1 = """<Statements>
+        document = """<Statements>
                     <Characters>
                     <Alexander>
                     Alexander has scruffy blonde curls.
@@ -234,15 +235,17 @@ class NarrativeElementTests(APITestCase):
                     </Kings-Square>
                     </Locations>
                     </Statements>"""
+
+        self.sheet1 = StatementSheet.objects.create(book=self.test_book, document=document)
         
     def test_generate_description(self):
         desc = utils.element_description(self.elem_alex, self.sheet1)
-        with open("test_files/description.txt", "w") as f:
+        with open("books/test_files/description.txt", "w") as f:
             f.write(desc)
 
     def test_generate_attributes(self):
         attr_list = utils.generate_attributes(self.elem_alex, self.sheet1)
-        with open("test_files/attributes.txt", "w") as f:
+        with open("books/test_files/attributes.txt", "w") as f:
             f.write(attr_list)
 # content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
 

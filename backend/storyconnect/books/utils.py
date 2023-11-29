@@ -31,7 +31,7 @@ def elements_from_type(e_type_obj, s_sheet):
         ## TODO: add statements to element
 
 def element_description(elem_obj, s_sheet):
-    elem_statements = s_sheet.get_statements(elem_obj.name)
+    elem_statements = s_sheet.get_statements(entity=elem_obj.name)
 
     prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Generate a short description of {elem_obj.name}."
     gpt_response = client.chat.completions.create(
@@ -45,7 +45,7 @@ def element_description(elem_obj, s_sheet):
     return description
 
 def generate_attributes(elem_obj, s_sheet):
-    elem_statements = s_sheet.get_statements(elem_obj.name)
+    elem_statements = s_sheet.get_statements(entity=elem_obj.name)
 
     prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Give me a list of attibutes that describe {elem_obj.name}. Identify whether they are physical, personality, or background traits."
     gpt_response = client.chat.completions.create(
