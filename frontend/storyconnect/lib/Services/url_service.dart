@@ -18,31 +18,45 @@ class _UrlBuilder {
   }
 }
 
-Future<Map<String, String>> buildHeaders() async {
-  String authToken =
-      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-  return <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8',
-    'Authorization': 'Token $authToken'
-  };
+Future<Map<String, String>> buildHeaders({bool noAuth = false}) async {
+  final Map<String, String> baseHeaders = <String, String>{'Content-Type': 'application/json; charset=UTF-8'};
+  if (noAuth == true) {
+    return baseHeaders;
+  }
+  String authToken = await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  final authorizedHeaders = Map<String, String>.from(baseHeaders);
+  authorizedHeaders.addAll({'Authorization': 'Token $authToken'});
+  return authorizedHeaders;
 }
 
 /// URL constants and builders for app pages.
 class PageUrls {
+  static String getLastPathSegment(String url) {
+    return url.split('/').last;
+  }
+
   static const String register = "/register";
 
+<<<<<<< HEAD
   static const String writerHome = "/writer/home";
 
   static const String createBook = "/writer/create_book";
+=======
+  static const String writerBase = "/writer";
+  static const String writerHome = "$writerBase/home";
+  static const String createBook = "$writerBase/create_book";
+  static String book(int bookID) {
+    return "$writerBase/book/$bookID";
+  }
+
+  // Login Page Urls
+  static const String about = "/about";
+  static const String login = "/login";
+>>>>>>> develop
 
   static const String readerHome = "/reader/home";
 
   static const String readerLibrary = "/reader/library";
-
-  /// Url for specific writing book.
-  static String book(int bookID) {
-    return "/writer/book/$bookID";
-  }
 
   /// URL for a specific reading book.
   static String readBook(int bookID) {
@@ -61,9 +75,7 @@ class UrlConstants {
 
   ///
   static Uri getWriterFeedback(int chapterId) {
-    return _urlBuilder
-        .build('feedback/by_chapter/')
-        .replace(queryParameters: {'chapter': chapterId.toString()});
+    return _urlBuilder.build('feedback/by_chapter/').replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
   /// URI for HTTP POST request for creating writer feedback.
@@ -78,8 +90,7 @@ class UrlConstants {
 
   static Uri books({String? uid, int? bookId}) {
     if (uid != null) {
-      return _urlBuilder
-          .build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
     }
     if (bookId != null) {
       return _urlBuilder.build('books/$bookId/');
@@ -146,8 +157,7 @@ class UrlConstants {
 
   static Uri getBooksByUser({String? uid}) {
     if (uid != null) {
-      return _urlBuilder
-          .build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
     }
     return _urlBuilder.build('books/writer/');
   }

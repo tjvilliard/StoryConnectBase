@@ -28,12 +28,8 @@ class ReadingState with _$ReadingState {
         config: EditorConfigM(
             readOnly: true,
             customStyles: const EditorStylesM(
-                paragraph: TextBlockStyleM(
-                    TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    null))));
+                paragraph: TextBlockStyleM(TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
+                    VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, null))));
   }
 }
 

@@ -23,6 +23,7 @@ dependencies:
   http: ^1.1.0
   intl: ^0.18.1
   json_annotation: ^4.8.1
+  flutter_markdown: ^0.6.18+2
   provider: ^6.1.1
   replay_bloc: ^0.2.4
   synchronized: ^3.1.0
@@ -32,6 +33,7 @@ dependencies:
     git: 
       url: https://github.com/Dall127/visual-editor.git
       ref: 19cd6c9
+  url_launcher: ^6.2.1
     
 dev_dependencies:
   flutter_test:
@@ -43,4 +45,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
 

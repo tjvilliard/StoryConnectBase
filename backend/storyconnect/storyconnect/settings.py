@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'django_extensions',
+    'django_crontab',
     'rest_framework',
     'rest_framework_json_api',
     'rest_framework.authtoken',
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
     'core',
     'ai_features',
     'features',
+    'book_rec',
 ]
 
 # DEBUG_TOOLBAR_ENABLED = True
@@ -97,6 +99,10 @@ INSTALLED_APPS = [
 #     'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 # }
 
+CRONJOBS = [
+    ('59 23 * * 1', 'features.cron.ct_cron_job'),
+    ('59 23 * * 1', 'book_rec.cron.rating_cron_job')
+]
 
 INTERNAL_IPS = [
     '127.0.0.1'
@@ -237,8 +243,14 @@ default_app = firebase_admin.initialize_app(cred, name='[DEFAULT]', options = {'
 
 FIREBASE_BUCKET = storage.bucket(app=default_app, name= 'storyconnect-9c7dd.appspot.com')
 
-REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.SessionAuthentication',
-                                                    'core.authentication.FirebaseAuthentication']}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'storyconnect.auth.FirebaseAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'storyconnect.permissions.IsOwnerOrReadOnly',
+    ],
+}
 
 # Openai API key
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')

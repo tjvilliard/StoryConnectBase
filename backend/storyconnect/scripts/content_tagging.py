@@ -108,19 +108,20 @@ def predict_genre(book_id, chapter_num):
     predict_books = Book.objects.get(pk=book_id)
     book_id = predict_books.pk
     book_title = predict_books.title
-    book_chapters = Chapter.objects.filter(book=predict_books)
-    predict_chapter = Chapter.objects.get(
-        book=predict_books, chapter_number=chapter_num
-    )
-
-    chapter_df = pd.DataFrame(
-        {
-            "book": [book_id],
-            "book_title": [book_title],
-            "chapter_number": [predict_chapter.chapter_number],
-            "content": [predict_chapter.content],
-        }
-    )
+    book_chapters = Chapter.objects.filter(book = predict_books)
+    predict_chapter = Chapter.objects.get(book=predict_books, chapter_number = chapter_num)
+    
+    chapter_df = pd.DataFrame({'book': [book_id],
+        'book_title': [book_title],
+        'chapter_number': [predict_chapter.chapter_number],
+        'content': [predict_chapter.content]})
+    
+    # for ch in book_chapters:
+    #     chp = {'book': book_id,
+    #     'book_title': book_title,
+    #     'chapter_number': ch.chapter_number,
+    #     'content': ch.content}
+    #     chapter_df = chapter_df.append(chp, ignore_index = True)
 
     """# if book_id == -1: # filter by the user
     #     user_owner,created = User.objects.get_or_create(id=user_id)
@@ -193,11 +194,11 @@ def predict_genre(book_id, chapter_num):
     df["Combined_Text"] = df["title"] + " " + df["summary"]
     chapter_df["Combined_Text"] = chapter_df["book_title"] + " " + chapter_df["content"]
 
-    # Finally we run the above defined funtions on the column Combined_Text
-    # df['Combined_Text']=df['Combined_Text'].apply(lowercase)
+    #Finally we run the above defined funtions on the column Combined_Text
+    """# df['Combined_Text']=df['Combined_Text'].apply(lowercase)
     # df['Combined_Text']=df['Combined_Text'].apply(removepunc)
     # df['Combined_Text']=df['Combined_Text'].apply(remove_sw)
-    # df['Combined_Text']=df['Combined_Text'].apply(stem_text)
+    # df['Combined_Text']=df['Combined_Text'].apply(stem_text)"""
 
     # df.head()
     pt_lst = []
@@ -254,7 +255,7 @@ def predict_genre(book_id, chapter_num):
     lg_y_pred_test = encoder.inverse_transform(lg_y_pred_test)
 
     # plot for confusion matrix
-    # fig, ax = plt.subplots(1, 2, figsize = (25,  8))
+    """# fig, ax = plt.subplots(1, 2, figsize = (25,  8))
     # ax1 = plot_confusion_matrix(y_test, lg_y_pred, ax= ax[0], cmap= 'YlGnBu')
     # ax2 = plot_roc(y_test, lg_y_prob, ax= ax[1], plot_macro= False, plot_micro= False, cmap= 'summer')
 
@@ -263,7 +264,7 @@ def predict_genre(book_id, chapter_num):
     # with open('/content/drive/MyDrive/Fall 2023/decision_tree_pred.csv', 'w') as f:
     #     mywriter = csv.writer(f, delimiter=',')
     #     mywriter.writerow(['ID','Prediction'])
-    #     mywriter.writerows(enumerate(lg_y_pred_test,1))
+    #     mywriter.writerows(enumerate(lg_y_pred_test,1))"""
 
     # chapter_df = chapter_df.join(lg_y_pred_test)
     lg_y_pred_test = pd.DataFrame(lg_y_pred_test, columns=["genre"])
@@ -273,5 +274,5 @@ def predict_genre(book_id, chapter_num):
 
 
 def run():
-    chapter_df = predict_genre(book_id=85, chapter_num=3)
-    chapter_df.to_csv("/src/scripts/chapter_genres_df.csv", index=False)
+    chapter_df = predict_genre(book_id=79, chapter_num=3)
+    chapter_df.to_csv('/src/scripts/chapter_genres_df.csv',index=False)

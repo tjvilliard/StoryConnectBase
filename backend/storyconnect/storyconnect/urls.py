@@ -21,6 +21,10 @@ from comment import views as comment_views
 from ai_features import urls as ai_features_urls
 from ai_features import views as ai_features_views
 from core import urls as core_views
+from features import views as features_view
+from features import urls as features_url
+from book_rec import urls as bookrec_url
+
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
 router.register(r'api/library', books_views.LibraryViewSet)
@@ -40,3 +44,5 @@ urlpatterns += [
 
 urlpatterns += ai_features_urls.urlpatterns
 urlpatterns += core_views.urlpatterns
+urlpatterns += features_url.urlpatterns
+urlpatterns += bookrec_url.urlpatterns
