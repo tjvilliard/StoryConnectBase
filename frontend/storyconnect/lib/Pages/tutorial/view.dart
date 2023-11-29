@@ -29,6 +29,16 @@ class TutorialPopupWidget extends StatelessWidget {
             "After exiting the Writing Page, in the app bar you'll notice in the app bar a link to the Reader Home Page. There, you can view all of the books available on StoryConnect. You can also search for books by title, author, or genre.",
         imageUrl: null),
     TutorialPageData(
+        title: "Reading Page",
+        description:
+            "When you click on a book. you'll be taken to the reading page for a book. There you can read through a book, and leave meaningful feedback for the author with optional text annotations. If feel as if you might enjoy a book your reading, be sure to add it to your personal library.",
+        imageUrl: null),
+    TutorialPageData(
+        title: "Library Page",
+        description:
+            "You will also notice in the app bar, another link to the Library Page. The library page will list all the stories currently in your personal library. From here you can easily read a book or remove it from your library. ",
+        imageUrl: null),
+    TutorialPageData(
         title: "RoadUnblocker",
         description:
             "The RoadUnblocker is a tool that helps you get past writer's block. It uses OpenAI's GPT-3 to answer questions and generate suggestions for your story. It even remembers what youve written in previous chapters!",
