@@ -20,7 +20,7 @@ class TutorialPopupWidget extends StatelessWidget {
         description:
             "The Book Creation Page is where you can add a new book. You can add a title, description, and cover image, among other important details. Once you're done, click the 'Create Book' button.",
         imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FScreenshot%202023-11-28%20at%207.43.43%E2%80%AFPM.png?alt=media&token=666a4e01-6ad4-4cd0-8b60-779bfbf5045a"),
+            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FScreenshot%202023-11-28%20at%207.44.47%E2%80%AFPM.png?alt=media&token=5bb3baf4-1989-44c6-b1b9-ce4d3fe1c7c0"),
     TutorialPageData(
         title: "Writing Page",
         description:

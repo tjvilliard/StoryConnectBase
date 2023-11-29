@@ -28,7 +28,8 @@ class TeamPictureWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
-                  child: Image.asset('assets/team_pic.jpg'),
+                  child: Image.network(
+                      "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2Fteam_pic.jpg?alt=media&token=c7bc8bdc-c0f9-402b-b5f6-8dd1ea10e30c"),
                 )),
             const Padding(
                 padding: EdgeInsets.only(left: 18, bottom: 18, top: 5),

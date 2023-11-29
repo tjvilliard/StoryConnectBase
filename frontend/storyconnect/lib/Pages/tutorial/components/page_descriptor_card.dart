@@ -24,11 +24,6 @@ class PageDescriptorCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 15),
-                if (data.imageUrl == null)
-                  const Placeholder(
-                    fallbackHeight: 200,
-                    fallbackWidth: 200,
-                  ),
                 if (data.imageUrl != null)
                   Container(
                       decoration: BoxDecoration(boxShadow: [
