@@ -18,7 +18,8 @@ class WritingApiProvider {
     final url = UrlConstants.continuities(chapterId);
 
     final result = await http.get(url, headers: await buildHeaders());
-    return ContinuityResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
+    return ContinuityResponse.fromJson(
+        jsonDecode(utf8.decode(result.bodyBytes)));
   }
 
   Future<Book?> createBook({required BookFormSerializer serialzer}) async {
@@ -38,7 +39,8 @@ class WritingApiProvider {
     }
   }
 
-  Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
+  Future<Book?> updateBook(
+      {required BookFormSerializer serializer, required int bookId}) async {
     try {
       final url = UrlConstants.books(bookId: bookId);
       final result = await http.patch(
@@ -103,6 +105,7 @@ class WritingApiProvider {
       yield WriterFeedback.fromJson(feedback);
     }
     // test object
+    /*
     yield WriterFeedback(
         id: 1,
         userId: 1,
@@ -112,6 +115,7 @@ class WritingApiProvider {
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
+        */
   }
 }
 

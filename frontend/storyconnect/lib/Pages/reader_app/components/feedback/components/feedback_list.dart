@@ -9,17 +9,6 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback
 
 ///
 class FeedbackList extends StatefulWidget {
-  static const WriterFeedback feedbackItemPlaceholder = WriterFeedback(
-    id: 0,
-    userId: 1,
-    chapterId: 1,
-    selection: AnnotatedTextSelection(
-        offset: 0, offsetEnd: 0, chapterId: 1, text: "text", floating: false),
-    sentiment: FeedbackSentiment.bad,
-    isSuggestion: true,
-    dismissed: false,
-  );
-
   final List<WriterFeedback> feedbackItems;
   const FeedbackList({super.key, required this.feedbackItems});
   @override

@@ -9,7 +9,7 @@ class AnnotatedTextSelection with _$AnnotatedTextSelection {
     required int offset,
     required int offsetEnd,
     @JsonKey(name: 'chapter') required int chapterId,
-    required String text,
+    String? text,
     required bool floating,
   }) = _AnnotatedTextSelection;
 

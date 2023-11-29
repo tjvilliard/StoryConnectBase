@@ -37,21 +37,29 @@ class ReadingApiProvider {
       return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
-        print("[Error]: $e");
+        print("[ERROR]: $e");
       }
       return null;
     }
   }
 
   /// Get feedback items associated with this chapter.
-  Stream<WriterFeedback> getFeedback(int chapterId) async* {
+  Stream<WriterFeedback> getChapterFeedback(int chapterId) async* {
     if (kDebugMode) {
       print("Getting Chapter Feedback");
     }
 
     final url = UrlConstants.getWriterFeedback(chapterId);
     final result = await http.get(url, headers: await buildHeaders());
+
+    if (kDebugMode) {
+      print("[INFO] Chapter Feedback Set");
+    }
     for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
+      if (kDebugMode) {
+        print("");
+        print(feedback);
+      }
       yield WriterFeedback.fromJson(feedback);
     }
   }
@@ -167,7 +175,7 @@ class ReadingRepository {
   Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
     List<WriterFeedback> feedback = [];
 
-    await for (WriterFeedback item in _api.getFeedback(chapterId)) {
+    await for (WriterFeedback item in _api.getChapterFeedback(chapterId)) {
       feedback.add(item);
     }
 
