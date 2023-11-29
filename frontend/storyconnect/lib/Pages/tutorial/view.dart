@@ -28,6 +28,16 @@ class TutorialPopupWidget extends StatelessWidget {
         description:
             "After exiting the Writing Page, in the app bar you'll notice in the app bar a link to the Reader Home Page. There, you can view all of the books available on StoryConnect. You can also search for books by title, author, or genre.",
         imageUrl: null),
+    TutorialPageData(
+        title: "RoadUnblocker",
+        description:
+            "The RoadUnblocker is a tool that helps you get past writer's block. It uses OpenAI's GPT-3 to answer questions and generate suggestions for your story. It even remembers what youve written in previous chapters!",
+        imageUrl: null),
+    TutorialPageData(
+        title: "Continuity Checker",
+        description:
+            "The Continuity Checker is a tool that helps you keep track of your story's continuity. It can identify contradictions in descriptions of characters, locations, and items in your story.",
+        imageUrl: null),
   ];
 
   @override
@@ -44,18 +54,22 @@ class TutorialPopupWidget extends StatelessWidget {
                 icon: const Icon(FontAwesomeIcons.x))),
         Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const TutorialTitleCard(),
-              Expanded(
-                  child: ListView.separated(
-                      itemCount: pages.length,
-                      separatorBuilder: (context, index) =>
-                          const Padding(padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20), child: Divider()),
-                      itemBuilder: (context, index) {
-                        return PageDescriptorCard(data: pages[index]);
-                      },
-                      shrinkWrap: true))
-            ])),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TutorialTitleCard(),
+                  Expanded(
+                      child: ListView.separated(
+                          itemCount: pages.length,
+                          separatorBuilder: (context, index) => const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                              child: Divider()),
+                          itemBuilder: (context, index) {
+                            return PageDescriptorCard(data: pages[index]);
+                          },
+                          shrinkWrap: true))
+                ])),
       ]),
     );
   }
