@@ -1,7 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Repositories/writing_repository.dart';
@@ -51,18 +50,12 @@ class MainApp extends StatelessWidget {
           ),
           RepositoryProvider(create: (_) => CoreRepository())
         ],
-        child: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => WriterProfileBloc(context.read<CoreRepository>()),
-              ),
-            ],
-            child: MaterialApp.router(
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              routerDelegate: routerDelegate,
-              routeInformationParser: BeamerParser(),
-              backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
-            )));
+        child: MaterialApp.router(
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          routerDelegate: routerDelegate,
+          routeInformationParser: BeamerParser(),
+          backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
+        ));
   }
 }

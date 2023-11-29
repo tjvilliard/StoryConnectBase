@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:storyconnect/Pages/login/components/email_field.dart';
 import 'package:storyconnect/Pages/login/components/layout_constants.dart';
@@ -6,6 +7,8 @@ import 'package:storyconnect/Pages/login/components/password_field.dart';
 import 'package:storyconnect/Pages/login/components/recovery_button.dart';
 import 'package:storyconnect/Pages/login/components/register_page_button.dart';
 import 'package:storyconnect/Pages/login/components/stay_signed_in_box.dart';
+import 'package:storyconnect/Services/url_service.dart';
+import 'package:storyconnect/Widgets/custom_scaffold.dart';
 
 class LoginPageView extends StatelessWidget {
   static Color charcoalBlue = const Color(0xFF28536B);
@@ -14,8 +17,16 @@ class LoginPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: null,
+    return CustomScaffold(
+        floatingActionButton: FilledButton(
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
+          onPressed: () {
+            Beamer.of(context).beamToNamed(PageUrls.about);
+          },
+          child: const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Text("Get to know our Team!")),
+        ),
         body: ListView(
           scrollDirection: Axis.vertical,
           children: [

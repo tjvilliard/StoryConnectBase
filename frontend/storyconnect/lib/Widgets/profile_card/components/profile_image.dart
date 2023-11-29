@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
-import 'package:storyconnect/Pages/writer_profile/components/profile/image_upload_dialog.dart';
-import 'package:storyconnect/Pages/writer_profile/state/writer_profile_bloc.dart';
 import 'package:storyconnect/Widgets/hover_button.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
+import 'package:storyconnect/Widgets/profile_card/components/image_upload_dialog.dart';
+import 'package:storyconnect/Widgets/profile_card/state/profile_card_bloc.dart';
 
 class ProfileImage extends StatefulWidget {
-  const ProfileImage({super.key});
+  final Size? imageSize;
+  const ProfileImage({super.key, this.imageSize});
 
   @override
   ProfileImageState createState() => ProfileImageState();
@@ -28,15 +29,15 @@ class ProfileImageState extends State<ProfileImage> {
       backgroundColor = Colors.grey[300]!;
     }
 
-    return BlocBuilder<WriterProfileBloc, WriterProfileState>(
+    return BlocBuilder<ProfileCardBloc, ProfileCardState>(
       builder: (context, state) {
         Widget toReturn;
-        if (state.loadingStructs.profileLoadingStruct.isLoading == true) {
+        if (state.loadingStruct.isLoading == true) {
           toReturn = _loadingImageWidget(context, iconColor: iconColor, backgroundColor: backgroundColor);
         } else if (state.profile.imageUrl != null) {
           toReturn = Container(
-              width: 100,
-              height: 100,
+              width: widget.imageSize?.width ?? 100,
+              height: widget.imageSize?.height ?? 100,
               decoration: const BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(child: ImageLoader(url: state.profile.imageUrl!)));
         } else {
@@ -44,17 +45,22 @@ class ProfileImageState extends State<ProfileImage> {
         }
 
         // Wrapping the display with a Stack and an edit button if isEditing is true
-        if (state.isEditingBio && state.loadingStructs.profileLoadingStruct.isLoading == false) {
+        if (state.isEditing && state.loadingStruct.isLoading == false) {
           return Stack(
             alignment: Alignment.center,
             children: [
               AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn),
               Center(
                 child: HoverButton(
-                    onPressed: () => showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => const EditProfileImageDialog()),
+                    onPressed: () {
+                      final bloc = context.read<ProfileCardBloc>();
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => EditProfileImageDialog(
+                                bloc: bloc,
+                              ));
+                    },
                     label: const Text(
                       "Edit",
                     ),

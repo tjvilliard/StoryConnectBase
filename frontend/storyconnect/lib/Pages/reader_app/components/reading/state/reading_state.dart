@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of 'reading_bloc.dart';
 
 const VERTICAL_SPACING_EMPTY = VerticalSpacing(top: 0, bottom: 0);
@@ -26,12 +28,8 @@ class ReadingState with _$ReadingState {
         config: EditorConfigM(
             readOnly: true,
             customStyles: const EditorStylesM(
-                paragraph: TextBlockStyleM(
-                    TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    VERTICAL_SPACING_EMPTY,
-                    null))));
+                paragraph: TextBlockStyleM(TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
+                    VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, null))));
   }
 }
 

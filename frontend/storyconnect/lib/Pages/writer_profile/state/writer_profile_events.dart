@@ -15,12 +15,6 @@ class MakeAnnouncementEvent extends WriterProfileEvent {
   const MakeAnnouncementEvent({required this.title, required this.content});
 }
 
-class RecievedProfileEvent extends WriterProfileEvent {
-  final Profile profile;
-
-  const RecievedProfileEvent({required this.profile});
-}
-
 class RecievedBooks extends WriterProfileEvent {
   final List<Book> books;
 
@@ -43,48 +37,6 @@ class RecievedActivitiesEvent extends WriterProfileEvent {
   const RecievedActivitiesEvent({required this.activities});
 }
 
-class WriterProfileEventClearEvent extends WriterProfileEvent {
-  const WriterProfileEventClearEvent();
-}
-
 class ClearLastResponseEvent extends WriterProfileEvent {
   const ClearLastResponseEvent();
-}
-
-class EditProfileEvent extends WriterProfileEvent {
-  const EditProfileEvent();
-}
-
-class EditBioStateEvent extends WriterProfileEvent {
-  final String bio;
-  const EditBioStateEvent({required this.bio});
-}
-
-class SaveProfileEvent extends WriterProfileEvent {
-  const SaveProfileEvent();
-}
-
-class CancelProfileEditEvent extends WriterProfileEvent {
-  const CancelProfileEditEvent();
-}
-
-class SelectProfileImageEvent extends WriterProfileEvent {
-  const SelectProfileImageEvent();
-}
-
-class SaveProfileImageEvent extends WriterProfileEvent {
-  const SaveProfileImageEvent();
-}
-
-class DeleteProfileImageEvent extends WriterProfileEvent {
-  const DeleteProfileImageEvent();
-}
-
-class ClearProfileImageEvent extends WriterProfileEvent {
-  const ClearProfileImageEvent();
-}
-
-class EditDisplayNameEvent extends WriterProfileEvent {
-  final String displayName;
-  const EditDisplayNameEvent({required this.displayName});
 }

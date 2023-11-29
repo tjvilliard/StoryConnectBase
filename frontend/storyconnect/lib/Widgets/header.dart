@@ -8,13 +8,16 @@ class Header extends StatelessWidget {
   final Widget? trailing;
   final Widget? child;
   final WrapAlignment alignment;
+  final TextStyle? titleStyle;
 
   const Header(
-      {super.key, required this.title,
+      {super.key,
+      required this.title,
       this.subtitle,
       this.leading,
       this.trailing,
       this.alignment = WrapAlignment.spaceBetween,
+      this.titleStyle,
       this.child});
 
   @override
@@ -32,7 +35,7 @@ class Header extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(title, style: Theme.of(context).textTheme.displaySmall),
+                  Text(title, style: titleStyle ?? Theme.of(context).textTheme.displaySmall),
                   if (subtitle != null) Text(subtitle!, style: Theme.of(context).textTheme.titleMedium),
                 ],
               ),
