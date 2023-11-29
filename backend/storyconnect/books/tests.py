@@ -4,7 +4,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 
-from .models import Book
+from .models import Book, NarrativeElement, NarrativeElementType, NarrativeElementAttributeType, NarrativeElementAttribute
+import books.utils as utils
 # from .models import Chapter, Character, Location, Scene
 
 
@@ -199,7 +200,50 @@ class UserBookCreationTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(len(deletedbook), 0)
 
+class NarrativeElementTests(APITestCase):
+    def setUp(self):
+        
+        self.user = User.objects.create_user(
+            username="testuser", password="this_is_a_test", email="testuser@test.com"
+        )
+        # create a book for the user
+        self.test_book = Book.objects.create(
+            title="Test Book",
+        )
+        
+        self.elem_type_char = NarrativeElementType.objects.create(user=self.user, name="Characters")
+        self.elem_alex = NarrativeElement.objects.create(user=self.user, name="Alexander", element_type=self.elem_type_char, book=self.test_book)
 
+        self.sheet1 = """<Statements>
+                    <Characters>
+                    <Alexander>
+                    Alexander has scruffy blonde curls.
+                    Alexander has stark icy eyes.
+                    </Alexander>
+                    <Isobel>
+                    Isobel has dark sea-colored eyes.
+                    Isobel has dark auburn hair.
+                    Isobel has burnished olive skin.
+                    </Isobel>
+                    </Characters>
+                    <Locations>
+                    <Kings-Square>
+                    The Kings Square is a quiet and peaceful spot.
+                    The Kings Square has a grand fountain.
+                    The Kings Square has a statue of a forgotten ruler.
+                    </Kings-Square>
+                    </Locations>
+                    </Statements>"""
+        
+    def test_generate_description(self):
+        desc = utils.element_description(self.elem_alex, self.sheet1)
+        with open("test_files/description.txt", "w") as f:
+            f.write(desc)
+
+    def test_generate_attributes(self):
+        attr_list = utils.generate_attributes(self.elem_alex, self.sheet1)
+        with open("test_files/attributes.txt", "w") as f:
+            f.write(attr_list)
 # content="A hobbit is a small human-like creature that lives in a hole in the ground. They are very peaceful and like to eat and drink."
 
 # http://localhost:8000/api/admin/login/?next=/api/admin/
