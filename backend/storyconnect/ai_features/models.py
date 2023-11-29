@@ -52,6 +52,10 @@ class StatementSheet(models.Model):
         
         return tree
 
+    def get_enitity_types(self):
+        elem_types = [x.tag for x in self.s_tree]
+        return elem_types
+
     def get_characters(self):
         # selfs_tree = etree.fromstring(self.document)
         characters = [x.tag for x in self.s_tree.find("Characters")]
@@ -95,6 +99,10 @@ class StatementSheet(models.Model):
             for x in tag_root:
                 tag_statements += x.text
             return tag_statements
+
+    def get_tag_entities(self, tag):
+        tag_root = self.s_tree.find(tag)
+        return [x.tag for x in tag_root]
     
     def merge_sheets(self, new_sheet):
         n_tree = etree.fromstring(new_sheet)
