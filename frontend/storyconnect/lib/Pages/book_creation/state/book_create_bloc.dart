@@ -37,11 +37,11 @@ class BookCreateBloc extends Bloc<BookCreateEvent, BookCreateState> {
     });
 
     on<SynopsisChangedEvent>((event, emit) {
-      emit(state.copyWith(serializer: state.serializer.copyWith(synopsis: event.Synopsis)));
+      emit(state.copyWith(serializer: state.serializer.copyWith(synopsis: event.synopsis)));
     });
 
-    on<SaveBookEvent>((event, emit) => saveBook(event, emit));
-    on<UploadImageEvent>((event, emit) => uploadImage(event, emit));
+    on<SaveBookEvent>((event, emit) => saveBook(event, emit.call));
+    on<UploadImageEvent>((event, emit) => uploadImage(event, emit.call));
 
     on<ResetEvent>((event, emit) {
       emit(state.copyWith(

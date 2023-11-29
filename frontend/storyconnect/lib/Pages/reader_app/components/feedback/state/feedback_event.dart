@@ -10,7 +10,7 @@ abstract class FeedbackEvent {
 class FeedbackEditedEvent extends FeedbackEvent {
   final String? suggestion;
   const FeedbackEditedEvent({
-    required String? this.suggestion,
+    required this.suggestion,
   });
 }
 
@@ -18,7 +18,7 @@ class FeedbackEditedEvent extends FeedbackEvent {
 class CommentEditedEvent extends FeedbackEvent {
   final String? comment;
   const CommentEditedEvent({
-    required String? this.comment,
+    required this.comment,
   });
 }
 
@@ -40,14 +40,14 @@ class FeedbackTypeChangedEvent extends FeedbackEvent {
 
 /// Updates the Recorded Annotation Item.
 class AnnotationChangedEvent extends FeedbackEvent {
-  final ChapterBloc chapterBloc;
+  final ReadingBloc readingBloc;
   final int offset;
   final int offsetEnd;
   final String text;
 
   ///
   const AnnotationChangedEvent({
-    required this.chapterBloc,
+    required this.readingBloc,
     required this.offset,
     required this.offsetEnd,
     required this.text,
@@ -56,16 +56,17 @@ class AnnotationChangedEvent extends FeedbackEvent {
 
 /// Load the comments for the chapter.
 class LoadChapterFeedbackEvent extends FeedbackEvent {
-  final ChapterBloc chapterBloc;
-  const LoadChapterFeedbackEvent({
-    required this.chapterBloc,
+  final ReadingBloc readingBloc;
+  const LoadChapterFeedbackEvent(
+    chapterId, {
+    required this.readingBloc,
   });
 }
 
 /// Submits a new feedback item.
 class SubmitFeedbackEvent extends FeedbackEvent {
-  final ChapterBloc chapterBloc;
+  final ReadingBloc readingBloc;
   const SubmitFeedbackEvent({
-    required this.chapterBloc,
+    required this.readingBloc,
   });
 }

@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .authentication import FirebaseAuthentication
+
 from .serializers import (
     UserUidConversionSerializer,
     ProfileSerializer,
@@ -12,9 +12,11 @@ from .serializers import (
 from .models import Profile, Activity, Announcement
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
+
+from storyconnect.auth import FirebaseAuthentication
+from storyconnect.permissions import IsOwnerOrReadOnly
 
 
 class UserUidConversion(APIView):
@@ -125,15 +127,10 @@ class ProfileImageUpload(APIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all().prefetch_related("user")
     serializer_class = ProfileSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    authentication_classes = [] # No authentication required for reads, 
+                                # though the default permissions protect against 'bad' writes 
     lookup_field = "user__username"
 
-    def get_queryset(self):
-        """
-        This view should return a list of all profiles
-        for currently authenticated users.
-        """
-        return Profile.objects.all()
 
     def get_object(self):
         """

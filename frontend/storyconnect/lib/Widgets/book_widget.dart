@@ -6,7 +6,7 @@ import 'package:storyconnect/Widgets/image_loader.dart';
 class BookWidget extends StatefulWidget {
   final Book book;
 
-  BookWidget({required this.book});
+  const BookWidget({super.key, required this.book});
 
   @override
   State<StatefulWidget> createState() {
@@ -15,27 +15,27 @@ class BookWidget extends StatefulWidget {
 }
 
 class BookWidgetState extends State<BookWidget> {
-  String? url = null;
+  String? url;
 
   @override
   void initState() {
-    get_image(widget.book.cover);
+    getImage(widget.book.cover);
     super.initState();
   }
 
   // build a rectangular placeholder for the book cover
-  Widget _imagePlaceHolder() {
+  Widget _imagePlaceHolder(String? url) {
     return Column(children: [
-      SizedBox(
+      const SizedBox(
         height: 150,
         width: 100,
         child: Icon(Icons.book, size: 100),
       ),
-      bookTitle()
+      bookTitle(url)
     ]);
   }
 
-  Future<void> get_image(String? relativePath) async {
+  Future<void> getImage(String? relativePath) async {
     if (relativePath == null || relativePath.isEmpty) {
       if (mounted) {
         setState(() {
@@ -54,37 +54,48 @@ class BookWidgetState extends State<BookWidget> {
     }
   }
 
-  Widget bookTitle() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          widget.book.title,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-        if (widget.book.authorName != null)
-          Text(
-            widget.book.authorName ?? "No name",
-            style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white),
-          ),
-      ],
-    );
+  Widget bookTitle(String? url) {
+    // Determine the text color based on the URL
+    Color? textColor = url != null && url.isNotEmpty ? Colors.white : null;
+
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              widget.book.title,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: textColor, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            if (widget.book.authorName != null)
+              Text(
+                widget.book.authorName ?? "No name",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: textColor),
+              ),
+          ],
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      margin: EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             child: Stack(
-              alignment: AlignmentGeometry.lerp(Alignment.center, Alignment.topCenter, 0.75)!,
+              alignment: AlignmentGeometry.lerp(
+                  Alignment.center, Alignment.topCenter, 0.75)!,
               children: [
                 // Image or Placeholder
                 if (url != null && url!.isNotEmpty)
@@ -93,25 +104,29 @@ class BookWidgetState extends State<BookWidget> {
                       child: ImageLoader(
                         url: url!,
                         fit: BoxFit.cover,
-                        constraints: BoxConstraints.expand(),
+                        constraints: const BoxConstraints.expand(),
                       )),
-                if (url == null || url!.isEmpty) _imagePlaceHolder(),
+                if (url == null || url!.isEmpty) _imagePlaceHolder(url),
                 if (url != null && url!.isNotEmpty)
                   Positioned(
                       bottom: 0,
                       left: 0,
                       right: 0,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.center,
                                 end: Alignment.bottomCenter,
-                                colors: [Color.fromARGB(238, 0, 0, 0), Colors.black54],
+                                colors: [
+                                  Color.fromARGB(238, 0, 0, 0),
+                                  Colors.black54
+                                ],
                               ),
                             ),
-                            child: bookTitle()),
+                            child: bookTitle(url)),
                       )),
               ],
             ),

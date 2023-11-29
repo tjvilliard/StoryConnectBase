@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Constants/feedback_sentiment.dart';
 
@@ -30,7 +31,9 @@ class WritingApiProvider {
       );
       return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -45,7 +48,9 @@ class WritingApiProvider {
       );
       return Book.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
@@ -55,7 +60,9 @@ class WritingApiProvider {
       final url = UrlConstants.books(bookId: bookId);
       await http.delete(url, headers: await buildHeaders());
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -68,7 +75,9 @@ class WritingApiProvider {
         yield Book.fromJson(book);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -81,7 +90,9 @@ class WritingApiProvider {
         yield NarrativeElement.fromJson(element);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -96,8 +107,8 @@ class WritingApiProvider {
         id: 1,
         userId: 1,
         chapterId: chapterId,
-        selection:
-            AnnotatedTextSelection(floating: false, text: "This is a test", chapterId: 1, offset: 10, offsetEnd: 20),
+        selection: const AnnotatedTextSelection(
+            floating: false, text: "This is a test", chapterId: 1, offset: 10, offsetEnd: 20),
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
@@ -106,7 +117,7 @@ class WritingApiProvider {
 
 class WritingRepository {
   List<Book> books = [];
-  WritingApiProvider _api = WritingApiProvider();
+  final WritingApiProvider _api = WritingApiProvider();
   Future<int?> createBook({
     required BookFormSerializer serializer,
   }) async {
@@ -119,7 +130,7 @@ class WritingRepository {
   }
 
   Future<List<Book>> getBooks() async {
-    final result = await _api.getBooks();
+    final result = _api.getBooks();
     // convert stream to future list and return
     return result.toList();
   }

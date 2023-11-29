@@ -6,13 +6,12 @@ import 'package:flutter/material.dart';
 abstract class ReadingIconButton extends StatelessWidget {
   final bool disableCondition;
 
-  static MaterialStatePropertyAll<OutlinedBorder> ButtonShape =
-      MaterialStatePropertyAll(RoundedRectangleBorder(
+  static MaterialStatePropertyAll<OutlinedBorder> buttonShape = MaterialStatePropertyAll(RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(4.0),
   ));
 
   /// A Reading Menu Button requires a direction and an action
-  ReadingIconButton({
+  const ReadingIconButton({
     super.key,
     required this.disableCondition,
   });
@@ -20,16 +19,15 @@ abstract class ReadingIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ButtonStyle defaultStyle = ButtonStyle(
-      overlayColor: MaterialStatePropertyAll(
-          Theme.of(context).colorScheme.primary.withOpacity(.1)),
+      overlayColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primary.withOpacity(.1)),
       iconColor: disableCondition
-          ? MaterialStatePropertyAll(Colors.grey)
+          ? const MaterialStatePropertyAll(Colors.grey)
           : MaterialStatePropertyAll(Theme.of(context).colorScheme.primary),
-      shape: ButtonShape,
+      shape: buttonShape,
     );
 
-    return BuildButton(defaultStyle);
+    return buildButton(defaultStyle);
   }
 
-  Widget BuildButton(ButtonStyle defaultStyle);
+  Widget buildButton(ButtonStyle defaultStyle);
 }

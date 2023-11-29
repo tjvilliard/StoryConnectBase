@@ -16,12 +16,12 @@ class ChapterTextWidget extends StatelessWidget {
                 current.chapterIDToTitle[current.chapterNumToID[index]] ||
             previous.currentIndex != current.currentIndex,
         builder: (context, state) {
-          final selectedTextColor = Colors.white;
+          const selectedTextColor = Colors.white;
 
           Widget toReturn;
           if (state.updatingChapter[index] == true) {
             toReturn = Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: LinearProgressIndicator(
                   borderRadius: BorderRadius.circular(5),
                 ));
@@ -45,7 +45,7 @@ class ChapterTextWidget extends StatelessWidget {
           }
 
           return AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             child: toReturn,
           );
         });

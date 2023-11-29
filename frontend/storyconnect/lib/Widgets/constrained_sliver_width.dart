@@ -7,10 +7,10 @@ class ConstrainedSliverWidth extends StatelessWidget {
   final Widget child;
   final double maxWidth;
   const ConstrainedSliverWidth({
-    Key? key,
+    super.key,
     required this.child,
     required this.maxWidth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

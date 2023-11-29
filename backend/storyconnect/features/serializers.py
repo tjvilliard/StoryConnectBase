@@ -1,14 +1,17 @@
 from rest_framework import serializers
-from rest_framework import status
-from rest_framework.exceptions import APIException
-from features.models import *
+from features.models import Review, GenreTag, ChapterTagging
 
-class GenreTaggingSerializer(serializers.ModelSerializer):
+class GenreTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GenreTagging
+        model = GenreTag
         fields = "__all__"
 
 class ChapterTaggingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChapterTagging
+        fields = "__all__"
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
         fields = "__all__"

@@ -9,7 +9,7 @@ class _UrlBuilder {
     Uri partialURI = Uri.parse(baseUrl).resolveUri(Uri.parse(path));
     // if we don't have a trailing slash, add one
     if (!partialURI.path.endsWith('/')) {
-      partialURI = partialURI.replace(path: partialURI.path + '/');
+      partialURI = partialURI.replace(path: '${partialURI.path}/');
     }
     if (queryParameters != null) {
       partialURI = partialURI.replace(queryParameters: queryParameters);
@@ -18,28 +18,41 @@ class _UrlBuilder {
   }
 }
 
-Future<Map<String, String>> buildHeaders() async {
+Future<Map<String, String>> buildHeaders({bool noAuth = false}) async {
+  final Map<String, String> baseHeaders = <String, String>{'Content-Type': 'application/json; charset=UTF-8'};
+  if (noAuth == true) {
+    return baseHeaders;
+  }
   String authToken = await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
-  return <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Token $authToken'};
+  final authorizedHeaders = Map<String, String>.from(baseHeaders);
+  authorizedHeaders.addAll({'Authorization': 'Token $authToken'});
+  return authorizedHeaders;
 }
 
 /// URL constants and builders for app pages.
 class PageUrls {
+  static String getLastPathSegment(String url) {
+    return url.split('/').last;
+  }
+
   static const String register = "/register";
 
-  static const String writerHome = "/writer/home";
-  static const String createBook = "/writer/create_book";
+  static const String writerBase = "/writer";
+  static const String writerHome = "$writerBase/home";
+  static const String createBook = "$writerBase/create_book";
+  static String book(int bookID) {
+    return "$writerBase/book/$bookID";
+  }
+
+  // Login Page Urls
+  static const String about = "/about";
+  static const String login = "/login";
 
   /// URL for reader home
   static const String readerHome = "/reader/home";
 
   /// URL for reader library
   static const String readerLibrary = "/reader/library";
-
-  /// Url for specific writing book.
-  static String book(int bookID) {
-    return "/writer/book/$bookID";
-  }
 
   /// URL for a specific reading book.
   static String readBook(int bookID) {
@@ -88,6 +101,10 @@ class UrlConstants {
   }
 
   static Uri createBook() {
+    return _urlBuilder.build('books/');
+  }
+
+  static Uri getAllBooks() {
     return _urlBuilder.build('books/');
   }
 

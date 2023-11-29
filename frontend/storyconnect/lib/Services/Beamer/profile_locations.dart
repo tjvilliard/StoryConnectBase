@@ -24,7 +24,7 @@ class ProfileLocations extends BeamLocation<BeamState> {
       ));
     } else {
       pages.add(CustomBeamPage(
-          key: ValueKey('profile'),
+          key: const ValueKey('profile'),
           child: Center(
             child: Text("No user exists", style: Theme.of(context).textTheme.displayMedium),
           )));

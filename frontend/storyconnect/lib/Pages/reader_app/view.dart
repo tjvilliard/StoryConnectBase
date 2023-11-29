@@ -2,24 +2,27 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
-import 'package:storyconnect/Pages/reader_app/components/page_view/page_view.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menubar.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/view.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
+import 'package:visual_editor/controller/controllers/editor-controller.dart';
+import 'package:visual_editor/visual-editor.dart';
 
 class ReadingAppView extends StatefulWidget {
   final int? bookId;
   const ReadingAppView({super.key, required this.bookId});
 
   @override
-  _ReadingAppViewState createState() => _ReadingAppViewState();
+  ReadingAppViewState createState() => ReadingAppViewState();
 }
 
-class _ReadingAppViewState extends State<ReadingAppView> {
+class ReadingAppViewState extends State<ReadingAppView> {
   bool firstLoaded = true;
   String? title;
   @override
@@ -27,17 +30,29 @@ class _ReadingAppViewState extends State<ReadingAppView> {
     if (firstLoaded) {
       firstLoaded = false;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ReadingBloc readingBloc = context.read<ReadingBloc>();
+        readingBloc.add(
+            SetEditorControllerCallbackEvent(callback: getEditorController));
+
         if (widget.bookId == null) {
           Beamer.of(context).beamToNamed(PageUrls.readerHome);
           return;
         }
         BlocProvider.of<ReadingUIBloc>(context).add(ReadingLoadEvent(
           bookId: widget.bookId!,
-          chapterBloc: context.read<ChapterBloc>(),
+          readingBloc: context.read<ReadingBloc>(),
+          feedbackBloc: context.read<FeedbackBloc>(),
         ));
       });
     }
     super.initState();
+  }
+
+  EditorController? getEditorController() {
+    if (mounted) {
+      return context.read<ReadingUIBloc>().state.editorController;
+    }
+    return null;
   }
 
   @override
@@ -49,7 +64,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
             title: Row(
               children: [
                 IconButton(
-                  icon: Icon(FontAwesomeIcons.house),
+                  icon: const Icon(FontAwesomeIcons.house),
                   onPressed: () {
                     BeamerDelegate beamer = Beamer.of(context);
                     if (beamer.canBeamBack) {
@@ -59,7 +74,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                     }
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
@@ -79,7 +94,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
                                   loadingStruct: state.loadingStruct);
                             }
                             return AnimatedSwitcher(
-                                duration: Duration(milliseconds: 500),
+                                duration: const Duration(milliseconds: 500),
                                 child: toReturn);
                           },
                         )))
@@ -88,7 +103,7 @@ class _ReadingAppViewState extends State<ReadingAppView> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
+            const Flexible(
                 fit: FlexFit.loose,
                 child: Stack(
                   alignment: Alignment.center,

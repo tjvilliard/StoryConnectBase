@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/buttons.dart';
 import 'package:storyconnect/Pages/reader_app/components/menubar/library_button.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 
 class ReadingMenuBar extends StatefulWidget {
   static const double height = 40;
   final int bookId;
 
-  ReadingMenuBar({required this.bookId, super.key});
+  const ReadingMenuBar({required this.bookId, super.key});
 
   @override
-  State<StatefulWidget> createState() => _readingMenuBarState(bookId: bookId);
+  ReadingMenuBarState createState() => ReadingMenuBarState();
 }
 
-class _readingMenuBarState extends State<ReadingMenuBar> {
-  final int bookId;
+class ReadingMenuBarState extends State<ReadingMenuBar> {
   late bool inLibrary;
 
-  _readingMenuBarState({required this.bookId});
+  int get bookId => widget.bookId;
 
-  static ShapeBorder widget_radius =
+  static ShapeBorder widgetRadius =
       RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0));
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReadingUIBloc, ReadingUIState>(
         builder: (context, uiState) {
-      return BlocBuilder<ChapterBloc, ChapterBlocStruct>(
+      return BlocBuilder<ReadingBloc, ReadingState>(
           builder: (context, chapterState) {
-        return BlocBuilder<LibraryBloc, LibraryStruct>(
+        return BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
             builder: (context, libState) {
           return Card(
-              shape: widget_radius,
-              margin: EdgeInsets.all(8),
+              shape: widgetRadius,
+              margin: const EdgeInsets.all(8),
               child: Padding(
-                  padding: EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(4),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -52,14 +51,13 @@ class _readingMenuBarState extends State<ReadingMenuBar> {
                                         OverflowBarAlignment.start,
                                     children: [
                                       NavigateBackwardButton(
-                                          disableCondition: chapterState
-                                                  .currentChapterIndex ==
-                                              0),
+                                          disableCondition:
+                                              chapterState.currentIndex == 0),
                                       NavigateForwardButton(
                                           disableCondition: chapterState
-                                                  .currentChapterIndex ==
+                                                  .currentIndex ==
                                               chapterState.chapters.length - 1),
-                                      ChapterNavigationBarButton(
+                                      const ChapterNavigationBarButton(
                                           disableCondition: false),
                                     ]))),
                         Expanded(
@@ -72,9 +70,10 @@ class _readingMenuBarState extends State<ReadingMenuBar> {
                                     overflowAlignment:
                                         OverflowBarAlignment.start,
                                     children: [
-                                      AuthorPageButton(disableCondition: true),
-                                      LibraryMenuButton(bookId: this.bookId),
-                                      ChapterFeedbackButton(
+                                      const AuthorPageButton(
+                                          disableCondition: true),
+                                      LibraryMenuButton(bookId: bookId),
+                                      const ChapterFeedbackButton(
                                           disableCondition: false),
                                     ])))
                       ])));

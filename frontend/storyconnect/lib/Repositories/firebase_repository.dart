@@ -1,4 +1,7 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 enum FirebaseCodeDescriptors {
   SUCCESS(
@@ -39,30 +42,39 @@ enum FirebaseCodeDescriptors {
 class FirebaseRepository {
   late final FirebaseAuth _firebaseAuth;
 
-  Stream<User?> get authStateChanges => this._firebaseAuth.authStateChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  User? get currentUser => this._firebaseAuth.currentUser;
+  User? get currentUser => _firebaseAuth.currentUser;
 
   static const String SUCCESS = "Success";
 
   static final FirebaseRepository _instance = FirebaseRepository._internal();
 
   FirebaseRepository._internal() {
-    this._firebaseAuth = FirebaseAuth.instance;
+    _firebaseAuth = FirebaseAuth.instance;
   }
 
   factory FirebaseRepository() {
     return FirebaseRepository._instance;
   }
 
+  /// Verifies the uniqueness of an email address.
+  Future<bool> validateEmail(String email) async {
+    final List<String> methods =
+        await _firebaseAuth.fetchSignInMethodsForEmail(email);
+
+    return methods.isEmpty;
+  }
+
+  ///
   Future<String> register(
       String email, String displayName, String password) async {
     try {
       UserCredential credential =
-          await this._firebaseAuth.createUserWithEmailAndPassword(
-                email: email,
-                password: password,
-              );
+          await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       if (credential.user != null) {
         credential.user?.updateDisplayName(displayName);
@@ -70,7 +82,9 @@ class FirebaseRepository {
 
       return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
-      print(firebaseError.code);
+      if (kDebugMode) {
+        print(firebaseError.code);
+      }
 
       if (firebaseError.code == FirebaseCodeDescriptors.UserNotFound.code) {
         return FirebaseCodeDescriptors.UserNotFound.message;
@@ -89,12 +103,13 @@ class FirebaseRepository {
     }
   }
 
+  ///
   Future<String?> signIn(String email, String password) async {
     try {
-      await this._firebaseAuth.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       return FirebaseRepository.SUCCESS;
     } on FirebaseAuthException catch (firebaseError) {
@@ -106,6 +121,19 @@ class FirebaseRepository {
         return FirebaseCodeDescriptors.EmailAlreadyInUse.message;
       } else {
         return FirebaseCodeDescriptors.UnmappedError.message;
+      }
+    }
+  }
+
+  ///
+  Future<void> updateDisplayName(String displayName) async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+
+      await user?.updateDisplayName(displayName);
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
       }
     }
   }

@@ -4,6 +4,8 @@ import 'package:storyconnect/Pages/login/components/layout_constants.dart';
 import 'package:storyconnect/Pages/login/state/login_bloc.dart';
 
 class StaySignedInBox extends StatelessWidget {
+  const StaySignedInBox({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -15,9 +17,9 @@ class StaySignedInBox extends StatelessWidget {
               Checkbox.adaptive(
                   value: state.staySignedIn,
                   onChanged: (_) {
-                    context.read<LoginBloc>().add(StayLoggedInCheckedEvent());
+                    context.read<LoginBloc>().add(const StayLoggedInCheckedEvent());
                   }),
-              Text("Stay Signed In?"),
+              const Text("Stay Signed In?"),
             ]));
       },
     );

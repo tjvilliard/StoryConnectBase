@@ -13,14 +13,14 @@ class NarrativeSheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 900),
+        constraints: const BoxConstraints(maxWidth: 900),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Narrative Element Sheet', style: Theme.of(context).textTheme.displayMedium),
-            SizedBox(height: 20),
-            ConfidenceScale(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            const ConfidenceScale(),
+            const SizedBox(height: 20),
             BlocBuilder<NarrativeSheetBloc, NarrativeSheetState>(builder: (context, state) {
               Widget toReturn;
 
@@ -29,7 +29,7 @@ class NarrativeSheetView extends StatelessWidget {
               } else {
                 toReturn = NarrativeElementsList(narrativeElements: state.sortedNarrativeElements);
               }
-              return Expanded(child: AnimatedSwitcher(duration: Duration(milliseconds: 500), child: toReturn));
+              return Expanded(child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
             })
           ],
         ));

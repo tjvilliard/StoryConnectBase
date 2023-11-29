@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 
 /// All input Widgets ultimately should extend from the Feedback Input Widget
 class FeedbackInputWidget extends StatefulWidget {
+  const FeedbackInputWidget({super.key});
+
   @override
-  _feedbackInputWidget createState() => _feedbackInputWidget();
+  FeedbackInputWidgetState createState() => FeedbackInputWidgetState();
 }
 
-class _feedbackInputWidget extends State<FeedbackInputWidget> {
-  TextEditingController _feedbackInputController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
+  final TextEditingController _feedbackInputController =
+      TextEditingController();
 
   @override
   void dispose() {
-    this._feedbackInputController.dispose();
+    _feedbackInputController.dispose();
     super.dispose();
   }
 
@@ -34,47 +32,37 @@ class _feedbackInputWidget extends State<FeedbackInputWidget> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Align(
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.add_comment),
-                          ))
-                    ],
-                  )),
-              Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     children: [
                       Expanded(
                           child: Container(
-                        constraints: BoxConstraints(minHeight: 60),
+                        constraints: const BoxConstraints(minHeight: 60),
                         child: TextField(
-                            controller: this._feedbackInputController,
+                            controller: _feedbackInputController,
                             maxLength: 1000,
                             minLines: 1,
                             maxLines: 5,
                             decoration: InputDecoration(
-                                hintText: "Write your Suggestion Here."),
+                                hintText: state.serializer.isSuggestion
+                                    ? "Write your Suggestion Here."
+                                    : "Write your Comment Here."),
                             onChanged: (_) {
                               context.read<FeedbackBloc>().add(
                                   FeedbackEditedEvent(
                                       suggestion:
-                                          this._feedbackInputController.text));
+                                          _feedbackInputController.text));
                             }),
                       )),
                       Container(
                           alignment: Alignment.bottomCenter,
                           child: IconButton(
-                              icon: Icon(Icons.send),
+                              icon: const Icon(Icons.send),
                               onPressed: () {
                                 context.read<FeedbackBloc>().add(
                                     SubmitFeedbackEvent(
-                                        chapterBloc:
-                                            context.read<ChapterBloc>()));
+                                        readingBloc:
+                                            context.read<ReadingBloc>()));
                               }))
                     ],
                   )),

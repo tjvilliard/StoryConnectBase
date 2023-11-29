@@ -12,14 +12,13 @@ from .serializers import (
 )
 from django.db import transaction
 from rest_framework.views import APIView
-from core.permissions import IsOwnerOrReadOnly
 
 
 class BookViewSet(viewsets.ModelViewSet):
     # filter_backends = (filters.SearchFilter)
     # search_fields = ['title', 'author', 'language']
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
 
     def create(self, request, *args, **kwargs):
@@ -140,7 +139,7 @@ class ChapterViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         book = instance.book
-        
+
         chapters = book.get_chapters()
         for chapter in chapters:
             if chapter.chapter_number > instance.chapter_number:
@@ -148,12 +147,8 @@ class ChapterViewSet(viewsets.ModelViewSet):
                 chapter.save()
 
         self.perform_destroy(instance)
-        serializer = self.get_serializer(chapters, many=True)
-        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
-        
-
-        
 
 # class CharacterViewSet(viewsets.ModelViewSet):
 #     queryset = Character.objects.all()
@@ -263,7 +258,7 @@ class RoadUnblockerView(APIView):
 
 
 class LibraryViewSet(viewsets.ModelViewSet):
-    #TODO: Potentialy change the default queryset and get rid of the get_user_library action
+    # TODO: Potentialy change the default queryset and get rid of the get_user_library action
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -287,7 +282,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def change_entry_status(self, request):
-        #TODO: Test this
+        # TODO: Test this
         library = self.get_object()
         # TODO: Why is there unaccesed data here?
         # book = library.book

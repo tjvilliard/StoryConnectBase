@@ -1,45 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryMenuButton extends StatefulWidget {
   final int bookId;
 
-  LibraryMenuButton({required this.bookId});
+  const LibraryMenuButton({super.key, required this.bookId});
 
   @override
-  _libraryMenuButtonState createState() =>
-      _libraryMenuButtonState(bookId: this.bookId);
+  LibraryMenuButtonState createState() => LibraryMenuButtonState();
 }
 
-class _libraryMenuButtonState extends State<LibraryMenuButton> {
+class LibraryMenuButtonState extends State<LibraryMenuButton> {
   late bool inLibrary;
-  final int bookId;
-
-  _libraryMenuButtonState({required this.bookId});
+  int get bookId => widget.bookId;
 
   @override
   void initState() {
-    context.read<LibraryBloc>().add(GetLibraryEvent());
+    context.read<ReadingHubBloc>().add(const FetchBooksEvent());
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LibraryBloc, LibraryStruct>(
-      builder: (BuildContext context, LibraryStruct state) {
-        this.inLibrary = context
-            .read<LibraryBloc>()
+    return BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
+      builder: (BuildContext context, ReadingHubStruct state) {
+        inLibrary = context
+            .read<ReadingHubBloc>()
             .state
-            .libraryBooks
-            .where((element) => (element.id == this.bookId))
+            .libraryBookMap
+            .values
+            .where((element) => (element.id == bookId))
             .isNotEmpty;
 
         return Container(
             height: 40,
-            width: this.inLibrary ? 180 : 130,
+            width: inLibrary ? 180 : 130,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.0)),
             child: state.loadingStruct.isLoading
                 ? Transform.scale(
@@ -50,23 +48,23 @@ class _libraryMenuButtonState extends State<LibraryMenuButton> {
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                     onTap: () {
-                      if (this.inLibrary) {
+                      if (inLibrary) {
                         context
-                            .read<LibraryBloc>()
-                            .add(RemoveBookEvent(bookId: this.bookId));
+                            .read<ReadingHubBloc>()
+                            .add(RemoveLibraryBookEvent(bookId: bookId));
                       } else {
                         context
-                            .read<LibraryBloc>()
-                            .add(AddBookEvent(bookId: this.bookId));
+                            .read<ReadingHubBloc>()
+                            .add(AddLibraryBookEvent(bookId: bookId));
                       }
-                      this.inLibrary = !this.inLibrary;
+                      inLibrary = !inLibrary;
                       setState(() {});
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Checkbox.adaptive(
-                            value: this.inLibrary,
+                            value: inLibrary,
                             side: MaterialStateBorderSide.resolveWith(
                                 (states) => BorderSide(
                                     width: 2.0,
@@ -76,7 +74,7 @@ class _libraryMenuButtonState extends State<LibraryMenuButton> {
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary),
-                            this.inLibrary
+                            inLibrary
                                 ? "Remove from library"
                                 : "Add to library"),
                       ],

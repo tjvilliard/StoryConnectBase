@@ -16,28 +16,28 @@ class ChapterNavigation extends StatelessWidget {
           return AnimatedCrossFade(
               firstChild: Container(),
               secondChild: Container(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
                   width: 300,
                   child: Card(
                       elevation: 3,
                       child: uiState.chapterOutlineShown
                           ? Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   SidePopupHeader(
                                       title: "Chapter Nav",
                                       dismiss: () =>
-                                          BlocProvider.of<WritingUIBloc>(context).add(ToggleChapterOutlineEvent())),
-                                  SizedBox(height: 20),
-                                  Expanded(child: ChapterNavigationList())
+                                          BlocProvider.of<WritingUIBloc>(context).add(const ToggleChapterOutlineEvent())),
+                                  const SizedBox(height: 20),
+                                  const Expanded(child: ChapterNavigationList())
                                 ],
                               ))
                           : Container())),
               crossFadeState: uiState.chapterOutlineShown ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-              duration: Duration(milliseconds: 500));
+              duration: const Duration(milliseconds: 500));
         });
   }
 }

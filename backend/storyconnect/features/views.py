@@ -1,9 +1,7 @@
 from rest_framework.response import Response
-from rest_framework import viewsets, status, filters
 from rest_framework.views import APIView
-from features import content_tagging as ct
 from features import models as features_models
-from features import serializers as features_serializers
+from .serializers import GenreTagSerializer, ChapterTaggingSerializer
 from books import models as book_models
 from books import serializers as book_serializers
 

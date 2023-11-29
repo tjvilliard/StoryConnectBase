@@ -6,8 +6,8 @@ import 'package:storyconnect/Widgets/auto_complete_searchbar.dart';
 
 class WritingSearchBar extends StatefulWidget {
   const WritingSearchBar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -29,10 +29,13 @@ class WritingSearchBarState extends State<WritingSearchBar> {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: BlocBuilder<WritingHomeBloc, WritingHomeState>(builder: (context, state) {
+        child: BlocBuilder<WritingHomeBloc, WritingHomeState>(
+            builder: (context, state) {
           return AutoCompleteSearchBar(
             hintText: "Search",
-            searchableItems: state.books.map((Book book) => book.title.toLowerCase().trim()).toList(),
+            searchableItems: state.books
+                .map((Book book) => book.title.toLowerCase().trim())
+                .toList(),
             searchCallback: (String value) {
               context.read<WritingHomeBloc>().add(SearchBooksEvent(value));
             },

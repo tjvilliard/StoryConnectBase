@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A button with a filled background.
 class HorizontalDivider extends StatelessWidget {
   final double height;
   final Color? color;

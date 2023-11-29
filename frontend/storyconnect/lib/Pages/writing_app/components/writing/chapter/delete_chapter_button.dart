@@ -29,7 +29,7 @@ class DeleteChapterButton extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(cantDeleteReason!),
-              duration: Duration(seconds: 6),
+              duration: const Duration(seconds: 6),
             ),
           );
           return;
@@ -39,9 +39,10 @@ class DeleteChapterButton extends StatelessWidget {
         if (shouldDelete && canDelete) {
           onDelete();
         }
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       },
-      child: Text(
+      child: const Text(
         'Delete',
         style: TextStyle(color: Colors.white),
       ),
@@ -53,19 +54,19 @@ class DeleteChapterButton extends StatelessWidget {
           context: context,
           builder: (BuildContext dialogContext) {
             return AlertDialog(
-              title: Text('Confirm Delete'),
-              content: Text('Are you sure you want to delete this chapter?'),
+              title: const Text('Confirm Delete'),
+              content: const Text('Are you sure you want to delete this chapter?'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red),
                   ),
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: Text('Delete', style: TextStyle(color: Colors.white)),
+                  child: const Text('Delete', style: TextStyle(color: Colors.white)),
                 ),
               ],
             );

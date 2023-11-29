@@ -4,7 +4,7 @@ import 'package:storyconnect/Constants/feedback_sentiment.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
 class SentimentSelectorWidget extends StatelessWidget {
-  const SentimentSelectorWidget({Key? key}) : super(key: key);
+  const SentimentSelectorWidget({super.key});
 
   static const double radioScale = 0.75;
 
@@ -26,7 +26,7 @@ class SentimentSelectorWidget extends StatelessWidget {
                     })),
             Text(
               FeedbackSentiment.bad.description,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             )
           ],
         ),
@@ -42,7 +42,7 @@ class SentimentSelectorWidget extends StatelessWidget {
                           sentiment: FeedbackSentiment.mediocre.index));
                     })),
             Text(FeedbackSentiment.mediocre.description,
-                style: TextStyle(fontSize: 12))
+                style: const TextStyle(fontSize: 12))
           ],
         ),
         Column(
@@ -57,7 +57,7 @@ class SentimentSelectorWidget extends StatelessWidget {
                           sentiment: FeedbackSentiment.good.index));
                     })),
             Text(FeedbackSentiment.good.description,
-                style: TextStyle(fontSize: 12))
+                style: const TextStyle(fontSize: 12))
           ],
         ),
         Column(
@@ -72,7 +72,7 @@ class SentimentSelectorWidget extends StatelessWidget {
                           sentiment: FeedbackSentiment.great.index));
                     })),
             Text(FeedbackSentiment.great.description,
-                style: TextStyle(fontSize: 12))
+                style: const TextStyle(fontSize: 12))
           ],
         )
       ]);

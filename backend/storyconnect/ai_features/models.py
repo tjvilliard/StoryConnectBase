@@ -2,7 +2,6 @@ from typing import Any
 from django.db import models
 from books.models import Chapter
 # from comment.models import TextSelection
-from .road_unblocker import RoadUnblocker
 import ai_features.utils as utils
 from lxml import etree
 from .exceptions import StatementSheetInvalidDocumentError

@@ -8,7 +8,7 @@ class EmptyContent extends StatelessWidget {
     return Card(
         elevation: 5,
         child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Text(
               "Highlight text to ask a specific question, or ask about the entire chapter.",
               style: Theme.of(context).textTheme.titleSmall,

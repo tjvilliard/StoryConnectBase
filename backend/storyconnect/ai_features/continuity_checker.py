@@ -55,6 +55,7 @@ class ContinuityChecker:
             prompt=prompt,
             # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE,
+            requst_timeout=300,
         )
 
         body = self.last_response.choices[0].text
@@ -74,6 +75,7 @@ class ContinuityChecker:
             prompt=filter_prompt,
             # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE,
+            timeout=300,
         )
         return self.last_response.choices[0].text.strip()
 
@@ -95,6 +97,7 @@ class ContinuityChecker:
             prompt=prompt,
             # max_tokens=self.MAX_TOKENS,
             temperature=self.TEMPERATURE * 2,
+            timeout=300,
         )
 
         response = self.last_response.choices[0].text.strip()
@@ -147,6 +150,7 @@ class ContinuityCheckerChat:
             messages=[{"role": "system", "content": prompt}],
             temperature=self.TEMPERATURE,
             max_tokens=self.MAX_TOKENS,
+            timeout=300,
         )
 
         body = self.last_response.choices[0].message.content
@@ -169,6 +173,7 @@ class ContinuityCheckerChat:
             messages=[{"role": "system", "content": filter_prompt}],
             temperature=self.TEMPERATURE,
             max_tokens=self.MAX_TOKENS,
+            timeout=300,
         )
         return self.last_response.choices[0].message.content.strip()
 
@@ -190,6 +195,7 @@ class ContinuityCheckerChat:
             messages=[{"role": "system", "content": prompt}],
             temperature=self.TEMPERATURE * 2,
             max_tokens=self.MAX_TOKENS,
+            timeout=300,
         )
 
         response = self.last_response.choices[0].message.content.strip()

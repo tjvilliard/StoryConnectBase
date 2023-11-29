@@ -14,18 +14,18 @@ class CurrentWorksCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: BoxConstraints(maxWidth: 550, minWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 550, minWidth: 400),
         height: 300,
         child: Card(
             child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(children: [
                   Text(
                     "Most Recent Works",
                     textAlign: TextAlign.start,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SizedBox(height: 20), // horizontally scrollable list of books
+                  const SizedBox(height: 20), // horizontally scrollable list of books
 
                   BlocBuilder<WriterProfileBloc, WriterProfileState>(
                       builder: (context, state) {
@@ -37,11 +37,11 @@ class CurrentWorksCard extends StatelessWidget {
                               state.loadingStructs.booksLoadingStruct);
                     } else {
                       if (state.books.isEmpty) {
-                        toReturn = Text("No books found");
+                        toReturn = const Text("No books found");
                       } else {
                         toReturn = ListView.separated(
                             separatorBuilder: (context, index) {
-                              return SizedBox(width: 20);
+                              return const SizedBox(width: 20);
                             },
                             scrollDirection: Axis.horizontal,
                             itemCount: min(state.books.length, 6),

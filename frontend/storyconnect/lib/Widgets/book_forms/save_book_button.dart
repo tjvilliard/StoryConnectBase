@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A button for saving a book.
 class SaveBookButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
@@ -8,9 +9,9 @@ class SaveBookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
+        onPressed: onPressed,
         child: Text(
           text,
-        ),
-        onPressed: onPressed);
+        ));
   }
 }

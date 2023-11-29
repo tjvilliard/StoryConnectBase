@@ -6,8 +6,12 @@ abstract class ReadingUIEvent {
 
 class ReadingLoadEvent extends ReadingUIEvent {
   final int bookId;
-  final ChapterBloc chapterBloc;
-  ReadingLoadEvent({required this.bookId, required this.chapterBloc});
+  final FeedbackBloc feedbackBloc;
+  final ReadingBloc readingBloc;
+  ReadingLoadEvent(
+      {required this.bookId,
+      required this.readingBloc,
+      required this.feedbackBloc});
 }
 
 class UpdateAllEvent extends ReadingUIEvent {
@@ -25,10 +29,6 @@ class ToggleFeedbackBarEvent extends ReadingUIEvent {
 
 class ToggleAnnotationBarEvent extends ReadingUIEvent {
   ToggleAnnotationBarEvent();
-}
-
-class ToggleToolbarEvent extends ReadingUIEvent {
-  ToggleToolbarEvent();
 }
 
 class SwitchChapterEvent extends ReadingUIEvent {

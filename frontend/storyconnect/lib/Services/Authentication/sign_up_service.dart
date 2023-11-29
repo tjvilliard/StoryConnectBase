@@ -13,10 +13,10 @@ class SignUpService {
   }
 
   // Success return message.
-  final String SUCCESS = "Success";
+  final String success = "Success";
 
   // Getter for Firebase Authentication State
-  Stream<User?> get authStateChanges => this._firebaseAuth.authStateChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   /// Gets the Sign-In-Service Singleton
   factory SignUpService() {
@@ -27,10 +27,8 @@ class SignUpService {
   /// Returns an exception message or a success message.
   Future<String?> signUp(String email, String password) async {
     try {
-      await this
-          ._firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
-      return SUCCESS;
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      return success;
     } on FirebaseAuthException catch (error) {
       return error.code;
     }

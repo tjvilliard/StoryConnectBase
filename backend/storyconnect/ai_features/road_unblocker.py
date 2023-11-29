@@ -1,11 +1,10 @@
 from storyconnect.settings import OPENAI_API_KEY
 from .exceptions import RoadUnblockerException
 import books.models as books_models
-import ai_features.models as ai_models
 import ai_features.utils as utils
 import logging
 from openai import OpenAI
-import threading
+
 
 # openai.api_key = OPENAI_API_KEY
 logger = logging.getLogger(__name__)
@@ -14,7 +13,7 @@ logger = logging.getLogger(__name__)
 class RoadUnblocker:
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
-    CHAT_MODEL = "gpt-3.5-turbo"
+    CHAT_MODEL = "gpt-3.5-turbo-16k"
     MAX_TOKENS = 5000
     TEMPERATURE = 0.2
 

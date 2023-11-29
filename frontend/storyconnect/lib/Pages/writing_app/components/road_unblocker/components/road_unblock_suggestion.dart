@@ -40,9 +40,9 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,9 +53,9 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
             //       ),
             // ),
 
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             SelectableText(suggestion.suggestion),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             // Padding(
             //     padding: EdgeInsets.symmetric(horizontal: 10),
             //     child: Divider()),
@@ -72,10 +72,10 @@ class RoadUnblockerSuggestionWidget extends StatelessWidget {
                         .read<RoadUnblockerBloc>()
                         .add(RejectSuggestionEvent(responseLocalId: responseLocalId, localId: suggestion.uid));
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     FontAwesomeIcons.x,
                   ),
-                  label: Text(
+                  label: const Text(
                     "Dismiss",
                   ),
                 ),

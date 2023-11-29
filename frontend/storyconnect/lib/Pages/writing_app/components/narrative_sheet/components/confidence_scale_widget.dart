@@ -11,17 +11,17 @@ class ConfidenceScale extends StatelessWidget {
       color: Colors.white,
       fontStyle: FontStyle.italic,
       shadows: <Shadow>[
-        Shadow(
+        const Shadow(
           offset: Offset(1, 1),
           blurRadius: 2,
-          color: const Color.fromARGB(255, 111, 111, 111),
+          color: Color.fromARGB(255, 111, 111, 111),
         ),
       ],
     );
 
     return Column(children: [
       Text("Confidence Scale", style: Theme.of(context).textTheme.titleLarge),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -34,10 +34,10 @@ class ConfidenceScale extends StatelessWidget {
             decoration: BoxDecoration(
               color: entry.value,
               borderRadius: BorderRadius.only(
-                topLeft: isFirst ? Radius.circular(10.0) : Radius.zero,
-                topRight: isLast ? Radius.circular(10.0) : Radius.zero,
-                bottomLeft: isFirst ? Radius.circular(10.0) : Radius.zero,
-                bottomRight: isLast ? Radius.circular(10.0) : Radius.zero,
+                topLeft: isFirst ? const Radius.circular(10.0) : Radius.zero,
+                topRight: isLast ? const Radius.circular(10.0) : Radius.zero,
+                bottomLeft: isFirst ? const Radius.circular(10.0) : Radius.zero,
+                bottomRight: isLast ? const Radius.circular(10.0) : Radius.zero,
               ),
             ),
             width: 100, // Adjust width if necessary

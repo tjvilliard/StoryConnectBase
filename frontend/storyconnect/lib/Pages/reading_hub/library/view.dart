@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/tabbed_item.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/book_grid_widget.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/tabbed_widget.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Widgets/header.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryView extends StatefulWidget {
-  const LibraryView({Key? key}) : super(key: key);
+  const LibraryView({super.key});
 
   @override
   LibraryState createState() => LibraryState();
@@ -22,8 +23,8 @@ class LibraryState extends State<LibraryView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (initialLoad) {
         initialLoad = false;
-        final libraryHomeBloc = context.read<LibraryBloc>();
-        libraryHomeBloc.add(GetLibraryEvent());
+        final libraryHomeBloc = context.read<ReadingHubBloc>();
+        libraryHomeBloc.add(const FetchBooksEvent());
       }
     });
   }
@@ -32,49 +33,45 @@ class LibraryState extends State<LibraryView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(
-          child: BlocBuilder<LibraryBloc, LibraryStruct>(
-            builder: (BuildContext context, LibraryStruct libState) {
-              List<ContentPanel> toReturn;
-              if (libState.loadingStruct.isLoading) {
-                toReturn = <ContentPanel>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
-                ];
-              } else {
-                toReturn = <ContentPanel>[
-                  SolidPanel(children: [
-                    BlankPanel(height: 25),
-                    PanelHeader("My Library"),
-                    BlankPanel(height: 25),
-                    TabbedPanel(
-                      tabs: [
-                        Tab(text: "Currently Reading"),
-                        Tab(text: "Completed"),
-                        Tab(text: "To Be Read")
-                      ],
-                      children: [
-                        BookGrid(
-                          books: libState.libraryBooks,
-                        ),
-                        Container(),
-                        Container(),
-                      ],
+        body: Center(
+            child: Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 0.65,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    const Header(
+                      title: "Library",
                     ),
-                    DividerPanel(color: Theme.of(context).dividerColor),
-                  ], primary: Theme.of(context).canvasColor)
-                ];
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            },
-          ),
-        )));
+                    Expanded(child:
+                        BlocBuilder<ReadingHubBloc, ReadingHubStruct>(builder:
+                            (BuildContext context, ReadingHubStruct libState) {
+                      Widget toReturn;
+
+                      if (libState.loadingStruct.isLoading) {
+                        toReturn = LoadingWidget(
+                            loadingStruct: libState.loadingStruct);
+                      } else {
+                        toReturn = TabbedBookDisplayWidget(
+                          tabs: const [
+                            Tab(text: "Currently Reading"),
+                            Tab(text: "Completed"),
+                            Tab(text: "To Be Read")
+                          ],
+                          children: [
+                            BookGridWidget(
+                                books: libState.libraryBookMap.values.toList()),
+                            const BookGridWidget(books: []),
+                            const BookGridWidget(books: []),
+                          ],
+                        );
+                      }
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: toReturn,
+                      );
+                    }))
+                  ],
+                ))));
   }
 }

@@ -1,9 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reader_app/components/chapter/state/chapter_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
+import 'package:visual_editor/controller/controllers/editor-controller.dart';
 
 part 'reading_ui_event.dart';
 part 'reading_ui_state.dart';
@@ -14,37 +17,35 @@ typedef ReadingUIEmitter = Emitter<ReadingUIState>;
 /// Transforms Events related to the book reading UI and transforms the
 /// state of the book reading UI Accordingly.
 class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
+  static double pageWidth = 800.0;
+  static double pageHeight = 1050.0;
+
   /// The current state of our reading resository, which contains all
   /// the data relevant to the reading UI.
-  ReadingRepository _repository = ReadingRepository();
+  final ReadingRepository _repo;
 
   ///
   ReadingUIBloc({required ReadingRepository repository})
-      : this._repository = repository,
+      : _repo = repository,
         super(ReadingUIState.initial()) {
-    on<UpdateAllEvent>((event, emit) => this.updateUI(event, emit));
-    on<ReadingLoadEvent>((event, emit) => this.loadEvent(event, emit));
+    on<UpdateAllEvent>((event, emit) => updateUI(event, emit));
+    on<ReadingLoadEvent>((event, emit) => loadEvent(event, emit));
     on<ToggleChapterOutlineEvent>(
         (event, emit) => toggleChapterOutline(event, emit));
-    on<ToggleFeedbackBarEvent>(
-        (event, emit) => this.toggleFeedbackBar(event, emit));
+    on<ToggleFeedbackBarEvent>((event, emit) => toggleFeedbackBar(event, emit));
     on<ToggleAnnotationBarEvent>(
-        (event, emit) => this.toggleAnnotationBar(event, emit));
-    on<ToggleToolbarEvent>((event, emit) => this.toggleToolbar(event, emit));
+        (event, emit) => toggleAnnotationBar(event, emit));
   }
 
   /// Gets the title of the book currently loaded by the reading UI.
   Future<String> _getBookTitle(int bookID) async {
-    // Search the current state of our repository for our book.
-    for (final book in this._repository.books) {
-      if (book.id == bookID) {
-        return book.title;
-      }
-    }
+    // Search all our books for our book.
 
-    // Call the api again, and search the result for books.
-    final List<Book> books = await this._repository.getBooks();
-    for (final book in books) {
+    List<Book> allBooks = await _repo.getBooks();
+    Map<Library, Book> libBooks = await _repo.getLibraryBooks();
+    allBooks.addAll(libBooks.values);
+
+    for (final book in allBooks) {
       if (book.id == bookID) {
         return book.title;
       }
@@ -56,8 +57,12 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// Completes all tasks related to loading a book into the reading UI.
   Future<void> loadEvent(ReadingLoadEvent event, ReadingUIEmitter emit) async {
-    emit(state.copyWith(loadingStruct: LoadingStruct.loading(true)));
-    event.chapterBloc.add(LoadEvent());
+    emit(state.copyWith(
+        loadingStruct: LoadingStruct.loading(true), bookId: event.bookId));
+
+    event.readingBloc.add(LoadReadingEvent(
+      event.feedbackBloc,
+    ));
 
     final title = await _getBookTitle(event.bookId);
 
@@ -85,10 +90,5 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
   /// Updates the toggled state of the Annotation Widget in the reading UI.
   void toggleAnnotationBar(ReadingUIEvent event, ReadingUIEmitter emit) {
     emit(state.copyWith(annotationBarShown: !state.annotationBarShown));
-  }
-
-  /// Updates the toggled state of the Toolbar Widget in the reading UI.
-  void toggleToolbar(ReadingUIEvent event, ReadingUIEmitter emit) {
-    emit(state.copyWith(toolbarShown: !state.toolbarShown));
   }
 }

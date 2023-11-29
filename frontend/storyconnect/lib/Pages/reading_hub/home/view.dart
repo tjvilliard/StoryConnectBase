@@ -1,115 +1,167 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/big_book_list.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/solid_panel.dart';
-import 'package:storyconnect/Pages/reading_hub/components/panel_items/panel_item.dart';
-import 'package:storyconnect/Pages/reading_hub/home/state/reading_home_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
+import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/reading_hub/home/components/home_book_list_widget.dart';
+import 'package:storyconnect/Pages/reading_hub/home/components/book_list.dart';
+import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Widgets/auto_complete_searchbar.dart';
+import 'package:storyconnect/Widgets/header.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
-/// The Reading Home View: Displays a curated set of book content for the readers.
+///
 class ReadingHomeView extends StatefulWidget {
-  const ReadingHomeView({Key? key}) : super(key: key);
+  const ReadingHomeView({super.key});
 
   @override
   ReadingHomeState createState() => ReadingHomeState();
 }
 
 class ReadingHomeState extends State<ReadingHomeView> {
-  bool initialLoad = true;
-
   @override
   void initState() {
+    ReadingHubBloc readingHomeBloc = context.read<ReadingHubBloc>();
+    readingHomeBloc.add(const FetchBooksEvent());
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (initialLoad) {
-        initialLoad = false;
-        final readingHomeBloc = context.read<ReadingHomeBloc>();
-        final libraryBloc = context.read<LibraryBloc>();
-        libraryBloc.add(GetLibraryEvent());
-        readingHomeBloc.add(GetBooksEvent());
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(context: context),
-        body: Center(child: Container(child:
-            BlocBuilder<ReadingHomeBloc, ReadingHomeStruct>(
-                builder: (BuildContext context, ReadingHomeStruct homeState) {
-          return BlocBuilder<LibraryBloc, LibraryStruct>(
-            builder: (BuildContext context, LibraryStruct libraryState) {
-              List<Widget> toReturn;
-              if (homeState.loadingStruct.isLoading ||
-                  libraryState.loadingStruct.isLoading) {
-                toReturn = <Widget>[
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor),
-                  Container(
-                    constraints: BoxConstraints(maxWidth: 800),
-                    child: Divider(
-                      height: 10,
-                      thickness: .5,
-                      color: Theme.of(context).dividerColor,
-                    ),
+        body: Center(
+            child: Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width * 0.65,
+          height: MediaQuery.of(context).size.height,
+          child: Column(children: [
+            const Header(
+              title: "Reading Home",
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                      maxWidth: 500, minWidth: 250, maxHeight: 50),
+                  child: const AutoCompleteSearchBar(
+                    hintText: "Search",
+                    searchableItems: [],
                   ),
-                  SolidPanel(
-                      children: [LoadingItem()],
-                      primary: Theme.of(context).canvasColor)
-                ];
-              } else {
-                /// Build scrolling paginated view of book panels
-                toReturn = <Widget>[
-                  SolidPanel(
-                    primary: Theme.of(context).canvasColor,
-                    children: [
-                      SizedBox(height: 20),
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
-                          child: Text(
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.titleLarge,
-                              "Continue Reading...")),
-                      BigBookListWidget(books: libraryState.libraryBooks)
-                    ],
-                  ),
-                  Container(
-                    constraints: BoxConstraints(maxWidth: 800),
-                    child: Divider(
-                      height: 10,
-                      thickness: .5,
-                      color: Theme.of(context).dividerColor,
-                    ),
-                  ),
-                  SolidPanel(
-                    primary: Theme.of(context).canvasColor,
-                    children: [
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          constraints: BoxConstraints(maxWidth: 800),
-                          child: Text(
-                              textAlign: TextAlign.left,
-                              style: Theme.of(context).textTheme.titleLarge,
-                              "Latest in \'Category\'")),
-                      BigBookListWidget(books: homeState.books)
-                    ],
-                  )
-                ];
-              }
-              return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    reverse: false,
-                    child: Column(children: toReturn),
-                  ));
-            },
-          );
-        }))));
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(child: BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
+              builder: (BuildContext context, ReadingHubStruct state) {
+                return ListView.builder(
+
+                    // add 1 to the number of
+                    itemCount: state.mappedBooks.length + 2,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        Widget widgetToReturn;
+                        if (state.loadingStruct.isLoading) {
+                          widgetToReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "Continue Reading from your Library...",
+                              ),
+                              const SizedBox(height: 25),
+                              Container(
+                                  alignment: Alignment.center,
+                                  height: 220,
+                                  child: LoadingWidget(
+                                    loadingStruct: state.loadingStruct,
+                                  )),
+                            ],
+                          );
+                        } else {
+                          widgetToReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "Continue Reading from your Library...",
+                              ),
+                              const SizedBox(height: 25),
+                              SizedBox(
+                                  height: 220,
+                                  child: BookListWidget(
+                                      bookList: BookList(
+                                    bookList:
+                                        state.libraryBookMap.values.toList(),
+                                  ))),
+                            ],
+                          );
+                        }
+
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: widgetToReturn,
+                        );
+                      } else if (index == 1) {
+                        Widget toReturn;
+                        if (state.loadingStruct.isLoading) {
+                          toReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 25),
+                              const Divider(),
+                              const SizedBox(height: 25),
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "All Books from Backend...",
+                              ),
+                              const SizedBox(height: 25),
+                              Container(
+                                  alignment: Alignment.center,
+                                  height: 220,
+                                  child: LoadingWidget(
+                                    loadingStruct: state.loadingStruct,
+                                  )),
+                            ],
+                          );
+                        } else {
+                          toReturn = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 25),
+                              const Divider(),
+                              const SizedBox(height: 25),
+                              Text(
+                                style: Theme.of(context).textTheme.titleLarge,
+                                "All Books from Backend...",
+                              ),
+                              const SizedBox(height: 25),
+                              SizedBox(
+                                  height: 220,
+                                  child: BookListWidget(
+                                    bookList: BookList(
+                                      bookList: state.allBooks,
+                                    ),
+                                  ))
+                            ],
+                          );
+                        }
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          child: toReturn,
+                        );
+                      } else {
+                        MapEntry<String, List<Book>> entry =
+                            state.mappedBooks.entries.toList()[index];
+                        String bookTag = entry.key;
+                        List<Book> bookList = entry.value;
+
+                        return BookList(bookList: bookList);
+                      }
+                    });
+              },
+            )),
+          ]),
+        )));
   }
 }

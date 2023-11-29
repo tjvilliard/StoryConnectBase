@@ -8,7 +8,7 @@ import 'package:storyconnect/Widgets/clickable.dart';
 class BookListWidget extends StatelessWidget {
   final List<Book> books;
 
-  BookListWidget({
+  const BookListWidget({
     super.key,
     required this.books,
   });
@@ -17,13 +17,13 @@ class BookListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Wrap(
               spacing: 20,
               runSpacing: 20,
               alignment: WrapAlignment.center,
               children: books
-                  .map((book) => Container(
+                  .map((book) => SizedBox(
                       key: ValueKey(book.id),
                       width: 150,
                       height: 200,

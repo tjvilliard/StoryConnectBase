@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// A custom form field.
+///
+/// This is a wrapper around a [TextFormField] with stylistic changes.
 class CustomFormField extends StatelessWidget {
   final String label;
   final String? value;
@@ -9,8 +12,8 @@ class CustomFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final VoidCallback? onFieldSubmitted;
   final TextEditingController? controller;
-  CustomFormField(
-      {required this.label,
+  const CustomFormField(
+      {super.key, required this.label,
       this.value,
       this.onChanged,
       this.onFieldSubmitted,

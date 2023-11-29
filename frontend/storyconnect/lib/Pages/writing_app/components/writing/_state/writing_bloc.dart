@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:replay_bloc/replay_bloc.dart';
@@ -91,9 +92,13 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
         final finalizedJson = jsonEncode([intermediateJson]);
         final decodedJson = jsonDecode(finalizedJson);
         doc = DeltaDocM.fromJson(decodedJson);
-        print("converted json to new format");
+        if (kDebugMode) {
+          print("converted json to new format");
+        }
       } catch (e) {
-        print("Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        if (kDebugMode) {
+          print("Unable to parse json, nor manually convert to new format. Returning as a blank chapter");
+        }
         doc = DeltaDocM();
       }
     }
@@ -107,6 +112,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     editorSubscription?.cancel();
     emit(state.copyWith(
       currentIndex: event.chapterToSwitchTo,
+      isDeletingAChapter: false,
     ));
     if (editor != null) {
       await editorSubscription?.cancel();
@@ -124,7 +130,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     if (debounceTimer != null && debounceTimer!.isActive) {
       debounceTimer!.cancel();
     }
-    debounceTimer = Timer(Duration(milliseconds: 250), () {
+    debounceTimer = Timer(const Duration(milliseconds: 250), () {
       add(_UpdateChapterHelperEvent(event: event));
     });
   }
@@ -242,6 +248,7 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
   }
 
   void deleteChapter(DeleteChapterEvent event, WritingEmitter emit) async {
+    emit(state.copyWith(isDeletingAChapter: true));
     final chapterId = state.chapterNumToID[event.chapterNum];
     if (chapterId == null) {
       // Handle the case where the chapter number does not exist.
@@ -273,10 +280,8 @@ class WritingBloc extends Bloc<WritingEvent, WritingState> with ReplayBlocMixin<
     chapters.remove(state.chapters.length - 1);
     chapterIDToTitle.remove(chapterId);
 
-    emit(state.copyWith(
-        currentIndex: state.currentIndex - 1,
-        chapterNumToID: chapterNumToID,
-        chapters: chapters,
-        chapterIDToTitle: chapterIDToTitle));
+    add(SwitchChapterEvent(chapterToSwitchTo: 0)); // switch to the first chapter
+
+    emit(state.copyWith(chapterNumToID: chapterNumToID, chapters: chapters, chapterIDToTitle: chapterIDToTitle));
   }
 }

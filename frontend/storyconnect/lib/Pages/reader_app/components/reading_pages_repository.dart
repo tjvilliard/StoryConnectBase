@@ -24,12 +24,12 @@ class BookApiProvider {
 
 /// Repository for book chapters.
 class BookProviderRepository {
-  BookApiProvider _api = BookApiProvider();
+  final BookApiProvider _api = BookApiProvider();
   final int bookID;
 
   BookProviderRepository({required this.bookID});
 
   Future<List<Chapter>> getChapters() async {
-    return _api.getChapters(this.bookID);
+    return _api.getChapters(bookID);
   }
 }

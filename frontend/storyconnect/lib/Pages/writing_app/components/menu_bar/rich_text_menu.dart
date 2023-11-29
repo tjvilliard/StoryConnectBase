@@ -6,12 +6,14 @@ import 'package:visual_editor/document/models/attributes/styling-attributes.dart
 import 'package:visual_editor/visual-editor.dart';
 
 class RichTextMenuBar extends StatelessWidget {
+  const RichTextMenuBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WritingUIBloc, WritingUIState>(
         builder: (context, state) {
-      final buttonPadding = EdgeInsets.symmetric(horizontal: 2, vertical: 3.5);
-      final iconTheme = EditorIconThemeM(
+      const buttonPadding = EdgeInsets.symmetric(horizontal: 2, vertical: 3.5);
+      const iconTheme = EditorIconThemeM(
         iconSelectedColor: Colors.white,
       );
 
