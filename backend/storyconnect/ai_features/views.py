@@ -1,11 +1,18 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import viewsets, status
 from .serializers import (
     RoadUnblockerRequestSerializer,
     RoadUnblockerResponseSerializer,
     RoadUnblockerSuggestionSerializer,
 )
+from books.serializers import (
+    NarrativeElementSerializer,
+    NarrativeElementTypeSerializer,
+    NarrativeElementAttributeSerializer,
+    NarrativeElementAttributeTypeSerializer,
+)
+from rest_framework.decorators import action
 from .models import StatementSheet
 from .continuity_checker import ContinuityCheckerChat
 from .road_unblocker import RoadUnblocker
@@ -447,3 +454,35 @@ class ContinuityCheckerView(APIView):
 
 #     serializer = ContinuityCheckerResponseSerializer(response_data)
 #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+class NarrativeElementGenerateView(APIView):
+    
+    def post(self, request, *args, **kwargs):
+        return 
+
+class NarrativeElementView(APIView):
+    def post(self, request, *args, **kwargs):
+
+        return 
+
+    def get(self, request, *args, **kwargs):
+        book_id = kwargs.get("book_id")
+        n_elems = books_models.NarrativeElement.objects.filter(book=book_id)
+        
+        data = NarrativeElementSerializer(n_elems, many=True).data
+        return 
+    
+class NarrativeElementViewset(viewsets.ModelViewSet):
+    queryset = books_models.NarrativeElement.objects.all()
+    serializer_class = NarrativeElementSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(book=self.kwargs["book_id"])
+    
+    @action
+    def generate(self, request, *args, **kwargs):
+        book_id = kwargs.get("book_id")
+        n_elems = books_models.NarrativeElement.objects.filter(book=book_id)
+        
+        data = NarrativeElementSerializer(n_elems, many=True).data
+        return Response(data, status=status.HTTP_200_OK)

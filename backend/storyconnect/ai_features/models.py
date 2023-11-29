@@ -1,6 +1,6 @@
 from typing import Any
 from django.db import models
-from books.models import Chapter
+from books.models import Chapter, Book
 # from comment.models import TextSelection
 import ai_features.utils as utils
 from lxml import etree
@@ -176,4 +176,6 @@ class BookSummary(models.Model):
     #     for chapter in self.book.get_chapters():
     #         summaries.append(chapter.chapter_summary.summary)
     #     return summaries
+    
+
     

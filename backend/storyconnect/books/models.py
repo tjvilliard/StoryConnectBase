@@ -173,7 +173,6 @@ class Chapter(models.Model):
 #     def __str__(self):
 #         return self.attribute
 
-
 # User
 #   |
 #   |---< NarrativeElementType   (One User can have many NarrativeElementTypes)
