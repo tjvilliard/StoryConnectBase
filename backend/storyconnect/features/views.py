@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from features import models as features_models
-from .serializers import GenreTagSerializer, ChapterTaggingSerializer
+from models import *
+from serializers import *
 from books import models as book_models
 from books import serializers as book_serializers
 
@@ -12,8 +12,8 @@ class GenreTaggingAPIView(APIView):
     def get(self, request, *args, **kwargs):
         book_id = request.query_params.get('book_id')
         intended_book = book_models.Book.objects.get(pk = book_id)
-        the_book_from_tag = features_models.GenreTagging.objects.get(book=intended_book)
-        serializer = features_serializers.GenreTaggingSerializer(the_book_from_tag, many=False)
+        the_book_from_tag = GenreTag.objects.get(book=intended_book)
+        serializer = GenreTagSerializer(the_book_from_tag, many=False)
 
         return Response(serializer.data)
     
@@ -22,8 +22,8 @@ class ChapterTaggingAPIView(APIView):
         book_id = request.query_params.get('book_id')
         chapter_num = request.query_params.get('chapter_num')
         intended_book = book_models.Book.objects.get(id = book_id)
-        the_chapter_from_tag = features_models.ChapterTagging.objects.get(book=intended_book, chapter_number = chapter_num)
-        serializer = features_serializers.ChapterTagging(the_chapter_from_tag, many=False)
+        the_chapter_from_tag = ChapterTagging.objects.get(book=intended_book, chapter_number = chapter_num)
+        serializer = ChapterTagging(the_chapter_from_tag, many=False)
 
         return Response(serializer.data)
 
