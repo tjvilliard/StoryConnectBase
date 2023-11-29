@@ -38,6 +38,21 @@ class TutorialPopupWidget extends StatelessWidget {
         description:
             "The Continuity Checker is a tool that helps you keep track of your story's continuity. It can identify contradictions in descriptions of characters, locations, and items in your story.",
         imageUrl: null),
+    TutorialPageData(
+        title: "Content Tagging",
+        description:
+            "Content tagging is a machine learning based - specifically for text analysis - feature tool to help generate recommended genres of a book by assessing the content of each chapter of the book.",
+        imageUrl: null),
+    TutorialPageData(
+    title: "User-Based Book Recommendation ",
+    description:
+        "When user lands on the reader's home page, you can see the list of books recommended by the system using machine learning model based on the user's recorded preferences, specifically based on the book rating aspect.",
+    imageUrl: null),
+    TutorialPageData(
+    title: "Content-Based Book Recommendation ",
+    description:
+        "In addition to the user-based book recommendation, users are also provided with recommendation assessed based on the text analysis of the similarities of the content of the books.",
+    imageUrl: null),
   ];
 
   @override

@@ -62,17 +62,17 @@ def create_book_dataframe():
     
     # dummy df
     df_books_test = pd.DataFrame(
-    {'book_id': [79],
+    {'book_id': [78],
     'book_title': ["The Hidden Masterpiece"]})
 
-    for each_book in all_books:
-        book_entry = {
-            'book_id': each_book.pk,
-            'book_title': each_book.title
-        }
-        df_books_test.append(book_entry, ignore_index=True)
+    # for each_book in all_books:
+    #     book_entry = {
+    #         'book_id': each_book.pk,
+    #         'book_title': each_book.title
+    #     }
+    #     df_books_test.append(book_entry, ignore_index=True)
 
-    df_books_test = df_books_test.iloc[1:, :]
+    # df_books_test = df_books_test.iloc[1:, :]
 
     return df_books_test
 
@@ -82,19 +82,19 @@ def create_ratings_dataframe():
     # dummy df
     df_ratings_test = pd.DataFrame(
     {'user_id': [3],
-    'book_id': [79],
+    'book_id': [78],
     'rating': [3]})
     
-    for each_user in all_users:
-        the_user_ratings = WriterFeedback.objects.filter(user=each_user)
+    # for each_user in all_users:
+    #     the_user_ratings = WriterFeedback.objects.filter(user=each_user)
 
-        for user_rate in the_user_ratings:
-            user_rating_entry = {
-                'user_id': each_user.pk,
-                'book_id': user_rate.selection.chapter.book.pk,
-                'rating': user_rate.sentiment
-            }
-            df_ratings_test.append(user_rating_entry, ignore_index = True)
+    #     for user_rate in the_user_ratings:
+    #         user_rating_entry = {
+    #             'user_id': each_user.pk,
+    #             'book_id': user_rate.selection.chapter.book.pk,
+    #             'rating': user_rate.sentiment
+    #         }
+    #         df_ratings_test.append(user_rating_entry, ignore_index = True)
 
     return df_ratings_test
 
@@ -201,4 +201,3 @@ def integrate_rec_into_models():
 def run():
     book_rec_book_based()
     # integrate_rec_into_models()
-
