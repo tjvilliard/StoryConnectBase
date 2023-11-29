@@ -30,13 +30,13 @@ class TutorialPopupWidget extends StatelessWidget {
         title: "Reader Home",
         description:
             "After exiting the Writing Page, in the app bar you'll notice in the app bar a link to the Reader Home Page. There, you can view all of the books available on StoryConnect. You can also search for books by title, author, or genre.",
-        imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FBookRec.png?alt=media&token=00e1d8ef-12ba-46b2-972d-ef6e6c2f7770"),
+        imageUrl: null),
     TutorialPageData(
         title: "Reading Page",
         description:
             "When you click on a book. you'll be taken to the reading page for a book. There you can read through a book, and leave meaningful feedback for the author with optional text annotations. If feel as if you might enjoy a book your reading, be sure to add it to your personal library.",
-        imageUrl: null),
+        imageUrl:
+            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FReading%20Page.png?alt=media&token=9edfc42f-da52-4b01-ab76-25343bd7b99c"),
     TutorialPageData(
         title: "Library Page",
         description:
