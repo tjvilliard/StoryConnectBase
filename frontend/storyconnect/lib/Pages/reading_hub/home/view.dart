@@ -113,7 +113,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               const SizedBox(height: 25),
                               Text(
                                 style: Theme.of(context).textTheme.titleLarge,
-                                "All Books from Backend...",
+                                "Books recommended for you...",
                               ),
                               const SizedBox(height: 25),
                               Container(
@@ -133,7 +133,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               const SizedBox(height: 25),
                               Text(
                                 style: Theme.of(context).textTheme.titleLarge,
-                                "All Books from Backend...",
+                                "Books recommended for you...",
                               ),
                               const SizedBox(height: 25),
                               SizedBox(

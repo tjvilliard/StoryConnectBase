@@ -11,14 +11,35 @@ from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from django.http import JsonResponse
 
+class CreateModelWithUserMixinJson:
+    '''
+    Create a model instance with a user.
+    '''
+    def create(self, request, *args, **kwargs) -> JsonResponse:
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+
+        # Here we handle the user field
+        serializer.save(user = request.user)
+
+        headers = self.get_success_headers(serializer.data)
+        return JsonResponse(serializer.data, status = status.HTTP_201_CREATED, headers = headers)
+
+    def perform_create(self, request, serializer) -> None:
+        serializer.save(user = request.user)
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
+
 class CreateModelMixinJson:
     """
     Create a model instance.
     """
     def create(self, request, *args, **kwargs):
-        #print("Creating Generic")
         serializer = self.get_serializer(data=request.data)
-        print(f"[INFO]: Serializer: {serializer}")
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
@@ -32,24 +53,7 @@ class CreateModelMixinJson:
             return {'Location': str(data[api_settings.URL_FIELD_NAME])}
         except (TypeError, KeyError):
             return {}
-
-
-class ListModelMixinJson:
-    """
-    List a queryset.
-    """
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return JsonResponse(serializer.data)
-
-
+        
 class RetrieveModelMixinJson:
     """
     Retrieve a model instance.
@@ -100,3 +104,21 @@ class DestroyModelMixinJson:
 
     def perform_destroy(self, instance):
         instance.delete()
+
+
+class ListModelMixinJson:
+    """
+    List a queryset.
+    """
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe = True)
+
+

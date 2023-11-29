@@ -21,9 +21,6 @@ class ReadingApiProvider {
         print("[DEBUG]: Sending Json String to Backend:");
         print("$serializer");
         print("");
-      }
-
-      if (kDebugMode) {
         print("[INFO]: Getting result from post call. \n");
       }
 

@@ -3,13 +3,14 @@ from rest_framework.permissions import  IsAuthenticatedOrReadOnly
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from storyconnect.mixins import CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson
+from storyconnect.mixins import CreateModelMixinJson, CreateModelWithUserMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson, DestroyModelMixinJson
 from .models import WriterFeedback, Highlight
 from .serializers import WriterFeedbackSerializer, HighlightSerializer
 import logging
 
+from django.db import transaction
 
-class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
+class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelWithUserMixinJson, ListModelMixinJson, RetrieveModelMixinJson, UpdateModelMixinJson):
     queryset = WriterFeedback.objects.all()
     serializer_class = WriterFeedbackSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -24,7 +25,6 @@ class WriterFeedbackViewSet(viewsets.GenericViewSet, CreateModelMixinJson, ListM
         comment.dismissed = True
         comment.save()
         return Response(status=status.HTTP_200_OK)
-    
 
     @action(detail=False, methods=['get'])
     def by_chapter(self, request):

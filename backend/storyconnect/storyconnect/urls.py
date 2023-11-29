@@ -23,10 +23,11 @@ from ai_features import views as ai_features_views
 from core import urls as core_views
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
+router.register(r'api/library', books_views.LibraryViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
-router.register(r'api/library', books_views.LibraryViewSet)
+
 
 urlpatterns = router.urls
 

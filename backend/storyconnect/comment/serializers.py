@@ -17,7 +17,7 @@ class WriterFeedbackSerializer(serializers.ModelSerializer):
     chapterId = serializers.PrimaryKeyRelatedField(many=False, read_only=True, source='selection.chapter')
     isSuggestion = serializers.BooleanField(source='suggestion')
     parentId = serializers.PrimaryKeyRelatedField(many=False, read_only=True, source='parent')
-    sentiment = serializers.SerializerMethodField()
+    sentiment = serializers.IntegerField()
 
     class Meta:
         model = WriterFeedback

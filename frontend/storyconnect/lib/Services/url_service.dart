@@ -32,12 +32,11 @@ class PageUrls {
   static const String register = "/register";
 
   static const String writerHome = "/writer/home";
+
   static const String createBook = "/writer/create_book";
 
-  /// URL for reader home
   static const String readerHome = "/reader/home";
 
-  /// URL for reader library
   static const String readerLibrary = "/reader/library";
 
   /// Url for specific writing book.
@@ -67,9 +66,9 @@ class UrlConstants {
         .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
-  /// URI for HTTP Put request for creating writer feedback.
+  /// URI for HTTP POST request for creating writer feedback.
   static Uri createWriterFeedback() {
-    return _urlBuilder.build('feedback');
+    return _urlBuilder.build('feedback/');
   }
 
   ///
