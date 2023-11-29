@@ -300,9 +300,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
 
 
 # TODO: Add a view for narrative element queries
-class NarrativeElementViewset:
+class NarrativeElementGenerateView(APIView):
     pass
 
+class 
 
-class NarrativeElementTypeViewset:
-    pass
+

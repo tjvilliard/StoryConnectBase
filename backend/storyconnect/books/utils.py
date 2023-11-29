@@ -47,12 +47,12 @@ def element_description(elem_obj, s_sheet):
 def generate_attributes(elem_obj, s_sheet):
     elem_statements = s_sheet.get_statements(entity=elem_obj.name)
 
-    prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Give me a list of attibutes that describe {elem_obj.name}. Identify whether they are physical, personality, or background traits."
+    prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Give me a list of attibutes that describe {elem_obj.name}. Identify whether they are physical, personality, or background traits. Give a confidence measure for each trati. Example: Physical - Blonde Hair - 100%"
     gpt_response = client.chat.completions.create(
             model=CHAT_MODEL,
             messages=[{"role": "system", "content": prompt}],
             temperature=TEMP,
-            timeout=300,
+            timeout=300, 
         )
     
     attr_list = gpt_response.choices[0].message.content

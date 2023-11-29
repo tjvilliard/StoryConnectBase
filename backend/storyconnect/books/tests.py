@@ -220,6 +220,12 @@ class NarrativeElementTests(APITestCase):
                     <Alexander>
                     Alexander has scruffy blonde curls.
                     Alexander has stark icy eyes.
+                    Alexander is kind and gentle.
+                    Alexander is a prince.
+                    Alexander saved Isobel from a fire.
+                    Alexander broak his oath.
+                    Alexander was an orphan.
+                    Alexanders father was a theif.
                     </Alexander>
                     <Isobel>
                     Isobel has dark sea-colored eyes.

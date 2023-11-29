@@ -173,6 +173,57 @@ class UtilsTests(TestCase):
             f.write(bk_sum)
         
 
+class NarrativeElementTests(TestCase):
+    def setUp(self):
+        
+        self.user = User.objects.create_user(
+            username="testuser", password="this_is_a_test", email="testuser@test.com"
+        )
+        # create a book for the user
+        self.test_book = Book.objects.create(
+            title="Test Book",
+        )
+        
+        self.elem_type_char = NarrativeElementType.objects.create(user=self.user, name="Characters")
+        self.elem_alex = NarrativeElement.objects.create(user=self.user, name="Alexander", element_type=self.elem_type_char, book=self.test_book)
 
+        document = """<Statements>
+                    <Characters>
+                    <Alexander>
+                    Alexander has scruffy blonde curls.
+                    Alexander has stark icy eyes.
+                    Alexander is kind and gentle.
+                    Alexander is a prince.
+                    Alexander saved Isobel from a fire.
+                    Alexander broak his oath.
+                    Alexander was an orphan.
+                    Alexanders father was a theif.
+                    </Alexander>
+                    <Isobel>
+                    Isobel has dark sea-colored eyes.
+                    Isobel has dark auburn hair.
+                    Isobel has burnished olive skin.
+                    </Isobel>
+                    </Characters>
+                    <Locations>
+                    <Kings-Square>
+                    The Kings Square is a quiet and peaceful spot.
+                    The Kings Square has a grand fountain.
+                    The Kings Square has a statue of a forgotten ruler.
+                    </Kings-Square>
+                    </Locations>
+                    </Statements>"""
+
+        self.sheet1 = StatementSheet.objects.create(book=self.test_book, document=document)
+        
+    def test_generate_description(self):
+        desc = utils.element_description(self.elem_alex, self.sheet1)
+        with open("ai_features/test_files/description.txt", "w") as f:
+            f.write(desc)
+
+    def test_generate_attributes(self):
+        attr_list = utils.generate_attributes(self.elem_alex, self.sheet1)
+        with open("ai_features/test_files/attributes.txt", "w") as f:
+            f.write(attr_list)
         
         
