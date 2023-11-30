@@ -114,6 +114,24 @@ class ReadingApiProvider {
     }
   }
 
+  Future<List<String>?> getBookTags(int bookId) async {
+    try {
+      final url = UrlConstants.getBookTags(bookId);
+
+      final result = await http.get(url, headers: await buildHeaders());
+
+      //print(result.body);
+      var decoded = jsonDecode(utf8.decode(result.bodyBytes));
+      print(decoded);
+      return decoded.map<String>((e) => e['genre']).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print("[ERROR] $e");
+      }
+      return null;
+    }
+  }
+
   Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
     try {
       final url = UrlConstants.getUserLibrary();
@@ -215,6 +233,14 @@ class ReadingRepository {
     return book;
   }
 
+  Future<List<String>?> getBookTags(int bookId) async {
+    if (kDebugMode) {
+      print("Fetching Tags for Book : $bookId");
+    }
+    return await _api.getBookTags(bookId);
+  }
+
+  // Library Endpoints
   ///
   Future<Map<Library, Book>> getLibraryBooks() async {
     Map<Library, Book> libraryBookMap = {};
@@ -231,4 +257,5 @@ class ReadingRepository {
   Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.addBooktoLibrary(serialzier);
   }
+  // Library Endpoints
 }

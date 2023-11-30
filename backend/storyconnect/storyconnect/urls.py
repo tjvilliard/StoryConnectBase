@@ -31,7 +31,7 @@ router.register(r'api/library', books_views.LibraryViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
-
+#router.register(r'api/genretagging', features_view.GenreTaggingAPIView)
 
 urlpatterns = router.urls
 
@@ -40,9 +40,11 @@ urlpatterns += [
     
     path('api/admin/', admin.site.urls),
     path('api/road_unblock/', ai_features_views.RoadUnblockerRequestView.as_view()),
+    path('api/genretagging/<int:book_id>/', features_view.GenreTaggingAPIView.as_view(), name="genretagging"),
+    path('api/chaptertagging/<int:book_id>/<int:chapter_num>/', features_view.ChapterTaggingAPIView.as_view(), name="chaptertagging"),
 ]
 
 urlpatterns += ai_features_urls.urlpatterns
 urlpatterns += core_views.urlpatterns
-urlpatterns += features_url.urlpatterns
+# urlpatterns += features_url.urlpatterns
 urlpatterns += bookrec_url.urlpatterns

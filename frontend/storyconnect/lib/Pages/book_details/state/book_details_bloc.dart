@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/genre_tagging/genre.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
@@ -15,9 +16,11 @@ class FetchBookDetailsEvent extends BookDetailsEvent {
 
 class BookDetailsState {
   final Book? book;
+  final List<String>? bookTags;
   final LoadingStruct loadingStruct;
   BookDetailsState({
     required this.book,
+    required this.bookTags,
     required this.loadingStruct,
   });
 }
@@ -30,6 +33,7 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
   BookDetailsBloc(this._repo)
       : super(BookDetailsState(
           book: null,
+          bookTags: null,
           loadingStruct: const LoadingStruct(isLoading: false),
         )) {
     on<FetchBookDetailsEvent>((event, emit) => fetchBook(event, emit));
@@ -41,13 +45,15 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     }
     emit(BookDetailsState(
       book: state.book,
+      bookTags: state.bookTags,
       loadingStruct: const LoadingStruct(isLoading: true),
     ));
 
     Book? book = await _repo.getBook(event.bookId);
-
+    List<String>? tags = await _repo.getBookTags(event.bookId!);
     emit(BookDetailsState(
       book: book,
+      bookTags: tags,
       loadingStruct: const LoadingStruct(isLoading: false),
     ));
   }

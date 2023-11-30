@@ -86,6 +86,8 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        if (state.bookTags != null)
+                                          Text(state.bookTags!.toString()),
                                         Text(yyMMddDateTime(
                                             state.book!.created)),
                                         const VerticalDivider(

@@ -74,6 +74,12 @@ class PageUrls {
 class UrlConstants {
   static final _urlBuilder = _UrlBuilder();
 
+  static Uri getBookTags(int bookId) {
+    return _urlBuilder.build('genretagging/$bookId/');
+  }
+
+  // Feedback Endpoints
+
   ///
   static Uri getWriterFeedback(int chapterId) {
     return _urlBuilder
@@ -85,6 +91,8 @@ class UrlConstants {
   static Uri createWriterFeedback() {
     return _urlBuilder.build('feedback/');
   }
+
+  // Feedback Endpoints
 
   ///
   static Uri getChapters(int bookId) {
