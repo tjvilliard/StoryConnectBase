@@ -79,6 +79,8 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                 children: [
                                   BookDetailsCover(book: state.book!),
                                   Text(state.book!.language),
+                                  if (state.bookTags != null)
+                                    Text(state.bookTags!.tags.toString()),
                                   Container(
                                     alignment: Alignment.center,
                                     height: 30,
@@ -86,8 +88,6 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        if (state.bookTags != null)
-                                          Text(state.bookTags!.toString()),
                                         Text(yyMMddDateTime(
                                             state.book!.created)),
                                         const VerticalDivider(

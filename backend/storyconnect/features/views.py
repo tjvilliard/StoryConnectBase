@@ -16,7 +16,7 @@ class GenreTaggingAPIView(APIView):
     #authentication_classes = (TokenAuthentication,)
     queryset = features_models.GenreTagging.objects.all().prefetch_related("book")
     
-    @action(detail=False, methods=["get"])
+    @action(detail=True, methods=["get"])
     def get(self, request, *args, **kwargs):
         
         genretags = self.queryset.filter(book__id = kwargs.get('book_id'))

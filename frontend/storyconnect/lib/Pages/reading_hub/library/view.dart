@@ -56,7 +56,7 @@ class LibraryState extends State<LibraryView> {
                           tabs: const [
                             Tab(text: "Currently Reading"),
                             Tab(text: "Completed"),
-                            Tab(text: "To Be Read")
+                            Tab(text: "Unread")
                           ],
                           children: [
                             BookGridWidget(

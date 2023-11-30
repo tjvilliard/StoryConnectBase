@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Models/genre_tagging/genre.dart';
 
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
@@ -104,6 +105,8 @@ class ReadingApiProvider {
 
       final result = await http.get(url, headers: await buildHeaders());
 
+      print(result.body);
+
       for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
@@ -114,16 +117,17 @@ class ReadingApiProvider {
     }
   }
 
-  Future<List<String>?> getBookTags(int bookId) async {
+  Future<GenreTags?> getBookTags(int bookId) async {
     try {
       final url = UrlConstants.getBookTags(bookId);
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      //print(result.body);
-      var decoded = jsonDecode(utf8.decode(result.bodyBytes));
-      print(decoded);
-      return decoded.map<String>((e) => e['genre']).toList();
+      // This is super duper hacky, but it can't be helped.
+      var tagSet =
+          (jsonDecode(utf8.decode(result.bodyBytes)) as Iterable).first;
+
+      return GenreTags.fromJson(tagSet);
     } catch (e) {
       if (kDebugMode) {
         print("[ERROR] $e");
@@ -139,6 +143,8 @@ class ReadingApiProvider {
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
+        print(map);
+
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield MapEntry<Library, Book>(
@@ -184,6 +190,15 @@ class ReadingApiProvider {
     } catch (e) {
       if (kDebugMode) {
         print(e);
+      }
+    }
+  }
+
+  Future<void> changeLibraryBookStatus(
+      LibraryEntrySerializer serializer) async {
+    try {} catch (e) {
+      if (kDebugMode) {
+        print("[ERROR] $e");
       }
     }
   }
@@ -233,7 +248,7 @@ class ReadingRepository {
     return book;
   }
 
-  Future<List<String>?> getBookTags(int bookId) async {
+  Future<GenreTags?> getBookTags(int bookId) async {
     if (kDebugMode) {
       print("Fetching Tags for Book : $bookId");
     }
@@ -257,5 +272,9 @@ class ReadingRepository {
   Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.addBooktoLibrary(serialzier);
   }
+
+  Future<void> changeLibraryBookStatus(
+      LibraryEntrySerializer serializer) async {}
+
   // Library Endpoints
 }

@@ -16,7 +16,7 @@ class FetchBookDetailsEvent extends BookDetailsEvent {
 
 class BookDetailsState {
   final Book? book;
-  final List<String>? bookTags;
+  final GenreTags? bookTags;
   final LoadingStruct loadingStruct;
   BookDetailsState({
     required this.book,
@@ -50,7 +50,7 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     ));
 
     Book? book = await _repo.getBook(event.bookId);
-    List<String>? tags = await _repo.getBookTags(event.bookId!);
+    GenreTags? tags = await _repo.getBookTags(event.bookId!);
     emit(BookDetailsState(
       book: book,
       bookTags: tags,

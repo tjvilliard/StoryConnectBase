@@ -34,10 +34,10 @@ class LibrarySerializer(serializers.ModelSerializer):
 
 
 class LibraryBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
     class Meta:
-        model = Library
         exclude = ["reader"]
-        depth = 1
+        model = Library
 
 
 class NarrativeElementSerializer(serializers.ModelSerializer):
