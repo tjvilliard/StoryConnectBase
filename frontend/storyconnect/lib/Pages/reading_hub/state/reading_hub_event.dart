@@ -22,3 +22,7 @@ class InitialLoadEvent extends ReadingHomeEvent {
 class FetchBooksEvent extends ReadingHomeEvent {
   const FetchBooksEvent() : super(isLoading: true);
 }
+
+class FetchLibraryBooksEvent extends ReadingHomeEvent {
+  const FetchLibraryBooksEvent() : super(isLoading: true);
+}

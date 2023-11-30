@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/components/library_book.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/library_book_item.dart';
 import 'package:storyconnect/Pages/reading_hub/library/components/library_book_cover.dart';
 
 class BookGridWidget extends StatelessWidget {

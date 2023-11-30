@@ -55,6 +55,10 @@ class PageUrls {
 
   static const String readerLibrary = "/reader/library";
 
+  static String bookDetails(int bookId) {
+    return "/reader/details/$bookId";
+  }
+
   /// URL for a specific reading book.
   static String readBook(int bookID) {
     return "/reader/book/$bookID";
@@ -66,7 +70,7 @@ class PageUrls {
   }
 }
 
-/// URL constants for REST api calls.
+/// URL constants for REST API Endpoints.
 class UrlConstants {
   static final _urlBuilder = _UrlBuilder();
 
@@ -125,7 +129,6 @@ class UrlConstants {
   }
 
   // Library Endpoints
-
   /// library/get_user/library/ for getting user library.
   static Uri getUserLibrary() {
     return _urlBuilder.build('library/get_user_library/');
@@ -140,7 +143,6 @@ class UrlConstants {
   static Uri removeLibraryBook(int entryId) {
     return _urlBuilder.build('library/$entryId/change_entry_status/');
   }
-
   // Library Endpoints
 
   static Uri continuities(int chapterId) {

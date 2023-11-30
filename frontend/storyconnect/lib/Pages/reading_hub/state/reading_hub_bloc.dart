@@ -20,9 +20,32 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
           loadingStruct: const LoadingStruct(isLoading: false),
         )) {
     on<FetchBooksEvent>((event, emit) => fetchBooks(event, emit));
+
+    on<FetchLibraryBooksEvent>((event, emit) => fetchLibraryBooks(event, emit));
     on<RemoveLibraryBookEvent>((event, emit) => removeLibraryBook(event, emit));
     on<AddLibraryBookEvent>((event, emit) => addLibraryBook(event, emit));
   }
+
+  void fetchLibraryBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
+    emit(ReadingHubStruct(
+      allBooks: state.allBooks,
+      libraryBookMap: state.libraryBookMap,
+      mappedBooks: {},
+      loadingStruct: LoadingStruct.loading((event.isLoading)),
+    ));
+
+    Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
+
+    emit(ReadingHubStruct(
+      allBooks: state.allBooks,
+      libraryBookMap: libBookMap,
+      mappedBooks: {},
+      loadingStruct: LoadingStruct.loading(false),
+    ));
+  }
+
+  void fetchReccomendedBooks(
+      ReadingHomeEvent event, ReadingHubEmitter emit) async {}
 
   void fetchBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
     emit(ReadingHubStruct(

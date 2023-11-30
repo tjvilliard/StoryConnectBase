@@ -11,28 +11,18 @@ import 'package:storyconnect/Pages/reading_hub/components/serializers/library_en
 import 'package:storyconnect/Services/url_service.dart';
 
 class ReadingApiProvider {
-  /// Generates HTTP: POST request for new feedback item.
+  /// Generates and Sends HTTP POST request for creating
+  /// a new Feedback Item to appropriate Endpoint.
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
       final url = UrlConstants.createWriterFeedback();
-
-      if (kDebugMode) {
-        print("[DEBUG]: Sending Json String to Backend:");
-        print("$serializer");
-        print("");
-        print("[INFO]: Getting result from post call. \n");
-      }
 
       final result = await http.post(
         url,
         headers: await buildHeaders(),
         body: jsonEncode(serializer.toJson()),
       );
-
-      if (kDebugMode) {
-        print("[DEBUG]: Json Result: \n ${result.body} \n");
-      }
 
       return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
@@ -43,7 +33,8 @@ class ReadingApiProvider {
     }
   }
 
-  /// Get feedback items associated with this chapter.
+  /// Generates and Sends HTTP GET request for chapter
+  /// related Feedback Items to appropriate Endpoint.
   Stream<WriterFeedback> getChapterFeedback(int chapterId) async* {
     if (kDebugMode) {
       print("Getting Chapter Feedback");
@@ -61,6 +52,33 @@ class ReadingApiProvider {
         print(feedback);
       }
       yield WriterFeedback.fromJson(feedback);
+    }
+  }
+
+  /// Generates and Sends HTTP GET request for
+  /// specific book and it's info.
+  Future<Book?> getBook(int? bookId) async {
+    try {
+      final url = UrlConstants.books(bookId: bookId);
+
+      if (kDebugMode) {
+        print(url);
+      }
+
+      final result = await http.get(url, headers: await buildHeaders());
+
+      if (kDebugMode) {
+        print(result);
+      }
+
+      final bookJson = jsonDecode(utf8.decode(result.bodyBytes));
+
+      return Book.fromJson(bookJson);
+    } catch (e) {
+      if (kDebugMode) {
+        print("[ERROR] $e");
+      }
+      return null;
     }
   }
 
@@ -182,10 +200,19 @@ class ReadingRepository {
     return feedback;
   }
 
-  /// Get
+  /// Get The Book Info for a certain book.
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = _api.getAllBooks();
     return result.toList();
+  }
+
+  ///
+  Future<Book?> getBook(int? bookId) async {
+    if (kDebugMode) {
+      print("Getting Book : $bookId");
+    }
+    final Book? book = await _api.getBook(bookId);
+    return book;
   }
 
   ///

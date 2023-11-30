@@ -156,7 +156,21 @@ class LibraryBookState extends State<LibraryBookItem> {
                                               child:
                                                   const Text("Start Reading")),
                                         ),
-                                        DetailsButton(bookId: bookId),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: OutlinedButton(
+                                              style: buttonStyle,
+                                              onPressed: () {
+                                                final uri =
+                                                    PageUrls.bookDetails(
+                                                        bookId);
+                                                Beamer.of(context).beamToNamed(
+                                                    uri,
+                                                    data: {"book": bookId});
+                                              },
+                                              child: const Text("Details")),
+                                        ),
                                         RemoveBookButton(bookId: bookId)
                                       ])),
                             ),

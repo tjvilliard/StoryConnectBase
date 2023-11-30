@@ -24,7 +24,7 @@ class LibraryState extends State<LibraryView> {
       if (initialLoad) {
         initialLoad = false;
         final libraryHomeBloc = context.read<ReadingHubBloc>();
-        libraryHomeBloc.add(const FetchBooksEvent());
+        libraryHomeBloc.add(const FetchLibraryBooksEvent());
       }
     });
   }
