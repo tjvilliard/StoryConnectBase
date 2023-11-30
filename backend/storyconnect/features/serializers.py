@@ -4,7 +4,6 @@ from features.models import Review, GenreTagging, ChapterTagging
 class GenreTaggingSerializer(serializers.ModelSerializer):
     class Meta:
         model = GenreTagging
-        # fields = "__all__"
         exclude = ('book', 'id')
 
 class ChapterTaggingSerializer(serializers.ModelSerializer):

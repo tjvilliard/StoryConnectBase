@@ -1,6 +1,5 @@
 part of 'reading_hub_bloc.dart';
 
-///
 class ReadingHubStruct {
   final List<Book> allBooks;
   final Map<Library, Book> libraryBookMap;
@@ -8,10 +7,6 @@ class ReadingHubStruct {
   final Book? bookToNavigate;
   final LoadingStruct loadingStruct;
 
-  /// Creates a possible state of the reading home page.
-  /// The state contains the following:
-  ///- Library Book Map
-  ///-
   ReadingHubStruct({
     required this.allBooks,
     required this.libraryBookMap,

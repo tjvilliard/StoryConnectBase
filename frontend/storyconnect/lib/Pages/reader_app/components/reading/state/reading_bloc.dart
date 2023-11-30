@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -48,16 +49,18 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
 
       final doc = convertToDeltaDoc(result.chapters[0]!);
       editor.update(doc.delta);
-
-      emit(state.copyWith(
-          chapters: result.chapters,
-          chapterNumToID: result.chapterNumToID,
-          loadingStruct: LoadingStruct.loading(false)));
-
-      final chapterId = state.chapterNumToID[state.currentIndex]!;
-      event.feedbackBloc
-          .add(LoadChapterFeedbackEvent(chapterId, readingBloc: this));
     }
+
+    emit(state.copyWith(
+        chapters: result.chapters,
+        chapterNumToID: result.chapterNumToID,
+        loadingStruct: LoadingStruct.loading(false)));
+
+    final chapterId = state.chapterNumToID[state.currentIndex]!;
+    if (kDebugMode) {
+      print("Getting Feedback Event on Load Reading Event. ");
+    }
+    event.feedbackBloc.add(LoadChapterFeedbackEvent(chapterId: chapterId));
   }
 
   // helper function to load chapters into expected format

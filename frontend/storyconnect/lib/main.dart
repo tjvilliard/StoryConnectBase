@@ -55,7 +55,8 @@ class MainApp extends StatelessWidget {
           darkTheme: darkTheme,
           routerDelegate: routerDelegate,
           routeInformationParser: BeamerParser(),
-          backButtonDispatcher: BeamerBackButtonDispatcher(delegate: routerDelegate),
+          backButtonDispatcher:
+              BeamerBackButtonDispatcher(delegate: routerDelegate),
         ));
   }
 }

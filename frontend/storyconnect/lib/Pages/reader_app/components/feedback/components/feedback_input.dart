@@ -50,8 +50,7 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                             onChanged: (_) {
                               context.read<FeedbackBloc>().add(
                                   FeedbackEditedEvent(
-                                      suggestion:
-                                          _feedbackInputController.text));
+                                      comment: _feedbackInputController.text));
                             }),
                       )),
                       Container(

@@ -1,6 +1,5 @@
 part of 'reading_hub_bloc.dart';
 
-///
 abstract class ReadingHomeEvent {
   final bool isLoading;
   const ReadingHomeEvent({required this.isLoading});
@@ -22,4 +21,8 @@ class InitialLoadEvent extends ReadingHomeEvent {
 
 class FetchBooksEvent extends ReadingHomeEvent {
   const FetchBooksEvent() : super(isLoading: true);
+}
+
+class FetchLibraryBooksEvent extends ReadingHomeEvent {
+  const FetchLibraryBooksEvent() : super(isLoading: true);
 }

@@ -17,19 +17,24 @@ class WriterFeedbackSerializer(serializers.ModelSerializer):
     chapterId = serializers.PrimaryKeyRelatedField(many=False, read_only=True, source='selection.chapter')
     isSuggestion = serializers.BooleanField(source='suggestion')
     parentId = serializers.PrimaryKeyRelatedField(many=False, read_only=True, source='parent')
-    sentiment = serializers.SerializerMethodField()
+    sentiment = serializers.IntegerField()
 
     class Meta:
         model = WriterFeedback
         exclude = ['user', 'parent', 'suggestion']
 
     def get_sentiment(self, obj):
+        print(f"[INFO] getting Sentiment display: {obj}")
         return obj.get_sentiment_display()
 
     def create(self, validated_data):
+        print('')
+        print(f"[INFO] ${validated_data}")
         selection_data = validated_data.pop('selection')
         selection = TextSelection.objects.create(**selection_data)
+        print(f"[INFO] ${validated_data}")
         comment = WriterFeedback.objects.create(selection=selection, **validated_data)
+        print(f"[INFO] ${comment.__str__}")
         return comment
 
 

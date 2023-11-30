@@ -6,15 +6,15 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/components/fee
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
 
 ///
-class FeedbackCardListWidget extends StatefulWidget {
+class FeedbackList extends StatefulWidget {
   final List<WriterFeedback> feedbackItems;
-  const FeedbackCardListWidget({super.key, required this.feedbackItems});
+  const FeedbackList({super.key, required this.feedbackItems});
   @override
-  FeedbackCardListState createState() => FeedbackCardListState();
+  FeedbackListState createState() => FeedbackListState();
 }
 
 ///
-class FeedbackCardListState extends State<FeedbackCardListWidget> {
+class FeedbackListState extends State<FeedbackList> {
   List<WriterFeedback> get feedbackItems => widget.feedbackItems;
 
   ///
@@ -55,8 +55,15 @@ class FeedbackCardListState extends State<FeedbackCardListWidget> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FeedbackBloc, FeedbackState>(builder: (BuildContext context, FeedbackState feedbackState) {
+    return BlocBuilder<FeedbackBloc, FeedbackState>(
+        builder: (BuildContext context, FeedbackState feedbackState) {
       if (feedbackItems.isEmpty) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
@@ -70,12 +77,21 @@ class FeedbackCardListState extends State<FeedbackCardListWidget> {
         return Stack(
           children: [
             Positioned.fill(
-                child: SingleChildScrollView(
-                    controller: _scrollController,
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: CommentCardWidget.buildAll(feedbackSet: feedbackItems)))),
+                child: ListView.separated(
+              itemCount: feedbackItems.length,
+              controller: _scrollController,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, int index) {
+                return FeedbackCardWidget(feedback: feedbackItems[index]);
+              },
+              separatorBuilder: (context, int index) {
+                if (index != feedbackItems.length - 1) {
+                  return const Divider();
+                } else {
+                  return Container();
+                }
+              },
+            )),
             Positioned(
                 top: 1.0,
                 left: 0.0,
@@ -86,10 +102,13 @@ class FeedbackCardListState extends State<FeedbackCardListWidget> {
                     child: Container(
                         alignment: Alignment.topCenter,
                         child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+                            style: ElevatedButton.styleFrom(
+                                shape: const CircleBorder()),
                             onPressed: () {
-                              _scrollController.animateTo(_scrollController.offset - 200,
-                                  duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                              _scrollController.animateTo(
+                                  _scrollController.offset - 200,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
                             },
                             child: const Icon(FontAwesomeIcons.arrowUp))))),
             Positioned(
@@ -102,11 +121,14 @@ class FeedbackCardListState extends State<FeedbackCardListWidget> {
                     child: Container(
                         alignment: Alignment.bottomCenter,
                         child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+                            style: ElevatedButton.styleFrom(
+                                shape: const CircleBorder()),
                             onLongPress: () {},
                             onPressed: () {
-                              _scrollController.animateTo(_scrollController.offset + 200,
-                                  duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                              _scrollController.animateTo(
+                                  _scrollController.offset + 200,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
                             },
                             child: const Icon(FontAwesomeIcons.arrowDown)))))
           ],

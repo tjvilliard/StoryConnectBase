@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
-import 'package:storyconnect/Pages/reading_hub/home/components/big_book.dart';
 import 'package:storyconnect/Pages/reading_hub/home/behaviors/horizontal_scroll_bloc.dart';
+import 'package:storyconnect/Widgets/book_widgets/big_book.dart';
 
 class BookList extends StatefulWidget {
   final List<Book> bookList;
@@ -30,7 +30,7 @@ class BookListState extends State<BookList> {
         controller: state.scrollController,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, int index) {
-          return BigBook(book: bookList[index]);
+          return BigBookWidget(book: bookList[index]);
         },
       );
     });
