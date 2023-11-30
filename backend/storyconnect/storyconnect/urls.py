@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path 
 from rest_framework import routers
+from pages import views as pages_views
 from books import views as books_views
 from comment import views as comment_views
 from ai_features import urls as ai_features_urls
@@ -31,6 +32,7 @@ router.register(r'api/chapters', books_views.ChapterViewSet)
 router.register(r'api/highlights', comment_views.HighlightViewSet)
 router.register(r'api/feedback', comment_views.WriterFeedbackViewSet)
 router.register(r'api/library', books_views.LibraryViewSet)
+# router.register(r'api/genretagging', features_view.GenreTaggingAPIView, basename='genretagging')
 
 urlpatterns = router.urls
 
@@ -39,9 +41,11 @@ urlpatterns += [
     
     path('api/admin/', admin.site.urls),
     path('api/road_unblock/', ai_features_views.RoadUnblockerRequestView.as_view()),
+    path('api/genretagging/<int:book_id>/', features_view.GenreTaggingAPIView.as_view(), name="genretagging"),
+    path('api/chaptertagging/<int:book_id>/<int:chapter_num>/', features_view.ChapterTaggingAPIView.as_view(), name="chaptertagging"),
 ]
 
 urlpatterns += ai_features_urls.urlpatterns
 urlpatterns += core_views.urlpatterns
-urlpatterns += features_url.urlpatterns
+# urlpatterns += features_url.urlpatterns
 urlpatterns += bookrec_url.urlpatterns

@@ -5,6 +5,9 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+from books import models
+from book_rec import models
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -87,8 +90,24 @@ def Special_Content_Recommender(df,col,book_id):
     similarity_scores_txt = similarity_scores_(content_txt,book_id)
     Recommend_txt = Recommended_book(similarity_scores_txt,df)
     Recommend_txt["similarity_scores"] = similarity_scores_txt
-    print(Recommend_txt.iloc[:15])
+    return Recommend_txt.iloc[:10]
     # fig_plot(Recommend_txt,df,col)
 
 def main():
     df= pd.read_csv('backend/storyconnect/book_rec/general_book_rec_dataset/goodbooks_10k_rating_and_description.csv')
+
+    pt_lst_test = []
+    for text in df["book_desc"]:
+        processed_text = remove_stopwords(clean_words(convertintolist(text)))
+        pt_lst_test.append(processed_text)
+    df["book_desc"] = pt_lst_test
+
+    all_books = Book.objects.all()
+
+    for each_book in all_books:
+        book_rec, created = Book_Based_Rec.objects.get_or_create(book=each_book)
+        df_cls_rec = Special_Content_Recommender(df,"book_desc",each_book.pk)
+        df_cls_rec = df_cls_rec[1:]
+        recs = []
+        for title in df_cls_rec:
+            recs.append(title)

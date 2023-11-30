@@ -1,10 +1,12 @@
-from django.contrib.auth.signals import user_logged_out
-from django.core.signals import request_finished
+# python manage.py runscript delete_all_questions
+
+# from django.contrib.auth.signals import user_logged_out
+# from django.core.signals import request_finished
 from logging import getLogger
 from features import content_tagging as ct
 from features import models as features_models
 from books import models as book_models
-from django.dispatch import receiver
+# from django.dispatch import receiver
 from django.contrib.auth.models import User
 # from django_postgres_extensions.models.functions import *
 
@@ -45,7 +47,7 @@ def contenttag_test():
     
     all_user_books = book_models.Book.objects.filter(user=me)
     for book in all_user_books:
-        book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
+        book_genretag,created = features_models.GenreTag.objects.get_or_create(book=book)
         book_genre, created = book_models.Book.objects.get_or_create(pk=book.pk)
         chapters_genres = []
         for chap in book.get_chapters():
@@ -78,7 +80,7 @@ def contenttag_test():
         book_genre = book_genre.union(added_genres)
 
         # update the book genre with the additional genres
-        features_models.GenreTagging.objects.filter(book=book_genretag).update(genre=book_genre)
+        features_models.GenreTag.objects.filter(book=book_genretag).update(genre=book_genre)
         book_models.Book.objects.filter(pk=book_genre).update(tags=book_genre)
         print("finished.")
 

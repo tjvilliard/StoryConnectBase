@@ -1,10 +1,10 @@
-from django.contrib.auth.signals import user_logged_out
-from django.core.signals import request_finished
+# from django.contrib.auth.signals import user_logged_out
+# from django.core.signals import request_finished
 from logging import getLogger
 from features import content_tagging as ct
 from features import models as features_models
 from books import models as book_models
-from django.dispatch import receiver
+# from django.dispatch import receiver
 from django.contrib.auth.models import User
 # from django_postgres_extensions.models.functions import *
 

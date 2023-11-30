@@ -53,7 +53,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
 ]
 
-CSRF_COOKIE_DOMAIN = 'storyconnect.app'
+# CSRF_COOKIE_DOMAIN = 'storyconnect.app'
 
 # TODO: Change this to False when deploying to production
 CORS_ALLOW_ALL_ORIGINS = True
@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'ai_features',
     'features',
     'book_rec',
+    'scripts',
 ]
 
 # DEBUG_TOOLBAR_ENABLED = True
