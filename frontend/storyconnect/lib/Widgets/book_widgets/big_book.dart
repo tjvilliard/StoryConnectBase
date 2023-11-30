@@ -6,13 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/clickable.dart';
+import 'package:storyconnect/Widgets/image_loader.dart';
 
 class BigBookWidget extends StatefulWidget {
   static const double sizeFactor = 1.1;
   static const double height = 200.0 * BigBookWidget.sizeFactor;
   static const double width = 400.0 * BigBookWidget.sizeFactor;
   static const double iconSize = 175.0 * BigBookWidget.sizeFactor;
-  static const double cardElevation = 3;
+  static const double cardElevation = 2;
   static const double maxColumnWidth = width / 2.0;
   static const double synopsisBoxHeight = height / 2.0;
 
@@ -30,15 +31,16 @@ class BigBookWidgetState extends State<BigBookWidget> {
 
   @override
   void initState() {
+    getImage(widget.book.cover);
     super.initState();
   }
 
-  Widget _imagePlaceHolder(String? url) {
+  Widget _imagePlaceHolder() {
     return const Column(children: [
       SizedBox(
-        height: 150,
-        width: 100,
-        child: Icon(Icons.book, size: 100),
+        height: BigBookWidget.height - 8.0,
+        width: BigBookWidget.width / 3.0,
+        child: Icon(Icons.book, size: 150),
       )
     ]);
   }
@@ -85,7 +87,22 @@ class BigBookWidgetState extends State<BigBookWidget> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _imagePlaceHolder(url),
+                  // Image Placeholder
+                  if (url == null || url!.isEmpty) _imagePlaceHolder(),
+                  if (url != null && url!.isNotEmpty)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: ImageLoader(
+                        url: url!,
+                        fit: BoxFit.cover,
+                        constraints: const BoxConstraints(
+                          maxWidth: BigBookWidget.width / 3.0,
+                          minHeight: BigBookWidget.height,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 20),
+                  // Image Placeholder
                   Container(
                     constraints: const BoxConstraints(
                         maxWidth: BigBookWidget.maxColumnWidth),
