@@ -77,7 +77,9 @@ class UrlConstants {
   static Uri getBookTags(int bookId) {
     return _urlBuilder.build('genretagging/$bookId/');
   }
-
+  static Uri getUBookRecs(int userId) {
+    return _urlBuilder.build('bookrec_userbased/$userId/');
+  }
   // Feedback Endpoints
 
   ///

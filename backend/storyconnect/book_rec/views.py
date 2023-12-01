@@ -27,7 +27,7 @@ class User_Based_Rec_APIView(APIView):
     
     @action(detail=True, methods=["get"])
     def get(self, request, *args, **kwargs):
-        ub_rec = self.queryset.filter(book__id = kwargs.get('user_id'))
+        ub_rec = self.queryset.filter(user__id = request.user.id)
         serializer=bookrec_serializers.User_Based_Rec_Serializer(ub_rec, many=True)
         return Response(serializer.data)
 
