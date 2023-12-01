@@ -11,9 +11,10 @@ import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/fe
 import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
+/// API Endpoint for reading related tasks.
 class ReadingApiProvider {
-  /// Generates and Sends HTTP POST request for creating
-  /// a new Feedback Item to appropriate Endpoint.
+  // Feedback Related Endpoints
+  /// Endpoint for creating a new feedback Item for a specific chapter.
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
@@ -34,8 +35,7 @@ class ReadingApiProvider {
     }
   }
 
-  /// Generates and Sends HTTP GET request for chapter
-  /// related Feedback Items to appropriate Endpoint.
+  /// Endpoint for getting feedback items for a specific chapter.
   Stream<WriterFeedback> getChapterFeedback(int chapterId) async* {
     if (kDebugMode) {
       print("Getting Chapter Feedback");
@@ -55,9 +55,10 @@ class ReadingApiProvider {
       yield WriterFeedback.fromJson(feedback);
     }
   }
+  // Feedback Related Endpoints
 
-  /// Generates and Sends HTTP GET request for
-  /// specific book and it's info.
+  // Book Specific Endpoints.
+  /// API Endpoint for getting a specific book.
   Future<Book?> getBook(int? bookId) async {
     try {
       final url = UrlConstants.books(bookId: bookId);
@@ -83,6 +84,7 @@ class ReadingApiProvider {
     }
   }
 
+  /// Unused Endpoint.
   Stream<Book> getBooks() async* {
     try {
       final url = UrlConstants.books();
@@ -99,13 +101,12 @@ class ReadingApiProvider {
     }
   }
 
+  /// API Endpoint for getting a set of books.
   Stream<Book> getAllBooks() async* {
     try {
       final url = UrlConstants.getAllBooks();
 
       final result = await http.get(url, headers: await buildHeaders());
-
-      print(result.body);
 
       for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
@@ -117,6 +118,7 @@ class ReadingApiProvider {
     }
   }
 
+  /// API Endpoint for getting tags related to a book.
   Future<GenreTags?> getBookTags(int bookId) async {
     try {
       final url = UrlConstants.getBookTags(bookId);
@@ -135,7 +137,33 @@ class ReadingApiProvider {
       return null;
     }
   }
+  // Book Specific Endpoints.
 
+  //
+  ///
+  Future<String?> getUUIDbyUsername(String displayName) async {
+    try {
+      final url = UrlConstants.getProfileName(displayName);
+
+      final result = await http.get(url, headers: await buildHeaders());
+
+      print(result.body);
+
+      var uuid = jsonDecode(utf8.decode(result.bodyBytes));
+
+      return uuid;
+    } catch (e) {
+      if (kDebugMode) {
+        print("[ERROR] $e");
+      }
+
+      return null;
+    }
+  }
+  //
+
+  // Library Related Endpoints.
+  /// API Endpoint for getting the full set of library books.
   Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
     try {
       final url = UrlConstants.getUserLibrary();
@@ -194,6 +222,7 @@ class ReadingApiProvider {
     }
   }
 
+  /// API endpoint for changing the status of a library Book.
   Future<void> changeLibraryBookStatus(
       LibraryEntrySerializer serializer) async {
     try {} catch (e) {
@@ -202,12 +231,14 @@ class ReadingApiProvider {
       }
     }
   }
+  // Library Related Endpoints. //
 }
 
 class ReadingRepository {
   final ReadingApiProvider _api = ReadingApiProvider();
   Map<Library, Book> libraryBookMap = {};
 
+  // Feedback Endpoints
   /// Creates a new feedback item for chapter.
   Future<int?> createChapterFeedback({
     required FeedbackCreationSerializer serializer,
@@ -232,7 +263,9 @@ class ReadingRepository {
 
     return feedback;
   }
+  // Feedback Endpoints
 
+  //
   /// Get The Book Info for a certain book.
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = _api.getAllBooks();
@@ -248,12 +281,14 @@ class ReadingRepository {
     return book;
   }
 
+  ///
   Future<GenreTags?> getBookTags(int bookId) async {
     if (kDebugMode) {
       print("Fetching Tags for Book : $bookId");
     }
     return await _api.getBookTags(bookId);
   }
+  //
 
   // Library Endpoints
   ///
@@ -275,6 +310,10 @@ class ReadingRepository {
 
   Future<void> changeLibraryBookStatus(
       LibraryEntrySerializer serializer) async {}
-
   // Library Endpoints
+
+  ///
+  Future<String?> getUUIDbyUsername(String displayName) async {
+    return await _api.getUUIDbyUsername(displayName);
+  }
 }

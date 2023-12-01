@@ -7,6 +7,7 @@ from .views import (
     AnnouncementViewSet,
     ProfileDisplayNameVerification,
     ProfileImageUpload,
+    GetProfileByDisplayName,
 )
 
 app_name = "core"
@@ -33,4 +34,10 @@ urlpatterns = [
         ProfileImageUpload.as_view(),
         name="profile_image_upload",
     ),
+    path(
+        "api/username/by_display_name/<str:display_name>/",
+        GetProfileByDisplayName.as_view(),
+        name="get_username_by_display"
+
+    )
 ]

@@ -79,7 +79,6 @@ class UrlConstants {
   }
 
   // Feedback Endpoints
-
   ///
   static Uri getWriterFeedback(int chapterId) {
     return _urlBuilder
@@ -91,7 +90,6 @@ class UrlConstants {
   static Uri createWriterFeedback() {
     return _urlBuilder.build('feedback/');
   }
-
   // Feedback Endpoints
 
   ///
@@ -159,6 +157,12 @@ class UrlConstants {
 
   static Uri getNarrativeElements(int bookId) {
     return _urlBuilder.build('narrative_elements/$bookId');
+  }
+
+  static Uri getProfileName(String displayName) {
+    print(displayName);
+
+    return _urlBuilder.build('username/by_display_name/$displayName?/');
   }
 
   static Uri getDisplayName(int uid) {

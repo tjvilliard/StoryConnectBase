@@ -62,7 +62,9 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
               fit: BoxFit.cover,
               constraints: const BoxConstraints(
                 maxHeight: 400,
+                minHeight: 400,
                 maxWidth: 300,
+                minWidth: 300,
               ),
             )),
     ]);

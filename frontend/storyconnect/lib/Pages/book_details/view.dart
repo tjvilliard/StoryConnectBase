@@ -65,7 +65,6 @@ class BookDetailsViewState extends State<BookDetailsView> {
                 children: [
                   Header(
                     title: state.book!.title,
-                    subtitle: state.book!.authorName ?? "Author Name Not Set.",
                     alignment: WrapAlignment.center,
                   ),
                   Body(
@@ -73,37 +72,61 @@ class BookDetailsViewState extends State<BookDetailsView> {
                           surfaceTintColor: Colors.white,
                           elevation: 4,
                           child: Container(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  BookDetailsCover(book: state.book!),
-                                  Text(state.book!.language),
-                                  if (state.bookTags != null)
-                                    Text(state.bookTags!.tags.toString()),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 30,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(yyMMddDateTime(
-                                            state.book!.created)),
-                                        const VerticalDivider(
-                                          indent: 2.5,
-                                          endIndent: 2.5,
-                                          width: 20,
-                                        ),
-                                        Text(yyMMddDateTime(
-                                            state.book!.modified)),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(state.book!.synopsis ?? ""),
-                                  Text(state.book!.copyright.toString()),
-                                ],
-                              )))),
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    BookDetailsCover(book: state.book!),
+                                    const SizedBox(height: 20),
+                                    Text("Language: ${state.book!.language}"),
+                                    const SizedBox(height: 20),
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          final uri = PageUrls.writerProfile(
+                                              state.uuid!);
+                                          Beamer.of(context).beamToNamed(uri);
+                                        },
+                                        child: Text(state.book!.authorName ??
+                                            "Author Name Not Set.")),
+                                    const SizedBox(height: 20),
+                                    if (state.bookTags != null)
+                                      Text(state.bookTags!.tags.toString()),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                        alignment: Alignment.center,
+                                        height: 30,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(yyMMddDateTime(
+                                                state.book!.created)),
+                                            const VerticalDivider(
+                                              indent: 2.5,
+                                              endIndent: 2.5,
+                                              width: 20,
+                                            ),
+                                            Text(yyMMddDateTime(
+                                                state.book!.modified)),
+                                          ],
+                                        )),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 450),
+                                        child: Text(
+                                          state.book!.synopsis ?? "",
+                                          maxLines: 7,
+                                        )),
+                                    Text(state.book!.copyright.toString()),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ))),
                 ],
               );
             }

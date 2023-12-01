@@ -73,7 +73,6 @@ class ProfileDisplayNameVerification(APIView):
         else:
             return Response({"success": True}, status=status.HTTP_200_OK)
 
-
 # A view to upload a profile image
 class ProfileImageUpload(APIView):
     serializer_class = ProfileImageSerializer
@@ -123,14 +122,12 @@ class ProfileImageUpload(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all().prefetch_related("user")
     serializer_class = ProfileSerializer
     authentication_classes = [] # No authentication required for reads, 
                                 # though the default permissions protect against 'bad' writes 
     lookup_field = "user__username"
-
 
     def get_object(self):
         """
@@ -146,7 +143,32 @@ class ProfileViewSet(viewsets.ModelViewSet):
             pass
 
         return profile
+    
 
+# A view to get Profile Information based on a display Name
+class GetProfileByDisplayName(APIView):
+    '''
+    Gets a user Profile username by Display Name.
+    '''
+    queryset = Profile.objects.all().prefetch_related("user")
+    serializer_class = ProfileSerializer
+    authentication_classes = [] # No authentication required for reads, 
+                                # though the default permissions protect against 'bad' writes 
+    lookup_field: str = 'display_name'
+
+    def get(self, request, *args, **kwargs):
+        '''Returns data based on a display name rather than a userId'''
+
+        print(f"request {request}")
+
+        displayName = self.kwargs.get("display_name")
+        print(f"Found Display Name {displayName}")
+
+        profile = Profile.objects.get(display_name = displayName)
+
+        print( f"Username: '{profile.user.username}' from DisplayName:  {displayName}")
+
+        return Response(profile.user.username, status=status.HTTP_200_OK)
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all().prefetch_related("user")

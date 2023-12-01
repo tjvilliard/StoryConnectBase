@@ -18,10 +18,12 @@ class BookDetailsState {
   final Book? book;
   final GenreTags? bookTags;
   final LoadingStruct loadingStruct;
+  final String? uuid;
   BookDetailsState({
     required this.book,
     required this.bookTags,
     required this.loadingStruct,
+    required this.uuid,
   });
 }
 
@@ -35,6 +37,7 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
           book: null,
           bookTags: null,
           loadingStruct: const LoadingStruct(isLoading: false),
+          uuid: null,
         )) {
     on<FetchBookDetailsEvent>((event, emit) => fetchBook(event, emit));
   }
@@ -47,14 +50,20 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
       book: state.book,
       bookTags: state.bookTags,
       loadingStruct: const LoadingStruct(isLoading: true),
+      uuid: state.uuid,
     ));
 
     Book? book = await _repo.getBook(event.bookId);
     GenreTags? tags = await _repo.getBookTags(event.bookId!);
+    String? uuid = await _repo.getUUIDbyUsername(book!.authorName!);
+
+    print(uuid);
+
     emit(BookDetailsState(
       book: book,
       bookTags: tags,
       loadingStruct: const LoadingStruct(isLoading: false),
+      uuid: uuid,
     ));
   }
 }
