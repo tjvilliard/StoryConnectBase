@@ -249,3 +249,6 @@ class NarrativeElementAttribute(models.Model):
 
     def __str__(self):
         return self.attribute
+
+    def test_display(self):
+        return self.attribute_type.name + " -- " + self.attribute + " -- " + str(self.confidence)

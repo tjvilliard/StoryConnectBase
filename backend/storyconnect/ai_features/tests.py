@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import *
-from books.models import Book
+from books.models import Book, NarrativeElement, NarrativeElementType, NarrativeElementAttributeType, NarrativeElementAttribute
+from django.contrib.auth.models import User
 from .continuity_checker import ContinuityChecker
 from .road_unblocker import RoadUnblocker
 import ai_features.utils as utils
@@ -212,18 +213,41 @@ class NarrativeElementTests(TestCase):
                     The Kings Square has a statue of a forgotten ruler.
                     </Kings-Square>
                     </Locations>
+                    <Items>
+                    <The-Ring-of-Power>
+                    The Ring of Power is a ring.
+                    The Ring of Power is gold.
+                    The Ring of Power grants the wearer invisibility.
+                    </The-Ring-of-Power>
+                    </Items>
                     </Statements>"""
 
         self.sheet1 = StatementSheet.objects.create(book=self.test_book, document=document)
+    
+    def test_generate_elements_from_statementsheet(self):
+        n_elems = utils.generate_elements_from_statementsheet(self.user, self.sheet1)
+        assert len(n_elems) == 4
+
+        elem_types = NarrativeElementType.objects.filter(user=self.user)
+        assert len(elem_types) == 3
+
+        with open("ai_features/test_files/n_elem/elements.txt", "w") as f:
+            for elem in n_elems:
+                f.write(str(elem) + "\n")
+                for attr in elem.attributes:
+                    f.write(attr.test_display() + "\n")
+
         
     def test_generate_description(self):
         desc = utils.element_description(self.elem_alex, self.sheet1)
-        with open("ai_features/test_files/description.txt", "w") as f:
+        with open("ai_features/test_files/n_elem/description.txt", "w") as f:
             f.write(desc)
 
     def test_generate_attributes(self):
-        attr_list = utils.generate_attributes(self.elem_alex, self.sheet1)
-        with open("ai_features/test_files/attributes.txt", "w") as f:
+        attr_list, tuples = utils.generate_attributes(self.elem_alex, self.sheet1)
+        with open("ai_features/test_files/n_elem/attr_tuples.txt", "w") as f:
             f.write(attr_list)
+            for x in tuples:
+                f.write(str(x) + "\n")
         
         
