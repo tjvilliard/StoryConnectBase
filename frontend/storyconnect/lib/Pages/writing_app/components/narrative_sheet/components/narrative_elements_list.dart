@@ -11,17 +11,20 @@ class NarrativeElementsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (narrativeElements.isEmpty) {
-      return Center(
+      return Container(
+          alignment: Alignment.topCenter,
           child: Card(
               margin: const EdgeInsets.all(16),
               child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('No narrative elements available.'),
-                      const SizedBox(height: 20),
+                      if (!triedToGenerate) const Text('No narrative elements available.'),
                       if (triedToGenerate)
                         const Text("No narrative elements were found. Try writing some text and trying again."),
+                      const SizedBox(height: 20),
                       const GenerateNarrativeSheetButton('Generate Narrative Sheet')
                     ],
                   ))));

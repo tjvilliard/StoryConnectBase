@@ -32,9 +32,7 @@ class NarrativeSheetBloc extends Bloc<NarrativeSheetEvent, NarrativeSheetState> 
   }
 
   generateNarrativeSheet(GenerateNarrativeSheet event, Emitter<NarrativeSheetState> emit) async {
-    emit(state.copyWith(
-      loading: LoadingStruct.message("Generating Narrative Sheet"),
-    ));
+    emit(state.copyWith(loading: LoadingStruct.message("Generating Narrative Sheet"), triedGenerating: true));
 
     add(RecieveNarrativeElements(await _repo.generateNarrativeSheet(state.bookId)));
   }
