@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Pages/tutorial/view.dart';
 
 class ProjectDescriptionCard extends StatelessWidget {
   const ProjectDescriptionCard({
@@ -28,6 +29,14 @@ class ProjectDescriptionCard extends StatelessWidget {
                 child: Text(
                   """Storyconnect integrates Firebase for secure authentication and image storage, a robust Postgres database, and a Django backend, ensuring efficient data management and user experience. With its Flutter frontend, the platform offers a seamless and responsive interface for both mobile and web users, enhancing accessibility and user engagement. Hosted on AWS, StoryConnect guarantees reliable and scalable infrastructure, supporting the platform's diverse functionalities ranging from reader-writer interactions to sophisticated book suggestion algorithms. This blend of technologies not only resolves the disjointed experiences prevalent in existing platforms but also empowers writers with advanced tools like a 'Continuity Checker' and 'Road-UnBlocker,' while providing readers and publishers with a dynamic community for feedback, discovery, and collaboration. The platform's aim is to harmonize the creative process for writers and the reading experience for readers, thereby cultivating a vibrant ecosystem for literature enthusiasts.""",
                   style: Theme.of(context).textTheme.bodyMedium,
+                )),
+            Padding(
+                padding: const EdgeInsets.all(10),
+                child: FilledButton(
+                  child: const Text("Show Tutorial"),
+                  onPressed: () {
+                    showDialog(context: context, builder: (context) => const TutorialPopupWidget());
+                  },
                 )),
           ],
         ),

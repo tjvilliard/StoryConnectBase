@@ -33,6 +33,7 @@ ThemeData lightTheme = ThemeData(
           backgroundColor: offWhite,
           surfaceTintColor: Colors.transparent,
         ),
+        dialogTheme: const DialogTheme(surfaceTintColor: offWhite),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
         cardTheme: CardTheme(surfaceTintColor: _lightColorScheme.primaryContainer, elevation: 2),
         useMaterial3: true)
@@ -41,6 +42,9 @@ ThemeData lightTheme = ThemeData(
 final _darkColorScheme = ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.dark);
 
 ThemeData darkTheme = ThemeData(
+        appBarTheme: const AppBarTheme(
+          surfaceTintColor: Colors.transparent,
+        ),
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
         dividerColor: Colors.white,
         colorScheme: _darkColorScheme,

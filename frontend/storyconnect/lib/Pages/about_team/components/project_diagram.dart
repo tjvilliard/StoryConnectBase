@@ -25,7 +25,10 @@ class ProjectDiagramCard extends StatelessWidget {
                 )),
             Padding(
                 padding: const EdgeInsets.all(18),
-                child: ClipRRect(borderRadius: BorderRadius.circular(15.0), child: Image.asset('assets/diagram.png'))),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Image.network(
+                        "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2Fdiagram.png?alt=media&token=db315d84-163b-49cb-a665-32744dccb933"))),
           ],
         ),
       ),
