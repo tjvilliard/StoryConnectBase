@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/components/generate_button.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/components/narrative_element_card.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 
 class NarrativeElementsList extends StatelessWidget {
   final List<NarrativeElement> narrativeElements;
-  const NarrativeElementsList({super.key, required this.narrativeElements});
+  final bool triedToGenerate;
+  const NarrativeElementsList({super.key, required this.narrativeElements, required this.triedToGenerate});
 
   @override
   Widget build(BuildContext context) {
     if (narrativeElements.isEmpty) {
-      return const Center(
+      return Center(
           child: Card(
-              margin: EdgeInsets.all(16),
-              child: Padding(padding: EdgeInsets.all(16), child: Text('No narrative elements available.'))));
+              margin: const EdgeInsets.all(16),
+              child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      const Text('No narrative elements available.'),
+                      const SizedBox(height: 20),
+                      if (triedToGenerate)
+                        const Text("No narrative elements were found. Try writing some text and trying again."),
+                      const GenerateNarrativeSheetButton('Generate Narrative Sheet')
+                    ],
+                  ))));
     }
 
     return ListView.separated(
-      itemCount: narrativeElements.length,
+      itemCount: narrativeElements.length + 1,
       separatorBuilder: (context, index) {
         final element = narrativeElements[index];
 
@@ -31,6 +43,14 @@ class NarrativeElementsList extends StatelessWidget {
         }
       },
       itemBuilder: (context, index) {
+        if (index == narrativeElements.length) {
+          return const Padding(
+              padding: EdgeInsets.only(bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [GenerateNarrativeSheetButton('Regenerate Narrative Sheet')],
+              ));
+        }
         final element = narrativeElements[index];
 
         if (index == 0 || narrativeElements[index - 1].elementType != element.elementType) {
@@ -49,7 +69,9 @@ class NarrativeElementsList extends StatelessWidget {
               NarrativeElementCard(narrativeElement: element)
             ],
           );
-        } else {
+        }
+        // add the 'regenerate' button to the end of the list
+        else {
           return NarrativeElementCard(narrativeElement: element);
         }
       },

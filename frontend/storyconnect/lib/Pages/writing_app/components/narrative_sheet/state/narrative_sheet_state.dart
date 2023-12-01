@@ -6,6 +6,7 @@ class NarrativeSheetState with _$NarrativeSheetState {
     required int bookId,
     required LoadingStruct loading,
     required List<NarrativeElement> narrativeElements,
+    @Default(false) bool triedGenerating,
   }) = _NarrativeSheetState;
   const NarrativeSheetState._();
 
@@ -22,10 +23,6 @@ class NarrativeSheetState with _$NarrativeSheetState {
 
   // initial state
   factory NarrativeSheetState.initial({required int bookId}) {
-    return NarrativeSheetState(
-      bookId: bookId,
-      loading: LoadingStruct.loading(true),
-      narrativeElements: [],
-    );
+    return NarrativeSheetState(bookId: bookId, loading: LoadingStruct.loading(true), narrativeElements: []);
   }
 }

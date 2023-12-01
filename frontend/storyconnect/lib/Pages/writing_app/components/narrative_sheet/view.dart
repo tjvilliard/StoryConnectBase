@@ -27,7 +27,8 @@ class NarrativeSheetView extends StatelessWidget {
               if (state.loading.isLoading) {
                 toReturn = LoadingWidget(loadingStruct: state.loading);
               } else {
-                toReturn = NarrativeElementsList(narrativeElements: state.sortedNarrativeElements);
+                toReturn = NarrativeElementsList(
+                    narrativeElements: state.sortedNarrativeElements, triedToGenerate: state.triedGenerating);
               }
               return Expanded(child: AnimatedSwitcher(duration: const Duration(milliseconds: 500), child: toReturn));
             })
