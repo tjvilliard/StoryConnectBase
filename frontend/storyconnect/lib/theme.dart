@@ -46,6 +46,9 @@ final _darkColorScheme =
     ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.dark);
 
 ThemeData darkTheme = ThemeData(
+        appBarTheme: const AppBarTheme(
+          surfaceTintColor: Colors.transparent,
+        ),
         fontFamily: GoogleFonts.ramabhadra().fontFamily,
         dividerColor: Colors.white,
         colorScheme: _darkColorScheme,

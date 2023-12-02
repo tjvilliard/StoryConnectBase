@@ -112,6 +112,48 @@ class UrlConstants {
     return _urlBuilder.build('books/');
   }
 
+  /// Creates a Uri for various operations on narrative elements.
+  ///
+  /// This method supports the following operations:
+  /// - Retrieving all narrative elements associated with a specific book (`bookId`).
+  /// - Retrieving a specific narrative element by its primary key (`narrativeElementId`).
+  /// - Generating narrative elements for a specific book (`bookId`) when `generate` is true.
+  ///
+  /// The URL scheme:
+  /// - To retrieve all narrative elements for a book: /api/narrative_elements/?book_id=<book_id>
+  /// - Url to a specific narrative element: /api/narrative_elements/<pk>
+  /// - To generate narrative elements for a book: GET /api/narrative_elements/generate/<book_id>
+  ///
+  ///
+  /// Arguments:
+  ///   [narrativeElementId] (int?): The primary key of the narrative element to retrieve.
+  ///   [bookId] (int?): The ID of the book for retrieving or generating narrative elements.
+  ///   [generate] (bool): A flag to indicate if narrative elements should be generated for the given book.
+  ///                      Defaults to false. When true, `bookId` cannot be null.
+  ///
+  /// Returns:
+  ///   Uri: A Uri for the requested narrative element(s) or for the narrative element generation endpoint.
+  ///
+  /// Throws:
+  ///   AssertionError: If the method parameters do not meet the required conditions.
+  static Uri narrativeElements(
+      {int? narrativeElementId, int? bookId, bool generate = false}) {
+    assert(!generate || bookId != null,
+        'bookId cannot be null when generate is true');
+    assert((narrativeElementId != null) != (bookId != null),
+        'Either narrativeElementId or bookId must be provided, but not both');
+
+    if (generate) {
+      return _urlBuilder.build('/api/narrative_elements/generate/$bookId');
+    } else if (narrativeElementId != null) {
+      return _urlBuilder.build('/api/narrative_elements/$narrativeElementId');
+    } else {
+      // Using query parameters for retrieving all narrative elements of a single book
+      return _urlBuilder.build('/api/narrative_elements',
+          queryParameters: {'book_id': bookId.toString()});
+    }
+  }
+
   static Uri currentUserBooks() {
     return _urlBuilder.build(
       'books/writer/',
