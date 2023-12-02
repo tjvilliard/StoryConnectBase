@@ -24,8 +24,8 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
   Widget _imagePlaceHolder() {
     return const Column(children: [
       SizedBox(
-        height: 400,
-        width: 300,
+        height: 350 * 1.6180,
+        width: 350,
         child: Icon(Icons.book, size: 200),
       )
     ]);
@@ -61,10 +61,10 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
               url: url!,
               fit: BoxFit.cover,
               constraints: const BoxConstraints(
-                maxHeight: 400,
-                minHeight: 400,
-                maxWidth: 300,
-                minWidth: 300,
+                maxHeight: 350 * 1.6180,
+                minHeight: 350 * 1.6180,
+                maxWidth: 350,
+                minWidth: 350,
               ),
             )),
     ]);

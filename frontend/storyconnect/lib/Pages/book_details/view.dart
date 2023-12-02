@@ -1,9 +1,12 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:storyconnect/Pages/book_details/components/book_detail_cover.dart';
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Pages/book_details/components/book_details_card.dart';
+import 'package:storyconnect/Pages/book_details/components/book_details_cover.dart';
 import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
@@ -28,9 +31,10 @@ class BookDetailsViewState extends State<BookDetailsView> {
     if (kDebugMode) {
       print("Details Init State");
     }
-    context
-        .read<BookDetailsBloc>()
-        .add(FetchBookDetailsEvent(bookId: widget.bookId));
+    Bloc bloc = context.read<BookDetailsBloc>();
+
+    bloc.add(FetchBookDetailsEvent(bookId: widget.bookId));
+    bloc.add(FetchBookChaptersEvent(bookId: widget.bookId));
 
     super.initState();
   }
@@ -63,67 +67,140 @@ class BookDetailsViewState extends State<BookDetailsView> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Header(
-                    title: state.book!.title,
-                    alignment: WrapAlignment.center,
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    child: Card(
+                        surfaceTintColor: Colors.white,
+                        elevation: 4,
+                        child: Header(
+                          title: state.book!.title,
+                          alignment: WrapAlignment.center,
+                        )),
                   ),
                   Body(
                       child: Card(
                           surfaceTintColor: Colors.white,
                           elevation: 4,
                           child: Container(
-                            padding: const EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(40),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                ConstrainedBox(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 350.0),
+                                    child: Column(children: [
+                                      BookDetailsCover(book: state.book!),
+                                      const SizedBox(height: 20),
+                                      BookDetailsCard(
+                                        book: state.book,
+                                        uuid: state.uuid,
+                                        bookTags: state.bookTags,
+                                      ),
+                                    ])),
+                                const SizedBox(
+                                  width: 50,
+                                  child: VerticalDivider(
+                                    thickness: 1.0,
+                                    indent: 0,
+                                    endIndent: 0,
+                                  ),
+                                ),
                                 Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    BookDetailsCover(book: state.book!),
-                                    const SizedBox(height: 20),
-                                    Text("Language: ${state.book!.language}"),
-                                    const SizedBox(height: 20),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          final uri = PageUrls.writerProfile(
-                                              state.uuid!);
-                                          Beamer.of(context).beamToNamed(uri);
-                                        },
-                                        child: Text(state.book!.authorName ??
-                                            "Author Name Not Set.")),
-                                    const SizedBox(height: 20),
-                                    if (state.bookTags != null)
-                                      Text(state.bookTags!.tags.toString()),
-                                    const SizedBox(height: 20),
-                                    Container(
-                                        alignment: Alignment.center,
-                                        height: 30,
+                                    ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          minHeight: 50,
+                                          maxWidth: 300,
+                                        ),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(yyMMddDateTime(
-                                                state.book!.created)),
-                                            const VerticalDivider(
-                                              indent: 2.5,
-                                              endIndent: 2.5,
-                                              width: 20,
-                                            ),
-                                            Text(yyMMddDateTime(
-                                                state.book!.modified)),
-                                          ],
-                                        )),
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                  child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        24),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        24),
+                                                                topRight:
+                                                                    Radius.zero,
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .zero))),
+                                                child: const Text(
+                                                    "Start Reading!"),
+                                                onPressed: () {},
+                                              )),
+                                              Expanded(
+                                                  child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        24),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            24),
+                                                                topLeft:
+                                                                    Radius.zero,
+                                                                bottomLeft:
+                                                                    Radius
+                                                                        .zero))),
+                                                child: const Text("Library"),
+                                                onPressed: () {},
+                                              )),
+                                            ])),
                                     const SizedBox(height: 20),
-                                    Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 450),
-                                        child: Text(
-                                          state.book!.synopsis ?? "",
-                                          maxLines: 7,
-                                        )),
-                                    Text(state.book!.copyright.toString()),
+                                    Card(
+                                        elevation: 4.0,
+                                        child: Column(children: [
+                                          SizedBox(
+                                            height: 50,
+                                            child: Text(
+                                              "Chapters",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              width: 300,
+                                              height: 800,
+                                              child: ListView.builder(
+                                                  itemCount:
+                                                      state.chapters.length,
+                                                  itemBuilder: (context,
+                                                          index) =>
+                                                      Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: SizedBox(
+                                                              height: 40,
+                                                              width: 200,
+                                                              child:
+                                                                  ElevatedButton(
+                                                                child: Text(
+                                                                    "Chapter ${index + 1}: ${state.chapters[index].chapterTitle}"),
+                                                                onPressed:
+                                                                    () {},
+                                                              ))))),
+                                        ])),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ))),

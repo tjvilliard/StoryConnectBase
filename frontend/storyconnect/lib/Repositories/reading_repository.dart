@@ -125,11 +125,16 @@ class ReadingApiProvider {
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      // This is super duper hacky, but it can't be helped.
-      var tagSet =
-          (jsonDecode(utf8.decode(result.bodyBytes)) as Iterable).first;
+      // This is super duper hacky, but it can't be helped at the moment.
+      var tagSet = jsonDecode(utf8.decode(result.bodyBytes)) as Iterable;
 
-      return GenreTags.fromJson(tagSet);
+      if (tagSet.isEmpty) {
+        return null;
+      } else {
+        var set = tagSet.first;
+
+        return GenreTags.fromJson(set);
+      }
     } catch (e) {
       if (kDebugMode) {
         print("[ERROR] $e");
@@ -146,8 +151,6 @@ class ReadingApiProvider {
       final url = UrlConstants.getProfileName(displayName);
 
       final result = await http.get(url, headers: await buildHeaders());
-
-      print(result.body);
 
       var uuid = jsonDecode(utf8.decode(result.bodyBytes));
 
@@ -232,6 +235,20 @@ class ReadingApiProvider {
     }
   }
   // Library Related Endpoints. //
+
+  /// Gets the Chapters for a the book-reading UI.
+  Future<List<Chapter>> getChapters(int bookId) async {
+    final result = await http.get(UrlConstants.getChapters(bookId),
+        headers: await buildHeaders());
+
+    final undecodedChapterList =
+        jsonDecode(utf8.decode(result.bodyBytes)) as List;
+    List<Chapter> results = [];
+    for (var undecodedChapter in undecodedChapterList) {
+      results.add(Chapter.fromJson(undecodedChapter));
+    }
+    return results;
+  }
 }
 
 class ReadingRepository {
@@ -315,5 +332,9 @@ class ReadingRepository {
   ///
   Future<String?> getUUIDbyUsername(String displayName) async {
     return await _api.getUUIDbyUsername(displayName);
+  }
+
+  Future<List<Chapter>> getChapters(int bookID) async {
+    return _api.getChapters(bookID);
   }
 }
