@@ -22,7 +22,9 @@ const ColorScheme myColorScheme = ColorScheme(
 
 const offWhite = Color.fromARGB(255, 250, 249, 249);
 
-final _lightColorScheme = ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.light).copyWith(
+final _lightColorScheme =
+    ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.light)
+        .copyWith(
   background: offWhite,
 );
 
@@ -35,11 +37,13 @@ ThemeData lightTheme = ThemeData(
         ),
         dialogTheme: const DialogTheme(surfaceTintColor: offWhite),
         textTheme: GoogleFonts.ramabhadraTextTheme(),
-        cardTheme: CardTheme(surfaceTintColor: _lightColorScheme.primaryContainer, elevation: 2),
+        cardTheme: CardTheme(
+            surfaceTintColor: _lightColorScheme.primaryContainer, elevation: 2),
         useMaterial3: true)
     .copyWith(dividerTheme: const DividerThemeData(color: Colors.black));
 
-final _darkColorScheme = ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.dark);
+final _darkColorScheme =
+    ColorScheme.fromSeed(seedColor: charcoalBlue, brightness: Brightness.dark);
 
 ThemeData darkTheme = ThemeData(
         fontFamily: GoogleFonts.ramabhadra().fontFamily,

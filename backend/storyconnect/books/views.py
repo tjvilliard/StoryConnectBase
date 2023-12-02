@@ -293,7 +293,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=["delete"])
-    def delete_entry_status(self, request, *args, **kwargs):
+    def delete_entry(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

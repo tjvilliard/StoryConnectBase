@@ -44,19 +44,22 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     final unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
     final editor = getEditorControllerCallback?.call();
+    int index =
+        event.chapterIndex > unParsedChapters.length ? 0 : event.chapterIndex;
     if (editor != null) {
       await editorSubscription?.cancel();
 
-      final doc = convertToDeltaDoc(result.chapters[0]!);
+      final doc = convertToDeltaDoc(result.chapters[index]!);
       editor.update(doc.delta);
     }
 
     emit(state.copyWith(
+        currentIndex: index,
         chapters: result.chapters,
         chapterNumToID: result.chapterNumToID,
         loadingStruct: LoadingStruct.loading(false)));
 
-    final chapterId = state.chapterNumToID[state.currentIndex]!;
+    final chapterId = state.chapterNumToID[index]!;
     if (kDebugMode) {
       print("Getting Feedback Event on Load Reading Event. ");
     }

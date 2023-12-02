@@ -58,10 +58,6 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
     List<Book> books = await _repo.getBooks();
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 
-    for (Book book in libBookMap.values) {
-      print(book);
-    }
-
     emit(ReadingHubStruct(
       allBooks: books,
       libraryBookMap: libBookMap,

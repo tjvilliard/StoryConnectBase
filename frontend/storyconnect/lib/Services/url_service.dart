@@ -64,6 +64,10 @@ class PageUrls {
     return "/reader/book/$bookID";
   }
 
+  static String readBookByChapter(int bookId, int chapterIndex) {
+    return "reader/book/$bookId/$chapterIndex";
+  }
+
   /// URL for a writer's profile.
   static String writerProfile(String uid) {
     return "/profile/writer/$uid";
@@ -147,7 +151,7 @@ class UrlConstants {
 
   /// library/change_entry_status for removing library entry.
   static Uri removeLibraryBook(int entryId) {
-    return _urlBuilder.build('library/$entryId/change_entry_status/');
+    return _urlBuilder.build('library/$entryId/delete_entry/');
   }
   // Library Endpoints
 
@@ -160,8 +164,6 @@ class UrlConstants {
   }
 
   static Uri getProfileName(String displayName) {
-    print(displayName);
-
     return _urlBuilder.build('username/by_display_name/$displayName?/');
   }
 

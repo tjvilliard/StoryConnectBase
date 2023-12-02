@@ -4,6 +4,7 @@ import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
 
 class BookDetailsCover extends StatefulWidget {
+  static const double coverWidth = 350.0;
   final Book? book;
 
   const BookDetailsCover({super.key, required this.book});
@@ -24,8 +25,8 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
   Widget _imagePlaceHolder() {
     return const Column(children: [
       SizedBox(
-        height: 350 * 1.6180,
-        width: 350,
+        height: BookDetailsCover.coverWidth * 1.33,
+        width: BookDetailsCover.coverWidth,
         child: Icon(Icons.book, size: 200),
       )
     ]);
@@ -61,8 +62,8 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
               url: url!,
               fit: BoxFit.cover,
               constraints: const BoxConstraints(
-                maxHeight: 350 * 1.6180,
-                minHeight: 350 * 1.6180,
+                maxHeight: 350 * 1.33,
+                minHeight: 350 * 1.33,
                 maxWidth: 350,
                 minWidth: 350,
               ),

@@ -131,50 +131,52 @@ class LibraryBookState extends State<LibraryBookItem> {
                     showButtons
                         ? Positioned.fill(
                             child: Material(
-                              color: Colors.black38.withOpacity(.25),
-                              child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 32.0, horizontal: 32.0),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: OutlinedButton(
-                                              style: buttonStyle,
-                                              onPressed: () {
-                                                final uri =
-                                                    PageUrls.readBook(bookId);
-                                                Beamer.of(context).beamToNamed(
-                                                    uri,
-                                                    data: {"book": bookId});
-                                              },
-                                              child:
-                                                  const Text("Start Reading")),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: OutlinedButton(
-                                              style: buttonStyle,
-                                              onPressed: () {
-                                                final uri =
-                                                    PageUrls.bookDetails(
-                                                        bookId);
-                                                Beamer.of(context).beamToNamed(
-                                                    uri,
-                                                    data: {"book": bookId});
-                                              },
-                                              child: const Text("Details")),
-                                        ),
-                                        RemoveBookButton(bookId: bookId)
-                                      ])),
-                            ),
-                          )
+                                color: Colors.black38.withOpacity(.25),
+                                child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 32.0, horizontal: 32.0),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: OutlinedButton(
+                                                  style: buttonStyle,
+                                                  onPressed: () {
+                                                    final uri =
+                                                        PageUrls.readBook(
+                                                            bookId);
+                                                    Beamer.of(context)
+                                                        .beamToNamed(uri,
+                                                            data: {
+                                                          "book": bookId
+                                                        });
+                                                  },
+                                                  child: const Text(
+                                                      "Start Reading"))),
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: OutlinedButton(
+                                                  style: buttonStyle,
+                                                  onPressed: () {
+                                                    final uri =
+                                                        PageUrls.bookDetails(
+                                                            bookId);
+                                                    Beamer.of(context)
+                                                        .beamToNamed(uri,
+                                                            data: {
+                                                          "book": bookId
+                                                        });
+                                                  },
+                                                  child:
+                                                      const Text("Details"))),
+                                          RemoveBookButton(bookId: bookId)
+                                        ]))))
                         : const SizedBox.shrink(),
                   ],
                 ))));

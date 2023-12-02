@@ -23,13 +23,15 @@ class ReaderLocations extends BeamLocation<BeamState> {
         '/reader/library',
         '/reader/details/:bookId',
         '/reader/book/:bookId',
-        '/reader/book/:bookId/:chapterId'
+        '/reader/book/:bookId/:chapterIndex'
       ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final pages = <CustomBeamPage>[];
     final url = state.uri.pathSegments;
+
+    print("Adding Page");
 
     // If the url contains 'reader' as a primary segment.
     if (url.contains('reader')) {
@@ -57,8 +59,16 @@ class ReaderLocations extends BeamLocation<BeamState> {
       // If the url contains a path parameter 'bookId'
       else if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
+        final chapterIndex = state.pathParameters['chapterIndex'];
 
         if (url.contains('book')) {
+          if (state.pathParameters.containsKey('chapterIndex')) {
+            print("Found?");
+            print(state.routeInformation.toString());
+            print(state.pathPatternSegments);
+            print(state.pathParameters);
+          } else {}
+
           pages.add(CustomBeamPage(
               key: ValueKey('book-$bookId'),
               child: MultiRepositoryProvider(
@@ -90,10 +100,11 @@ class ReaderLocations extends BeamLocation<BeamState> {
                       ],
                       child: ReadingAppView(
                         bookId: int.tryParse(bookId ?? ""),
+                        chapterIndex: int.tryParse(chapterIndex ?? ""),
                       )))));
         } else if (url.contains('details')) {
           pages.add(CustomBeamPage(
-            key: ValueKey('book-$bookId'),
+            key: ValueKey('book-details-$bookId'),
             child: MultiBlocProvider(
                 providers: [
                   BlocProvider<BookDetailsBloc>(

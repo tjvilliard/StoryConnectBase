@@ -38,8 +38,9 @@ class IncrementChapterEvent extends SwitchChapterEvent {
 
 class LoadReadingEvent extends ReadingEvent {
   final FeedbackBloc feedbackBloc;
+  final int chapterIndex;
 
-  LoadReadingEvent(this.feedbackBloc);
+  LoadReadingEvent(this.feedbackBloc, this.chapterIndex);
 }
 
 class SetEditorControllerCallbackEvent extends ReadingEvent {

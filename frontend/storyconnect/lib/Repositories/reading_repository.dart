@@ -63,15 +63,7 @@ class ReadingApiProvider {
     try {
       final url = UrlConstants.books(bookId: bookId);
 
-      if (kDebugMode) {
-        print(url);
-      }
-
       final result = await http.get(url, headers: await buildHeaders());
-
-      if (kDebugMode) {
-        print(result);
-      }
 
       final bookJson = jsonDecode(utf8.decode(result.bodyBytes));
 
@@ -174,8 +166,6 @@ class ReadingApiProvider {
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
-        print(map);
-
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield MapEntry<Library, Book>(
@@ -291,18 +281,12 @@ class ReadingRepository {
 
   ///
   Future<Book?> getBook(int? bookId) async {
-    if (kDebugMode) {
-      print("Getting Book : $bookId");
-    }
     final Book? book = await _api.getBook(bookId);
     return book;
   }
 
   ///
   Future<GenreTags?> getBookTags(int bookId) async {
-    if (kDebugMode) {
-      print("Fetching Tags for Book : $bookId");
-    }
     return await _api.getBookTags(bookId);
   }
   //

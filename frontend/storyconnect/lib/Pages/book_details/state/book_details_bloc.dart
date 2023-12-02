@@ -26,13 +26,15 @@ class FetchBookTagsEvent extends BookDetailsEvent {
 class BookDetailsState {
   final Book? book;
   final GenreTags? bookTags;
-  final LoadingStruct loadingStruct;
+  final LoadingStruct loadingBookStruct;
+  final LoadingStruct loadingChaptersStruct;
   final String? uuid;
   final List<Chapter> chapters;
   BookDetailsState({
     required this.book,
     required this.bookTags,
-    required this.loadingStruct,
+    required this.loadingBookStruct,
+    required this.loadingChaptersStruct,
     required this.uuid,
     required this.chapters,
   });
@@ -47,7 +49,8 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
       : super(BookDetailsState(
             book: null,
             bookTags: null,
-            loadingStruct: const LoadingStruct(isLoading: false),
+            loadingBookStruct: const LoadingStruct(isLoading: false),
+            loadingChaptersStruct: const LoadingStruct(isLoading: false),
             uuid: null,
             chapters: [])) {
     on<FetchBookDetailsEvent>((event, emit) => fetchBook(event, emit));
@@ -59,7 +62,8 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     emit(BookDetailsState(
       book: state.book,
       bookTags: state.bookTags,
-      loadingStruct: const LoadingStruct(isLoading: true),
+      loadingBookStruct: const LoadingStruct(isLoading: true),
+      loadingChaptersStruct: state.loadingChaptersStruct,
       uuid: state.uuid,
       chapters: state.chapters,
     ));
@@ -70,7 +74,8 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     emit(BookDetailsState(
       book: state.book,
       bookTags: state.bookTags,
-      loadingStruct: const LoadingStruct(isLoading: false),
+      loadingBookStruct: const LoadingStruct(isLoading: false),
+      loadingChaptersStruct: state.loadingChaptersStruct,
       uuid: state.uuid,
       chapters: chapters,
     ));
@@ -80,20 +85,21 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     emit(BookDetailsState(
       book: state.book,
       bookTags: state.bookTags,
-      loadingStruct: const LoadingStruct(isLoading: true),
+      loadingBookStruct: state.loadingBookStruct,
+      loadingChaptersStruct: const LoadingStruct(isLoading: true),
       uuid: state.uuid,
       chapters: state.chapters,
     ));
 
     Book? book = await _repo.getBook(event.bookId);
-    print(book);
     GenreTags? tags = await _repo.getBookTags(event.bookId!);
     String? uuid = await _repo.getUUIDbyUsername(book!.authorName!);
 
     emit(BookDetailsState(
       book: book,
       bookTags: tags,
-      loadingStruct: const LoadingStruct(isLoading: false),
+      loadingBookStruct: state.loadingBookStruct,
+      loadingChaptersStruct: const LoadingStruct(isLoading: false),
       uuid: uuid,
       chapters: state.chapters,
     ));

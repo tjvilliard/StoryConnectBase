@@ -34,7 +34,8 @@ class LoginLocations extends BeamLocation<BeamState> {
           child: RepositoryProvider<FirebaseRepository>(
             create: (_) => FirebaseRepository(),
             child: BlocProvider<LoginBloc>(
-              create: (context) => LoginBloc(context.read<FirebaseRepository>()),
+              create: (context) =>
+                  LoginBloc(context.read<FirebaseRepository>()),
               child: const LoginPageView(),
             ),
           )));
@@ -43,11 +44,15 @@ class LoginLocations extends BeamLocation<BeamState> {
           key: const ValueKey('register'),
           child: MultiRepositoryProvider(
             providers: [
-              RepositoryProvider<FirebaseRepository>(create: (_) => FirebaseRepository()),
-              RepositoryProvider<CoreRepository>(create: (_) => CoreRepository()),
+              RepositoryProvider<FirebaseRepository>(
+                  create: (_) => FirebaseRepository()),
+              RepositoryProvider<CoreRepository>(
+                  create: (_) => CoreRepository()),
             ],
             child: BlocProvider<RegistrationBloc>(
-              create: (context) => RegistrationBloc(context.read<FirebaseRepository>(), context.read<CoreRepository>()),
+              create: (context) => RegistrationBloc(
+                  context.read<FirebaseRepository>(),
+                  context.read<CoreRepository>()),
               child: const RegistrationPageView(),
             ),
           )));
@@ -58,7 +63,9 @@ class LoginLocations extends BeamLocation<BeamState> {
         key: ValueKey('about'),
         child: AboutTeamWidget(),
       ));
-    } else {}
+    } else {
+      print("Not Found");
+    }
 
     return pages;
   }
