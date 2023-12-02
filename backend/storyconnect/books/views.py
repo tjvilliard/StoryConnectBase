@@ -299,10 +299,7 @@ class LibraryViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# TODO: Add a view for narrative element queries
-class NarrativeElementViewset:
-    pass
 
 
-class NarrativeElementTypeViewset:
-    pass
+
+

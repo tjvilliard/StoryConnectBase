@@ -1,11 +1,19 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import viewsets, status
 from .serializers import (
     RoadUnblockerRequestSerializer,
     RoadUnblockerResponseSerializer,
     RoadUnblockerSuggestionSerializer,
 )
+from books.serializers import (
+    NarrativeElementSerializer,
+    NarrativeElementTypeSerializer,
+    NarrativeElementAttributeSerializer,
+    NarrativeElementAttributeTypeSerializer,
+)
+from rest_framework.decorators import action
+import ai_features.utils as utils
 from .models import StatementSheet
 from .continuity_checker import ContinuityCheckerChat
 from .road_unblocker import RoadUnblocker
@@ -396,6 +404,7 @@ class ContinuityCheckerView(APIView):
             ch_curr = books_models.Chapter.objects.filter(
                 book=book, chapter_number=ch_num
             ).first()
+            s_sheet = utils.fill_book_sheet(cc, book, s_sheet, ch_num)
             s_sheet.last_run_chapter = ch_num
             s_sheet.last_run_offset = len(ch_curr.content)
             return ContinuityCheckerView.cc_helper(book, ch_num, s_sheet, 0, cc)
@@ -426,6 +435,10 @@ class ContinuityCheckerView(APIView):
 
         serializer = ContinuityCheckerResponseSerializer(response_data)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+  
+    
+            
 
 
 # # Helper function for ContinuityChecker -- should i put this inside the class? or will that fuck with the api view?
@@ -447,3 +460,55 @@ class ContinuityCheckerView(APIView):
 
 #     serializer = ContinuityCheckerResponseSerializer(response_data)
 #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+class NarrativeElementGenerateView(APIView):
+    
+    def post(self, request, *args, **kwargs):
+        return 
+
+class NarrativeElementView(APIView):
+    def post(self, request, *args, **kwargs):
+
+        return 
+
+    def get(self, request, *args, **kwargs):
+        book_id = kwargs.get("book_id")
+        n_elems = books_models.NarrativeElement.objects.filter(book=book_id)
+        
+        data = NarrativeElementSerializer(n_elems, many=True).data
+        return 
+    
+class NarrativeElementViewset(viewsets.ModelViewSet):
+    queryset = books_models.NarrativeElement.objects.all()
+    serializer_class = NarrativeElementSerializer
+
+    def list(self, request, *args, **kwargs):
+        book_id = request.query_params.get("book_id")
+        n_elems = books_models.NarrativeElement.objects.filter(book=book_id)
+        serializer = NarrativeElementSerializer(n_elems, many=True)
+        return Response(serializer.data)
+    
+class NarrativeElementGen(APIView):
+    def get(self, request, book_id, *args, **kwargs):
+        book = books_models.Book.objects.get(id=book_id)
+        ch_num = book.get_chapters().count() - 1
+        s_sheet = StatementSheet.objects.filter(book=book_id).first()
+
+        if s_sheet is None:
+            logger.info("Creating new statement sheet")
+            ch_one = books_models.Chapter.objects.get(book=book, chapter_number=0)
+            document = cc.create_statementsheet(ch_one.content)
+            logger.info(document)
+            s_sheet = StatementSheet.objects.create(
+                book=book,
+                document=document,
+                last_run_chapter=0,
+                last_run_offset=len(ch_one.content),
+            )
+        
+        cc = ContinuityCheckerChat()
+        s_sheet = utils.fill_book_sheet(book, s_sheet, ch_num)
+        n_elems = utils.generate_elements_from_statementsheet(s_sheet)
+
+        serialized_data = NarrativeElementSerializer(n_elems, many=True)
+        return Response(serialized_data, status=status.HTTP_200_OK)
