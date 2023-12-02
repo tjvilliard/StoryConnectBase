@@ -73,7 +73,8 @@ class SuggestionWidget extends StatelessWidget {
                                     // accept button
                                     FilledButton.tonalIcon(
                                         onPressed: () {},
-                                        icon: const Icon(FontAwesomeIcons.check),
+                                        icon:
+                                            const Icon(FontAwesomeIcons.check),
                                         label: Text("Accept",
                                             style: Theme.of(context)
                                                 .textTheme

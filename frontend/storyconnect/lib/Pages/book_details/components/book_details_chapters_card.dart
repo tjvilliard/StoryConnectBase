@@ -20,6 +20,7 @@ class BookDetailsChaptersCard extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(children: [
+              /*
               ElevatedButton(
                   onPressed: () {
                     final uri = PageUrls.readBookByChapter(bookId, 0);
@@ -27,6 +28,7 @@ class BookDetailsChaptersCard extends StatelessWidget {
                     b.beamToNamed(uri, data: {"book": bookId});
                   },
                   child: const Text("Debug Button Chapter beam")),
+                  */
               ConstrainedBox(
                   constraints: const BoxConstraints(
                     minHeight: 75.0,

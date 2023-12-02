@@ -81,7 +81,7 @@ class BigBookWidgetState extends State<BigBookWidget> {
             elevation: BigBookWidget.cardElevation,
             child: Clickable(
               onPressed: () {
-                final uri = PageUrls.readBook(book.id);
+                final uri = PageUrls.bookDetails(book.id);
                 Beamer.of(context).beamToNamed(uri, data: {"book": book});
               },
               child: Row(

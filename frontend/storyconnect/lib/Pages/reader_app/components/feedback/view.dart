@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/components/feedback_input.dart';
@@ -60,9 +59,6 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                                         BlocListener<ReadingBloc, ReadingState>(
                                             listener: (context,
                                                 ReadingState readingState) {
-                                              if (kDebugMode) {
-                                                print("Event Detected. ");
-                                              }
                                               final int chapterId =
                                                   readingState.currentChapterId;
                                               context.read<FeedbackBloc>().add(

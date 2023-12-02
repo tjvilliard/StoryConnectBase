@@ -39,6 +39,22 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit));
   }
 
+  int getSelectionBaseOffset() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.baseOffset;
+  }
+
+  int getSelectionOffsetExtent() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.extentOffset;
+  }
+
+  String getSelection() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.plainText.text
+        .substring(editor.selection.baseOffset, editor.selection.extentOffset);
+  }
+
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
     final unParsedChapters = await _repo.getChapters();
@@ -50,6 +66,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
       await editorSubscription?.cancel();
 
       final doc = convertToDeltaDoc(result.chapters[index]!);
+
       editor.update(doc.delta);
     }
 
