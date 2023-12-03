@@ -109,7 +109,7 @@ class ContinuityChecker:
 class ContinuityCheckerChat:
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
-    CHAT_MODEL = "gpt-3.5-turbo-16k"
+    CHAT_MODEL = "gpt-3.5-turbo-1106"
     MAX_TOKENS = 4000
     TEMPERATURE = 0.2
 
