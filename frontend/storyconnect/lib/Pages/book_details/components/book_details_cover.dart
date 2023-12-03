@@ -1,7 +1,10 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class BookDetailsCover extends StatefulWidget {
   static const double coverWidth = 350.0;
@@ -53,21 +56,39 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      if (url == null || url!.isEmpty) _imagePlaceHolder(),
-      if (url != null && url!.isNotEmpty)
-        ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: ImageLoader(
-              url: url!,
-              fit: BoxFit.cover,
-              constraints: const BoxConstraints(
-                maxHeight: 350 * 1.33,
-                minHeight: 350 * 1.33,
-                maxWidth: 350,
-                minWidth: 350,
-              ),
-            )),
-    ]);
+    return BlocBuilder<BookDetailsBloc, BookDetailsState>(
+        builder: (context, state) {
+      Widget toReturn;
+      if (state.loadingBookStruct.isLoading) {
+        toReturn = SizedBox(
+            height: 350 * 1.33,
+            width: 350 * 1.33,
+            child: LoadingWidget(
+              loadingStruct: state.loadingBookStruct,
+            ));
+      } else {
+        return Column(children: [
+          if (url == null || url!.isEmpty) _imagePlaceHolder(),
+          if (url != null && url!.isNotEmpty)
+            ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: ImageLoader(
+                  url: url!,
+                  fit: BoxFit.cover,
+                  constraints: const BoxConstraints(
+                    maxHeight: 350 * 1.33,
+                    minHeight: 350 * 1.33,
+                    maxWidth: 350,
+                    minWidth: 350,
+                  ),
+                )),
+        ]);
+      }
+
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: toReturn,
+      );
+    });
   }
 }

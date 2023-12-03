@@ -95,8 +95,8 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ConstrainedBox(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 325.0),
+                                      constraints: const BoxConstraints(
+                                          maxWidth: 325.0, minHeight: 325.0),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -112,8 +112,8 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                             ),
                                           ])),
                                   ConstrainedBox(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 325.0),
+                                      constraints: const BoxConstraints(
+                                          maxWidth: 325.0, minHeight: 325.0),
                                       child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,

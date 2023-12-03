@@ -25,8 +25,6 @@ class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
     ReadingHubBloc bloc = context.read<ReadingHubBloc>();
     bloc.add(const FetchLibraryBooksEvent());
 
-    print(inLibrary);
-
     super.initState();
   }
 
