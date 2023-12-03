@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/home_book_list_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/book_list.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
@@ -57,7 +56,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 return ListView.builder(
 
                     // add 1 to the number of
-                    itemCount: state.mappedBooks.length + 2,
+                    itemCount: 2,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         Widget widgetToReturn;
@@ -102,7 +101,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           duration: const Duration(milliseconds: 500),
                           child: widgetToReturn,
                         );
-                      } else if (index == 1) {
+                      } else {
                         Widget toReturn;
                         if (state.loadingStruct.isLoading) {
                           toReturn = Column(
@@ -140,7 +139,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                                   height: 220,
                                   child: BookListWidget(
                                     bookList: BookList(
-                                      bookList: state.allBooks,
+                                      bookList: state.recommendedBooks,
                                     ),
                                   ))
                             ],
@@ -150,13 +149,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           duration: const Duration(milliseconds: 500),
                           child: toReturn,
                         );
-                      } else {
-                        MapEntry<String, List<Book>> entry =
-                            state.mappedBooks.entries.toList()[index];
-                        String bookTag = entry.key;
-                        List<Book> bookList = entry.value;
-
-                        return BookList(bookList: bookList);
                       }
                     });
               },

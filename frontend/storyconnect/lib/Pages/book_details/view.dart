@@ -35,11 +35,7 @@ class BookDetailsView extends StatefulWidget {
 class BookDetailsViewState extends State<BookDetailsView> {
   @override
   void initState() {
-    if (kDebugMode) {
-      print("Details Init State");
-    }
     Bloc bloc = context.read<BookDetailsBloc>();
-
     bloc.add(FetchBookDetailsEvent(bookId: widget.bookId));
     bloc.add(FetchBookChaptersEvent(bookId: widget.bookId));
 

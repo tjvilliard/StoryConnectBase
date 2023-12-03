@@ -77,23 +77,6 @@ class ReadingApiProvider {
     }
   }
 
-  /// Unused Endpoint.
-  Stream<Book> getBooks() async* {
-    try {
-      final url = UrlConstants.books();
-
-      final result = await http.get(url, headers: await buildHeaders());
-
-      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
-        yield Book.fromJson(book);
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        printException("getBooks", e);
-      }
-    }
-  }
-
   /// API Endpoint for getting a set of books.
   Stream<Book> getAllBooks() async* {
     try {
@@ -110,6 +93,7 @@ class ReadingApiProvider {
       }
     }
   }
+  // Book Specific Endpoints.
 
   /// API Endpoint for getting tags related to a book.
   Future<GenreTags?> getBookTags(int bookId) async {
