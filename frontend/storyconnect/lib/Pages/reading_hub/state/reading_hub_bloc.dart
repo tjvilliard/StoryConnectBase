@@ -23,6 +23,24 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
     on<FetchLibraryBooksEvent>((event, emit) => fetchLibraryBooks(event, emit));
     on<RemoveLibraryBookEvent>((event, emit) => removeLibraryBook(event, emit));
     on<AddLibraryBookEvent>((event, emit) => addLibraryBook(event, emit));
+    on<UpdateLibraryBookStatusEvent>((event, emit) => ());
+  }
+
+  void fetchBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
+    emit(ReadingHubStruct(
+      recommendedBooks: state.recommendedBooks,
+      libraryBookMap: state.libraryBookMap,
+      loadingStruct: LoadingStruct.loading((event.isLoading)),
+    ));
+
+    List<Book> books = await _repo.getBooks();
+    Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
+
+    emit(ReadingHubStruct(
+      recommendedBooks: books,
+      libraryBookMap: libBookMap,
+      loadingStruct: LoadingStruct.loading(false),
+    ));
   }
 
   void fetchLibraryBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
@@ -43,23 +61,6 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
   void fetchReccomendedBooks(
       ReadingHomeEvent event, ReadingHubEmitter emit) async {}
-
-  void fetchBooks(ReadingHomeEvent event, ReadingHubEmitter emit) async {
-    emit(ReadingHubStruct(
-      recommendedBooks: state.recommendedBooks,
-      libraryBookMap: state.libraryBookMap,
-      loadingStruct: LoadingStruct.loading((event.isLoading)),
-    ));
-
-    List<Book> books = await _repo.getBooks();
-    Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
-
-    emit(ReadingHubStruct(
-      recommendedBooks: books,
-      libraryBookMap: libBookMap,
-      loadingStruct: LoadingStruct.loading(false),
-    ));
-  }
 
   void removeLibraryBook(
       RemoveLibraryBookEvent event, ReadingHubEmitter emit) async {
@@ -99,6 +100,29 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
       book: event.bookId,
       status: 3,
     ));
+
+    Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
+
+    emit(ReadingHubStruct(
+      recommendedBooks: state.recommendedBooks,
+      libraryBookMap: libBookMap,
+      loadingStruct: LoadingStruct.loading(false),
+    ));
+  }
+
+  void updateLibraryBookStatus(
+      UpdateLibraryBookStatusEvent event, ReadingHubEmitter emit) async {
+    emit(ReadingHubStruct(
+      recommendedBooks: state.recommendedBooks,
+      libraryBookMap: state.libraryBookMap,
+      loadingStruct: LoadingStruct.loading(true),
+    ));
+
+    Library lib = state.libraryBookMap.keys
+        .where((element) => element.book == event.bookId)
+        .first;
+
+    lib = lib.copyWith(status: event.status);
 
     Map<Library, Book> libBookMap = await _repo.getLibraryBooks();
 

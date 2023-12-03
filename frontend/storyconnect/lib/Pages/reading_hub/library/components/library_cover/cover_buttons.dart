@@ -27,6 +27,9 @@ class ReadingPageButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
+              context
+                  .read<ReadingHubBloc>()
+                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 1));
               final uri = PageUrls.readBook(bookId);
               Beamer.of(context).beamToNamed(uri, data: {"book": bookId});
             },
@@ -57,6 +60,9 @@ class DetailsPageButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
+              context
+                  .read<ReadingHubBloc>()
+                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 1));
               final uri = PageUrls.bookDetails(bookId);
               Beamer.of(context).beamToNamed(uri, data: {"book": bookId});
             },
@@ -86,7 +92,11 @@ class MarkUnreadButton extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: OutlinedButton(
             style: buttonStyle,
-            onPressed: () {},
+            onPressed: () {
+              context
+                  .read<ReadingHubBloc>()
+                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 3));
+            },
             child: const Text("Mark Unread")));
   }
 }
@@ -113,7 +123,11 @@ class MarkCompletedButton extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: OutlinedButton(
             style: buttonStyle,
-            onPressed: () {},
+            onPressed: () {
+              context
+                  .read<ReadingHubBloc>()
+                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 2));
+            },
             child: const Text("Mark Completed")));
   }
 }

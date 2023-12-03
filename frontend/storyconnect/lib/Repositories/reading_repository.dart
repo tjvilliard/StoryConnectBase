@@ -170,7 +170,7 @@ class ReadingApiProvider {
   /// API endpoint for adding a new entry to a user's library.
   Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
-      final url = UrlConstants.addLibraryBook();
+      final url = UrlConstants.libraryBooks();
 
       await http.post(url,
           headers: await buildHeaders(),
@@ -199,9 +199,16 @@ class ReadingApiProvider {
   }
 
   /// API endpoint for changing the status of a library Book.
-  Future<void> changeLibraryBookStatus(
-      LibraryEntrySerializer serializer) async {
-    try {} catch (e) {
+  Future<void> changeLibraryBookStatus(Library library) async {
+    try {
+      final url = UrlConstants.addLibraryBook();
+
+      await http.patch(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(library.toJson()),
+      );
+    } catch (e) {
       if (kDebugMode) {
         printException("changeLibraryBookStatus", e);
       }
@@ -289,8 +296,9 @@ class ReadingRepository {
   }
 
   /// Changes the status of a Library Entry.
-  Future<void> changeLibraryBookStatus(
-      LibraryEntrySerializer serializer) async {}
+  Future<void> changeLibraryBookStatus(Library library) async {
+    await _api.changeLibraryBookStatus(library);
+  }
   // Library Endpoints
 
   /// Retrieves the UUID associated with a displayName.

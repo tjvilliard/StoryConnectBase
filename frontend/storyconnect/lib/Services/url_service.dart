@@ -184,6 +184,8 @@ class UrlConstants {
     return _urlBuilder.build('library/get_user_library/');
   }
 
+  static Uri libraryBooks() {}
+
   /// library/ url for adding entries to library
   static Uri addLibraryBook() {
     return _urlBuilder.build('library/');
@@ -193,6 +195,7 @@ class UrlConstants {
   static Uri removeLibraryBook(int entryId) {
     return _urlBuilder.build('library/$entryId/delete_entry/');
   }
+
   // Library Endpoints
 
   static Uri continuities(int chapterId) {

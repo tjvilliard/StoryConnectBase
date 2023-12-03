@@ -118,7 +118,8 @@ class WritingApiProvider {
 
   Stream<NarrativeElement> generateNarrativeElements(int bookID) async* {
     try {
-      final url = UrlConstants.narrativeElements(bookId: bookID, generate: true);
+      final url =
+          UrlConstants.narrativeElements(bookId: bookID, generate: true);
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {
