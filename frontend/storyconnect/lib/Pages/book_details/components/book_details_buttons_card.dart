@@ -32,74 +32,80 @@ class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: BookDetailsView.secondaryCardElevation,
-      child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                    child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(24),
-                              bottomLeft: Radius.circular(24),
-                              topRight: Radius.zero,
-                              bottomRight: Radius.zero))),
-                  child: const Text("Start Reading!"),
-                  onPressed: () {
-                    final uri = PageUrls.readBook(widget.bookId!);
-                    Beamer.of(context)
-                        .beamToNamed(uri, data: {"book": widget.bookId});
-                  },
-                )),
-                Expanded(child: BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
-                    builder: (context, state) {
-                  Widget toReturn;
-                  OutlinedBorder? libButtonBorder =
-                      const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(24),
-                              bottomRight: Radius.circular(24),
-                              topLeft: Radius.zero,
-                              bottomLeft: Radius.zero));
+    return SizedBox(
+        height: 100,
+        child: Card(
+          elevation: BookDetailsView.secondaryCardElevation,
+          child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
+                  builder: (context, readingHubState) {
+                Widget toReturn;
 
-                  if (state.loadingStruct.isLoading) {
-                    toReturn = ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: libButtonBorder),
-                        onPressed: () {},
-                        child:
-                            LoadingWidget(loadingStruct: state.loadingStruct));
-                  } else {
-                    toReturn = ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: libButtonBorder),
-                        onPressed: () {
-                          ReadingHubBloc bloc = context.read<ReadingHubBloc>();
-                          if (inLibrary) {
-                            bloc.add(
-                                RemoveLibraryBookEvent(bookId: widget.bookId!));
-                          } else {
-                            bloc.add(
-                                AddLibraryBookEvent(bookId: widget.bookId!));
-                          }
+                if (readingHubState.loadingStruct.isLoading) {
+                  toReturn = Align(
+                      alignment: Alignment.center,
+                      child: LoadingWidget(
+                          loadingStruct: readingHubState.loadingStruct));
+                } else {
+                  toReturn = Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                            child: SizedBox(
+                                height: 60,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(24),
+                                                bottomLeft: Radius.circular(24),
+                                                topRight: Radius.zero,
+                                                bottomRight: Radius.zero))),
+                                    child: const Text("Start Reading!"),
+                                    onPressed: () {
+                                      final uri =
+                                          PageUrls.readBook(widget.bookId!);
+                                      Beamer.of(context).beamToNamed(uri,
+                                          data: {"book": widget.bookId});
+                                    }))),
+                        Expanded(
+                            child: SizedBox(
+                          height: 60,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(24),
+                                          bottomRight: Radius.circular(24),
+                                          topLeft: Radius.zero,
+                                          bottomLeft: Radius.zero))),
+                              onPressed: () {
+                                ReadingHubBloc bloc =
+                                    context.read<ReadingHubBloc>();
+                                if (inLibrary) {
+                                  bloc.add(RemoveLibraryBookEvent(
+                                      bookId: widget.bookId!));
+                                } else {
+                                  bloc.add(AddLibraryBookEvent(
+                                      bookId: widget.bookId!));
+                                }
 
-                          inLibrary = !inLibrary;
-                          setState(() {});
-                        },
-                        child: inLibrary
-                            ? const Text("Add To Library")
-                            : const Text("Remove From Library"));
-                  }
-
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: toReturn,
-                  );
-                })),
-              ])),
-    );
+                                inLibrary = !inLibrary;
+                                setState(() {});
+                              },
+                              child: inLibrary
+                                  ? const Text("Add To Library")
+                                  : const Text("Remove From Library")),
+                        )),
+                      ]);
+                }
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: toReturn,
+                );
+              })),
+        ));
   }
 }
