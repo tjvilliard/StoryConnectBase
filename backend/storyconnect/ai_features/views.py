@@ -497,6 +497,7 @@ class NarrativeElementGen(APIView):
         if s_sheet is None:
             logger.info("Creating new statement sheet")
             ch_one = books_models.Chapter.objects.get(book=book, chapter_number=0)
+            cc = ContinuityCheckerChat()
             document = cc.create_statementsheet(ch_one.content)
             logger.info(document)
             s_sheet = StatementSheet.objects.create(
@@ -507,8 +508,9 @@ class NarrativeElementGen(APIView):
             )
         
         cc = ContinuityCheckerChat()
-        s_sheet = utils.fill_book_sheet(book, s_sheet, ch_num)
-        n_elems = utils.generate_elements_from_statementsheet(s_sheet)
+        
+        s_sheet = utils.fill_book_sheet(cc, book, s_sheet, ch_num)
+        n_elems = utils.generate_elements_from_statementsheet(request.user, s_sheet)
 
-        serialized_data = NarrativeElementSerializer(n_elems, many=True)
-        return Response(serialized_data, status=status.HTTP_200_OK)
+        serializer = NarrativeElementSerializer(n_elems, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

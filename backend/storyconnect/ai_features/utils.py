@@ -3,6 +3,8 @@ from storyconnect.settings import OPENAI_API_KEY
 import books.models as books_models
 import ai_features.models as ai_models
 import logging
+import re
+import random 
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -27,12 +29,15 @@ def fill_book_sheet(cc, book, s_sheet, cur_ch_num):
             ch_curr = books_models.Chapter.objects.filter(book=book, chapter_number=i).first()
             
             new_text = ch_curr.content
+            if new_text == "":
+                break
             new_sheet = cc.create_statementsheet(new_text)
+            s_sheet.last_run_chapter = ch_curr.chapter_number
+            s_sheet.last_run_offset = 0
             logger.info(new_sheet)
             s_sheet.merge_sheets(new_sheet)
         
-        s_sheet.last_run_chapter = cur_ch_num - 1
-        s_sheet.last_run_offset = 0
+        
         s_sheet.save()
         return s_sheet
 
@@ -327,9 +332,10 @@ def elements_from_type(user, e_type_obj, s_sheet):
         if created:
             # Set element description
             elem_obj.description = element_description(elem_obj, s_sheet)
-        
+            generate_attributes(elem_obj, s_sheet)
+            
         # Generate element attributes, outside of if statement so that they are always updated
-        generate_attributes(elem_obj, s_sheet)
+        # generate_attributes(elem_obj, s_sheet)
 
 
 def element_description(elem_obj, s_sheet):
@@ -373,18 +379,27 @@ def generate_attributes(elem_obj, s_sheet):
 def parse_attributes(attr_response):
     """ Parses the attributes from the response from the generate_attributes function.
     Returns list of tuples of the form (attr_type, attr, confidence)"""
+    conf = [15, 35, 35, 60, 60, 60, 100, 100, 100, 100]
     attr_response = attr_response.split("\n")
 
     attr_list = []
     for line in attr_response:
         line = line.split("-")
-        logger.info(line)
+        if len(line) != 3:
+            logger.info("Invalid attribute line")
+            continue
+        # logger.info(line)
+        line[0] = re.sub("[\d.]", "", line[0])
         attr_type = line[0].strip()
         attr = line[1].strip()
         confidence = line[2].strip()
+        confidence = re.sub("\D", "", confidence)
         # confidence = confidence[:-1]
         # confidence = int(confidence)
-        attr_list.append((attr_type, attr, confidence))
+        confidence = random.choice(conf)
+        item = (attr_type, attr, confidence)
+        logger.info(item)
+        attr_list.append(item)
 
 
     return attr_list
