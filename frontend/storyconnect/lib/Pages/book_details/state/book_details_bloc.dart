@@ -29,7 +29,7 @@ class BookDetailsState {
   final LoadingStruct loadingBookStruct;
   final LoadingStruct loadingChaptersStruct;
   final String? uuid;
-  final List<Chapter> chapters;
+  final List<Chapter>? chapters;
   BookDetailsState({
     required this.book,
     required this.bookTags,

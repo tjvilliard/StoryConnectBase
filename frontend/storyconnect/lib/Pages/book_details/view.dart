@@ -125,7 +125,7 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                             const SizedBox(height: 20),
                                             BookDetailsChaptersCard(
                                                 bookId: widget.bookId!,
-                                                chapters: state.chapters),
+                                                chapters: state.chapters!),
                                           ])),
                                 ]))))
               ]);

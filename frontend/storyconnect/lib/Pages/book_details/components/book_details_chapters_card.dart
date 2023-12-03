@@ -1,8 +1,11 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Pages/book_details/view.dart';
 import 'package:storyconnect/Services/url_service.dart';
+import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class BookDetailsChaptersCard extends StatelessWidget {
   final int bookId;
@@ -54,24 +57,32 @@ class BookDetailsChaptersCard extends StatelessWidget {
                     minHeight: 200.0,
                     maxHeight: 850.0,
                   ),
-                  child: ListView.builder(
-                      itemCount: chapters.length,
-                      itemBuilder: (context, index) => SizedBox(
-                          height: 50,
-                          width: 200,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ElevatedButton(
-                                child: Text(
-                                    overflow: TextOverflow.fade,
-                                    "Chapter ${index + 1}: ${chapters[index].chapterTitle}"),
-                                onPressed: () {
-                                  final uri =
-                                      PageUrls.readBookByChapter(bookId, index);
-                                  Beamer.of(context)
-                                      .beamToNamed(uri, data: {"book": bookId});
-                                },
-                              ))))),
+                  child: BlocBuilder<BookDetailsBloc, BookDetailsState>(
+                      builder: (context, state) {
+                    if (state.loadingChaptersStruct.isLoading) {
+                      return LoadingWidget(
+                          loadingStruct: state.loadingChaptersStruct);
+                    } else {
+                      return ListView.builder(
+                          itemCount: chapters.length,
+                          itemBuilder: (context, index) => SizedBox(
+                              height: 75,
+                              width: 200,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    child: Text(
+                                        overflow: TextOverflow.fade,
+                                        "Chapter ${index + 1}: ${chapters[index].chapterTitle}"),
+                                    onPressed: () {
+                                      final uri = PageUrls.readBookByChapter(
+                                          bookId, index);
+                                      Beamer.of(context).beamToNamed(uri,
+                                          data: {"book": bookId});
+                                    },
+                                  ))));
+                    }
+                  })),
             ])));
   }
 }
