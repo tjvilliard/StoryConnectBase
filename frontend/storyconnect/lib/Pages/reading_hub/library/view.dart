@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/library/components/book_grid_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/library/components/tabbed_widget.dart';
@@ -52,6 +53,21 @@ class LibraryState extends State<LibraryView> {
                         toReturn = LoadingWidget(
                             loadingStruct: libState.loadingStruct);
                       } else {
+                        List<Book> reading = [];
+                        List<Book> completed = [];
+                        List<Book> unread = [];
+
+                        for (MapEntry<Library, Book> entry
+                            in libState.libraryBookMap.entries) {
+                          if (entry.key.status == 1) {
+                            reading.add(entry.value);
+                          } else if (entry.key.status == 2) {
+                            completed.add(entry.value);
+                          } else {
+                            unread.add(entry.value);
+                          }
+                        }
+
                         toReturn = TabbedBookDisplayWidget(
                           tabs: const [
                             Tab(text: "Currently Reading"),
@@ -60,9 +76,17 @@ class LibraryState extends State<LibraryView> {
                           ],
                           children: [
                             BookGridWidget(
-                                books: libState.libraryBookMap.values.toList()),
-                            const BookGridWidget(books: []),
-                            const BookGridWidget(books: []),
+                              books: reading,
+                              category: 1,
+                            ),
+                            BookGridWidget(
+                              books: completed,
+                              category: 2,
+                            ),
+                            BookGridWidget(
+                              books: unread,
+                              category: 3,
+                            ),
                           ],
                         );
                       }

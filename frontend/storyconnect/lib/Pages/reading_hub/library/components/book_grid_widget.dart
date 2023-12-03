@@ -9,10 +9,15 @@ import 'package:storyconnect/Pages/reading_hub/library/components/library_book_c
 class BookGridWidget extends StatelessWidget {
   /// The set of books we are displaying in this panel item.
   final List<Book> books;
+  final int category;
 
   final bool descript = false;
 
-  const BookGridWidget({super.key, required this.books});
+  const BookGridWidget({
+    super.key,
+    required this.books,
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,7 @@ class BookGridWidget extends StatelessWidget {
                       children: books
                           .map((book) => LibraryBookItem(
                               bookId: book.id,
+                              category: category,
                               child: LibraryBookCoverWidget(book: book)))
                           .toList(),
                     ))));
