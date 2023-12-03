@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/about_team/view.dart';
@@ -15,10 +16,10 @@ class LoginLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
         '/',
-        '/register',
         '/recover',
         PageUrls.login,
         PageUrls.about,
+        PageUrls.register,
       ];
 
   @override
@@ -27,6 +28,7 @@ class LoginLocations extends BeamLocation<BeamState> {
     final url = state.uri.pathSegments;
     final String aboutUrl = PageUrls.getLastPathSegment(PageUrls.about);
     final String loginUrl = PageUrls.getLastPathSegment(PageUrls.login);
+    final String registerUrl = PageUrls.getLastPathSegment(PageUrls.register);
 
     if (url.isEmpty || url.contains(loginUrl)) {
       pages.add(CustomBeamPage(
@@ -39,7 +41,7 @@ class LoginLocations extends BeamLocation<BeamState> {
               child: const LoginPageView(),
             ),
           )));
-    } else if (url.contains('register')) {
+    } else if (url.contains(registerUrl)) {
       pages.add(CustomBeamPage(
           key: const ValueKey('register'),
           child: MultiRepositoryProvider(
@@ -64,7 +66,9 @@ class LoginLocations extends BeamLocation<BeamState> {
         child: AboutTeamWidget(),
       ));
     } else {
-      print("Not Found");
+      if (kDebugMode) {
+        print("Not Found");
+      }
     }
 
     return pages;

@@ -14,29 +14,35 @@ import 'package:storyconnect/Pages/reader_app/view.dart';
 import 'package:storyconnect/Pages/reading_hub/library/view.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Services/Beamer/custom_beam_page.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 /// Handles the beamer locations for Reader Functions.
 class ReaderLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
-        '/reader/home',
-        '/reader/library',
-        '/reader/details/:bookId',
-        '/reader/book/:bookId',
-        '/reader/book/:bookId/:chapterIndex'
+        PageUrls.readerHome,
+        PageUrls.readerLibrary,
+        '${PageUrls.readBookBase}/:bookId',
+        '${PageUrls.readBookBase}/:bookId/:chapterIndex',
+        '${PageUrls.readerBase}/details/:bookId',
       ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) {
     final pages = <CustomBeamPage>[];
     final url = state.uri.pathSegments;
-
-    print("Adding Page");
+    final baseUrlString = PageUrls.readerBase.split('/').last;
 
     // If the url contains 'reader' as a primary segment.
-    if (url.contains('reader')) {
-      // If the url contains home, send the reader home.
-      if (url.contains('home')) {
+    if (url.contains(baseUrlString)) {
+      final String homeUrl = PageUrls.getLastPathSegment(PageUrls.readerHome);
+      final String libraryUrl =
+          PageUrls.getLastPathSegment(PageUrls.readerLibrary);
+      final String detailsUrl =
+          PageUrls.getLastPathSegment(PageUrls.readerDetails);
+      final String bookUrl = PageUrls.getLastPathSegment(PageUrls.readBookBase);
+
+      if (url.contains(homeUrl)) {
         pages.add(CustomBeamPage(
           key: const ValueKey('reader'),
           child: MultiBlocProvider(providers: [
@@ -47,7 +53,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
         ));
       }
       // If the url contains library, send the reader to the library.
-      else if (url.contains('library')) {
+      else if (url.contains(libraryUrl)) {
         pages.add(CustomBeamPage(
             key: const ValueKey('library'),
             child: BlocProvider(
@@ -56,18 +62,31 @@ class ReaderLocations extends BeamLocation<BeamState> {
               child: const LibraryView(),
             )));
       }
-      // If the url contains a path parameter 'bookId'
+      // If the url contains a path parameter 'bookId':
+      // Page is either book Details or book Reading.
       else if (state.pathParameters.containsKey('bookId')) {
         final bookId = state.pathParameters['bookId'];
-        final chapterIndex = state.pathParameters['chapterIndex'];
 
-        if (url.contains('book')) {
-          if (state.pathParameters.containsKey('chapterIndex')) {
-            print("Found?");
-            print(state.routeInformation.toString());
-            print(state.pathPatternSegments);
-            print(state.pathParameters);
-          } else {}
+        if (url.contains(detailsUrl)) {
+          pages.add(CustomBeamPage(
+            key: ValueKey('book-details-$bookId'),
+            child: MultiBlocProvider(
+                providers: [
+                  BlocProvider<BookDetailsBloc>(
+                      lazy: false,
+                      create: (context) =>
+                          BookDetailsBloc(context.read<ReadingRepository>())),
+                  BlocProvider<ReadingHubBloc>(
+                      lazy: false,
+                      create: (context) =>
+                          ReadingHubBloc(context.read<ReadingRepository>()))
+                ],
+                child: BookDetailsView(
+                  bookId: int.tryParse(bookId ?? ""),
+                )),
+          ));
+        } else if (url.contains(bookUrl)) {
+          final chapterIndex = state.pathParameters['chapterIndex'];
 
           pages.add(CustomBeamPage(
               key: ValueKey('book-$bookId'),
@@ -102,24 +121,6 @@ class ReaderLocations extends BeamLocation<BeamState> {
                         bookId: int.tryParse(bookId ?? ""),
                         chapterIndex: int.tryParse(chapterIndex ?? ""),
                       )))));
-        } else if (url.contains('details')) {
-          pages.add(CustomBeamPage(
-            key: ValueKey('book-details-$bookId'),
-            child: MultiBlocProvider(
-                providers: [
-                  BlocProvider<BookDetailsBloc>(
-                      lazy: false,
-                      create: (context) =>
-                          BookDetailsBloc(context.read<ReadingRepository>())),
-                  BlocProvider<ReadingHubBloc>(
-                      lazy: false,
-                      create: (context) =>
-                          ReadingHubBloc(context.read<ReadingRepository>()))
-                ],
-                child: BookDetailsView(
-                  bookId: int.tryParse(bookId ?? ""),
-                )),
-          ));
         }
       } else {
         if (kDebugMode) {

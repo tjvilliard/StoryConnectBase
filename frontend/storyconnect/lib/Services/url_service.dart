@@ -60,8 +60,9 @@ class PageUrls {
   static const String readerBase = "/reader";
   static const String readerHome = "$readerBase/home";
   static const String readerLibrary = "$readerBase/library";
+  static const String readerDetails = "$readerBase/details";
   static String bookDetails(int bookId) {
-    return "$readerBase/details/$bookId";
+    return "$readerDetails/$bookId";
   }
 
   static const String readBookBase = "$readerBase/book";
