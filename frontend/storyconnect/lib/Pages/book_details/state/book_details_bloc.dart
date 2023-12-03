@@ -93,7 +93,7 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
 
     Book? book = await _repo.getBook(event.bookId);
     GenreTags? tags = await _repo.getBookTags(event.bookId!);
-    String? uuid = await _repo.getUUIDbyUsername(book!.authorName!);
+    String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
 
     emit(BookDetailsState(
       book: book,

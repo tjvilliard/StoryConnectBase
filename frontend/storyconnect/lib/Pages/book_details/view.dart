@@ -88,7 +88,7 @@ class BookDetailsViewState extends State<BookDetailsView> {
                         surfaceTintColor: Colors.white,
                         elevation: 4,
                         child: Container(
-                            padding: const EdgeInsets.all(40),
+                            padding: const EdgeInsets.all(32),
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
