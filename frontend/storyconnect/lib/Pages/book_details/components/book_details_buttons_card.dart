@@ -16,6 +16,8 @@ class BookDetailsButtonsCard extends StatefulWidget {
 }
 
 class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
+  // If True, book is in library and can be removed
+  // If false, book is not in library and can be added.
   bool inLibrary = false;
 
   @override
@@ -23,9 +25,7 @@ class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
     ReadingHubBloc bloc = context.read<ReadingHubBloc>();
     bloc.add(const FetchLibraryBooksEvent());
 
-    inLibrary = bloc.state.libraryBookMap.keys
-        .where((element) => element.book == widget.bookId)
-        .isNotEmpty;
+    print(inLibrary);
 
     super.initState();
   }
@@ -48,6 +48,9 @@ class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
                       child: LoadingWidget(
                           loadingStruct: readingHubState.loadingStruct));
                 } else {
+                  inLibrary = readingHubState.libraryBookMap.values
+                      .where((element) => element.id == widget.bookId)
+                      .isNotEmpty;
                   toReturn = Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
@@ -96,8 +99,8 @@ class BookDetailsButtonsCardState extends State<BookDetailsButtonsCard> {
                                 setState(() {});
                               },
                               child: inLibrary
-                                  ? const Text("Add To Library")
-                                  : const Text("Remove From Library")),
+                                  ? const Text("Remove From Library")
+                                  : const Text("Add To Library")),
                         )),
                       ]);
                 }
