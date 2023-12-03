@@ -32,14 +32,19 @@ Future<Map<String, String>> buildHeaders({bool noAuth = false}) async {
   return authorizedHeaders;
 }
 
-/// URL constants and builders for app pages.
+/// Front End Application Page Url Constants and Builders.
 class PageUrls {
   static String getLastPathSegment(String url) {
     return url.split('/').last;
   }
 
+  // Login Page Urls
+  static const String about = "/about";
+  static const String login = "/login";
+
   static const String register = "/register";
 
+  // Writer Side Urls
   static const String writerBase = "/writer";
   static const String writerHome = "$writerBase/home";
   static const String createBook = "$writerBase/create_book";
@@ -47,30 +52,25 @@ class PageUrls {
     return "$writerBase/book/$bookID";
   }
 
-  // Login Page Urls
-  static const String about = "/about";
-  static const String login = "/login";
-
-  static const String readerHome = "/reader/home";
-
-  static const String readerLibrary = "/reader/library";
-
-  static String bookDetails(int bookId) {
-    return "/reader/details/$bookId";
+  static String writerProfile(String uid) {
+    return "/profile/writer/$uid";
   }
 
-  /// URL for a specific reading book.
-  static String readBook(int bookID) {
-    return "/reader/book/$bookID";
+  // Reader Side Urls
+  static const String readerBase = "/reader";
+  static const String readerHome = "$readerBase/home";
+  static const String readerLibrary = "$readerBase/library";
+  static String bookDetails(int bookId) {
+    return "$readerBase/details/$bookId";
+  }
+
+  static const String readBookBase = "$readerBase/book";
+  static String readBook(int bookId) {
+    return "$readBookBase/$bookId";
   }
 
   static String readBookByChapter(int bookId, int chapterIndex) {
-    return "reader/book/$bookId/$chapterIndex";
-  }
-
-  /// URL for a writer's profile.
-  static String writerProfile(String uid) {
-    return "/profile/writer/$uid";
+    return "$readBookBase/$bookId/$chapterIndex";
   }
 }
 
@@ -82,21 +82,16 @@ class UrlConstants {
     return _urlBuilder.build('genretagging/$bookId/');
   }
 
-  // Feedback Endpoints
-  ///
   static Uri getWriterFeedback(int chapterId) {
     return _urlBuilder
         .build('feedback/by_chapter/')
         .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
-  /// URI for HTTP POST request for creating writer feedback.
   static Uri createWriterFeedback() {
     return _urlBuilder.build('feedback/');
   }
-  // Feedback Endpoints
 
-  ///
   static Uri getChapters(int bookId) {
     return _urlBuilder.build('books/$bookId/get_chapters');
   }
@@ -154,12 +149,14 @@ class UrlConstants {
     }
   }
 
+  /// Creates a Uri for retrieving the books a user is writing themselves.
   static Uri currentUserBooks() {
     return _urlBuilder.build(
       'books/writer/',
     );
   }
 
+  /// Creates a Uri for creating a new book.
   static Uri createBook() {
     return _urlBuilder.build('books/');
   }
