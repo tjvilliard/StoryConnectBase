@@ -125,7 +125,7 @@ class UrlConstants {
     }
 
     if (audience != null) {
-      parameters.add(MapEntry('audience', audience.toString()));
+      parameters.add(MapEntry('target_audience', audience.toString()));
     }
 
     Map<String, String> params = {};

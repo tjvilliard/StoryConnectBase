@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
@@ -53,6 +54,9 @@ class BookDetailsCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 20),
+                      Text(
+                          "Audience: ${TargetAudience.values[book!.targetAudience].label}"),
+                      const SizedBox(height: 20),
                       Row(children: [
                         const Icon(
                           size: 18,
@@ -64,8 +68,10 @@ class BookDetailsCard extends StatelessWidget {
                           TextSpan(
                               style: Theme.of(context).textTheme.bodyMedium,
                               text: book!.authorName ?? " Author Name Not Set.",
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
+                              recognizer: book!.authorName == null
+                                  ? null
+                                  : TapGestureRecognizer()
+                                ?..onTap = () {
                                   final uri = PageUrls.writerProfile(uuid!);
                                   Beamer.of(context).beamToNamed(uri);
                                 })

@@ -22,7 +22,7 @@ class BookViewSet(viewsets.ModelViewSet):
 
 
     serializer_class = BookSerializer
-    #permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
 
     def create(self, request, *args, **kwargs):

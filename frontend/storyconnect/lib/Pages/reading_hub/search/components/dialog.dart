@@ -91,6 +91,7 @@ class SearchDialogState extends State<SearchDialog> {
                           SizedBox(width: 16),
                           AudienceDropdown(),
                         ]),
+                    const SizedBox(height: 16),
                     toReturn,
                   ]);
                 }))));
