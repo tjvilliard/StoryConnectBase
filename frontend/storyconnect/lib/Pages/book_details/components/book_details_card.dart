@@ -32,6 +32,9 @@ class BookDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String tagsString =
+        bookTags!.tags.toString().replaceAll("[", "").replaceAll("]", "");
+
     return Card(
         elevation: BookDetailsView.secondaryCardElevation,
         child: Padding(
@@ -78,7 +81,7 @@ class BookDetailsCard extends StatelessWidget {
                         ])),
                       ]),
                       const SizedBox(height: 20),
-                      if (bookTags != null) Text(bookTags!.tags.toString()),
+                      if (bookTags != null) Text("Generated Tags: $tagsString"),
                       if (bookTags != null) const SizedBox(height: 20),
                       Text(
                           style: Theme.of(context).textTheme.bodyMedium,
@@ -113,7 +116,7 @@ class BookDetailsCard extends StatelessWidget {
                           constraints: const BoxConstraints(maxWidth: 300),
                           child: Text(
                             book!.synopsis ?? "",
-                            maxLines: 15,
+                            maxLines: 28,
                           )),
                     ]);
               }

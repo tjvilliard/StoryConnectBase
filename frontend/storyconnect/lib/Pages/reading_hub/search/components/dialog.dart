@@ -30,7 +30,8 @@ class SearchDialogState extends State<SearchDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        backgroundColor: Theme.of(context).primaryColorDark,
+        backgroundColor: Theme.of(context).cardColor,
+        surfaceTintColor: Colors.white,
         child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: BlocProvider(
@@ -45,8 +46,8 @@ class SearchDialogState extends State<SearchDialog> {
                         LoadingWidget(loadingStruct: state.loadingStruct);
                   } else {
                     toReturn = ConstrainedBox(
-                        constraints:
-                            const BoxConstraints(maxHeight: 600, maxWidth: 450),
+                        constraints: const BoxConstraints(
+                            maxHeight: 600, maxWidth: 450, minHeight: 400),
                         child: ListView.builder(
                             itemCount: state.queryResults.length,
                             itemBuilder: (context, index) {
