@@ -113,15 +113,11 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
   void updateLibraryBookStatus(
       UpdateLibraryBookStatusEvent event, ReadingHubEmitter emit) async {
-    print("[INFO] setting state loading");
-
     emit(ReadingHubStruct(
       recommendedBooks: state.recommendedBooks,
       libraryBookMap: state.libraryBookMap,
       loadingStruct: LoadingStruct.loading(true),
     ));
-
-    print("[INFO] getting library item with id.");
 
     MapEntry<Library, Book> libBookMapItem = state.libraryBookMap.entries
         .where((entry) => entry.value.id == event.bookId)
@@ -129,11 +125,7 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
     Library lib = libBookMapItem.key;
 
-    print("[DEBUG]: init lib item status $lib");
-
     lib = lib.copyWith(book: libBookMapItem.value.id, status: event.status);
-
-    print("[DEBUG]: updated lib item status $lib");
 
     _repo.changeLibraryBookStatus(lib);
 

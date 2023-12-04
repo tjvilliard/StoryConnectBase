@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/home_book_list_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/book_list.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
@@ -78,6 +79,18 @@ class ReadingHomeState extends State<ReadingHomeView> {
                             ],
                           );
                         } else {
+                          List<MapEntry<Library, Book>> libBooksEntries = state
+                              .libraryBookMap.entries
+                              .where((element) => element.key.status == 1)
+                              .toList();
+
+                          List<Book> libBooks = [];
+
+                          for (MapEntry<Library, Book> entry
+                              in libBooksEntries) {
+                            libBooks.add(entry.value);
+                          }
+
                           widgetToReturn = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -90,8 +103,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                                   height: 220,
                                   child: BookListWidget(
                                       bookList: BookList(
-                                    bookList:
-                                        state.libraryBookMap.values.toList(),
+                                    bookList: libBooks,
                                   ))),
                             ],
                           );

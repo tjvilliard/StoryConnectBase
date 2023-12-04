@@ -60,9 +60,8 @@ class DetailsPageButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
-              context
-                  .read<ReadingHubBloc>()
-                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 1));
+              ReadingHubBloc bloc = context.read<ReadingHubBloc>();
+              bloc.add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 1));
               final uri = PageUrls.bookDetails(bookId);
               Beamer.of(context).beamToNamed(uri, data: {"book": bookId});
             },
@@ -93,12 +92,7 @@ class MarkUnreadButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
-              print("[INFO] getting reading hub bloc.");
-
               ReadingHubBloc bloc = context.read<ReadingHubBloc>();
-
-              print("[INFO] adding update status event.");
-
               bloc.add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 3));
             },
             child: const Text("Mark Unread")));
@@ -128,9 +122,8 @@ class MarkCompletedButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
-              context
-                  .read<ReadingHubBloc>()
-                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 2));
+              ReadingHubBloc bloc = context.read<ReadingHubBloc>();
+              bloc.add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 2));
             },
             child: const Text("Mark Completed")));
   }
@@ -160,9 +153,8 @@ class RemoveBookButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
-              context
-                  .read<ReadingHubBloc>()
-                  .add(RemoveLibraryBookEvent(bookId: bookId));
+              ReadingHubBloc bloc = context.read<ReadingHubBloc>();
+              bloc.add(RemoveLibraryBookEvent(bookId: bookId));
             },
             child: const Text("Remove")),
       );
