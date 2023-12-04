@@ -10,7 +10,6 @@ import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Services/url_service.dart';
 import 'package:storyconnect/Widgets/body.dart';
 import 'package:storyconnect/Widgets/custom_scaffold.dart';
-import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class BookDetailsView extends StatefulWidget {
@@ -69,18 +68,23 @@ class BookDetailsViewState extends State<BookDetailsView> {
             } else {
               return Column(mainAxisSize: MainAxisSize.min, children: [
                 ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: 800, minWidth: 800, minHeight: 100),
-                  child: Card(
-                      surfaceTintColor: Colors.white,
-                      elevation: 4,
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.fade,
-                        state.book!.title,
-                        style: Theme.of(context).textTheme.displayLarge,
-                      )),
-                ),
+                    constraints: const BoxConstraints(
+                        maxWidth: 800,
+                        minWidth: 800,
+                        minHeight: 100,
+                        maxHeight: 200),
+                    child: Card(
+                        surfaceTintColor: Colors.white,
+                        elevation: 4,
+                        child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.fade,
+                              state.book!.title,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            )))),
                 Body(
                     child: Card(
                         surfaceTintColor: Colors.white,
