@@ -36,7 +36,7 @@ class LibrarySerializer(serializers.ModelSerializer):
 class LibraryBookSerializer(serializers.ModelSerializer):
     book = BookSerializer()
     class Meta:
-        exclude = ["reader"]
+        fields = "__all__"
         model = Library
 
 

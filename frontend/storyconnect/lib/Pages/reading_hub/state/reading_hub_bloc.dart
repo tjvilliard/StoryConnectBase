@@ -123,14 +123,15 @@ class ReadingHubBloc extends Bloc<ReadingHomeEvent, ReadingHubStruct> {
 
     print("[INFO] getting library item with id.");
 
-    Library lib = state.libraryBookMap.entries
+    MapEntry<Library, Book> libBookMapItem = state.libraryBookMap.entries
         .where((entry) => entry.value.id == event.bookId)
-        .first
-        .key;
+        .first;
+
+    Library lib = libBookMapItem.key;
 
     print("[DEBUG]: init lib item status $lib");
 
-    lib = lib.copyWith(status: event.status);
+    lib = lib.copyWith(book: libBookMapItem.value.id, status: event.status);
 
     print("[DEBUG]: updated lib item status $lib");
 

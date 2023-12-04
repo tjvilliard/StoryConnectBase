@@ -253,10 +253,6 @@ class RoadUnblockerView(APIView):
         }
         return Response(hardcoded_roadunblock, status=status.HTTP_200_OK)
 
-
-# TODO: Add a view for library queries
-
-
 class LibraryViewSet(viewsets.ModelViewSet):
     # TODO: Potentialy change the default queryset and get rid of the get_user_library action
     queryset = Library.objects.all()
@@ -280,7 +276,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
         )
     
     def partial_update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data = request.data, partial = True)
+        instance = self.get_object()
+
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
 
         serializer.is_valid(raise_exception=True)
 

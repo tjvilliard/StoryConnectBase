@@ -156,6 +156,7 @@ class ReadingApiProvider {
           Library(
             id: decode.id,
             status: decode.status,
+            reader: decode.reader,
           ),
           decode.book,
         );
