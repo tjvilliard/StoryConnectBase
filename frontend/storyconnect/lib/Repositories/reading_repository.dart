@@ -201,7 +201,7 @@ class ReadingApiProvider {
   /// API endpoint for changing the status of a library Book.
   Future<void> changeLibraryBookStatus(Library library) async {
     try {
-      final url = UrlConstants.addLibraryBook();
+      final url = UrlConstants.libraryBookEntry(library.id);
 
       await http.patch(
         url,

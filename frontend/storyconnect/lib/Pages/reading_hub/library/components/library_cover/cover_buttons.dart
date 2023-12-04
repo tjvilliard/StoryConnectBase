@@ -93,9 +93,13 @@ class MarkUnreadButton extends StatelessWidget {
         child: OutlinedButton(
             style: buttonStyle,
             onPressed: () {
-              context
-                  .read<ReadingHubBloc>()
-                  .add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 3));
+              print("[INFO] getting reading hub bloc.");
+
+              ReadingHubBloc bloc = context.read<ReadingHubBloc>();
+
+              print("[INFO] adding update status event.");
+
+              bloc.add(UpdateLibraryBookStatusEvent(bookId: bookId, status: 3));
             },
             child: const Text("Mark Unread")));
   }

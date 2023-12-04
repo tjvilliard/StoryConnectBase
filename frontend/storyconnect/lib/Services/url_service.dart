@@ -184,7 +184,14 @@ class UrlConstants {
     return _urlBuilder.build('library/get_user_library/');
   }
 
-  static Uri libraryBooks() {}
+  /// Library Endpoint.
+  static Uri libraryBooks() {
+    return _urlBuilder.build('library/');
+  }
+
+  static Uri libraryBookEntry(int libId) {
+    return _urlBuilder.build('library/$libId');
+  }
 
   /// library/ url for adding entries to library
   static Uri addLibraryBook() {

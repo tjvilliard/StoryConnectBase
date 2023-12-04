@@ -272,25 +272,21 @@ class LibraryViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # add the owner
         serializer.save(reader=request.user)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+    
+    def partial_update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data, partial = True)
 
-    @action(detail=True, methods=["post"])
-    def change_entry_status(self, request):
-        # TODO: Test this
-        library = self.get_object()
-        # TODO: Why is there unaccesed data here?
-        # book = library.book
-        # book_id = book.id
-        # status = request.data['status']
-        library.save()
-        serializer = LibrarySerializer(library)
-        return Response(serializer.data)
+        serializer.is_valid(raise_exception=True)
+
+        self.perform_update(serializer)
+
+        return Response(status = status.HTTP_202_ACCEPTED)
 
     @action(detail=True, methods=["delete"])
     def delete_entry(self, request, *args, **kwargs):
