@@ -16,7 +16,7 @@ class SearchBarWidget extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (builderContext) {
-                    return SearchDialog();
+                    return const SearchDialog();
                   });
             }));
   }

@@ -7,6 +7,8 @@ import 'package:storyconnect/Widgets/book_widgets/big_book.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class SearchDialog extends StatefulWidget {
+  const SearchDialog({super.key});
+
   @override
   State<StatefulWidget> createState() => SearchDialogState();
 }
