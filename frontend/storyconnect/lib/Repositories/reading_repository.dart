@@ -77,6 +77,23 @@ class ReadingApiProvider {
     }
   }
 
+  Stream<Book> getBookByFilter(
+      String? search, String? language, int? copyright, int? audience) async* {
+    try {
+      final url =
+          UrlConstants.booksQuery(search, language, copyright, audience);
+      final result = await http.get(url, headers: await buildHeaders());
+
+      for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
+        yield Book.fromJson(book);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        printException("getBookByFilter", e);
+      }
+    }
+  }
+
   /// API Endpoint for getting a set of books.
   Stream<Book> getAllBooks() async* {
     try {
@@ -264,6 +281,18 @@ class ReadingRepository {
   Future<Book?> getBook(int? bookId) async {
     final Book? book = await _api.getBook(bookId);
     return book;
+  }
+
+  Future<List<Book>> getBookByFilter(
+    String? search,
+    String? language,
+    int? copyright,
+    int? audience,
+  ) async {
+    final List<Book> books = await _api
+        .getBookByFilter(search, language, copyright, audience)
+        .toList();
+    return books;
   }
 
   /// Retrieves a list of all books.

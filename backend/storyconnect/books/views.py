@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import viewsets, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Book, Chapter, Library
@@ -13,12 +14,15 @@ from .serializers import (
 from django.db import transaction
 from rest_framework.views import APIView
 
-
 class BookViewSet(viewsets.ModelViewSet):
-    # filter_backends = (filters.SearchFilter)
-    # search_fields = ['title', 'author', 'language']
+    #Filtering and Searching Parameters
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["language", "copyright", "target_audience"]
+    search_fields = ["title", "synopsis"]
+
+
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    #permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
 
     def create(self, request, *args, **kwargs):
@@ -254,7 +258,6 @@ class RoadUnblockerView(APIView):
         return Response(hardcoded_roadunblock, status=status.HTTP_200_OK)
 
 class LibraryViewSet(viewsets.ModelViewSet):
-    # TODO: Potentialy change the default queryset and get rid of the get_user_library action
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -262,18 +265,23 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def get_user_library(self, request):
         library = Library.objects.filter(reader=request.user)
+
         serializer = LibraryBookSerializer(library, many=True)
+
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+
         serializer.is_valid(raise_exception=True)
+
         serializer.save(reader=request.user)
+
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -289,7 +297,9 @@ class LibraryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["delete"])
     def delete_entry(self, request, *args, **kwargs):
         instance = self.get_object()
+
         instance.delete()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

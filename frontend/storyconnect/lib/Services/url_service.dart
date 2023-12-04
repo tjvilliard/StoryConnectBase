@@ -108,6 +108,35 @@ class UrlConstants {
     return _urlBuilder.build('books/');
   }
 
+  static Uri booksQuery(
+      String? search, String? language, int? copyright, int? audience) {
+    List<MapEntry<String, String>> parameters = [];
+
+    if (search != null) {
+      parameters.add(MapEntry('search', search));
+    }
+
+    if (language != null) {
+      parameters.add(MapEntry('language', language));
+    }
+
+    if (copyright != null) {
+      parameters.add(MapEntry('copyright', copyright.toString()));
+    }
+
+    if (audience != null) {
+      parameters.add(MapEntry('audience', audience.toString()));
+    }
+
+    Map<String, String> params = {};
+    params.addEntries(parameters);
+
+    return _urlBuilder.build(
+      'books/',
+      queryParameters: params,
+    );
+  }
+
   /// Creates a Uri for various operations on narrative elements.
   ///
   /// This method supports the following operations:
