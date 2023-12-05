@@ -24,21 +24,26 @@ class AboutTeamWidgetState extends State<AboutTeamWidget> {
             Beamer.of(context).beamToNamed(PageUrls.login);
           }
         },
-        body: SingleChildScrollView(
-            child: Column(
+        body: ListView(
           children: [
             Header(
               alignment: WrapAlignment.center,
               title: "StoryConnect",
               titleStyle: Theme.of(context).textTheme.displayMedium,
             ),
-            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDescriptionCard()),
-            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDiagramCard()),
-            ConstrainedBox(constraints: const BoxConstraints(maxWidth: 800), child: const TeamProfilesWidget()),
+            Center(
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDescriptionCard())),
+            Center(
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800), child: const ProjectDiagramCard())),
+            Center(
+                child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800), child: const TeamProfilesWidget())),
             const SizedBox(
               height: 50,
             )
           ],
-        )));
+        ));
   }
 }
