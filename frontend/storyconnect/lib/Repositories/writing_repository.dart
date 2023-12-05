@@ -83,7 +83,7 @@ class WritingApiProvider {
 
   Stream<NarrativeElement> getNarrativeElements(int bookId) async* {
     try {
-      final url = UrlConstants.getNarrativeElements(bookId);
+      final url = UrlConstants.narrativeElements(bookId: bookId);
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {
@@ -112,6 +112,21 @@ class WritingApiProvider {
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
+  }
+
+  Stream<NarrativeElement> generateNarrativeElements(int bookID) async* {
+    try {
+      final url = UrlConstants.narrativeElements(bookId: bookID, generate: true);
+      final result = await http.get(url, headers: await buildHeaders());
+
+      for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {
+        yield NarrativeElement.fromJson(element);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }
 
@@ -187,5 +202,9 @@ class WritingRepository {
 
   Future<void> deleteBook(int bookId) {
     return _api.deleteBook(bookId);
+  }
+
+  Future<List<NarrativeElement>> generateNarrativeSheet(int bookID) {
+    return _api.generateNarrativeElements(bookID).toList();
   }
 }

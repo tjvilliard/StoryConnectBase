@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/tutorial/components/page_descriptor_card.dart';
 import 'package:storyconnect/Pages/tutorial/components/tutorial_title_card.dart';
 import 'package:storyconnect/Pages/tutorial/data.dart';
-import 'package:storyconnect/theme.dart';
 
 class TutorialPopupWidget extends StatelessWidget {
   const TutorialPopupWidget({super.key});
