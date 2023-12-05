@@ -56,11 +56,6 @@ CSRF_TRUSTED_ORIGINS = [
 #TODO: Uncomment
 #CSRF_COOKIE_DOMAIN = 'storyconnect.app'
 
-#TODO: Remove before comitting. 
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
-#TODO: Remove before comitting. 
-
 # TODO: Change this to False when deploying to production
 CORS_ALLOW_ALL_ORIGINS = True
 
