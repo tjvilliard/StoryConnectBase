@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Pages/book_details/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Pages/reading_hub/home/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
@@ -58,7 +59,7 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: const ValueKey('library'),
             child: BlocProvider(
               create: (context) =>
-                  ReadingHubBloc(context.read<ReadingRepository>()),
+                  LibraryBloc(context.read<ReadingRepository>()),
               child: const LibraryView(),
             )));
       }
@@ -72,14 +73,13 @@ class ReaderLocations extends BeamLocation<BeamState> {
             key: ValueKey('book-details-$bookId'),
             child: MultiBlocProvider(
                 providers: [
+                  BlocProvider<LibraryBloc>(
+                      create: (context) =>
+                          LibraryBloc(context.read<ReadingRepository>())),
                   BlocProvider<BookDetailsBloc>(
                       lazy: false,
                       create: (context) =>
                           BookDetailsBloc(context.read<ReadingRepository>())),
-                  BlocProvider<ReadingHubBloc>(
-                      lazy: false,
-                      create: (context) =>
-                          ReadingHubBloc(context.read<ReadingRepository>()))
                 ],
                 child: BookDetailsView(
                   bookId: int.tryParse(bookId ?? ""),

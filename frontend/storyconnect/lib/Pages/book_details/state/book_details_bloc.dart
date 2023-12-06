@@ -1,43 +1,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 
+part 'book_details_state.dart';
+part 'book_details_bloc.freezed.dart';
+
 abstract class BookDetailsEvent {
   const BookDetailsEvent();
 }
 
-class FetchBookDetailsEvent extends BookDetailsEvent {
+class LoadBookDetailsEvent extends BookDetailsEvent {
   final int? bookId;
-  const FetchBookDetailsEvent({required this.bookId});
+  const LoadBookDetailsEvent({required this.bookId});
 }
 
-class FetchBookChaptersEvent extends BookDetailsEvent {
+class LoadBookChaptersEvent extends BookDetailsEvent {
   final int? bookId;
-  const FetchBookChaptersEvent({required this.bookId});
-}
-
-class FetchBookTagsEvent extends BookDetailsEvent {
-  final int? bookId;
-  const FetchBookTagsEvent({required this.bookId});
-}
-
-class BookDetailsState {
-  final Book? book;
-  final GenreTags? bookTags;
-  final LoadingStruct loadingBookStruct;
-  final LoadingStruct loadingChaptersStruct;
-  final String? uuid;
-  final List<Chapter>? chapters;
-  BookDetailsState({
-    required this.book,
-    required this.bookTags,
-    required this.loadingBookStruct,
-    required this.loadingChaptersStruct,
-    required this.uuid,
-    required this.chapters,
-  });
+  const LoadBookChaptersEvent({required this.bookId});
 }
 
 typedef BookDetailsEmitter = Emitter<BookDetailsState>;
@@ -45,63 +27,44 @@ typedef BookDetailsEmitter = Emitter<BookDetailsState>;
 class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
   late final ReadingRepository _repo;
 
-  BookDetailsBloc(this._repo)
-      : super(BookDetailsState(
-            book: null,
-            bookTags: null,
-            loadingBookStruct: const LoadingStruct(isLoading: false),
-            loadingChaptersStruct: const LoadingStruct(isLoading: false),
-            uuid: null,
-            chapters: [])) {
-    on<FetchBookDetailsEvent>((event, emit) => fetchBook(event, emit));
-    on<FetchBookChaptersEvent>((event, emit) => fetchBookChapters(event, emit));
+  BookDetailsBloc(this._repo) : super(BookDetailsState.initial()) {
+    on<LoadBookDetailsEvent>((event, emit) => loadBookDetails(event, emit));
+    on<LoadBookChaptersEvent>((event, emit) => loadBookChapters(event, emit));
   }
 
-  void fetchBookChapters(
-      FetchBookChaptersEvent event, BookDetailsEmitter emit) async {
-    emit(BookDetailsState(
-      book: state.book,
-      bookTags: state.bookTags,
-      loadingBookStruct: const LoadingStruct(isLoading: true),
-      loadingChaptersStruct: state.loadingChaptersStruct,
-      uuid: state.uuid,
-      chapters: state.chapters,
+  void loadBookChapters(
+      LoadBookChaptersEvent event, BookDetailsEmitter emit) async {
+    emit(state.copyWith(
+      chapterLoadingStruct: LoadingStruct.loading(true),
     ));
 
     List<Chapter> chapters = await _repo.getChapters(event.bookId!);
-    chapters.sort((a, b) => a.id.compareTo(b.id));
 
-    emit(BookDetailsState(
-      book: state.book,
-      bookTags: state.bookTags,
-      loadingBookStruct: const LoadingStruct(isLoading: false),
-      loadingChaptersStruct: state.loadingChaptersStruct,
-      uuid: state.uuid,
+    emit(state.copyWith(
       chapters: chapters,
+      chapterLoadingStruct: LoadingStruct.loading(false),
     ));
   }
 
-  void fetchBook(FetchBookDetailsEvent event, BookDetailsEmitter emit) async {
-    emit(BookDetailsState(
-      book: state.book,
-      bookTags: state.bookTags,
-      loadingBookStruct: state.loadingBookStruct,
-      loadingChaptersStruct: const LoadingStruct(isLoading: true),
-      uuid: state.uuid,
-      chapters: state.chapters,
+  void loadBookDetails(
+      LoadBookDetailsEvent event, BookDetailsEmitter emit) async {
+    emit(state.copyWith(
+      bookDetailsLoadingStruct: LoadingStruct.loading(true),
     ));
 
     Book? book = await _repo.getBook(event.bookId);
-    GenreTags? tags = await _repo.getBookTags(event.bookId!);
-    String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
+    print("Book: ${book == null}");
 
-    emit(BookDetailsState(
-      book: book,
-      bookTags: tags,
-      loadingBookStruct: state.loadingBookStruct,
-      loadingChaptersStruct: const LoadingStruct(isLoading: false),
-      uuid: uuid,
-      chapters: state.chapters,
-    ));
+    GenreTags? tags = await _repo.getBookTags(event.bookId!);
+    print("Tags: ${tags == null}");
+
+    String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
+    print(uuid == null);
+
+    emit(state.copyWith(
+        book: book,
+        bookTags: tags ?? state.bookTags,
+        uuid: uuid ?? state.uuid,
+        bookDetailsLoadingStruct: LoadingStruct.loading(false)));
   }
 }

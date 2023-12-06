@@ -6,17 +6,45 @@ import 'package:storyconnect/Pages/book_details/state/book_details_bloc.dart';
 import 'package:storyconnect/Widgets/image_loader.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
-class BookDetailsCover extends StatefulWidget {
+class BookDetailsCover extends StatelessWidget {
+  const BookDetailsCover({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<BookDetailsBloc, BookDetailsState>(
+        builder: (context, state) {
+      Widget toReturn;
+      if (state.bookDetailsLoadingStruct.isLoading) {
+        toReturn = SizedBox(
+            height: 325 * 1.33,
+            width: 325,
+            child: LoadingWidget(
+              loadingStruct: state.bookDetailsLoadingStruct,
+            ));
+      } else if (state.book == null) {
+        toReturn = const SizedBox.shrink();
+      } else {
+        toReturn = BookDetailsCoverLoader(book: state.book);
+      }
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: toReturn,
+      );
+    });
+  }
+}
+
+class BookDetailsCoverLoader extends StatefulWidget {
   static const double coverWidth = 350.0;
   final Book? book;
 
-  const BookDetailsCover({super.key, required this.book});
+  const BookDetailsCoverLoader({super.key, required this.book});
 
   @override
-  State<StatefulWidget> createState() => BookDetailsCoverState();
+  State<StatefulWidget> createState() => BookDetailsCoverLoaderState();
 }
 
-class BookDetailsCoverState extends State<BookDetailsCover> {
+class BookDetailsCoverLoaderState extends State<BookDetailsCoverLoader> {
   String? url;
 
   @override
@@ -28,8 +56,8 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
   Widget _imagePlaceHolder() {
     return const Column(children: [
       SizedBox(
-        height: BookDetailsCover.coverWidth * 1.33,
-        width: BookDetailsCover.coverWidth,
+        height: BookDetailsCoverLoader.coverWidth * 1.33,
+        width: BookDetailsCoverLoader.coverWidth,
         child: Icon(Icons.book, size: 200),
       )
     ]);
@@ -56,39 +84,20 @@ class BookDetailsCoverState extends State<BookDetailsCover> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookDetailsBloc, BookDetailsState>(
-        builder: (context, state) {
-      Widget toReturn;
-      if (state.loadingBookStruct.isLoading) {
-        toReturn = SizedBox(
-            height: 350 * 1.33,
-            width: 350 * 1.33,
-            child: LoadingWidget(
-              loadingStruct: state.loadingBookStruct,
-            ));
-      } else {
-        return Column(children: [
-          if (url == null || url!.isEmpty) _imagePlaceHolder(),
-          if (url != null && url!.isNotEmpty)
-            ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: ImageLoader(
-                  url: url!,
-                  fit: BoxFit.cover,
-                  constraints: const BoxConstraints(
-                    maxHeight: 350 * 1.33,
-                    minHeight: 350 * 1.33,
-                    maxWidth: 350,
-                    minWidth: 350,
-                  ),
-                )),
-        ]);
-      }
-
-      return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: toReturn,
-      );
-    });
+    return Column(children: [
+      if (url == null || url!.isEmpty) _imagePlaceHolder(),
+      if (url != null && url!.isNotEmpty)
+        ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: ImageLoader(
+                url: url!,
+                fit: BoxFit.cover,
+                constraints: const BoxConstraints(
+                  maxHeight: 325 * 1.33,
+                  minHeight: 325 * 1.33,
+                  maxWidth: 325,
+                  minWidth: 325,
+                ))),
+    ]);
   }
 }

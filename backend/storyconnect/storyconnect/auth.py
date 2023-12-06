@@ -27,8 +27,6 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         # if postman:
         #     return None
 
-        print(auth_header)
-
         if not auth_header:
             raise NoAuthToken("No auth token provided")
 
