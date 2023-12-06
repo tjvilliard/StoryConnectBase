@@ -81,7 +81,6 @@ class BookSearchBarState extends State<BookSearchBar> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(0.0))),
                       controller: _textEditingController,
-                      leading: const Icon(Icons.search),
                       hintText: 'Search',
                       onChanged: (search) {
                         context
@@ -89,17 +88,37 @@ class BookSearchBarState extends State<BookSearchBar> {
                             .add(SearchChangedEvent(search: search));
                       },
                       trailing: [
-                    IconButton(
-                      icon: const Icon(FontAwesomeIcons.x),
-                      onPressed: () {
-                        context.read<SearchBloc>().add(ClearSearchEvent());
-                        _textEditingController.clear();
-                      },
-                    ),
+                    Tooltip(
+                        message: "Clear",
+                        child: IconButton(
+                          icon: const Icon(FontAwesomeIcons.x),
+                          onPressed: () {
+                            context.read<SearchBloc>().add(ClearSearchEvent());
+                            _textEditingController.clear();
+                          },
+                        )),
                   ])),
-              SizedBox(
-                  width: height,
-                  child: IconButton(
+              Tooltip(
+                  message: "Search",
+                  child: SizedBox(
+                      width: height,
+                      child: IconButton(
+                          style: ButtonStyle(
+                              shadowColor: backgroundColorProperty,
+                              surfaceTintColor: surfaceTintColor,
+                              backgroundColor: backgroundColorProperty,
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(0.0)))),
+                          onPressed: () {
+                            context.read<SearchBloc>().add(QueryEvent());
+                          },
+                          icon: const Icon(FontAwesomeIcons.magnifyingGlass)))),
+              Tooltip(
+                  message: "Clear Result Entries",
+                  child: ElevatedButton(
                       style: ButtonStyle(
                           shadowColor: backgroundColorProperty,
                           surfaceTintColor: surfaceTintColor,
@@ -110,22 +129,9 @@ class BookSearchBarState extends State<BookSearchBar> {
                                       borderRadius:
                                           BorderRadius.circular(0.0)))),
                       onPressed: () {
-                        context.read<SearchBloc>().add(QueryEvent());
+                        context.read<SearchBloc>().add(ClearResultsEvent());
                       },
-                      icon: const Icon(FontAwesomeIcons.magnifyingGlass))),
-              ElevatedButton(
-                style: ButtonStyle(
-                    shadowColor: backgroundColorProperty,
-                    surfaceTintColor: surfaceTintColor,
-                    backgroundColor: backgroundColorProperty,
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0)))),
-                onPressed: () {
-                  context.read<SearchBloc>().add(ClearResultsEvent());
-                },
-                child: const Text("Clear"),
-              ),
+                      child: const Text("Clear"))),
             ])));
   }
 }
