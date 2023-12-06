@@ -14,8 +14,6 @@ from .serializers import (
 from django.db import transaction
 from rest_framework.views import APIView
 
-
-
 class BooksByTitleViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
@@ -40,15 +38,10 @@ class BooksByAuthorViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.select_related("user").select_related("")
 
     def get_queryset(self):
-        q_param = self.request.GET.get('search')
-        id = list((set(Profile.objects.filter(display_name__contains=q_param).values_list('user'))))
-        print(f"Search Parameter: {q_param}")
-        print(id)
-        
+        search_param = self.request.GET.get('search')
+        id = list((set(Profile.objects.filter(display_name__contains=search_param).values_list('user'))))
         queryset = Book.objects.select_related("user").filter(user_id__in=id)
-        print(queryset)
         return queryset
-        ...
 
 class BookViewSet(viewsets.ModelViewSet):
     #Filtering and Searching Parameters
