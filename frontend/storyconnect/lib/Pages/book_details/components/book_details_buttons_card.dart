@@ -14,6 +14,7 @@ class BookDetailsButtonsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         height: 100,
+        width: 325,
         child: Card(
             elevation: BookDetailsView.secondaryCardElevation,
             child: Padding(

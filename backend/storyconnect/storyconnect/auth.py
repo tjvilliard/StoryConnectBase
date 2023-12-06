@@ -59,6 +59,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
     
     # Written in response to a firebase 'based' error where the computer clock not being synchronized would throw a firebase auth error
     # because firebase doesn't allow for a margin of error for time in computer clocks. This happens on localhost all the time. 
+    # This method should most likely only ever be used on localhost. 
     # https://stackoverflow.com/questions/71915309/token-used-too-early-error-thrown-by-firebase-admin-auths-verify-id-token-metho
     @staticmethod
     def authenticate_token_wrapper(id_token) -> dict:

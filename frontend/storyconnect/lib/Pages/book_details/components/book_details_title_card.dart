@@ -25,8 +25,10 @@ class BookDetailsTitleCard extends StatelessWidget {
                         loadingStruct: state.bookDetailsLoadingStruct);
                   } else {
                     if (state.book == null) {
-                      print("book is null");
-                      toReturn = const SizedBox.shrink();
+                      toReturn = Text(
+                        "Not Found",
+                        style: Theme.of(context).textTheme.displayMedium,
+                      );
                     } else {
                       toReturn = Text(
                         textAlign: TextAlign.center,

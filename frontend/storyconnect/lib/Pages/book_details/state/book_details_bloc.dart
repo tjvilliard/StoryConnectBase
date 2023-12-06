@@ -53,18 +53,23 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
     ));
 
     Book? book = await _repo.getBook(event.bookId);
-    print("Book: ${book == null}");
 
-    GenreTags? tags = await _repo.getBookTags(event.bookId!);
-    print("Tags: ${tags == null}");
+    if (book == null) {
+      emit(state.copyWith(
+        bookDetailsLoadingStruct: LoadingStruct.loading(false),
+      ));
+    } else {
+      GenreTags? tags = await _repo.getBookTags(event.bookId!);
+      print("Tags: ${tags == null}");
 
-    String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
-    print(uuid == null);
+      String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
+      print(uuid == null);
 
-    emit(state.copyWith(
-        book: book,
-        bookTags: tags ?? state.bookTags,
-        uuid: uuid ?? state.uuid,
-        bookDetailsLoadingStruct: LoadingStruct.loading(false)));
+      emit(state.copyWith(
+          book: book,
+          bookTags: tags ?? state.bookTags,
+          uuid: uuid ?? state.uuid,
+          bookDetailsLoadingStruct: LoadingStruct.loading(false)));
+    }
   }
 }

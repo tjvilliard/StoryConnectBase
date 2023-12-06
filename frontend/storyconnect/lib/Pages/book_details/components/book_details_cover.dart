@@ -22,7 +22,10 @@ class BookDetailsCover extends StatelessWidget {
               loadingStruct: state.bookDetailsLoadingStruct,
             ));
       } else if (state.book == null) {
-        toReturn = const SizedBox.shrink();
+        toReturn = const SizedBox(
+            height: 325 * 1.33,
+            width: 325,
+            child: Icon(Icons.book, size: 200.0));
       } else {
         toReturn = BookDetailsCoverLoader(book: state.book);
       }
