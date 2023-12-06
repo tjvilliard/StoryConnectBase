@@ -158,6 +158,11 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Checks the validity of the provided display name.
   Future<bool> validateDisplayName(RegistrationEmitter emit) async {
+    print(state.displayName);
+    print(state.email);
+    print(state.password);
+    print(state.confirmPassword);
+
     if (state.displayName.isEmpty) {
       emit(state.copyWith(
         displayNameError: "Display Name field cannot be empty.",
@@ -166,7 +171,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    if (await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
+    print("Display Name Not Empty");
+
+    if (!await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
       emit(state.copyWith(
         displayNameError: "Display Name is already in use.",
         showDisplayNameError: true,

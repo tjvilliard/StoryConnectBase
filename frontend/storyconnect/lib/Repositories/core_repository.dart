@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:storyconnect/Pages/registration/models/registration_models.dart';
-import 'package:storyconnect/Pages/writer_profile/serializers/writer_profile_serializers.dart';
-import 'package:storyconnect/Services/url_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Models/models.dart';
+import 'package:storyconnect/Pages/registration/models/registration_models.dart';
 import 'package:storyconnect/Pages/writer_profile/models/writer_profile_models.dart';
+import 'package:storyconnect/Pages/writer_profile/serializers/writer_profile_serializers.dart';
+import 'package:storyconnect/Services/url_service.dart';
 
 class CoreApiProvider {
   Stream<Book> getBooksByUser(String uid) async* {
@@ -25,11 +26,19 @@ class CoreApiProvider {
     }
   }
 
-  Future<GenericResponse?> verifyDisplayNameUniqueness(DisplayNameSerializer serializer) async {
+  Future<GenericResponse?> verifyDisplayNameUniqueness(
+      DisplayNameSerializer serializer) async {
     try {
       final url = UrlConstants.verifyDisplayNameUniqueness();
-      final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
-      return GenericResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
+
+      bool signedIn = FirebaseAuth.instance.currentUser != null;
+
+      final result = await http.post(url,
+          headers: await buildHeaders(noAuth: !signedIn),
+          body: jsonEncode(serializer.toJson()));
+
+      return GenericResponse.fromJson(
+          jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -57,7 +66,8 @@ class CoreApiProvider {
   Future<Profile?> getProfile(String uid) async {
     try {
       final url = UrlConstants.profiles(uid: uid);
-      final result = await http.get(url, headers: await buildHeaders(noAuth: true));
+      final result =
+          await http.get(url, headers: await buildHeaders(noAuth: true));
       return Profile.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
@@ -69,9 +79,11 @@ class CoreApiProvider {
 
   Future<Announcement?> makeAnnouncement(String title, String content) async {
     try {
-      final serializer = Announcement(title: title, content: content, createdAt: DateTime.now());
+      final serializer = Announcement(
+          title: title, content: content, createdAt: DateTime.now());
       final url = UrlConstants.announcements();
-      final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
+      final result = await http.post(url,
+          headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
 
       return Announcement.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
@@ -103,7 +115,8 @@ class CoreApiProvider {
       final String uid = FirebaseAuth.instance.currentUser!.uid;
 
       final url = UrlConstants.profiles(uid: uid);
-      final response = await http.patch(url, headers: await buildHeaders(), body: jsonEncode(profile.toJson()));
+      final response = await http.patch(url,
+          headers: await buildHeaders(), body: jsonEncode(profile.toJson()));
       return Profile.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
@@ -118,7 +131,8 @@ class CoreApiProvider {
       final serializer = ProfileImageSerializer(image: encodedImage);
 
       final url = UrlConstants.updateProfileImage();
-      final result = await http.post(url, headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
+      final result = await http.post(url,
+          headers: await buildHeaders(), body: jsonEncode(serializer.toJson()));
       return Profile.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
@@ -132,12 +146,14 @@ class CoreApiProvider {
     try {
       final url = UrlConstants.updateProfileImage();
       final result = await http.delete(url, headers: await buildHeaders());
-      return GenericResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
+      return GenericResponse.fromJson(
+          jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      return const GenericResponse(success: false, message: "Failed to delete profile image");
+      return const GenericResponse(
+          success: false, message: "Failed to delete profile image");
     }
   }
 }

@@ -60,6 +60,8 @@ class UserUidConversion(APIView):
 
 # A view to verify display name uniqueness on a profile before saving
 class ProfileDisplayNameVerification(APIView):
+    authentication_classes = []
+
     def post(self, request, format=None):
         if not request.data.get("display_name"):
             return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)

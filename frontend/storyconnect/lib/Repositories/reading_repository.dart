@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyconnect/Constants/search_constants.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
-
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
