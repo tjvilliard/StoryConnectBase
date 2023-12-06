@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/search/components/dropdowns.dart';
+import 'package:storyconnect/Pages/reading_hub/search/components/book_search_bar.dart';
+import 'package:storyconnect/Pages/reading_hub/search/components/dropdown_filters.dart';
 import 'package:storyconnect/Pages/reading_hub/search/state/search_bloc.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
 import 'package:storyconnect/Widgets/book_widgets/big_book.dart';
@@ -14,19 +15,6 @@ class SearchDialog extends StatefulWidget {
 }
 
 class SearchDialogState extends State<SearchDialog> {
-  late final TextEditingController _textEditingController;
-  @override
-  void initState() {
-    _textEditingController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -61,29 +49,7 @@ class SearchDialogState extends State<SearchDialog> {
                   }
 
                   return Column(children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      ConstrainedBox(
-                          constraints: const BoxConstraints(
-                              maxWidth: 500, minWidth: 250, maxHeight: 50),
-                          child: SearchBar(
-                            controller: _textEditingController,
-                            leading: const Icon(Icons.search),
-                            hintText: 'Search',
-                            onChanged: (search) {
-                              context
-                                  .read<SearchBloc>()
-                                  .add(SearchChangedEvent(search: search));
-                            },
-                          )),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 50),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context.read<SearchBloc>().add(QueryEvent());
-                            },
-                            child: const Text("Search")),
-                      ),
-                    ]),
+                    const BookSearchBar(),
                     const SizedBox(height: 16),
                     const Row(
                         mainAxisAlignment: MainAxisAlignment.center,

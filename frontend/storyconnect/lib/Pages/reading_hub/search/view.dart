@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Pages/reading_hub/search/components/dialog.dart';
+import 'package:storyconnect/Pages/reading_hub/search/components/search_dialog_box.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});

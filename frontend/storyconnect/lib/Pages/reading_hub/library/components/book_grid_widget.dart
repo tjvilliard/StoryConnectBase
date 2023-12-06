@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/library/components/library_book_item.dart';
-import 'package:storyconnect/Pages/reading_hub/library/components/library_book_cover.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/library_cover/library_book_item.dart';
+import 'package:storyconnect/Pages/reading_hub/library/components/library_cover/library_book_cover.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class BookGridWidget extends StatelessWidget {

@@ -60,10 +60,8 @@ class BookDetailsBloc extends Bloc<BookDetailsEvent, BookDetailsState> {
       ));
     } else {
       GenreTags? tags = await _repo.getBookTags(event.bookId!);
-      print("Tags: ${tags == null}");
 
-      String? uuid = await _repo.getUUIDbyDisplayName(book!.authorName!);
-      print(uuid == null);
+      String? uuid = await _repo.getUUIDbyDisplayName(book.authorName!);
 
       emit(state.copyWith(
           book: book,

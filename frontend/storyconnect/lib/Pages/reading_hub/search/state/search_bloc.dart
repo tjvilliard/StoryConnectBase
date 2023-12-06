@@ -28,7 +28,7 @@ class AudienceChangedEvent extends SearchEvent {
   AudienceChangedEvent({required this.audience});
 }
 
-class ClearEvent extends SearchEvent {}
+class ClearStateEvent extends SearchEvent {}
 
 class QueryEvent extends SearchEvent {}
 
@@ -64,7 +64,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<CopyrightChangedEvent>((event, emit) => copyrightChanged(event, emit));
     on<AudienceChangedEvent>((event, emit) => audienceChanged(event, emit));
     on<QueryEvent>((event, emit) => query(event, emit));
-    on<ClearEvent>((event, emit) => clear(event, emit));
+    on<ClearStateEvent>((event, emit) => clear(event, emit));
   }
 
   searchChanged(SearchChangedEvent event, SearchEmitter emit) {
@@ -94,7 +94,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         queryResults: list));
   }
 
-  clear(ClearEvent event, SearchEmitter emit) async {
+  clear(ClearStateEvent event, SearchEmitter emit) async {
     emit(state.copyWith(
       search: null,
       language: null,

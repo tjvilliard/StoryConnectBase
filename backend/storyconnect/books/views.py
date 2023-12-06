@@ -14,13 +14,19 @@ from .serializers import (
 from django.db import transaction
 from rest_framework.views import APIView
 
+class BooksByAuthorViewSet(viewsets.ModelViewSet):
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["language", "copyright", "target_audience"]
+    search_fields = ["author"]
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Book.objects.all().prefetch_related("user")
+
 class BookViewSet(viewsets.ModelViewSet):
     #Filtering and Searching Parameters
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
     search_fields = ["title", "synopsis"]
-
-
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
