@@ -77,6 +77,7 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       BookDetailsCover(),
+                                      SizedBox(height: 24),
                                       BookDetailsCard(),
                                     ])),
                             ConstrainedBox(
@@ -88,6 +89,7 @@ class BookDetailsViewState extends State<BookDetailsView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       BookDetailsButtonsCard(),
+                                      SizedBox(height: 24),
                                       BookDetailsChaptersCard(),
                                     ])),
                           ]))))

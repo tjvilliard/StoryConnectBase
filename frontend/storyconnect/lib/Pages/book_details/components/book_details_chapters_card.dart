@@ -41,7 +41,7 @@ class BookDetailsChaptersCard extends StatelessWidget {
               ConstrainedBox(
                   constraints: const BoxConstraints(
                     minHeight: 250.0,
-                    maxHeight: 850.0,
+                    maxHeight: 800.0,
                   ),
                   child: BlocBuilder<BookDetailsBloc, BookDetailsState>(
                       builder: (context, state) {
