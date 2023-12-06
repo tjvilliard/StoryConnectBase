@@ -97,6 +97,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
     bool passwordsValid = validatePassword(emit);
 
+    print(passwordsValid);
+
     if (emailValid & displayNameValid & passwordsValid) {
       //String response = await _repo
 
@@ -158,11 +160,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   /// Checks the validity of the provided display name.
   Future<bool> validateDisplayName(RegistrationEmitter emit) async {
-    print(state.displayName);
-    print(state.email);
-    print(state.password);
-    print(state.confirmPassword);
-
     if (state.displayName.isEmpty) {
       emit(state.copyWith(
         displayNameError: "Display Name field cannot be empty.",
@@ -170,8 +167,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       ));
       return false;
     }
-
-    print("Display Name Not Empty");
 
     if (!await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
       emit(state.copyWith(
@@ -187,6 +182,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   /// Validates the password fields.
   bool validatePassword(RegistrationEmitter emit) {
     if (state.password.isEmpty || state.confirmPassword.isEmpty) {
+      print("One is empty");
       if (state.password.isEmpty) {
         emit(state.copyWith(
           passwordError: "Password field cannot be empty.",
@@ -195,6 +191,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
 
       if (state.confirmPassword.isEmpty) {
+        print("Confirm password is empty");
         emit(state.copyWith(
           confirmPasswordError: "Confirmation field cannot be empty.",
           showConfirmPasswordError: true,
@@ -271,7 +268,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       if (!passwordHasChar) {
         passwordError +=
-            "Password must contain one of the following special characters: . ";
+            "Password must contain one of the following special characters: '!', '@', '#','\$','%','^', '&','*','(',')'. ";
       }
       if (!passwordHasDigit) {
         passwordError += "Password must contain at least one digit 0 - 9. ";
@@ -282,7 +279,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       if (!confirmPasswordHasChar) {
         confirmPasswordError +=
-            "Password must contain one of the following special characters: . ";
+            "Password must contain one of the following special characters: '!', '@', '#','\$','%','^', '&','*','(',')'. ";
       }
       if (!confirmPasswordHasDigit) {
         confirmPasswordError +=
@@ -294,6 +291,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(state.copyWith(
           passwordError: passwordError,
           showPasswordError: true,
+        ));
+      }
+
+      if (confirmPasswordError.isNotEmpty) {
+        emit(state.copyWith(
+          confirmPasswordError: confirmPasswordError,
+          showConfirmPasswordError: true,
         ));
       }
 

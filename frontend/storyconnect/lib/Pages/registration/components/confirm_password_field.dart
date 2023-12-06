@@ -53,7 +53,7 @@ class ConfirmPasswordState extends State<ConfirmPasswordField> {
                     },
                   ),
                   labelText: 'Confirm Password',
-                  errorText: state.showPasswordError
+                  errorText: state.showConfirmPasswordError
                       ? state.confirmPasswordError
                       : null),
             ));
