@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Book, Chapter, Library
+from .models import Book, Chapter, Library, User, Profile
 from .serializers import (
     BookSerializer,
     ChapterSerializer,
@@ -14,13 +14,41 @@ from .serializers import (
 from django.db import transaction
 from rest_framework.views import APIView
 
-class BooksByAuthorViewSet(viewsets.ModelViewSet):
+
+
+class BooksByTitleViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
-    search_fields = ["author"]
+    search_fields = ["title"]
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
+
+class BooksBySynopsisViewSet(viewsets.ModelViewSet):
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["language", "copyright", "target_audience"]
+    search_fields = ["synopsis"]
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Book.objects.all().prefetch_related("user")
+
+class BooksByAuthorViewSet(viewsets.ModelViewSet):
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["language", "copyright", "target_audience"]
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Book.objects.select_related("user").select_related("")
+
+    def get_queryset(self):
+        q_param = self.request.GET.get('search')
+        id = list((set(Profile.objects.filter(display_name__contains=q_param).values_list('user'))))
+        print(f"Search Parameter: {q_param}")
+        print(id)
+        
+        queryset = Book.objects.select_related("user").filter(user_id__in=id)
+        print(queryset)
+        return queryset
+        ...
 
 class BookViewSet(viewsets.ModelViewSet):
     #Filtering and Searching Parameters

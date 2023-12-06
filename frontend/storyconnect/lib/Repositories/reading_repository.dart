@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Constants/search_constants.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
 
 import 'package:storyconnect/Models/models.dart';
@@ -77,11 +78,11 @@ class ReadingApiProvider {
     }
   }
 
-  Stream<Book> getBookByFilter(
-      String? search, String? language, int? copyright, int? audience) async* {
+  Stream<Book> getBookByFilter(String? search, String? language, int? copyright,
+      int? audience, SearchModeConstant searchMode) async* {
     try {
-      final url =
-          UrlConstants.booksQuery(search, language, copyright, audience);
+      final url = UrlConstants.booksQuery(
+          search, language, copyright, audience, searchMode);
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
@@ -288,9 +289,10 @@ class ReadingRepository {
     String? language,
     int? copyright,
     int? audience,
+    SearchModeConstant searchMode,
   ) async {
     final List<Book> books = await _api
-        .getBookByFilter(search, language, copyright, audience)
+        .getBookByFilter(search, language, copyright, audience, searchMode)
         .toList();
     return books;
   }

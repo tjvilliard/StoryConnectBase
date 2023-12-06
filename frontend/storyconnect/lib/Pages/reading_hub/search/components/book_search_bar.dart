@@ -68,7 +68,7 @@ class BookSearchBarState extends State<BookSearchBar> {
                 onSelected: (choice) {
                   context
                       .read<SearchBloc>()
-                      .add(SearchModeChangedEvent(mode: choice!.index));
+                      .add(SearchModeChangedEvent(mode: choice!));
                 },
               ),
               Expanded(

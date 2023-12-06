@@ -27,6 +27,8 @@ from book_rec import urls as bookrec_url
 
 router = routers.DefaultRouter()
 router.register(r'api/books', books_views.BookViewSet)
+router.register(r'api/books-by-title', books_views.BooksByTitleViewSet)
+router.register(r'api/books-by-synopsis', books_views.BooksBySynopsisViewSet)
 router.register(r'api/books-by-author', books_views.BooksByAuthorViewSet)
 router.register(r'api/library', books_views.LibraryViewSet)
 router.register(r'api/chapters', books_views.ChapterViewSet)

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:replay_bloc/replay_bloc.dart';
+import 'package:storyconnect/Constants/search_constants.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
@@ -29,7 +30,7 @@ class AudienceChangedEvent extends SearchEvent {
 }
 
 class SearchModeChangedEvent extends SearchEvent {
-  int mode;
+  SearchModeConstant mode;
   SearchModeChangedEvent({required this.mode});
 }
 
@@ -45,7 +46,7 @@ class SearchState with _$SearchState {
     String? language,
     int? copyright,
     int? audience,
-    required int searchMode,
+    required SearchModeConstant searchMode,
     required List<Book> queryResults,
   }) = _SearchState;
   const SearchState._();
@@ -54,7 +55,9 @@ class SearchState with _$SearchState {
   /// the Search - BLOC.
   factory SearchState.initial() {
     return const SearchState(
-        loadingStruct: LoadingStruct(), queryResults: [], searchMode: 0);
+        loadingStruct: LoadingStruct(),
+        queryResults: [],
+        searchMode: SearchModeConstant.story);
   }
 }
 
@@ -97,24 +100,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   query(QueryEvent event, SearchEmitter emit) async {
     emit(state.copyWith(loadingStruct: const LoadingStruct(isLoading: true)));
-
-    List<Book> list;
-
-    switch (state.searchMode) {
-      case 1:
-        print("Search for Title");
-        list = [];
-      case 2:
-        print("Search for Synopsis");
-        list = [];
-      case 3:
-        print("Search for Author");
-        list = [];
-      default:
-        print("Search for Story");
-        list = await _repo.getBookByFilter(
-            state.search, state.language, state.copyright, state.audience);
-    }
+    List<Book> list = await _repo.getBookByFilter(state.search, state.language,
+        state.copyright, state.audience, state.searchMode);
 
     emit(state.copyWith(
         loadingStruct: const LoadingStruct(isLoading: false),

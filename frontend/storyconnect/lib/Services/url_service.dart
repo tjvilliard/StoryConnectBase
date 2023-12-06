@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:storyconnect/Constants/search_constants.dart';
 
 /// Builder for api uri's
 class _UrlBuilder {
@@ -108,8 +109,8 @@ class UrlConstants {
     return _urlBuilder.build('books/');
   }
 
-  static Uri booksQuery(
-      String? search, String? language, int? copyright, int? audience) {
+  static Uri booksQuery(String? search, String? language, int? copyright,
+      int? audience, SearchModeConstant searchMode) {
     List<MapEntry<String, String>> parameters = [];
 
     if (search != null) {
@@ -131,10 +132,27 @@ class UrlConstants {
     Map<String, String> params = {};
     params.addEntries(parameters);
 
-    return _urlBuilder.build(
-      'books/',
-      queryParameters: params,
-    );
+    if (searchMode == SearchModeConstant.story) {
+      return _urlBuilder.build(
+        'books/',
+        queryParameters: params,
+      );
+    } else if (searchMode == SearchModeConstant.title) {
+      return _urlBuilder.build(
+        'books-by-title/',
+        queryParameters: params,
+      );
+    } else if (searchMode == SearchModeConstant.synopsis) {
+      return _urlBuilder.build(
+        'books-by-synopsis/',
+        queryParameters: params,
+      );
+    } else {
+      return _urlBuilder.build(
+        'books-by-author/',
+        queryParameters: params,
+      );
+    }
   }
 
   /// Creates a Uri for various operations on narrative elements.
