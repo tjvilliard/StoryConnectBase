@@ -33,24 +33,19 @@ class SearchDialogState extends State<SearchDialog> {
                     toReturn =
                         LoadingWidget(loadingStruct: state.loadingStruct);
                   } else {
-                    toReturn = ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            maxHeight: 600, maxWidth: 450, minHeight: 400),
-                        child: ListView.builder(
-                            itemCount: state.queryResults.length,
-                            itemBuilder: (context, index) {
-                              return ConstrainedBox(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 400),
-                                child: BigBookWidget(
-                                    book: state.queryResults[index]),
-                              );
-                            }));
+                    toReturn = SizedBox(
+                        height: MediaQuery.of(context).size.height - 325,
+                        child: SingleChildScrollView(
+                          child: Column(
+                              children: state.queryResults
+                                  .map((book) => BigBookWidget(book: book))
+                                  .toList()),
+                        ));
                   }
 
                   return Column(children: [
                     const BookSearchBar(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 32),
                     const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -60,7 +55,7 @@ class SearchDialogState extends State<SearchDialog> {
                           SizedBox(width: 16),
                           AudienceDropdown(),
                         ]),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 32),
                     toReturn,
                   ]);
                 }))));
