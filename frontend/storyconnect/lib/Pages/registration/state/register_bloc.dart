@@ -97,15 +97,12 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
     bool passwordsValid = validatePassword(emit);
 
-    print(passwordsValid);
-
     if (emailValid & displayNameValid & passwordsValid) {
+      print("Valid");
       //String response = await _repo
 
-      /*
-      String response = await this
-          ._firebaseRepo
-          .register(state.email, state.displayName, state.password);
+      String response = await _firebaseRepo.register(
+          state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
         emit(state.copyWith(success: true));
@@ -124,9 +121,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           ));
         }
       }
-      */
     } else {
-      // print("[DEBUG] Field failed validity check.");
+      print("Not Valid");
       return;
     }
   }
@@ -182,7 +178,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   /// Validates the password fields.
   bool validatePassword(RegistrationEmitter emit) {
     if (state.password.isEmpty || state.confirmPassword.isEmpty) {
-      print("One is empty");
       if (state.password.isEmpty) {
         emit(state.copyWith(
           passwordError: "Password field cannot be empty.",
@@ -191,7 +186,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
 
       if (state.confirmPassword.isEmpty) {
-        print("Confirm password is empty");
         emit(state.copyWith(
           confirmPasswordError: "Confirmation field cannot be empty.",
           showConfirmPasswordError: true,
