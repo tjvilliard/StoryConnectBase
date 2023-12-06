@@ -32,6 +32,19 @@ class SearchDialogState extends State<SearchDialog> {
                   if (state.loadingStruct.isLoading) {
                     toReturn =
                         LoadingWidget(loadingStruct: state.loadingStruct);
+                  } else if (state.queryResults.isEmpty && !state.initLoad) {
+                    toReturn = const Card(
+                      elevation: 4,
+                      child: Padding(
+                          padding: EdgeInsets.all(24.0),
+                          child: SizedBox(
+                              height: 50,
+                              width: 200,
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      "No results found matching your search.")))),
+                    );
                   } else {
                     toReturn = SizedBox(
                         height: MediaQuery.of(context).size.height - 325,
@@ -55,7 +68,7 @@ class SearchDialogState extends State<SearchDialog> {
                           SizedBox(width: 16),
                           AudienceDropdown(),
                         ]),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 64),
                     toReturn,
                   ]);
                 }))));

@@ -92,13 +92,14 @@ class BookSearchBarState extends State<BookSearchBar> {
                     IconButton(
                       icon: const Icon(FontAwesomeIcons.x),
                       onPressed: () {
-                        context.read<SearchBloc>().add(ClearStateEvent());
+                        context.read<SearchBloc>().add(ClearSearchEvent());
                         _textEditingController.clear();
                       },
                     ),
                   ])),
               SizedBox(
-                  child: ElevatedButton(
+                  width: height,
+                  child: IconButton(
                       style: ButtonStyle(
                           shadowColor: backgroundColorProperty,
                           surfaceTintColor: surfaceTintColor,
@@ -111,7 +112,20 @@ class BookSearchBarState extends State<BookSearchBar> {
                       onPressed: () {
                         context.read<SearchBloc>().add(QueryEvent());
                       },
-                      child: const Text("Search")))
+                      icon: const Icon(FontAwesomeIcons.magnifyingGlass))),
+              ElevatedButton(
+                style: ButtonStyle(
+                    shadowColor: backgroundColorProperty,
+                    surfaceTintColor: surfaceTintColor,
+                    backgroundColor: backgroundColorProperty,
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0.0)))),
+                onPressed: () {
+                  context.read<SearchBloc>().add(ClearResultsEvent());
+                },
+                child: const Text("Clear"),
+              ),
             ])));
   }
 }

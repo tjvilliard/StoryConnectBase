@@ -34,7 +34,9 @@ class SearchModeChangedEvent extends SearchEvent {
   SearchModeChangedEvent({required this.mode});
 }
 
-class ClearStateEvent extends SearchEvent {}
+class ClearResultsEvent extends SearchEvent {}
+
+class ClearSearchEvent extends SearchEvent {}
 
 class QueryEvent extends SearchEvent {}
 
@@ -42,6 +44,7 @@ class QueryEvent extends SearchEvent {}
 class SearchState with _$SearchState {
   const factory SearchState({
     required LoadingStruct loadingStruct,
+    required bool initLoad,
     String? search,
     String? language,
     int? copyright,
@@ -55,6 +58,11 @@ class SearchState with _$SearchState {
   /// the Search - BLOC.
   factory SearchState.initial() {
     return const SearchState(
+        search: null,
+        language: null,
+        copyright: null,
+        audience: null,
+        initLoad: true,
         loadingStruct: LoadingStruct(),
         queryResults: [],
         searchMode: SearchModeConstant.story);
@@ -75,7 +83,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<AudienceChangedEvent>((event, emit) => audienceChanged(event, emit));
     on<SearchModeChangedEvent>((event, emit) => searchModeChanged(event, emit));
     on<QueryEvent>((event, emit) => query(event, emit));
-    on<ClearStateEvent>((event, emit) => clear(event, emit));
+    on<ClearSearchEvent>((event, emit) => clearSearch(event, emit));
+    on<ClearResultsEvent>((event, emit) => clearResults(event, emit));
   }
 
   searchChanged(SearchChangedEvent event, SearchEmitter emit) {
@@ -104,13 +113,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         state.copyright, state.audience, state.searchMode);
 
     emit(state.copyWith(
+        initLoad: false,
         loadingStruct: const LoadingStruct(isLoading: false),
         queryResults: list));
   }
 
-  clear(ClearStateEvent event, SearchEmitter emit) async {
+  clearSearch(ClearSearchEvent event, SearchEmitter emit) async {
     emit(state.copyWith(
       search: null,
+    ));
+  }
+
+  clearResults(ClearResultsEvent event, SearchEmitter emit) async {
+    emit(state.copyWith(
+      queryResults: [],
+      initLoad: true,
     ));
   }
 }
