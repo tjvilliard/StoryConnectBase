@@ -28,6 +28,11 @@ class AudienceChangedEvent extends SearchEvent {
   AudienceChangedEvent({required this.audience});
 }
 
+class SearchModeChangedEvent extends SearchEvent {
+  int mode;
+  SearchModeChangedEvent({required this.mode});
+}
+
 class ClearStateEvent extends SearchEvent {}
 
 class QueryEvent extends SearchEvent {}
@@ -40,6 +45,7 @@ class SearchState with _$SearchState {
     String? language,
     int? copyright,
     int? audience,
+    required int searchMode,
     required List<Book> queryResults,
   }) = _SearchState;
   const SearchState._();
@@ -47,7 +53,8 @@ class SearchState with _$SearchState {
   /// 'Initial' or 'default' state of
   /// the Search - BLOC.
   factory SearchState.initial() {
-    return const SearchState(loadingStruct: LoadingStruct(), queryResults: []);
+    return const SearchState(
+        loadingStruct: LoadingStruct(), queryResults: [], searchMode: 0);
   }
 }
 
@@ -63,12 +70,17 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<LanguageChangedEvent>((event, emit) => languageChanged(event, emit));
     on<CopyrightChangedEvent>((event, emit) => copyrightChanged(event, emit));
     on<AudienceChangedEvent>((event, emit) => audienceChanged(event, emit));
+    on<SearchModeChangedEvent>((event, emit) => searchModeChanged(event, emit));
     on<QueryEvent>((event, emit) => query(event, emit));
     on<ClearStateEvent>((event, emit) => clear(event, emit));
   }
 
   searchChanged(SearchChangedEvent event, SearchEmitter emit) {
     emit(state.copyWith(search: event.search));
+  }
+
+  searchModeChanged(SearchModeChangedEvent event, SearchEmitter emit) {
+    emit(state.copyWith(searchMode: event.mode));
   }
 
   languageChanged(LanguageChangedEvent event, SearchEmitter emit) {
@@ -86,8 +98,23 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   query(QueryEvent event, SearchEmitter emit) async {
     emit(state.copyWith(loadingStruct: const LoadingStruct(isLoading: true)));
 
-    List<Book> list = await _repo.getBookByFilter(
-        state.search, state.language, state.copyright, state.audience);
+    List<Book> list;
+
+    switch (state.searchMode) {
+      case 1:
+        print("Search for Title");
+        list = [];
+      case 2:
+        print("Search for Synopsis");
+        list = [];
+      case 3:
+        print("Search for Author");
+        list = [];
+      default:
+        print("Search for Story");
+        list = await _repo.getBookByFilter(
+            state.search, state.language, state.copyright, state.audience);
+    }
 
     emit(state.copyWith(
         loadingStruct: const LoadingStruct(isLoading: false),
@@ -97,9 +124,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   clear(ClearStateEvent event, SearchEmitter emit) async {
     emit(state.copyWith(
       search: null,
-      language: null,
-      copyright: null,
-      audience: null,
     ));
   }
 }
