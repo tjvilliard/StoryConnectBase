@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
 import 'package:storyconnect/Constants/search_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 
 /// Builder for api uri's
 class _UrlBuilder {
@@ -109,24 +112,29 @@ class UrlConstants {
     return _urlBuilder.build('books/');
   }
 
-  static Uri booksQuery(String? search, String? language, int? copyright,
-      int? audience, SearchModeConstant searchMode) {
+  static Uri booksQuery(
+    String? search,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
+    SearchModeConstant searchMode,
+  ) {
     List<MapEntry<String, String>> parameters = [];
 
-    if (search != null) {
+    if (search != null && search.isNotEmpty) {
       parameters.add(MapEntry('search', search));
     }
 
     if (language != null) {
-      parameters.add(MapEntry('language', language));
+      parameters.add(MapEntry('language', language.label));
     }
 
     if (copyright != null) {
-      parameters.add(MapEntry('copyright', copyright.toString()));
+      parameters.add(MapEntry('copyright', copyright.index.toString()));
     }
 
     if (audience != null) {
-      parameters.add(MapEntry('target_audience', audience.toString()));
+      parameters.add(MapEntry('target_audience', audience.index.toString()));
     }
 
     Map<String, String> params = {};

@@ -1,6 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:replay_bloc/replay_bloc.dart';
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
 import 'package:storyconnect/Constants/search_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/loading_struct.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/reading_repository.dart';
@@ -15,17 +18,17 @@ class SearchChangedEvent extends SearchEvent {
 }
 
 class LanguageChangedEvent extends SearchEvent {
-  String? language;
+  LanguageConstant? language;
   LanguageChangedEvent({required this.language});
 }
 
 class CopyrightChangedEvent extends SearchEvent {
-  int? copyright;
+  CopyrightOption? copyright;
   CopyrightChangedEvent({required this.copyright});
 }
 
 class AudienceChangedEvent extends SearchEvent {
-  int? audience;
+  TargetAudience? audience;
   AudienceChangedEvent({required this.audience});
 }
 
@@ -46,9 +49,9 @@ class SearchState with _$SearchState {
     required LoadingStruct loadingStruct,
     required bool initLoad,
     String? search,
-    String? language,
-    int? copyright,
-    int? audience,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
     required SearchModeConstant searchMode,
     required List<Book> queryResults,
   }) = _SearchState;
@@ -111,6 +114,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     emit(state.copyWith(loadingStruct: const LoadingStruct(isLoading: true)));
     List<Book> list = await _repo.getBookByFilter(state.search, state.language,
         state.copyright, state.audience, state.searchMode);
+
+    print("Audience ${state.audience}");
+    print("Copyright ${state.copyright}");
+    print("Language ${state.language}");
+    print("Search Mode: ${state.searchMode}");
+    print("Search: ${state.search}");
 
     emit(state.copyWith(
         initLoad: false,

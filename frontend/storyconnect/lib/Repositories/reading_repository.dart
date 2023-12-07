@@ -3,7 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
 import 'package:storyconnect/Constants/search_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
@@ -77,8 +80,13 @@ class ReadingApiProvider {
     }
   }
 
-  Stream<Book> getBookByFilter(String? search, String? language, int? copyright,
-      int? audience, SearchModeConstant searchMode) async* {
+  Stream<Book> getBookByFilter(
+    String? search,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
+    SearchModeConstant searchMode,
+  ) async* {
     try {
       final url = UrlConstants.booksQuery(
           search, language, copyright, audience, searchMode);
@@ -285,9 +293,9 @@ class ReadingRepository {
 
   Future<List<Book>> getBookByFilter(
     String? search,
-    String? language,
-    int? copyright,
-    int? audience,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
     SearchModeConstant searchMode,
   ) async {
     final List<Book> books = await _api
