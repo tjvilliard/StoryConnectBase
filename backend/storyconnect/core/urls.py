@@ -8,6 +8,7 @@ from .views import (
     ProfileDisplayNameVerification,
     ProfileImageUpload,
     GetProfileByDisplayName,
+    CatalystViewSet
 )
 
 app_name = "core"
@@ -16,6 +17,7 @@ router = DefaultRouter()
 router.register(r"profiles", ProfileViewSet)
 router.register(r"activities", ActivityViewSet)
 router.register(r"announcements", AnnouncementViewSet)
+router.register(r"makeUser", CatalystViewSet)
 
 urlpatterns = [
     path("api/", include(router.urls)),
@@ -38,6 +40,5 @@ urlpatterns = [
         "api/username/by_display_name/<str:display_name>/",
         GetProfileByDisplayName.as_view(),
         name="get_username_by_display"
-
-    )
+    ),
 ]

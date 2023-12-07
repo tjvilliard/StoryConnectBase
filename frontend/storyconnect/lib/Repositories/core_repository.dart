@@ -156,6 +156,21 @@ class CoreApiProvider {
           success: false, message: "Failed to delete profile image");
     }
   }
+
+  Future<GenericResponse> triggerUserCreation() async {
+    try {
+      final url = UrlConstants.updateProfileImage();
+      final result = await http.get(url, headers: await buildHeaders());
+      return GenericResponse.fromJson(
+          jsonDecode(utf8.decode(result.bodyBytes)));
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return const GenericResponse(
+          success: false, message: "Failed: something went wrong.");
+    }
+  }
 }
 
 class CoreRepository {
@@ -199,5 +214,9 @@ class CoreRepository {
     final serializer = DisplayNameSerializer(displayName: displayName);
     final response = await _api.verifyDisplayNameUniqueness(serializer);
     return response?.success ?? false;
+  }
+
+  Future<void> triggerUserCreation() async {
+    await _api.triggerUserCreation();
   }
 }

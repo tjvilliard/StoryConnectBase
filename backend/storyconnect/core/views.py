@@ -216,3 +216,14 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class CatalystViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    '''
+    This should only ever be called to trigger the creation of a
+    new user. I am aware of how hacky this is. 
+    '''
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)

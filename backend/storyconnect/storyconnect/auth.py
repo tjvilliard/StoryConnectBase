@@ -35,10 +35,10 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
         decoded_token: dict = None
         try:
             # This should be used in production on an actual server, uncomment this out
-            #decoded_token = auth.verify_id_token(id_token, None, False)
+            decoded_token = auth.verify_id_token(id_token, None, False)
 
             # This can and probably should be used when running the project locally, as firebase can fail on localhost. 
-            decoded_token = FirebaseAuthentication.authenticate_token_wrapper(id_token)
+            # decoded_token = FirebaseAuthentication.authenticate_token_wrapper(id_token)
 
         except Exception as e:
             logging.exception(msg = e, exc_info = True, stack_info = True, stacklevel = 1)
@@ -54,6 +54,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             raise FirebaseError()
 
         user, created = User.objects.get_or_create(username = uid)
+        print(f"Profile Created {created}")
 
         return (user, None)
     

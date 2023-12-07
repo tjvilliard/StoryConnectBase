@@ -100,15 +100,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     bool passwordsValid = validatePassword(emit);
 
     if (emailValid & displayNameValid & passwordsValid) {
-      print("Valid");
       //String response = await _repo
 
       String response = await _firebaseRepo.register(
           state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
-        Profile? p =
-            await _coreRepo.getProfile(FirebaseAuth.instance.currentUser!.uid);
+        String uuid = FirebaseAuth.instance.currentUser!.uid;
+
+        await _coreRepo.triggerUserCreation();
+
+        Profile? p = await _coreRepo.getProfile(uuid);
+
         _coreRepo.updateProfile(p!.copyWith(displayName: state.displayName));
 
         emit(state.copyWith(success: true));
@@ -128,7 +131,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         }
       }
     } else {
-      print("Not Valid");
       return;
     }
   }

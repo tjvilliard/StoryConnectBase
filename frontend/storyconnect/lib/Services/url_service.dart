@@ -304,4 +304,9 @@ class UrlConstants {
   static Uri verifyDisplayNameUniqueness() {
     return _urlBuilder.build('display_name/verify_uniqueness/');
   }
+
+  /// Hack for manually triggering user creation.
+  static Uri triggerUserCreation() {
+    return _urlBuilder.build('makeUser');
+  }
 }
