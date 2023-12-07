@@ -12,7 +12,7 @@ class WriterFeedback with _$WriterFeedback {
     required int userId, //ID of the user in the db.
     required int chapterId, //not chapter index, but the actual chapter ID
     required AnnotatedTextSelection selection,
-    required FeedbackSentiment sentiment,
+    @JsonKey(name: 'sentiment') required int sentimentIndex,
     required bool isSuggestion,
     required bool dismissed,
     String? comment,
@@ -28,5 +28,8 @@ class WriterFeedback with _$WriterFeedback {
   @override
   int get chapterId => selection.chapterId;
 
-  factory WriterFeedback.fromJson(Map<String, dynamic> json) => _$WriterFeedbackFromJson(json);
+  FeedbackSentiment get sentiment => FeedbackSentiment.values[sentimentIndex];
+
+  factory WriterFeedback.fromJson(Map<String, dynamic> json) =>
+      _$WriterFeedbackFromJson(json);
 }

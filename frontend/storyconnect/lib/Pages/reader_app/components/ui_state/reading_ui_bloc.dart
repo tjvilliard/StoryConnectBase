@@ -39,20 +39,16 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
   /// Gets the title of the book currently loaded by the reading UI.
   Future<String> _getBookTitle(int bookID) async {
-    // Search all our books for our book.
-
-    List<Book> allBooks = await _repo.getBooks();
-    Map<Library, Book> libBooks = await _repo.getLibraryBooks();
-    allBooks.addAll(libBooks.values);
-
-    for (final book in allBooks) {
-      if (book.id == bookID) {
-        return book.title;
-      }
-    }
+    // Query Backend for our book.
 
     // If the book wasn't found, return Book not found Error.
-    return "Error: Title not found";
+    Book? book = await _repo.getBook(bookID);
+
+    if (book == null) {
+      return "Error: Title not found";
+    } else {
+      return book.title;
+    }
   }
 
   /// Completes all tasks related to loading a book into the reading UI.
@@ -62,6 +58,7 @@ class ReadingUIBloc extends Bloc<ReadingUIEvent, ReadingUIState> {
 
     event.readingBloc.add(LoadReadingEvent(
       event.feedbackBloc,
+      event.chapterIndex,
     ));
 
     final title = await _getBookTitle(event.bookId);

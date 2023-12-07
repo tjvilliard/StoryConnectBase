@@ -41,7 +41,7 @@ class Book(models.Model):
         choices=TARGET_AUDIENCES, null=True, blank=True
     )
     book_status = models.IntegerField(choices=STATUS, null=True, default=2)
-    tags = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+    tags = ArrayField(models.CharField(max_length=50), blank=True, null=True, default=list)
     cover = models.CharField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

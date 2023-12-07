@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,26 +39,48 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit));
   }
 
+  int getSelectionBaseOffset() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.baseOffset;
+  }
+
+  int getSelectionOffsetExtent() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.extentOffset;
+  }
+
+  String getSelection() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.plainText.text
+        .substring(editor.selection.baseOffset, editor.selection.extentOffset);
+  }
+
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
     final unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
     final editor = getEditorControllerCallback?.call();
+    int index =
+        event.chapterIndex > unParsedChapters.length ? 0 : event.chapterIndex;
     if (editor != null) {
       await editorSubscription?.cancel();
 
-      final doc = convertToDeltaDoc(result.chapters[0]!);
+      final doc = convertToDeltaDoc(result.chapters[index]!);
+
       editor.update(doc.delta);
-
-      emit(state.copyWith(
-          chapters: result.chapters,
-          chapterNumToID: result.chapterNumToID,
-          loadingStruct: LoadingStruct.loading(false)));
-
-      final chapterId = state.chapterNumToID[state.currentIndex]!;
-      event.feedbackBloc
-          .add(LoadChapterFeedbackEvent(chapterId, readingBloc: this));
     }
+
+    emit(state.copyWith(
+        currentIndex: index,
+        chapters: result.chapters,
+        chapterNumToID: result.chapterNumToID,
+        loadingStruct: LoadingStruct.loading(false)));
+
+    final chapterId = state.chapterNumToID[index]!;
+    if (kDebugMode) {
+      print("Getting Feedback Event on Load Reading Event. ");
+    }
+    event.feedbackBloc.add(LoadChapterFeedbackEvent(chapterId: chapterId));
   }
 
   // helper function to load chapters into expected format

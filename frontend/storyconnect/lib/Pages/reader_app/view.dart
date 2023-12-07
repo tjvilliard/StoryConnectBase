@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Pages/reader_app/components/chapter/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/state/feedback_bloc.dart';
-import 'package:storyconnect/Pages/reader_app/components/menubar/reading_menubar.dart';
+import 'package:storyconnect/Pages/reader_app/components/menubar/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/state/reading_bloc.dart';
 import 'package:storyconnect/Pages/reader_app/components/reading/view.dart';
 import 'package:storyconnect/Pages/reader_app/components/ui_state/reading_ui_bloc.dart';
@@ -16,7 +16,12 @@ import 'package:visual_editor/visual-editor.dart';
 
 class ReadingAppView extends StatefulWidget {
   final int? bookId;
-  const ReadingAppView({super.key, required this.bookId});
+  final int? chapterIndex;
+  const ReadingAppView({
+    super.key,
+    required this.bookId,
+    required this.chapterIndex,
+  });
 
   @override
   ReadingAppViewState createState() => ReadingAppViewState();
@@ -37,12 +42,15 @@ class ReadingAppViewState extends State<ReadingAppView> {
         if (widget.bookId == null) {
           Beamer.of(context).beamToNamed(PageUrls.readerHome);
           return;
+        } else {
+          BlocProvider.of<ReadingUIBloc>(context).add(ReadingLoadEvent(
+            bookId: widget.bookId!,
+            chapterIndex:
+                widget.chapterIndex == null ? 0 : widget.chapterIndex!,
+            readingBloc: context.read<ReadingBloc>(),
+            feedbackBloc: context.read<FeedbackBloc>(),
+          ));
         }
-        BlocProvider.of<ReadingUIBloc>(context).add(ReadingLoadEvent(
-          bookId: widget.bookId!,
-          readingBloc: context.read<ReadingBloc>(),
-          feedbackBloc: context.read<FeedbackBloc>(),
-        ));
       });
     }
     super.initState();

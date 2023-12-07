@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/home_book_list_widget.dart';
 import 'package:storyconnect/Pages/reading_hub/home/components/book_list.dart';
+import 'package:storyconnect/Pages/reading_hub/search/view.dart';
 import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
 import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
-import 'package:storyconnect/Widgets/auto_complete_searchbar.dart';
 import 'package:storyconnect/Widgets/header.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
@@ -38,18 +38,9 @@ class ReadingHomeState extends State<ReadingHomeView> {
             const Header(
               title: "Reading Home",
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: 500, minWidth: 250, maxHeight: 50),
-                  child: const AutoCompleteSearchBar(
-                    hintText: "Search",
-                    searchableItems: [],
-                  ),
-                )
-              ],
+              children: [SearchBarWidget()],
             ),
             const SizedBox(height: 20),
             Expanded(child: BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
@@ -57,7 +48,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                 return ListView.builder(
 
                     // add 1 to the number of
-                    itemCount: state.mappedBooks.length + 2,
+                    itemCount: 2,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         Widget widgetToReturn;
@@ -79,6 +70,18 @@ class ReadingHomeState extends State<ReadingHomeView> {
                             ],
                           );
                         } else {
+                          List<MapEntry<Library, Book>> libBooksEntries = state
+                              .libraryBookMap.entries
+                              .where((element) => element.key.status == 1)
+                              .toList();
+
+                          List<Book> libBooks = [];
+
+                          for (MapEntry<Library, Book> entry
+                              in libBooksEntries) {
+                            libBooks.add(entry.value);
+                          }
+
                           widgetToReturn = Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -91,8 +94,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                                   height: 220,
                                   child: BookListWidget(
                                       bookList: BookList(
-                                    bookList:
-                                        state.libraryBookMap.values.toList(),
+                                    bookList: libBooks,
                                   ))),
                             ],
                           );
@@ -102,7 +104,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           duration: const Duration(milliseconds: 500),
                           child: widgetToReturn,
                         );
-                      } else if (index == 1) {
+                      } else {
                         Widget toReturn;
                         if (state.loadingStruct.isLoading) {
                           toReturn = Column(
@@ -113,7 +115,7 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               const SizedBox(height: 25),
                               Text(
                                 style: Theme.of(context).textTheme.titleLarge,
-                                "All Books from Backend...",
+                                "Books recommended for you...",
                               ),
                               const SizedBox(height: 25),
                               Container(
@@ -133,14 +135,14 @@ class ReadingHomeState extends State<ReadingHomeView> {
                               const SizedBox(height: 25),
                               Text(
                                 style: Theme.of(context).textTheme.titleLarge,
-                                "All Books from Backend...",
+                                "Books recommended for you...",
                               ),
                               const SizedBox(height: 25),
                               SizedBox(
                                   height: 220,
                                   child: BookListWidget(
                                     bookList: BookList(
-                                      bookList: state.allBooks,
+                                      bookList: state.recommendedBooks,
                                     ),
                                   ))
                             ],
@@ -150,13 +152,6 @@ class ReadingHomeState extends State<ReadingHomeView> {
                           duration: const Duration(milliseconds: 500),
                           child: toReturn,
                         );
-                      } else {
-                        MapEntry<String, List<Book>> entry =
-                            state.mappedBooks.entries.toList()[index];
-                        String bookTag = entry.key;
-                        List<Book> bookList = entry.value;
-
-                        return BookList(bookList: bookList);
                       }
                     });
               },

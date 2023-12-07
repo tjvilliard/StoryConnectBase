@@ -3,11 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:storyconnect/Constants/feedback_sentiment.dart';
 
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
-import 'package:storyconnect/Models/text_annotation/text_selection.dart';
 import 'package:storyconnect/Pages/writing_app/components/continuity_checker/models/continuity_models.dart';
 import 'package:storyconnect/Pages/writing_app/components/narrative_sheet/models/narrative_element_models.dart';
 import 'package:storyconnect/Services/url_service.dart';
@@ -18,7 +16,8 @@ class WritingApiProvider {
     final url = UrlConstants.continuities(chapterId);
 
     final result = await http.get(url, headers: await buildHeaders());
-    return ContinuityResponse.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
+    return ContinuityResponse.fromJson(
+        jsonDecode(utf8.decode(result.bodyBytes)));
   }
 
   Future<Book?> createBook({required BookFormSerializer serialzer}) async {
@@ -38,7 +37,8 @@ class WritingApiProvider {
     }
   }
 
-  Future<Book?> updateBook({required BookFormSerializer serializer, required int bookId}) async {
+  Future<Book?> updateBook(
+      {required BookFormSerializer serializer, required int bookId}) async {
     try {
       final url = UrlConstants.books(bookId: bookId);
       final result = await http.patch(
@@ -103,6 +103,7 @@ class WritingApiProvider {
       yield WriterFeedback.fromJson(feedback);
     }
     // test object
+    /*
     yield WriterFeedback(
         id: 1,
         userId: 1,
@@ -112,11 +113,13 @@ class WritingApiProvider {
         sentiment: FeedbackSentiment.values[1],
         isSuggestion: false,
         dismissed: false);
+        */
   }
 
   Stream<NarrativeElement> generateNarrativeElements(int bookID) async* {
     try {
-      final url = UrlConstants.narrativeElements(bookId: bookID, generate: true);
+      final url =
+          UrlConstants.narrativeElements(bookId: bookID, generate: true);
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var element in jsonDecode(utf8.decode(result.bodyBytes))) {

@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:storyconnect/Pages/about_team/view.dart';
@@ -15,10 +16,10 @@ class LoginLocations extends BeamLocation<BeamState> {
   @override
   List<Pattern> get pathPatterns => [
         '/',
-        '/register',
         '/recover',
         PageUrls.login,
         PageUrls.about,
+        PageUrls.register,
       ];
 
   @override
@@ -27,6 +28,7 @@ class LoginLocations extends BeamLocation<BeamState> {
     final url = state.uri.pathSegments;
     final String aboutUrl = PageUrls.getLastPathSegment(PageUrls.about);
     final String loginUrl = PageUrls.getLastPathSegment(PageUrls.login);
+    final String registerUrl = PageUrls.getLastPathSegment(PageUrls.register);
 
     if (url.isEmpty || url.contains(loginUrl)) {
       pages.add(CustomBeamPage(
@@ -34,20 +36,25 @@ class LoginLocations extends BeamLocation<BeamState> {
           child: RepositoryProvider<FirebaseRepository>(
             create: (_) => FirebaseRepository(),
             child: BlocProvider<LoginBloc>(
-              create: (context) => LoginBloc(context.read<FirebaseRepository>()),
+              create: (context) =>
+                  LoginBloc(context.read<FirebaseRepository>()),
               child: const LoginPageView(),
             ),
           )));
-    } else if (url.contains('register')) {
+    } else if (url.contains(registerUrl)) {
       pages.add(CustomBeamPage(
           key: const ValueKey('register'),
           child: MultiRepositoryProvider(
             providers: [
-              RepositoryProvider<FirebaseRepository>(create: (_) => FirebaseRepository()),
-              RepositoryProvider<CoreRepository>(create: (_) => CoreRepository()),
+              RepositoryProvider<FirebaseRepository>(
+                  create: (_) => FirebaseRepository()),
+              RepositoryProvider<CoreRepository>(
+                  create: (_) => CoreRepository()),
             ],
             child: BlocProvider<RegistrationBloc>(
-              create: (context) => RegistrationBloc(context.read<FirebaseRepository>(), context.read<CoreRepository>()),
+              create: (context) => RegistrationBloc(
+                  context.read<FirebaseRepository>(),
+                  context.read<CoreRepository>()),
               child: const RegistrationPageView(),
             ),
           )));
@@ -58,7 +65,11 @@ class LoginLocations extends BeamLocation<BeamState> {
         key: ValueKey('about'),
         child: AboutTeamWidget(),
       ));
-    } else {}
+    } else {
+      if (kDebugMode) {
+        print("Not Found");
+      }
+    }
 
     return pages;
   }
