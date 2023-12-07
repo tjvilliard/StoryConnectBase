@@ -43,10 +43,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     final List<WriterFeedback> newFeedbackSet =
         await _repo.getChapterFeedback(event.chapterId);
 
-    // Remove the current set of feedback Items from storage.
     currentFeedbackSet.remove(event.chapterId);
 
-    // Add the new set of feedback Items to storage.
     currentFeedbackSet[event.chapterId] = newFeedbackSet;
 
     emit(state.copyWith(
@@ -121,16 +119,15 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     final List<WriterFeedback> newFeedbackSet = await _repo
         .getChapterFeedback(event.readingBloc.state.currentChapterId);
 
-    // Remove the current set of feedback Items from storage.
     currentFeedbackSet.remove(event.readingBloc.state.currentChapterId);
 
-    // Add the new set of feedback Items to storage.
     currentFeedbackSet[event.readingBloc.state.currentChapterId] =
         newFeedbackSet;
 
     emit(state.copyWith(
       feedbackSet: currentFeedbackSet,
-      serializer: FeedbackCreationSerializer.initial(),
+      serializer: FeedbackCreationSerializer.initial().copyWith(
+          isSuggestion: state.selectedFeedbackType == FeedbackType.suggestion),
       loadingStruct: LoadingStruct.loading(false),
     ));
   }

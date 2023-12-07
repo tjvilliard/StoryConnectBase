@@ -44,7 +44,8 @@ class FeedbackInputWidgetState extends State<FeedbackInputWidget> {
                                   minLines: 1,
                                   maxLines: 5,
                                   decoration: InputDecoration(
-                                      hintText: state.serializer.isSuggestion
+                                      hintText: state.selectedFeedbackType ==
+                                              FeedbackType.suggestion
                                           ? "Write your Suggestion Here."
                                           : "Write your Comment Here."),
                                   onChanged: (_) {
