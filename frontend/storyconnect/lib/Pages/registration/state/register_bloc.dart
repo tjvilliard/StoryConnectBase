@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Repositories/firebase_repository.dart';
 
@@ -105,6 +107,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
+        Profile? p =
+            await _coreRepo.getProfile(FirebaseAuth.instance.currentUser!.uid);
+        _coreRepo.updateProfile(p!.copyWith(displayName: state.displayName));
+
         emit(state.copyWith(success: true));
         return;
       } else {
@@ -135,8 +141,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         showEmailError: true,
       ));
       return false;
-    } else if (!RegExp(
-            r"^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)$")
+    } else if (!RegExp(r"^[\w%\+\-]+(\.[\w%\+\-]+)*@[\w%\+\-]+(\.[\w%\+\-]+)+$")
         .hasMatch(state.email)) {
       emit(state.copyWith(
         emailError: "Email format is invalid.",
