@@ -115,12 +115,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     List<Book> list = await _repo.getBookByFilter(state.search, state.language,
         state.copyright, state.audience, state.searchMode);
 
-    print("Audience ${state.audience}");
-    print("Copyright ${state.copyright}");
-    print("Language ${state.language}");
-    print("Search Mode: ${state.searchMode}");
-    print("Search: ${state.search}");
-
     emit(state.copyWith(
         initLoad: false,
         loadingStruct: const LoadingStruct(isLoading: false),
