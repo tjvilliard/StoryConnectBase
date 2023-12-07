@@ -30,7 +30,14 @@ class TutorialPopupWidget extends StatelessWidget {
         title: "Reader Home",
         description:
             "After exiting the Writing Page, in the app bar you'll notice in the app bar a link to the Reader Home Page. There, you can view all of the books available on StoryConnect. You can also search for books by title, author, or genre.",
-        imageUrl: null),
+        imageUrl:
+            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FHome%20Page%20Screenshot.png?alt=media&token=cbeb8ec1-63e8-4e74-b662-9ae18fdeaaef"),
+    TutorialPageData(
+        title: "Book Search",
+        description:
+            "From the Reader's Home, you will notice a search bar, clicking on this will bring you the search function, where you can search for books with a few filters. ",
+        imageUrl:
+            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FSearch%20Page.png?alt=media&token=8fe3b752-a737-43f5-8a9d-baba577e84c4"),
     TutorialPageData(
         title: "Reading Page",
         description:
@@ -42,7 +49,7 @@ class TutorialPopupWidget extends StatelessWidget {
         description:
             "You will also notice in the app bar, another link to the Library Page. The library page will list all the stories currently in your personal library. From here you can easily read a book or remove it from your library. ",
         imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FLibrary%20Page%20Screenshot.png?alt=media&token=653e8d58-54d7-4995-bbd3-481b929f4359"),
+            "https://firebasestorage.googleapis.com/v0/b/storyconnect-9c7dd.appspot.com/o/about_images%2FUpdated%20Library%20Screenshot.png?alt=media&token=6904b96a-7dc4-4f6a-a696-5e9b6eef8cf3"),
     TutorialPageData(
         title: "RoadUnblocker",
         description:
@@ -86,18 +93,22 @@ class TutorialPopupWidget extends StatelessWidget {
                 icon: const Icon(FontAwesomeIcons.x))),
         Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const TutorialTitleCard(),
-              Expanded(
-                  child: ListView.separated(
-                      itemCount: pages.length,
-                      separatorBuilder: (context, index) =>
-                          const Padding(padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20), child: Divider()),
-                      itemBuilder: (context, index) {
-                        return PageDescriptorCard(data: pages[index]);
-                      },
-                      shrinkWrap: true))
-            ])),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TutorialTitleCard(),
+                  Expanded(
+                      child: ListView.separated(
+                          itemCount: pages.length,
+                          separatorBuilder: (context, index) => const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                              child: Divider()),
+                          itemBuilder: (context, index) {
+                            return PageDescriptorCard(data: pages[index]);
+                          },
+                          shrinkWrap: true))
+                ])),
       ]),
     );
   }
