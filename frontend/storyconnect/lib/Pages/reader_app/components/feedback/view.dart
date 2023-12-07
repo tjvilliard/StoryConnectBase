@@ -56,38 +56,47 @@ class FeedbackWidgetState extends State<FeedbackWidget> {
                                         const SizedBox(height: 20),
                                         const FeedbackTypeSelector(),
                                         const SentimentSelectorWidget(),
-                                        BlocListener<ReadingBloc, ReadingState>(
+                                        BlocConsumer<ReadingBloc, ReadingState>(
                                             listener: (context,
                                                 ReadingState readingState) {
-                                              final int chapterId =
-                                                  readingState.currentChapterId;
-                                              context.read<FeedbackBloc>().add(
-                                                  LoadChapterFeedbackEvent(
-                                                      chapterId: chapterId));
-                                            },
-                                            child: Expanded(
-                                                child: AnimatedSwitcher(
-                                                    duration: const Duration(
-                                                        milliseconds: 500),
-                                                    child: feedbackState
-                                                            .loadingStruct
-                                                            .isLoading
-                                                        ? LoadingWidget(
-                                                            loadingStruct:
-                                                                feedbackState
-                                                                    .loadingStruct)
-                                                        : (feedbackState
-                                                                    .selectedFeedbackType ==
-                                                                FeedbackType
-                                                                    .suggestion
-                                                            ? FeedbackList(
-                                                                feedbackItems:
-                                                                    feedbackState
-                                                                        .suggestions)
-                                                            : FeedbackList(
-                                                                feedbackItems:
-                                                                    feedbackState
-                                                                        .comments))))),
+                                          final int chapterId =
+                                              readingState.currentChapterId;
+                                          context.read<FeedbackBloc>().add(
+                                              LoadChapterFeedbackEvent(
+                                                  chapterId: chapterId));
+                                        }, builder: (context,
+                                                ReadingState readingState) {
+                                          return Expanded(
+                                              child: AnimatedSwitcher(
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            child: feedbackState
+                                                    .loadingStruct.isLoading
+                                                ? LoadingWidget(
+                                                    loadingStruct: feedbackState
+                                                        .loadingStruct)
+                                                : (feedbackState
+                                                            .selectedFeedbackType ==
+                                                        FeedbackType.suggestion
+                                                    ? FeedbackList(
+                                                        feedbackItems: feedbackState
+                                                            .suggestions
+                                                            .where((suggestion) =>
+                                                                suggestion
+                                                                    .chapterId ==
+                                                                readingState
+                                                                    .currentChapterId)
+                                                            .toList())
+                                                    : FeedbackList(
+                                                        feedbackItems: feedbackState
+                                                            .comments
+                                                            .where((comment) =>
+                                                                comment.chapterId ==
+                                                                readingState
+                                                                    .currentChapterId)
+                                                            .toList())),
+                                          ));
+                                        }),
                                         const FeedbackInputWidget(),
                                       ]))
                               : Container(),
