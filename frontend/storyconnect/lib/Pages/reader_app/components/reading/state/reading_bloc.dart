@@ -57,7 +57,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
 
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
-    final unParsedChapters = await _repo.getChapters();
+    final List<Chapter> unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
     final editor = getEditorControllerCallback?.call();
     int index =
@@ -74,6 +74,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
         currentIndex: index,
         chapters: result.chapters,
         chapterNumToID: result.chapterNumToID,
+        chapterIDToTitle: result.chapterIDToTitle,
         loadingStruct: LoadingStruct.loading(false)));
 
     final chapterId = state.chapterNumToID[index]!;
@@ -87,12 +88,16 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   _ParsedChapterResult _parseChapters(List<Chapter> chapters) {
     final Map<int, int> chapterNumToID = {};
     Map<int, String> parsedChapters = {};
+    final Map<int, String?> chapterIDToTitle = {};
     for (Chapter chapter in chapters) {
       chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
+      chapterIDToTitle[chapter.id] = chapter.chapterTitle;
     }
     return _ParsedChapterResult(
-        chapters: parsedChapters, chapterNumToID: chapterNumToID);
+        chapters: parsedChapters,
+        chapterNumToID: chapterNumToID,
+        chapterIDToTitle: chapterIDToTitle);
   }
 
   void switchChapter(SwitchChapterEvent event, ReadingEmitter emit) async {
