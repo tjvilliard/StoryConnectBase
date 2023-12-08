@@ -18,7 +18,7 @@ class BookSettings extends StatelessWidget {
     return Dialog(
         child: Stack(children: [
       Container(
-        constraints: const BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
