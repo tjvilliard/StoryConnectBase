@@ -60,6 +60,8 @@ class UserUidConversion(APIView):
 
 # A view to verify display name uniqueness on a profile before saving
 class ProfileDisplayNameVerification(APIView):
+    authentication_classes = []
+
     def post(self, request, format=None):
         if not request.data.get("display_name"):
             return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
@@ -72,7 +74,6 @@ class ProfileDisplayNameVerification(APIView):
             return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"success": True}, status=status.HTTP_200_OK)
-
 
 # A view to upload a profile image
 class ProfileImageUpload(APIView):
@@ -123,14 +124,12 @@ class ProfileImageUpload(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all().prefetch_related("user")
     serializer_class = ProfileSerializer
     authentication_classes = [] # No authentication required for reads, 
                                 # though the default permissions protect against 'bad' writes 
     lookup_field = "user__username"
-
 
     def get_object(self):
         """
@@ -146,6 +145,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
             pass
 
         return profile
+    
+
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
@@ -192,3 +193,38 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class CatalystViewSet(viewsets.ModelViewSet):
+    '''
+        Viewset containing Dummy API call that does nothing,
+        hack for triggering creation of a new user upon authentication. 
+        That is literally it's only use. 
+    '''
+    queryset = User.objects.all()
+    '''
+    This should only ever be called to trigger the creation of a
+    new user. I am aware of how hacky this is. 
+    '''
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)
+    
+class GetProfileByDisplayName(APIView):
+    '''
+        Gets a user Profile username by Display Name.
+    '''
+    queryset = Profile.objects.all().prefetch_related("user")
+    serializer_class = ProfileSerializer
+    authentication_classes = [] # No authentication required for reads, 
+                                # though the default permissions protect against 'bad' writes 
+    lookup_field: str = 'display_name'
+
+    def get(self, request, *args, **kwargs):
+        '''Returns data based on a display name rather than a userId'''
+
+        displayName = self.kwargs.get("display_name")
+
+        profile = Profile.objects.get(display_name = displayName)
+
+        return Response(profile.user.username, status=status.HTTP_200_OK)

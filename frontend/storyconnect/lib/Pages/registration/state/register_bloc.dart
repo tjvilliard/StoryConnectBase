@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Repositories/core_repository.dart';
 import 'package:storyconnect/Repositories/firebase_repository.dart';
 
@@ -100,12 +102,18 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (emailValid & displayNameValid & passwordsValid) {
       //String response = await _repo
 
-      /*
-      String response = await this
-          ._firebaseRepo
-          .register(state.email, state.displayName, state.password);
+      String response = await _firebaseRepo.register(
+          state.email, state.displayName, state.password);
 
       if (response == FirebaseRepository.SUCCESS) {
+        String uuid = FirebaseAuth.instance.currentUser!.uid;
+
+        await _coreRepo.triggerUserCreation();
+
+        Profile? p = await _coreRepo.getProfile(uuid);
+
+        _coreRepo.updateProfile(p!.copyWith(displayName: state.displayName));
+
         emit(state.copyWith(success: true));
         return;
       } else {
@@ -122,9 +130,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           ));
         }
       }
-      */
     } else {
-      // print("[DEBUG] Field failed validity check.");
       return;
     }
   }
@@ -137,8 +143,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         showEmailError: true,
       ));
       return false;
-    } else if (!RegExp(
-            r"^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)$")
+    } else if (!RegExp(r"^[\w%\+\-]+(\.[\w%\+\-]+)*@[\w%\+\-]+(\.[\w%\+\-]+)+$")
         .hasMatch(state.email)) {
       emit(state.copyWith(
         emailError: "Email format is invalid.",
@@ -166,7 +171,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       return false;
     }
 
-    if (await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
+    if (!await _coreRepo.verifyDisplayNameUniqueness(state.displayName)) {
       emit(state.copyWith(
         displayNameError: "Display Name is already in use.",
         showDisplayNameError: true,
@@ -264,7 +269,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       if (!passwordHasChar) {
         passwordError +=
-            "Password must contain one of the following special characters: . ";
+            "Password must contain one of the following special characters: '!', '@', '#','\$','%','^', '&','*','(',')'. ";
       }
       if (!passwordHasDigit) {
         passwordError += "Password must contain at least one digit 0 - 9. ";
@@ -275,7 +280,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       }
       if (!confirmPasswordHasChar) {
         confirmPasswordError +=
-            "Password must contain one of the following special characters: . ";
+            "Password must contain one of the following special characters: '!', '@', '#','\$','%','^', '&','*','(',')'. ";
       }
       if (!confirmPasswordHasDigit) {
         confirmPasswordError +=
@@ -287,6 +292,13 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(state.copyWith(
           passwordError: passwordError,
           showPasswordError: true,
+        ));
+      }
+
+      if (confirmPasswordError.isNotEmpty) {
+        emit(state.copyWith(
+          confirmPasswordError: confirmPasswordError,
+          showConfirmPasswordError: true,
         ));
       }
 

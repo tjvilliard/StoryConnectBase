@@ -3,7 +3,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
-from books.models import *
+from books.models import Book, Library
 from books import serializers as books_serializers
 from book_rec import models as bookrec_models
 from book_rec import serializers as bookrec_serializers
@@ -37,19 +37,13 @@ class User_Based_Rec_APIView(APIView):
         for lib in libSet:
             bookSet.append(Book.objects.filter(id = lib.book))
 
-        bookRec = []
-
         for book in bookSet:
             my_value = book.pk
             bookrecs_of_the_book = bookrec_dataset.loc[bookrec_dataset["id"] == my_value]
             bookrecs_of_the_book_id = list(bookrecs_of_the_book['rec_id'])
             bookrecs_of_the_book_book_model = Book.objects.filter(pk__in=bookrecs_of_the_book_id)
         serializer=bookrec_serializers.Book_Based_Rec_Serializer(bookrecs_of_the_book_book_model, many=True)
-            # content = {'title': book, 'recommendation':bookrecs_of_the_book_book_model}
 
-            # for each_rec in bookrecs_of_the_book_id:
-            #     recbook = Book.objects.get(pk=each_rec)
-            #     content = {'book':book, 'recommendation': recbook}
         return Response(serializer.data)
 
 class Book_Rating_APIView(APIView):

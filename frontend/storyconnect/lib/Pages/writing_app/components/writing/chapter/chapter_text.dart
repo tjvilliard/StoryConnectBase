@@ -28,7 +28,8 @@ class ChapterTextWidget extends StatelessWidget {
           } else {
             String title;
             if (state.chapterIDToTitle[state.chapterNumToID[index]] == null ||
-                state.chapterIDToTitle[state.chapterNumToID[index]]?.isEmpty == true) {
+                state.chapterIDToTitle[state.chapterNumToID[index]]?.isEmpty == true ||
+                int.tryParse(state.chapterIDToTitle[state.chapterNumToID[index]]!) != null) {
               final int naturalIndex = index + 1;
               title = "Chapter $naturalIndex";
             } else {

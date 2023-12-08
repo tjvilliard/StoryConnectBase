@@ -1,6 +1,7 @@
 import openai
 from storyconnect.settings import OPENAI_API_KEY
 from .exceptions import ContinuityCheckerNullTextError
+from .models import StatementSheet
 
 # from .models import StatementSheet
 import lxml.etree as etree
@@ -108,7 +109,7 @@ class ContinuityChecker:
 class ContinuityCheckerChat:
     # openai parameters
     BASE_MODEL = "gpt-3.5-turbo-instruct"
-    CHAT_MODEL = "gpt-3.5-turbo-16k"
+    CHAT_MODEL = "gpt-3.5-turbo-1106"
     MAX_TOKENS = 4000
     TEMPERATURE = 0.2
 
@@ -185,7 +186,7 @@ class ContinuityCheckerChat:
         # print('\n')
         # print(s_new)
         comp_input = f"The following statements are about previously written text: \n {s_old} \n The next statements are about new text: \n {s_new}\n"
-        comp_instructions = "Identify any contradictions between the old text and the new text. Briefly summarize the contradicitons. Do not say anything about changes that dont contain contradictions. Do not use complicated formatting. Be brief. Stop when appropriate."
+        comp_instructions = "Identify any contradictions between the old text and the new text.  Do not say anything about changes that dont contain contradictions. Do not use complicated formatting. Be brief. Stop when appropriate."
         comp_instructions_list = "List any contradictions between the descriptions in the old text versus the new. If an entity is not mentioned in the new text, ignore it. If no contradicions exist, say 'NONE'."
         prompt = comp_input + comp_instructions_list
         client = OpenAI(api_key=OPENAI_API_KEY)
@@ -201,3 +202,6 @@ class ContinuityCheckerChat:
         response = self.last_response.choices[0].message.content.strip()
         pattern = re.compile(r"(\d+\. )")
         return re.sub(pattern, "", response)
+    
+
+

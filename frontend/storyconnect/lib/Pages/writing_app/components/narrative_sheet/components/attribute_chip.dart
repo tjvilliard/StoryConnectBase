@@ -11,12 +11,10 @@ class AttributeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color chipColor = confidenceColors[
-        ConfidenceChecker.getConfidence(attribute.confidence)]!;
+    final Color chipColor = confidenceColors[ConfidenceChecker.getConfidence(attribute.confidence)]!;
     const Color textColor = Colors.white;
 
-    final TextStyle textStyle =
-        Theme.of(context).textTheme.labelLarge!.copyWith(
+    final TextStyle textStyle = Theme.of(context).textTheme.labelLarge!.copyWith(
       color: textColor,
       fontStyle: FontStyle.italic,
       shadows: <Shadow>[
@@ -33,15 +31,16 @@ class AttributeChip extends StatelessWidget {
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          Flexible(
+              child: Text(
             attribute.attribute,
             style: textStyle,
-          ),
-          if (attribute.generated) ...[
-            const SizedBox(width: 8.0),
-            Text('${(attribute.confidence * 100).toStringAsFixed(0)}%',
-                style: textStyle),
-          ],
+          )),
+          // if (attribute.generated) ...[
+          //   const SizedBox(width: 8.0),
+          //   Text('${(attribute.confidence * 100).toStringAsFixed(0)}%',
+          //       style: textStyle),
+          // ],
         ],
       ),
     );

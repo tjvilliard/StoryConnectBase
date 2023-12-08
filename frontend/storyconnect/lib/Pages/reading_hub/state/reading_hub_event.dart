@@ -15,6 +15,13 @@ class RemoveLibraryBookEvent extends ReadingHomeEvent {
   RemoveLibraryBookEvent({required this.bookId}) : super(isLoading: true);
 }
 
+class UpdateLibraryBookStatusEvent extends ReadingHomeEvent {
+  int status;
+  int bookId;
+  UpdateLibraryBookStatusEvent({required this.bookId, required this.status})
+      : super(isLoading: true);
+}
+
 class InitialLoadEvent extends ReadingHomeEvent {
   InitialLoadEvent() : super(isLoading: true);
 }

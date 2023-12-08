@@ -52,6 +52,10 @@ class AnnotationChangedEvent extends FeedbackEvent {
   });
 }
 
+class ClearAnnotationEvent extends FeedbackEvent {
+  const ClearAnnotationEvent();
+}
+
 /// Submits a new feedback item.
 class SubmitFeedbackEvent extends FeedbackEvent {
   final ReadingBloc readingBloc;
