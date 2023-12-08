@@ -54,7 +54,6 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             raise FirebaseError()
 
         user, created = User.objects.get_or_create(username = uid)
-        print(f"Profile Created {created}")
 
         return (user, None)
     
