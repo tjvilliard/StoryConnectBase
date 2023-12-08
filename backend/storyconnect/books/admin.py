@@ -3,7 +3,6 @@ from .models import (
     Book,
     Library,
     Chapter,
-    Library,
     NarrativeElementType,
     NarrativeElementAttributeType,
     NarrativeElement,
@@ -14,7 +13,6 @@ from .models import (
 admin.site.register(Book)
 admin.site.register(Library)
 admin.site.register(Chapter)
-admin.site.register(Library)
 admin.site.register(NarrativeElementType)
 admin.site.register(NarrativeElementAttributeType)
 admin.site.register(NarrativeElement)

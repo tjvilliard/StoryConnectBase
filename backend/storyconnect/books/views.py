@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Book, Chapter, Library, User, Profile
+from .models import Book, Chapter, Library, Profile
 from .serializers import (
     BookSerializer,
     ChapterSerializer,
