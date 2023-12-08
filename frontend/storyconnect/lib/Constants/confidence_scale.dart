@@ -12,7 +12,8 @@ enum ConfidenceScale {
 
 class ConfidenceChecker {
   static final condidenceIntervals = [.25, .5, .75, 1];
-  static ConfidenceScale getConfidence(double confidence) {
+  static ConfidenceScale getConfidence(double incomingConfidence) {
+    final confidence = (incomingConfidence / 100).clamp(0, 1);
     for (int i = 0; i < condidenceIntervals.length; i++) {
       if (confidence <= condidenceIntervals[i]) {
         return ConfidenceScale.values[i];

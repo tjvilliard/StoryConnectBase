@@ -31,10 +31,11 @@ class AttributeChip extends StatelessWidget {
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          Flexible(
+              child: Text(
             attribute.attribute,
             style: textStyle,
-          ),
+          )),
           // if (attribute.generated) ...[
           //   const SizedBox(width: 8.0),
           //   Text('${(attribute.confidence * 100).toStringAsFixed(0)}%',
