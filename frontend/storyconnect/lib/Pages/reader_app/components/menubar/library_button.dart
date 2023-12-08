@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:storyconnect/Pages/reading_hub/state/reading_hub_bloc.dart';
+import 'package:storyconnect/Pages/reading_hub/library/state/library_bloc.dart';
 import 'package:storyconnect/Widgets/loading_widget.dart';
 
 class LibraryMenuButton extends StatefulWidget {
@@ -18,17 +18,17 @@ class LibraryMenuButtonState extends State<LibraryMenuButton> {
 
   @override
   void initState() {
-    context.read<ReadingHubBloc>().add(const FetchBooksEvent());
+    context.read<LibraryBloc>().add(const FetchLibraryBooksEvent());
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReadingHubBloc, ReadingHubStruct>(
-      builder: (BuildContext context, ReadingHubStruct state) {
+    return BlocBuilder<LibraryBloc, LibraryState>(
+      builder: (BuildContext context, LibraryState state) {
         inLibrary = context
-            .read<ReadingHubBloc>()
+            .read<LibraryBloc>()
             .state
             .libraryBookMap
             .values
@@ -39,10 +39,11 @@ class LibraryMenuButtonState extends State<LibraryMenuButton> {
             height: 40,
             width: inLibrary ? 180 : 130,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(2.0)),
-            child: state.loadingStruct.isLoading
+            child: state.libraryLoadingStruct.isLoading
                 ? Transform.scale(
                     scale: .6,
-                    child: LoadingWidget(loadingStruct: state.loadingStruct))
+                    child: LoadingWidget(
+                        loadingStruct: state.libraryLoadingStruct))
                 : InkWell(
                     customBorder: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),
@@ -50,12 +51,12 @@ class LibraryMenuButtonState extends State<LibraryMenuButton> {
                     onTap: () {
                       if (inLibrary) {
                         context
-                            .read<ReadingHubBloc>()
-                            .add(RemoveLibraryBookEvent(bookId: bookId));
+                            .read<LibraryBloc>()
+                            .add(RemoveBookFromLibraryEvent(bookId: bookId));
                       } else {
                         context
-                            .read<ReadingHubBloc>()
-                            .add(AddLibraryBookEvent(bookId: bookId));
+                            .read<LibraryBloc>()
+                            .add(AddBookToLibraryEvent(bookId: bookId));
                       }
                       inLibrary = !inLibrary;
                       setState(() {});

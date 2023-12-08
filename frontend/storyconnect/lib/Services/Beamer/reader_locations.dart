@@ -100,10 +100,10 @@ class ReaderLocations extends BeamLocation<BeamState> {
                   ],
                   child: MultiBlocProvider(
                       providers: [
-                        BlocProvider<ReadingHubBloc>(
+                        BlocProvider<LibraryBloc>(
                             lazy: false,
-                            create: (context) => ReadingHubBloc(
-                                context.read<ReadingRepository>())),
+                            create: (context) =>
+                                LibraryBloc(context.read<ReadingRepository>())),
                         BlocProvider<ReadingBloc>(
                             lazy: false,
                             create: (context) => ReadingBloc(
