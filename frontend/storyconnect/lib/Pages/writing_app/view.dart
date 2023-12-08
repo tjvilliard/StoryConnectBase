@@ -77,12 +77,18 @@ class WritingAppViewState extends State<WritingAppView> {
               const SizedBox(
                 width: 10,
               ),
-              BlocBuilder<WritingUIBloc, WritingUIState>(builder: (context, state) {
+              BlocConsumer<WritingUIBloc, WritingUIState>(listener: (context, state) {
+                if (state.hasBeenDeleted) {
+                  Beamer.of(context).beamToReplacementNamed(PageUrls.writerHome);
+                }
+              }, builder: (context, state) {
                 Widget toReturn;
                 if (state.loadingStruct.isLoading) {
                   toReturn = LoadingWidget(loadingStruct: state.loadingStruct);
                 } else if (state.isSaving) {
                   toReturn = LoadingWidget(loadingStruct: LoadingStruct.message("Saving"), short: true);
+                } else if (state.deletingBook == true) {
+                  toReturn = LoadingWidget(loadingStruct: LoadingStruct.message("Deleting"), short: true);
                 } else if (state.book == null) {
                   toReturn = Text("No book was found", style: Theme.of(context).textTheme.displaySmall);
                 } else {
