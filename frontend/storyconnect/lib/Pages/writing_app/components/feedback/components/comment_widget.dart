@@ -9,10 +9,11 @@ class CommentWidget extends StatelessWidget {
   final WriterFeedback comment;
 
   String get commentText {
-    if (comment.selection.text.isEmpty) {
+    final String text = comment.selection.text ?? "";
+    if (text.isEmpty) {
       return "No text selected";
     } else {
-      return comment.selection.text;
+      return text;
     }
   }
 
