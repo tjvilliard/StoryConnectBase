@@ -147,30 +147,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return profile
     
 
-# A view to get Profile Information based on a display Name
-class GetProfileByDisplayName(APIView):
-    '''
-    Gets a user Profile username by Display Name.
-    '''
-    queryset = Profile.objects.all().prefetch_related("user")
-    serializer_class = ProfileSerializer
-    authentication_classes = [] # No authentication required for reads, 
-                                # though the default permissions protect against 'bad' writes 
-    lookup_field: str = 'display_name'
 
-    def get(self, request, *args, **kwargs):
-        '''Returns data based on a display name rather than a userId'''
-
-        print(f"request {request}")
-
-        displayName = self.kwargs.get("display_name")
-        print(f"Found Display Name {displayName}")
-
-        profile = Profile.objects.get(display_name = displayName)
-
-        print( f"Username: '{profile.user.username}' from DisplayName:  {displayName}")
-
-        return Response(profile.user.username, status=status.HTTP_200_OK)
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all().prefetch_related("user")
@@ -218,6 +195,11 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 class CatalystViewSet(viewsets.ModelViewSet):
+    '''
+        Viewset containing Dummy API call that does nothing,
+        hack for triggering creation of a new user upon authentication. 
+        That is literally it's only use. 
+    '''
     queryset = User.objects.all()
     '''
     This should only ever be called to trigger the creation of a
@@ -227,3 +209,22 @@ class CatalystViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         return Response(status=status.HTTP_200_OK)
+    
+class GetProfileByDisplayName(APIView):
+    '''
+        Gets a user Profile username by Display Name.
+    '''
+    queryset = Profile.objects.all().prefetch_related("user")
+    serializer_class = ProfileSerializer
+    authentication_classes = [] # No authentication required for reads, 
+                                # though the default permissions protect against 'bad' writes 
+    lookup_field: str = 'display_name'
+
+    def get(self, request, *args, **kwargs):
+        '''Returns data based on a display name rather than a userId'''
+
+        displayName = self.kwargs.get("display_name")
+
+        profile = Profile.objects.get(display_name = displayName)
+
+        return Response(profile.user.username, status=status.HTTP_200_OK)

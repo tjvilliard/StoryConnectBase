@@ -15,6 +15,7 @@ from django.db import transaction
 from rest_framework.views import APIView
 
 class BooksByTitleViewSet(viewsets.ModelViewSet):
+    '''View Set for searching for a book by title.'''
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
     search_fields = ["title"]
@@ -23,6 +24,7 @@ class BooksByTitleViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().prefetch_related("user")
 
 class BooksBySynopsisViewSet(viewsets.ModelViewSet):
+    '''View Set for searching for a book by synopsis content.'''
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
     search_fields = ["synopsis"]
@@ -31,6 +33,7 @@ class BooksBySynopsisViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().prefetch_related("user")
 
 class BooksByAuthorViewSet(viewsets.ModelViewSet):
+    '''View Set for searching for a book by author name.'''
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["language", "copyright", "target_audience"]
     serializer_class = BookSerializer
@@ -94,7 +97,6 @@ class BookViewSet(viewsets.ModelViewSet):
             books = self.queryset.filter(user__username=username)
         else:
             # Default to filtering books based on the request user
-            print(request.user.id)
             books = self.queryset.filter(user__id=request.user.id)
 
         serializer = BookSerializer(books, many=True)
