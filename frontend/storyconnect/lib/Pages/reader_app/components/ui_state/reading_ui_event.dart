@@ -6,10 +6,12 @@ abstract class ReadingUIEvent {
 
 class ReadingLoadEvent extends ReadingUIEvent {
   final int bookId;
+  final int chapterIndex;
   final FeedbackBloc feedbackBloc;
   final ReadingBloc readingBloc;
   ReadingLoadEvent(
       {required this.bookId,
+      required this.chapterIndex,
       required this.readingBloc,
       required this.feedbackBloc});
 }

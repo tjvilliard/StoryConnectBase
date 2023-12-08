@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,21 +21,41 @@ class ExpandableBioWidgetState extends State<ExpandableBioWidget> {
   bool isExpanded = false;
   final GlobalKey _unexpandedKey = GlobalKey();
   bool _isOverflowing = false;
+  Timer? _layoutCheckTimer;
+  int _layoutRetryCount = 0;
+  final int _maxLayoutRetries = 10;
 
   @override
   void initState() {
     super.initState();
-    // Wait for the first frame to be drawn, then check the content height
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkContentHeight());
+    _layoutCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      _checkContentHeight();
+    });
   }
 
   void _checkContentHeight() {
-    final RenderBox renderBox = _unexpandedKey.currentContext?.findRenderObject() as RenderBox;
-    if (renderBox.size.height > widget.maxHeight) {
-      setState(() {
-        _isOverflowing = true;
-      });
+    if (_layoutRetryCount >= _maxLayoutRetries) {
+      _layoutCheckTimer?.cancel();
+      return;
     }
+
+    final RenderBox? renderBox = _unexpandedKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null && renderBox.hasSize) {
+      if (renderBox.size.height > widget.maxHeight) {
+        setState(() {
+          _isOverflowing = true;
+        });
+      }
+      _layoutCheckTimer?.cancel(); // Cancel timer as layout is successful
+    } else {
+      _layoutRetryCount++;
+    }
+  }
+
+  @override
+  void dispose() {
+    _layoutCheckTimer?.cancel();
+    super.dispose();
   }
 
   void toggleExpanded() {
@@ -52,7 +73,7 @@ class ExpandableBioWidgetState extends State<ExpandableBioWidget> {
         if (_isOverflowing)
           Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: FilledButton.tonal(
+              child: ElevatedButton(
                 onPressed: toggleExpanded,
                 child: Text(isExpanded ? "Show Less" : "Show More"),
               )),

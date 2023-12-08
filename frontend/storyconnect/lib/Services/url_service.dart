@@ -1,4 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
+import 'package:storyconnect/Constants/search_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 
 /// Builder for api uri's
 class _UrlBuilder {
@@ -19,24 +23,32 @@ class _UrlBuilder {
 }
 
 Future<Map<String, String>> buildHeaders({bool noAuth = false}) async {
-  final Map<String, String> baseHeaders = <String, String>{'Content-Type': 'application/json; charset=UTF-8'};
+  final Map<String, String> baseHeaders = <String, String>{
+    'Content-Type': 'application/json; charset=UTF-8'
+  };
   if (noAuth == true) {
     return baseHeaders;
   }
-  String authToken = await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  String authToken =
+      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
   final authorizedHeaders = Map<String, String>.from(baseHeaders);
   authorizedHeaders.addAll({'Authorization': 'Token $authToken'});
   return authorizedHeaders;
 }
 
-/// URL constants and builders for app pages.
+/// Front End Application Page Url Constants and Builders.
 class PageUrls {
   static String getLastPathSegment(String url) {
     return url.split('/').last;
   }
 
+  // Login Page Urls
+  static const String about = "/about";
+  static const String login = "/login";
+
   static const String register = "/register";
 
+  // Writer Side Urls
   static const String writerBase = "/writer";
   static const String writerHome = "$writerBase/home";
   static const String createBook = "$writerBase/create_book";
@@ -44,54 +56,111 @@ class PageUrls {
     return "$writerBase/book/$bookID";
   }
 
-  // Login Page Urls
-  static const String about = "/about";
-  static const String login = "/login";
-
-  /// URL for reader home
-  static const String readerHome = "/reader/home";
-
-  /// URL for reader library
-  static const String readerLibrary = "/reader/library";
-
-  /// URL for a specific reading book.
-  static String readBook(int bookID) {
-    return "/reader/book/$bookID";
-  }
-
-  /// URL for a writer's profile.
   static String writerProfile(String uid) {
     return "/profile/writer/$uid";
   }
+
+  // Reader Side Urls
+  static const String readerBase = "/reader";
+  static const String readerHome = "$readerBase/home";
+  static const String readerLibrary = "$readerBase/library";
+  static const String readerDetails = "$readerBase/details";
+  static String bookDetails(int bookId) {
+    return "$readerDetails/$bookId";
+  }
+
+  static const String readBookBase = "$readerBase/book";
+  static String readBook(int bookId) {
+    return "$readBookBase/$bookId";
+  }
+
+  static String readBookByChapter(int bookId, int chapterIndex) {
+    return "$readBookBase/$bookId/$chapterIndex";
+  }
 }
 
-/// URL constants for REST api calls.
+/// URL constants for REST API Endpoints.
 class UrlConstants {
   static final _urlBuilder = _UrlBuilder();
 
-  ///
+  static Uri getBookTags(int bookId) {
+    return _urlBuilder.build('genretagging/$bookId/');
+  }
+
   static Uri getWriterFeedback(int chapterId) {
-    return _urlBuilder.build('feedback/by_chapter/').replace(queryParameters: {'chapter': chapterId.toString()});
+    return _urlBuilder
+        .build('feedback/by_chapter/')
+        .replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
-  /// URI for HTTP Put request for creating writer feedback.
   static Uri createWriterFeedback() {
-    return _urlBuilder.build('feedback');
+    return _urlBuilder.build('feedback/');
   }
 
-  ///
   static Uri getChapters(int bookId) {
     return _urlBuilder.build('books/$bookId/get_chapters');
   }
 
   static Uri books({String? uid, int? bookId}) {
     if (uid != null) {
-      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
     }
     if (bookId != null) {
       return _urlBuilder.build('books/$bookId/');
     }
     return _urlBuilder.build('books/');
+  }
+
+  static Uri booksQuery(
+    String? search,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
+    SearchModeConstant searchMode,
+  ) {
+    List<MapEntry<String, String>> parameters = [];
+
+    if (search != null && search.isNotEmpty) {
+      parameters.add(MapEntry('search', search));
+    }
+
+    if (language != null) {
+      parameters.add(MapEntry('language', language.label));
+    }
+
+    if (copyright != null) {
+      parameters.add(MapEntry('copyright', copyright.index.toString()));
+    }
+
+    if (audience != null) {
+      parameters.add(MapEntry('target_audience', audience.index.toString()));
+    }
+
+    Map<String, String> params = {};
+    params.addEntries(parameters);
+
+    if (searchMode == SearchModeConstant.story) {
+      return _urlBuilder.build(
+        'books/',
+        queryParameters: params,
+      );
+    } else if (searchMode == SearchModeConstant.title) {
+      return _urlBuilder.build(
+        'books-by-title/',
+        queryParameters: params,
+      );
+    } else if (searchMode == SearchModeConstant.synopsis) {
+      return _urlBuilder.build(
+        'books-by-synopsis/',
+        queryParameters: params,
+      );
+    } else {
+      return _urlBuilder.build(
+        'books-by-author/',
+        queryParameters: params,
+      );
+    }
   }
 
   /// Creates a Uri for various operations on narrative elements.
@@ -118,8 +187,10 @@ class UrlConstants {
   ///
   /// Throws:
   ///   AssertionError: If the method parameters do not meet the required conditions.
-  static Uri narrativeElements({int? narrativeElementId, int? bookId, bool generate = false}) {
-    assert(!generate || bookId != null, 'bookId cannot be null when generate is true');
+  static Uri narrativeElements(
+      {int? narrativeElementId, int? bookId, bool generate = false}) {
+    assert(!generate || bookId != null,
+        'bookId cannot be null when generate is true');
     assert((narrativeElementId != null) != (bookId != null),
         'Either narrativeElementId or bookId must be provided, but not both');
 
@@ -129,16 +200,19 @@ class UrlConstants {
       return _urlBuilder.build('/api/narrative_elements/$narrativeElementId');
     } else {
       // Using query parameters for retrieving all narrative elements of a single book
-      return _urlBuilder.build('/api/narrative_elements', queryParameters: {'book_id': bookId.toString()});
+      return _urlBuilder.build('/api/narrative_elements',
+          queryParameters: {'book_id': bookId.toString()});
     }
   }
 
+  /// Creates a Uri for retrieving the books a user is writing themselves.
   static Uri currentUserBooks() {
     return _urlBuilder.build(
       'books/writer/',
     );
   }
 
+  /// Creates a Uri for creating a new book.
   static Uri createBook() {
     return _urlBuilder.build('books/');
   }
@@ -159,9 +233,19 @@ class UrlConstants {
     return _urlBuilder.build('road_unblock/');
   }
 
+  // Library Endpoints
   /// library/get_user/library/ for getting user library.
   static Uri getUserLibrary() {
     return _urlBuilder.build('library/get_user_library/');
+  }
+
+  /// Library Endpoint.
+  static Uri libraryBooks() {
+    return _urlBuilder.build('library/');
+  }
+
+  static Uri libraryBookEntry(int libId) {
+    return _urlBuilder.build('library/$libId');
   }
 
   /// library/ url for adding entries to library
@@ -171,11 +255,21 @@ class UrlConstants {
 
   /// library/change_entry_status for removing library entry.
   static Uri removeLibraryBook(int entryId) {
-    return _urlBuilder.build('library/$entryId/change_entry_status/');
+    return _urlBuilder.build('library/$entryId/delete_entry/');
   }
+
+  // Library Endpoints
 
   static Uri continuities(int chapterId) {
     return _urlBuilder.build('continuities/$chapterId');
+  }
+
+  static Uri getNarrativeElements(int bookId) {
+    return _urlBuilder.build('narrative_elements/$bookId');
+  }
+
+  static Uri getProfileName(String displayName) {
+    return _urlBuilder.build('username/by_display_name/$displayName?/');
   }
 
   static Uri getDisplayName(int uid) {
@@ -184,7 +278,8 @@ class UrlConstants {
 
   static Uri getBooksByUser({String? uid}) {
     if (uid != null) {
-      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder
+          .build('books/writer/', queryParameters: {'username': uid});
     }
     return _urlBuilder.build('books/writer/');
   }
@@ -216,5 +311,10 @@ class UrlConstants {
 
   static Uri verifyDisplayNameUniqueness() {
     return _urlBuilder.build('display_name/verify_uniqueness/');
+  }
+
+  /// Hack for manually triggering user creation.
+  static Uri triggerUserCreation() {
+    return _urlBuilder.build('makeUser');
   }
 }

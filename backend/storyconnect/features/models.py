@@ -25,7 +25,7 @@ class Review(models.Model):
         thebook = Book.objects.get(pk=book_id)
         return Review.objects.filter(pk=thebook).aggregate(models.Avg("rating"))["rating__avg"] or 0
 
-class GenreTag(models.Model):
+class GenreTagging(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
 

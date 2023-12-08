@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from features.models import Review, GenreTag, ChapterTagging
+from features.models import Review, GenreTagging, ChapterTagging
 
-class GenreTagSerializer(serializers.ModelSerializer):
+class GenreTaggingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GenreTag
-        fields = "__all__"
+        model = GenreTagging
+        exclude = ('book', 'id')
 
 class ChapterTaggingSerializer(serializers.ModelSerializer):
     class Meta:

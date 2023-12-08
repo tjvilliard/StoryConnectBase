@@ -93,18 +93,22 @@ class TutorialPopupWidget extends StatelessWidget {
                 icon: const Icon(FontAwesomeIcons.x))),
         Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const TutorialTitleCard(),
-              Expanded(
-                  child: ListView.separated(
-                      itemCount: pages.length,
-                      separatorBuilder: (context, index) =>
-                          const Padding(padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20), child: Divider()),
-                      itemBuilder: (context, index) {
-                        return PageDescriptorCard(data: pages[index]);
-                      },
-                      shrinkWrap: true))
-            ])),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TutorialTitleCard(),
+                  Expanded(
+                      child: ListView.separated(
+                          itemCount: pages.length,
+                          separatorBuilder: (context, index) => const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 20),
+                              child: Divider()),
+                          itemBuilder: (context, index) {
+                            return PageDescriptorCard(data: pages[index]);
+                          },
+                          shrinkWrap: true))
+                ])),
       ]),
     );
   }

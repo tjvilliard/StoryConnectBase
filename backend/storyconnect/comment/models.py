@@ -25,6 +25,7 @@ class WriterFeedback(models.Model):  # writer feedback
     selection = models.OneToOneField(TextSelection, on_delete=models.CASCADE)
 
     comment = models.TextField(max_length=1000, null=True, blank=True)
+
     parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
 
     SENTIMENT_CHOICES = [(0, "great"), (1, "good"), (2, "mediocre"), (3, "bad")]
@@ -35,6 +36,7 @@ class WriterFeedback(models.Model):  # writer feedback
     suggestion = models.BooleanField(default=False)
 
     posted = models.DateTimeField(auto_now_add=True)
+    
     edited = models.DateTimeField(auto_now=True)
 
     def __str__(self):

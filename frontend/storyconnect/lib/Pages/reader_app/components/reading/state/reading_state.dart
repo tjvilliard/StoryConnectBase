@@ -13,6 +13,7 @@ class ReadingState with _$ReadingState {
     required LoadingStruct loadingStruct,
     int? caretOffest,
     @Default(<int, int>{}) Map<int, int> chapterNumToID,
+    @Default(<int, String?>{}) Map<int, String?> chapterIDToTitle,
     required EditorConfigM config,
   }) = _ReadingState;
   const ReadingState._();
@@ -28,13 +29,21 @@ class ReadingState with _$ReadingState {
         config: EditorConfigM(
             readOnly: true,
             customStyles: const EditorStylesM(
-                paragraph: TextBlockStyleM(TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
-                    VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, VERTICAL_SPACING_EMPTY, null))));
+                paragraph: TextBlockStyleM(
+                    TextStyle(color: Colors.black, fontSize: 16, height: 1.3),
+                    VERTICAL_SPACING_EMPTY,
+                    VERTICAL_SPACING_EMPTY,
+                    VERTICAL_SPACING_EMPTY,
+                    null))));
   }
 }
 
 class _ParsedChapterResult {
   final Map<int, String> chapters;
   final Map<int, int> chapterNumToID;
-  _ParsedChapterResult({required this.chapters, required this.chapterNumToID});
+  final Map<int, String?> chapterIDToTitle;
+  _ParsedChapterResult(
+      {required this.chapters,
+      required this.chapterNumToID,
+      required this.chapterIDToTitle});
 }

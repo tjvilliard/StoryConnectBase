@@ -34,10 +34,10 @@ class LibrarySerializer(serializers.ModelSerializer):
 
 
 class LibraryBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
     class Meta:
+        fields = "__all__"
         model = Library
-        exclude = ["reader"]
-        depth = 1
 
 class NarrativeElementTypeSerializer(serializers.ModelSerializer):
     # book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all(), many=False)

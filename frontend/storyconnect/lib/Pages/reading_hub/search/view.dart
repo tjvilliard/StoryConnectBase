@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:storyconnect/Widgets/app_nav/app_nav.dart';
+import 'package:storyconnect/Pages/reading_hub/search/components/search_dialog_box.dart';
 
-class SearchView extends StatefulWidget {
-  const SearchView({super.key});
-
-  @override
-  SearchViewState createState() => SearchViewState();
-}
-
-class SearchViewState extends State<SearchView> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+class SearchBarWidget extends StatelessWidget {
+  const SearchBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(context: context),
-      body: Container(),
-    );
+    return ConstrainedBox(
+        constraints:
+            const BoxConstraints(maxWidth: 500, minWidth: 250, maxHeight: 50),
+        child: SearchBar(
+            leading: const Icon(Icons.search),
+            hintText: 'Search',
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (builderContext) {
+                    return const SearchDialog();
+                  });
+            }));
   }
 }

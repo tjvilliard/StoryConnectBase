@@ -37,6 +37,9 @@ class PasswordState extends State<PasswordField> {
           child: TextField(
             controller: _passwordController,
             obscureText: !state.showPassword,
+            onSubmitted: (_) {
+              context.read<LoginBloc>().add(const LoginButtonPushedEvent());
+            },
             onChanged: (_) {
               context.read<LoginBloc>().add(PasswordFieldChangedEvent(password: _passwordController.text));
             },
