@@ -64,7 +64,7 @@ class NarrativeElementsList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "${element.elementType.name}s",
+                    element.elementType.name,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
