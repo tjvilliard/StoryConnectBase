@@ -55,25 +55,21 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all().prefetch_related("user")
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
-        with transaction.atomic():
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            # add the owner
-            serializer.save(user=request.user)
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-            book = serializer.instance
+        # Add the owner and save the book
+        serializer.save(user=request.user)
+        self.perform_create(serializer)
 
-            # Create the first chapter for the book
-            Chapter.objects.create(book=book)
+        # Create the first chapter for the book
+        book = serializer.instance
+        Chapter.objects.create(book=book)
 
-        # Commit the transaction
-        transaction.set_autocommit(True)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def put(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
@@ -87,6 +83,10 @@ class BookViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         kwargs["partial"] = True
         return self.update(request, *args, **kwargs)
+
+    @transaction.atomic
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=["get"])
     def writer(self, request):

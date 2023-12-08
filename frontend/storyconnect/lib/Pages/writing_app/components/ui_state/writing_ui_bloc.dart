@@ -121,7 +121,8 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
       painter.layout(maxWidth: pageWidth);
       final feedbackOffset = painter.getOffsetForCaret(TextPosition(offset: event.selection.offset), Rect.zero);
 
-      await scrollController.animateTo(feedbackOffset.dy, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+      await scrollController.animateTo(feedbackOffset.dy,
+          duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
 
       // Create a temporary highlight effect on the feedback
       final List<TextBox> boxes = painter.getBoxesForSelection(
@@ -145,8 +146,10 @@ class WritingUIBloc extends Bloc<WritingUIEvent, WritingUIState> {
     emit(state.copyWith(rectsToHighlight: null));
   }
 
-  void deleteBook(DeleteBookEvent event, WritingUIEmiter emit) {
-    repository.deleteBook(state.bookId);
+  Future<void> deleteBook(DeleteBookEvent event, WritingUIEmiter emit) async {
+    emit(state.copyWith(deletingBook: true));
+    await repository.deleteBook(state.bookId);
+    emit(state.copyWith(deletingBook: false, hasBeenDeleted: true));
   }
 
   void updateBook(UpdateBookEvent event, WritingUIEmiter emit) async {
