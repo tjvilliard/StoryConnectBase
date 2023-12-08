@@ -11,7 +11,7 @@ from .models import (
 
 
 admin.site.register(Book)
-# admin.site.register(Library)
+admin.site.register(Library)
 admin.site.register(Chapter)
 admin.site.register(NarrativeElementType)
 admin.site.register(NarrativeElementAttributeType)
