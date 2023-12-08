@@ -31,6 +31,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 from books.models import *
+from features import models as features_models
+
+import warnings
+warnings.filterwarnings('ignore')  # "error", "ignore", "always", "default", "module" or "once"
 
 nltk.download("punkt")
 nltk.download("stopwords")
@@ -208,7 +212,7 @@ def predict_genre(book_id, chapter_num):
     # df = df.loc[index, 'Combined_Text'] = processed_text  # assigns processed to the cell at row index and column 'Combined_Text'
     # df = df.assign(Combined_text=df['Combined_Text'].apply(lambda x:processed_text))
     df["Combined_Text"] = pt_lst
-
+    print("text data cleaned.")
     # remove the genre column as it is the y label column
     # null_genre = null_genre.drop(columns=['genre'])
 
@@ -217,6 +221,7 @@ def predict_genre(book_id, chapter_num):
         processed_text = stem_text(remove_stopwords(clean_words(convertintolist(text))))
         pt_lst_test.append(processed_text)
     chapter_df["Combined_Text"] = pt_lst_test
+    print("text content cleaned.")
 
     # Encoding the genre column
     encoder = LabelEncoder()
@@ -226,7 +231,7 @@ def predict_genre(book_id, chapter_num):
     X = df["Combined_Text"]
     y = df["genre"].values
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=42
     )
 
     chapter_df_test = chapter_df["Combined_Text"]
@@ -239,16 +244,20 @@ def predict_genre(book_id, chapter_num):
     X_train = tf_idf.fit_transform(X_train).toarray()
     X_test = tf_idf.transform(X_test).toarray()
     chapter_df_test = tf_idf.transform(chapter_df_test).toarray()
+    print("TF-IDF completed")
 
     """ after testing several classification models, it is proven that logistic regression has the best fit for the best accuracy."""
-    lg = LogisticRegression()
+    lg = LogisticRegression(max_iter=1000)
+    print("LG made.")
     lg.fit(X_train, y_train)
-    lg_y_pred = lg.predict(X_test)
+    print("LG fit")
+    # lg_y_pred = lg.predict(X_test)
     lg_y_pred_test = lg.predict(chapter_df_test)
-    lg_y_prob = lg.predict_proba(X_test)
-    accuracy = round(accuracy_score(y_test, lg_y_pred), 3)
-    precision = round(precision_score(y_test, lg_y_pred, average="weighted"), 3)
-    recall = round(recall_score(y_test, lg_y_pred, average="weighted"), 3)
+    print("LG predicted.")
+    # lg_y_prob = lg.predict_proba(X_test)
+    # accuracy = round(accuracy_score(y_test, lg_y_pred), 3)
+    # precision = round(precision_score(y_test, lg_y_pred, average="weighted"), 3)
+    # recall = round(recall_score(y_test, lg_y_pred, average="weighted"), 3)
 
     # Converting back from label encoded form to labels
     # lg_y_pred = encoder.inverse_transform(lg_y_pred)
@@ -272,7 +281,97 @@ def predict_genre(book_id, chapter_num):
 
     return chapter_df
 
+def contenttag_test():
+    me, created = User.objects.get_or_create(pk=11)
+    
+    all_user_books = Book.objects.filter(user=me)
+
+    for book in all_user_books:
+        # if book.pk in [79,81,85,80]:
+        if book.pk == 79:
+            print(book)
+            book_genretag,created = features_models.GenreTagging.objects.get_or_create(book=book)
+            book_genre, created = Book.objects.get_or_create(pk=book.pk)
+            chapters_genres = []
+            for chap in book.get_chapters():
+                chapter_genre, created = features_models.ChapterTagging.objects.get_or_create(chapter = chap)
+                updated_chapter_len = len(chap.content)
+                # if updated_chapter_len >= 2*chapter_genre.last_chapter_len and updated_chapter_len>=1000 and chap.chapter_number != 1:
+                chapter_df = predict_genre(book_id=book.pk, chapter_num=chap.chapter_number)
+                generated_genre = list(chapter_df['genre'].values)
+                chapter_genre.genre = generated_genre
+                chapters_genres.append(generated_genre)
+                chapter_genre.last_chapter_len = updated_chapter_len
+                tmp_lst = chapter_genre.genre
+                # for idx,i in enumerate(chapters_genres):
+                #     chapters_genres[idx] = list(i)
+                    # print(list(i))
+                # chapters_genres = chapters_genres + tmp_lst
+                print(chapter_genre.genre)
+                if any(isinstance(i, list) for i in chapters_genres) == True:
+                    chapters_genres = list(np.concatenate(chapters_genres).flat)
+                    # chapters_genres = np.sum(chapters_genres,[])
+                # chapters_genres = set(chapters_genres)
+                # chapters_genres = list(chapters_genres)
+                chapter_genre.genre = chapters_genres
+                print(chap.chapter_number,":", chapter_genre.genre)
+                chapter_genre.save()
+
+        # genres_of_the_book_from_book_model = book_genre.tags
+        # genres_of_the_book_from_book_model = book_models.Book._meta.get_field('tags').value_from_object(book_genre)
+        
+            # check if the genres in both models are the same
+            genre_from_tag = book_genretag.genre
+            genre_from_book = book_genre.tags
+            genre_combined = genre_from_book+genre_from_tag             
+
+            if genre_from_book != genre_from_tag or len(genre_from_tag) == 0 or len(genre_from_book) == 0:
+                # book_genre_combined = list(set(genre_combined))
+                book_genre_combined = set(genre_combined)
+            else:
+                book_genre_combined = genre_from_book
+
+            print("genre_from_tag: ", genre_from_tag)
+            print("genre_from_book: ", genre_from_book)
+            print("genre_combined: ", genre_combined)
+            print("book_genre_combined: ", book_genre_combined)
+            print("genre_combined type: ", type(book_genre_combined))
+            print("chapters_genres: ", chapters_genres)
+            book_genre_combined = list(book_genre_combined)
+            # collect the added genres
+            added_genres = []
+            print("added_genre type: ", type(added_genres))
+            for genre in chapters_genres:
+                print("genre",genre)
+                if genre not in book_genre_combined:
+                    added_genres.append(genre)
+            if any(isinstance(i, list) for i in added_genres):
+                    added_genres = list(np.concatenate(added_genres).flat)
+            print("added_genre as list: ", added_genres)
+            added_genres = set(added_genres)
+            print("added_genre as set: ", added_genres)
+            added_genres = list(added_genres)
+            print("added_genre as list: ", added_genres)
+
+            # book_genre_combined = book_genre_combined.union(added_genres)
+            book_genre_combined = book_genre_combined+added_genres
+            # book_genre_combined = list(book_genre_combined)
+            print("book_genre_combined: ", book_genre_combined)
+
+            # update the book genre with the additional genres
+            features_models.GenreTagging.objects.filter(book=book).update(genre=book_genre_combined)
+            Book.objects.filter(pk=book_genre.pk).update(tags=book_genre_combined)
+            print("finished.")  
 
 def run():
-    chapter_df = predict_genre(book_id=79, chapter_num=3)
-    chapter_df.to_csv('/src/scripts/chapter_genres_df.csv',index=False)
+    # chapter_df = predict_genre(book_id=84, chapter_num=1)
+    # chapter_df.to_csv('/src/scripts/chapter_genres_df.csv',index=False)
+    contenttag_test()
+    # logger.info('content tagging finished.')
+    """genre_from_tag:  []
+genre_from_book:  ["['Historical fiction'", "'Biographical fiction'", "'Love stories'", "'France  Fiction'", "'Manwoman relationships  Fiction'", "'French fiction  Translations into English'", "'Letters  Fiction'", "'Romance fiction']"]
+genre_combined:  ["['Historical fiction'", "'Biographical fiction'", "'Love stories'", "'France  Fiction'", "'Manwoman relationships  Fiction'", "'French fiction  Translations into English'", "'Letters  Fiction'", "'Romance fiction']"]
+book_genre_combined:  ["'Manwoman relationships  Fiction'", <ChapterTagging: ChapterTagging object (7)>, <ChapterTagging: ChapterTagging object (8)>, <ChapterTagging: ChapterTagging object (9)>, <ChapterTagging: ChapterTagging object (10)>, "['Historical fiction'", "'Romance fiction']", "'France  Fiction'", "'Love stories'", "'Biographical fiction'", "'Letters  Fiction'", "'French fiction  Translations into English'"]
+finished."""
+
+# 'Pompeii (Extinct city)  Fiction'],['Historical fiction'',ChapterTagging object (1),ChapterTagging object (1)'

@@ -8,7 +8,8 @@ from book_rec import models as bookrec_models
 from book_rec import serializers as bookrec_serializers
 
 # # Create your views here.
-    
+import pandas as pd
+
 class Book_Based_Rec_APIView(APIView):
     serializer_class = bookrec_serializers.Book_Based_Rec_Serializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -27,8 +28,27 @@ class User_Based_Rec_APIView(APIView):
     
     @action(detail=True, methods=["get"])
     def get(self, request, *args, **kwargs):
-        ub_rec = self.queryset.filter(user__id = request.user.id)
-        serializer=bookrec_serializers.User_Based_Rec_Serializer(ub_rec, many=True)
+        bookrec_dataset = pd.read_csv('book_rec/bookrec_data.csv', index_col=0)
+        libSet = Library.objects.filter(reader = request.user)
+
+        bookSet = []
+
+        for lib in libSet:
+            bookSet.append(Book.objects.filter(id = lib.book))
+
+        bookRec = []
+
+        for book in bookSet:
+            my_value = book.pk
+            bookrecs_of_the_book = bookrec_dataset.loc[bookrec_dataset["id"] == my_value]
+            bookrecs_of_the_book_id = list(bookrecs_of_the_book['rec_id'])
+            bookrecs_of_the_book_book_model = Book.objects.filter(pk__in=bookrecs_of_the_book_id)
+            serializer=bookrec_serializers.Book_Based_Rec_Serializer(bookrecs_of_the_book_book_model, many=True)
+            # content = {'title': book, 'recommendation':bookrecs_of_the_book_book_model}
+
+            # for each_rec in bookrecs_of_the_book_id:
+            #     recbook = Book.objects.get(pk=each_rec)
+            #     content = {'book':book, 'recommendation': recbook}
         return Response(serializer.data)
 
 class Book_Rating_APIView(APIView):

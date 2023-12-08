@@ -5,13 +5,30 @@ from django.contrib.postgres.fields import ArrayField
 from books import models as book_model
 from comment import models as comment_model
 
-class Book_Based_Rec(models.Model):
-    book = models.ForeignKey(book_model.Book, on_delete=models.CASCADE)
-    recommendations = ArrayField(models.IntegerField(), blank=True, null=True, default=list)
+# class Group(models.Model):
+#     # name = models.CharField(max_length=128)
+#     members = models.ManyToManyField(
+#         book_model.Book,
+#         through='Book_Based_Rec',
+#         through_fields=('group', 'book'),
+#     )
 
+class Book_Based_Rec(models.Model):
+    # group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    book = models.ForeignKey(book_model.Book, on_delete=models.CASCADE, related_name="book")
+    # placeholder = models.CharField(default="", blank=True, null=True)
+    recommendations = models.IntegerField( blank=True, null=True)
+    # recommendations = models.ForeignKey(book_model.Book,on_delete=models.CASCADE,blank=True, related_name="recommendations")
+    tmp = models.CharField(null=True,blank=True, default="")
+
+    # def __str__(self):
+    #         return f'{self.book} -> {self.recommendations.name}'
+    
 class User_Based_Rec(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    recommendations = ArrayField(models.IntegerField(), blank=True, null=True, default=list)
+    library = models.ForeignKey(book_model.Library, on_delete=models.CASCADE)
+    recommendations = models.ForeignKey(Book_Based_Rec, on_delete=models.CASCADE,blank=True,null=True)
+    # recommendations = ArrayField(models.IntegerField(), blank=True, null=True, default=list)
+    # recommendations = models.ForeignKey(book_model.Book, on_delete=models.CASCADE)
 
 class Book_Rating(models.Model):
     book = models.ForeignKey(book_model.Book, on_delete=models.CASCADE)

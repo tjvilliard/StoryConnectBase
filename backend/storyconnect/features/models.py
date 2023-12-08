@@ -27,11 +27,14 @@ class Review(models.Model):
 
 class GenreTagging(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+    genre = ArrayField(models.CharField(max_length=50), blank=True, null=False, default=list)
+
+    def __str__(self):
+         return self.book.title
 
 class ChapterTagging(models.Model):
     # book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     last_chapter_len = models.IntegerField(default=0)
-    genre = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+    genre = ArrayField(models.CharField(max_length=50), blank=True, null=False, default=list)
         
