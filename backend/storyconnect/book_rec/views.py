@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from books.models import *
+from books import serializers as books_serializers
 from book_rec import models as bookrec_models
 from book_rec import serializers as bookrec_serializers
 
@@ -22,9 +23,9 @@ class Book_Based_Rec_APIView(APIView):
         return Response(serializer.data)
 
 class User_Based_Rec_APIView(APIView):
-    serializer_class = bookrec_serializers.User_Based_Rec_Serializer
+    serializer_class = books_serializers.BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = bookrec_models.User_Based_Rec.objects.all().prefetch_related("user")
+    queryset = Book.objects.all().prefetch_related("user")
     
     @action(detail=True, methods=["get"])
     def get(self, request, *args, **kwargs):
@@ -43,7 +44,7 @@ class User_Based_Rec_APIView(APIView):
             bookrecs_of_the_book = bookrec_dataset.loc[bookrec_dataset["id"] == my_value]
             bookrecs_of_the_book_id = list(bookrecs_of_the_book['rec_id'])
             bookrecs_of_the_book_book_model = Book.objects.filter(pk__in=bookrecs_of_the_book_id)
-            serializer=bookrec_serializers.Book_Based_Rec_Serializer(bookrecs_of_the_book_book_model, many=True)
+        serializer=bookrec_serializers.Book_Based_Rec_Serializer(bookrecs_of_the_book_book_model, many=True)
             # content = {'title': book, 'recommendation':bookrecs_of_the_book_book_model}
 
             # for each_rec in bookrecs_of_the_book_id:
