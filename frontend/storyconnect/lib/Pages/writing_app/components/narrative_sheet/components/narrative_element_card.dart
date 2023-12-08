@@ -10,6 +10,13 @@ class NarrativeElementCard extends StatelessWidget {
     required this.narrativeElement,
   });
 
+  String get description {
+    if (narrativeElement.description == null || narrativeElement.description!.isEmpty) {
+      return "No description available";
+    }
+    return narrativeElement.description!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -21,35 +28,22 @@ class NarrativeElementCard extends StatelessWidget {
               children: [
                 Flexible(
                     flex: 2,
-                    child: Container(
-                        constraints: const BoxConstraints(maxWidth: 300),
-                        child: Card(
-                            elevation: .5,
-                            child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  children: [
-                                    const Placeholder(
-                                      fallbackHeight: 100,
-                                      fallbackWidth: 100,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(narrativeElement.name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(narrativeElement.description ??
-                                        "No description provided.")
-                                  ],
-                                ))))),
+                    child: Card(
+                        elevation: .5,
+                        child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                const SizedBox(width: 10),
+                                Text(narrativeElement.name, style: Theme.of(context).textTheme.titleLarge),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Text(description, style: Theme.of(context).textTheme.bodyMedium)
+                              ],
+                            )))),
                 const SizedBox(width: 10),
-                Flexible(
-                    flex: 3,
-                    child: AttributesWidget(
-                        attributes: narrativeElement.sortedAttributes))
+                Flexible(flex: 3, child: AttributesWidget(attributes: narrativeElement.sortedAttributes))
               ],
             )));
   }
