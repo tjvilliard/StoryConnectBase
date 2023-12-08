@@ -23,14 +23,11 @@ class _UrlBuilder {
 }
 
 Future<Map<String, String>> buildHeaders({bool noAuth = false}) async {
-  final Map<String, String> baseHeaders = <String, String>{
-    'Content-Type': 'application/json; charset=UTF-8'
-  };
+  final Map<String, String> baseHeaders = <String, String>{'Content-Type': 'application/json; charset=UTF-8'};
   if (noAuth == true) {
     return baseHeaders;
   }
-  String authToken =
-      await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
+  String authToken = await FirebaseAuth.instance.currentUser!.getIdToken(true) as String;
   final authorizedHeaders = Map<String, String>.from(baseHeaders);
   authorizedHeaders.addAll({'Authorization': 'Token $authToken'});
   return authorizedHeaders;
@@ -88,9 +85,7 @@ class UrlConstants {
   }
 
   static Uri getWriterFeedback(int chapterId) {
-    return _urlBuilder
-        .build('feedback/by_chapter/')
-        .replace(queryParameters: {'chapter': chapterId.toString()});
+    return _urlBuilder.build('feedback/by_chapter/').replace(queryParameters: {'chapter': chapterId.toString()});
   }
 
   static Uri createWriterFeedback() {
@@ -103,8 +98,7 @@ class UrlConstants {
 
   static Uri books({String? uid, int? bookId}) {
     if (uid != null) {
-      return _urlBuilder
-          .build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
     }
     if (bookId != null) {
       return _urlBuilder.build('books/$bookId/');
@@ -187,10 +181,8 @@ class UrlConstants {
   ///
   /// Throws:
   ///   AssertionError: If the method parameters do not meet the required conditions.
-  static Uri narrativeElements(
-      {int? narrativeElementId, int? bookId, bool generate = false}) {
-    assert(!generate || bookId != null,
-        'bookId cannot be null when generate is true');
+  static Uri narrativeElements({int? narrativeElementId, int? bookId, bool generate = false}) {
+    assert(!generate || bookId != null, 'bookId cannot be null when generate is true');
     assert((narrativeElementId != null) != (bookId != null),
         'Either narrativeElementId or bookId must be provided, but not both');
 
@@ -200,8 +192,7 @@ class UrlConstants {
       return _urlBuilder.build('/api/narrative_elements/$narrativeElementId');
     } else {
       // Using query parameters for retrieving all narrative elements of a single book
-      return _urlBuilder.build('/api/narrative_elements',
-          queryParameters: {'book_id': bookId.toString()});
+      return _urlBuilder.build('/api/narrative_elements', queryParameters: {'book_id': bookId.toString()});
     }
   }
 
@@ -278,8 +269,7 @@ class UrlConstants {
 
   static Uri getBooksByUser({String? uid}) {
     if (uid != null) {
-      return _urlBuilder
-          .build('books/writer/', queryParameters: {'username': uid});
+      return _urlBuilder.build('books/writer/', queryParameters: {'username': uid});
     }
     return _urlBuilder.build('books/writer/');
   }
