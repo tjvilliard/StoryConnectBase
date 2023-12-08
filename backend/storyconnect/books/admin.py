@@ -9,7 +9,6 @@ from .models import (
     NarrativeElementAttribute,
 )
 
-
 admin.site.register(Book)
 admin.site.register(Library)
 admin.site.register(Chapter)
