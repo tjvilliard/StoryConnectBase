@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/writing_app/components/feedback/components/navigate_button.dart';
+import 'package:storyconnect/Pages/writing_app/components/feedback/state/feedback_bloc.dart';
+import 'package:storyconnect/Pages/writing_app/components/writing/_state/writing_bloc.dart';
 import 'package:storyconnect/Widgets/horizontal_divider.dart';
 
 class SuggestionWidget extends StatelessWidget {
@@ -23,26 +26,19 @@ class SuggestionWidget extends StatelessWidget {
                   children: [
                     Align(
                       alignment: Alignment.topCenter,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Chapter ${suggestion.chapterId}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .apply(fontStyle: FontStyle.italic)),
-                            if (suggestion.isGhost == false)
-                              NavigateToFeedbackButton(
-                                feedback: suggestion,
-                              )
-                          ]),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Text("Chapter ${suggestion.chapterId}",
+                            style: Theme.of(context).textTheme.titleSmall!.apply(fontStyle: FontStyle.italic)),
+                        if (suggestion.isGhost == false)
+                          NavigateToFeedbackButton(
+                            feedback: suggestion,
+                          )
+                      ]),
                     ),
                     Container(
-                      constraints:
-                          const BoxConstraints(minHeight: 50, maxHeight: 100),
+                      constraints: const BoxConstraints(minHeight: 50, maxHeight: 100),
                       alignment: Alignment.center,
-                      child: Text(suggestion.comment!,
-                          style: Theme.of(context).textTheme.titleSmall),
+                      child: Text(suggestion.comment!, style: Theme.of(context).textTheme.titleSmall),
                     ),
                     Align(
                         alignment: Alignment.bottomCenter,
@@ -57,27 +53,26 @@ class SuggestionWidget extends StatelessWidget {
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     // decline button
                                     FilledButton.tonalIcon(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          context.read<FeedbackBloc>().add(RejectFeedbackEvent(
+                                              feedbackId: suggestion.id, chapterId: suggestion.chapterId));
+                                        },
                                         icon: const Icon(FontAwesomeIcons.x),
-                                        label: Text("Decline",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium)),
+                                        label: Text("Decline", style: Theme.of(context).textTheme.labelMedium)),
                                     const HorizontalDivider(height: 30),
 
                                     // accept button
                                     FilledButton.tonalIcon(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          context.read<FeedbackBloc>().add(AcceptFeedbackEvent(
+                                              feedbackId: suggestion.id, writingBloc: context.read<WritingBloc>()));
+                                        },
                                         icon: const Icon(FontAwesomeIcons.check),
-                                        label: Text("Accept",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium)),
+                                        label: Text("Accept", style: Theme.of(context).textTheme.labelMedium)),
                                   ],
                                 ))
                           ],

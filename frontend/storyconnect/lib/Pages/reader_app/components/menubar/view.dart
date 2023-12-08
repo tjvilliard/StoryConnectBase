@@ -59,8 +59,8 @@ class ReadingMenuBarState extends State<ReadingMenuBar> {
                                 textDirection: TextDirection.ltr,
                                 overflowAlignment: OverflowBarAlignment.start,
                                 children: [
-                                  const AuthorPageButton(),
                                   LibraryMenuButton(bookId: bookId),
+                                  const SizedBox(width: 16),
                                   const ToggleChapterFeedback(),
                                 ])))
                   ])));

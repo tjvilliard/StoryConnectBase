@@ -3,6 +3,8 @@ from storyconnect.settings import OPENAI_API_KEY
 import books.models as books_models
 import ai_features.models as ai_models
 import logging
+import re
+import random 
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -10,13 +12,36 @@ logger = logging.getLogger(__name__)
 openai.api_key = OPENAI_API_KEY
 
 BASE_MODEL = "gpt-3.5-turbo-instruct"
-CHAT_MODEL = "gpt-3.5-turbo-16k"
+CHAT_MODEL = "gpt-3.5-turbo-1106"
+CHAT_MODEL_SMALL = "gpt-3.5-turbo" # for narrative elem
 MAX_TOKENS = 2000
 TEMPERATURE = 0.5
+TEMP = 1.0 # for narrative elem 
 MAX_CONTEXT = 16000
 AVG_TOKEN = 3.5
 
+## CC utils
 
+def fill_book_sheet(cc, book, s_sheet, cur_ch_num):
+        
+        
+        for i in range(s_sheet.last_run_chapter + 1, cur_ch_num):
+            ch_curr = books_models.Chapter.objects.filter(book=book, chapter_number=i).first()
+            
+            new_text = ch_curr.content
+            if new_text == "":
+                break
+            new_sheet = cc.create_statementsheet(new_text)
+            s_sheet.last_run_chapter = ch_curr.chapter_number
+            s_sheet.last_run_offset = 0
+            logger.info(new_sheet)
+            s_sheet.merge_sheets(new_sheet)
+        
+        
+        s_sheet.save()
+        return s_sheet
+
+## RU utils 
 def summarize_chapter(
     chapter_id, model=BASE_MODEL, max_tokens=MAX_TOKENS, temp=TEMPERATURE
 ):
@@ -278,3 +303,103 @@ def summarize_book_chat(book_id):
 
     # return the summary and created info
     return bk_summary_text, created
+
+
+## Narrative element generation
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+def generate_elements_from_statementsheet(user, s_sheet):
+    """ Generates narrative elements for each type in a statement sheet. Returns a list of generated elements."""
+
+    
+    types = s_sheet.get_enitity_types()
+
+    for e_type in types:
+        # For each type, get or create a narrative element type for
+        e_type_obj, created = books_models.NarrativeElementType.objects.get_or_create(user=user, name=e_type)
+        # TODO: FINISH FROM elements_from_type
+        elements_from_type(user, e_type_obj, s_sheet)
+
+    return books_models.NarrativeElement.objects.filter(book=s_sheet.book)
+
+def elements_from_type(user, e_type_obj, s_sheet):
+    """ Generates all narrative elements of e_type in s_sheet. Returns a list of generated elements."""
+    type_elems = s_sheet.get_tag_entities(e_type_obj.name)
+
+    for t_elem in type_elems:
+        elem_obj, created = books_models.NarrativeElement.objects.get_or_create(user=user, name=t_elem, element_type=e_type_obj, book=s_sheet.book)
+        if created:
+            # Set element description
+            elem_obj.description = element_description(elem_obj, s_sheet)
+            generate_attributes(elem_obj, s_sheet)
+            
+        # Generate element attributes, outside of if statement so that they are always updated
+        # generate_attributes(elem_obj, s_sheet)
+
+
+def element_description(elem_obj, s_sheet):
+    """ Generates a description for a narrative element. Returns a string description."""
+    elem_statements = s_sheet.get_statements(entity=elem_obj.name)
+
+    prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Generate a short description of {elem_obj.name}."
+    gpt_response = client.chat.completions.create(
+            model=CHAT_MODEL_SMALL,
+            messages=[{"role": "system", "content": prompt}],
+            temperature=TEMP,
+            timeout=300,
+        )
+    
+    description = gpt_response.choices[0].message.content
+    return description
+
+def generate_attributes(elem_obj, s_sheet):
+    """ Generates attributes for a narrative element. Generates Narrative Elemenet Attribute objects in db for elem_obj"""
+    elem_statements = s_sheet.get_statements(entity=elem_obj.name)
+
+    prompt = f"{elem_obj.name} is a {elem_obj.element_type.name} in a story. \n {elem_statements}\n Give me a list of attibutes that describe {elem_obj.name}. Identify whether they are physical, personality, or background traits. Give a confidence measure for each trati. Example: Physical - Blonde Hair - 100"
+    gpt_response = client.chat.completions.create(
+            model=CHAT_MODEL_SMALL,
+            messages=[{"role": "system", "content": prompt}],
+            temperature=TEMP,
+            timeout=300, 
+        )
+    
+    attr_response = gpt_response.choices[0].message.content
+    attr_tuple_list = parse_attributes(attr_response)
+
+    for t in attr_tuple_list:
+        attr_type_obj, type_created = books_models.NarrativeElementAttributeType.objects.get_or_create(user=elem_obj.user, name=t[0], applicable_to=elem_obj.element_type)
+        attr_obj, attr_created = books_models.NarrativeElementAttribute.objects.get_or_create(element=elem_obj, attribute=t[1], attribute_type=attr_type_obj, confidence=t[2], generated=True)
+
+    # Return for testing purposes
+    return attr_response, attr_tuple_list
+   
+
+def parse_attributes(attr_response):
+    """ Parses the attributes from the response from the generate_attributes function.
+    Returns list of tuples of the form (attr_type, attr, confidence)"""
+    conf = [15, 35, 35, 60, 60, 60, 100, 100, 100, 100]
+    attr_response = attr_response.split("\n")
+
+    attr_list = []
+    for line in attr_response:
+        line = line.split("-")
+        if len(line) != 3:
+            logger.info("Invalid attribute line")
+            continue
+        # logger.info(line)
+        line[0] = re.sub("[\d.]", "", line[0])
+        attr_type = line[0].strip()
+        attr = line[1].strip()
+        confidence = line[2].strip()
+        confidence = re.sub("\D", "", confidence)
+        # confidence = confidence[:-1]
+        # confidence = int(confidence)
+        confidence = random.choice(conf)
+        item = (attr_type, attr, confidence)
+        logger.info(item)
+        attr_list.append(item)
+
+
+    return attr_list

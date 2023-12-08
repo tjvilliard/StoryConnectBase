@@ -81,7 +81,7 @@ class BigBookWidgetState extends State<BigBookWidget> {
             elevation: BigBookWidget.cardElevation,
             child: Clickable(
               onPressed: () {
-                final uri = PageUrls.readBook(book.id);
+                final uri = PageUrls.bookDetails(book.id);
                 Beamer.of(context).beamToNamed(uri, data: {"book": book});
               },
               child: Row(
@@ -104,86 +104,64 @@ class BigBookWidgetState extends State<BigBookWidget> {
                   const SizedBox(width: 20),
                   // Image Placeholder
                   Container(
-                    constraints: const BoxConstraints(
-                        maxWidth: BigBookWidget.maxColumnWidth),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Title Text Widget
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(top: 12.0),
-                            constraints: const BoxConstraints(
-                              maxHeight: 40.0,
-                            ),
-                            child: Text(
-                              book.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
-                          // Title Text Widget
-
-                          //Author Text Widget
-                          Container(
+                      constraints: const BoxConstraints(
+                          maxWidth: BigBookWidget.maxColumnWidth),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title Text Widget
+                            Container(
                               alignment: Alignment.centerLeft,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 2.0),
+                              padding: const EdgeInsets.only(top: 12.0),
                               constraints: const BoxConstraints(
-                                maxHeight: 30.0,
+                                maxHeight: 40.0,
                               ),
-                              child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  text: TextSpan(children: [
-                                    WidgetSpan(
-                                      child: Icon(
-                                        size: smallIconSize,
-                                        Icons.person_outline,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: book.authorName ??
-                                          "Author Name Not Set",
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    )
-                                  ]))),
-                          // Author Text Widget
-
-                          Container(
-                            constraints: const BoxConstraints(
-                              maxHeight: 30.0,
+                              child: Text(
+                                book.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 2.0),
-                            child: Row(
-                              children: [
-                                // Chapter Info Text Widget
-                                RichText(
-                                    text: TextSpan(children: [
-                                  WidgetSpan(
-                                    child: Icon(
-                                      size: smallIconSize,
-                                      FontAwesomeIcons.list,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: " 15",
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ])),
-                                // Chapter Info Text Widget
+                            // Title Text Widget
 
-                                const VerticalDivider(
-                                  indent: 2.5,
-                                  endIndent: 2.5,
-                                  width: 20,
+                            //Author Text Widget
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2.0),
+                                constraints: const BoxConstraints(
+                                  maxHeight: 30.0,
                                 ),
+                                child: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    text: TextSpan(children: [
+                                      WidgetSpan(
+                                        child: Icon(
+                                          size: smallIconSize,
+                                          Icons.person_outline,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: book.authorName ??
+                                            "Author Name Not Set",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      )
+                                    ]))),
+                            // Author Text Widget
 
-                                // Date Widget
-                                RichText(
-                                  text: TextSpan(children: [
+                            Container(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 30.0,
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2.0),
+                                child: Row(children: [
+                                  // Date Widget
+                                  RichText(
+                                      text: TextSpan(children: [
                                     WidgetSpan(
                                       child: Icon(
                                         size: smallIconSize,
@@ -196,28 +174,24 @@ class BigBookWidgetState extends State<BigBookWidget> {
                                             .bodySmall,
                                         text:
                                             " ${yyMMddDateTime(book.modified)}"),
-                                  ]),
-                                ),
-                                // Date Widget
-                              ],
-                            ),
-                          ),
+                                  ])),
+                                  // Date Widget
+                                ])),
 
-                          // Synopsis Text Widget
-                          Container(
-                              alignment: Alignment.topLeft,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 2.0),
-                              constraints: const BoxConstraints(
-                                  maxHeight: BigBookWidget.synopsisBoxHeight),
-                              child: Text(book.synopsis ?? "",
-                                  maxLines: 5,
-                                  overflow: TextOverflow.ellipsis,
-                                  style:
-                                      Theme.of(context).textTheme.bodySmall)),
-                          // Synopsis Text Widget
-                        ]),
-                  ),
+                            // Synopsis Text Widget
+                            Container(
+                                alignment: Alignment.topLeft,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2.0),
+                                constraints: const BoxConstraints(
+                                    maxHeight: BigBookWidget.synopsisBoxHeight),
+                                child: Text(book.synopsis ?? "",
+                                    maxLines: 5,
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall)),
+                            // Synopsis Text Widget
+                          ])),
                 ],
               ),
             )));

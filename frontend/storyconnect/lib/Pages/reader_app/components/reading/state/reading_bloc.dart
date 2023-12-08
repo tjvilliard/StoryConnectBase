@@ -39,24 +39,45 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     on<SwitchChapterEvent>((event, emit) => switchChapter(event, emit));
   }
 
+  int getSelectionBaseOffset() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.baseOffset;
+  }
+
+  int getSelectionOffsetExtent() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.selection.extentOffset;
+  }
+
+  String getSelection() {
+    final editor = getEditorControllerCallback?.call();
+    return editor!.plainText.text
+        .substring(editor.selection.baseOffset, editor.selection.extentOffset);
+  }
+
   void loadReadingEvent(LoadReadingEvent event, ReadingEmitter emit) async {
     emit(state.copyWith(loadingStruct: LoadingStruct.message("Loading Book")));
-    final unParsedChapters = await _repo.getChapters();
+    final List<Chapter> unParsedChapters = await _repo.getChapters();
     final _ParsedChapterResult result = _parseChapters(unParsedChapters);
     final editor = getEditorControllerCallback?.call();
+    int index =
+        event.chapterIndex > unParsedChapters.length ? 0 : event.chapterIndex;
     if (editor != null) {
       await editorSubscription?.cancel();
 
-      final doc = convertToDeltaDoc(result.chapters[0]!);
+      final doc = convertToDeltaDoc(result.chapters[index]!);
+
       editor.update(doc.delta);
     }
 
     emit(state.copyWith(
+        currentIndex: index,
         chapters: result.chapters,
         chapterNumToID: result.chapterNumToID,
+        chapterIDToTitle: result.chapterIDToTitle,
         loadingStruct: LoadingStruct.loading(false)));
 
-    final chapterId = state.chapterNumToID[state.currentIndex]!;
+    final chapterId = state.chapterNumToID[index]!;
     if (kDebugMode) {
       print("Getting Feedback Event on Load Reading Event. ");
     }
@@ -67,12 +88,16 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   _ParsedChapterResult _parseChapters(List<Chapter> chapters) {
     final Map<int, int> chapterNumToID = {};
     Map<int, String> parsedChapters = {};
+    final Map<int, String?> chapterIDToTitle = {};
     for (Chapter chapter in chapters) {
       chapterNumToID[chapter.number] = chapter.id;
       parsedChapters[chapter.number] = chapter.chapterContent;
+      chapterIDToTitle[chapter.id] = chapter.chapterTitle;
     }
     return _ParsedChapterResult(
-        chapters: parsedChapters, chapterNumToID: chapterNumToID);
+        chapters: parsedChapters,
+        chapterNumToID: chapterNumToID,
+        chapterIDToTitle: chapterIDToTitle);
   }
 
   void switchChapter(SwitchChapterEvent event, ReadingEmitter emit) async {

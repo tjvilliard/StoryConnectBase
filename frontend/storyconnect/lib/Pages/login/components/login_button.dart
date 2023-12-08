@@ -17,6 +17,7 @@ class LoginButton extends StatelessWidget {
       builder: (context, state) {
         return Container(
             width: LoginPageConstants.maxWidth,
+            constraints: const BoxConstraints(minHeight: 56),
             padding: LoginPageConstants.verticalPadding,
             child: OutlinedButton(
               style: ButtonStyle(

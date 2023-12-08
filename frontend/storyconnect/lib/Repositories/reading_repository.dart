@@ -3,17 +3,27 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:storyconnect/Constants/copyright_constants.dart';
+import 'package:storyconnect/Constants/language_constants.dart';
+import 'package:storyconnect/Constants/search_constants.dart';
+import 'package:storyconnect/Constants/target_audience_constants.dart';
 import 'package:storyconnect/Models/genre_tagging/genre.dart';
-
 import 'package:storyconnect/Models/models.dart';
 import 'package:storyconnect/Models/text_annotation/feedback.dart';
 import 'package:storyconnect/Pages/reader_app/components/feedback/serializers/feedback_serializer.dart';
 import 'package:storyconnect/Pages/reading_hub/components/serializers/library_entry_serializer.dart';
 import 'package:storyconnect/Services/url_service.dart';
 
+/// API Endpoint for reading related tasks.
 class ReadingApiProvider {
-  /// Generates and Sends HTTP POST request for creating
-  /// a new Feedback Item to appropriate Endpoint.
+  /// Prints an exception for this file
+  static void printException(String methodName, Object e) {
+    // ignore: avoid_print
+    print("[ERROR] [$methodName]: $e");
+  }
+
+  // Feedback Related Endpoints
+  /// Endpoint for creating a new feedback Item for a specific chapter.
   Future<WriterFeedback?> createFeedbackItem(
       {required FeedbackCreationSerializer serializer}) async {
     try {
@@ -28,65 +38,58 @@ class ReadingApiProvider {
       return WriterFeedback.fromJson(jsonDecode(utf8.decode(result.bodyBytes)));
     } catch (e) {
       if (kDebugMode) {
-        print("[ERROR]: $e");
+        printException("createFeedbackItem", e);
       }
       return null;
     }
   }
 
-  /// Generates and Sends HTTP GET request for chapter
-  /// related Feedback Items to appropriate Endpoint.
+  /// Endpoint for getting feedback items for a specific chapter.
   Stream<WriterFeedback> getChapterFeedback(int chapterId) async* {
-    if (kDebugMode) {
-      print("Getting Chapter Feedback");
-    }
+    try {
+      final url = UrlConstants.getWriterFeedback(chapterId);
+      final result = await http.get(url, headers: await buildHeaders());
 
-    final url = UrlConstants.getWriterFeedback(chapterId);
-    final result = await http.get(url, headers: await buildHeaders());
-
-    if (kDebugMode) {
-      print("[INFO] Chapter Feedback Set");
-    }
-    for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
-      if (kDebugMode) {
-        print("");
-        print(feedback);
+      for (var feedback in jsonDecode(utf8.decode(result.bodyBytes))) {
+        yield WriterFeedback.fromJson(feedback);
       }
-      yield WriterFeedback.fromJson(feedback);
+    } catch (e) {
+      if (kDebugMode) {
+        printException("getChapterFeedback", e);
+      }
     }
   }
+  // Feedback Related Endpoints
 
-  /// Generates and Sends HTTP GET request for
-  /// specific book and it's info.
+  // Book Specific Endpoints.
+  /// API Endpoint for getting a specific book.
   Future<Book?> getBook(int? bookId) async {
     try {
       final url = UrlConstants.books(bookId: bookId);
 
-      if (kDebugMode) {
-        print(url);
-      }
-
       final result = await http.get(url, headers: await buildHeaders());
-
-      if (kDebugMode) {
-        print(result);
-      }
 
       final bookJson = jsonDecode(utf8.decode(result.bodyBytes));
 
       return Book.fromJson(bookJson);
     } catch (e) {
       if (kDebugMode) {
-        print("[ERROR] $e");
+        printException("getBook", e);
       }
       return null;
     }
   }
 
-  Stream<Book> getBooks() async* {
+  Stream<Book> getBookByFilter(
+    String? search,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
+    SearchModeConstant searchMode,
+  ) async* {
     try {
-      final url = UrlConstants.books();
-
+      final url = UrlConstants.booksQuery(
+          search, language, copyright, audience, searchMode);
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
@@ -94,48 +97,77 @@ class ReadingApiProvider {
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        printException("getBookByFilter", e);
       }
     }
   }
 
+  /// API Endpoint for getting a set of books.
   Stream<Book> getAllBooks() async* {
     try {
       final url = UrlConstants.getAllBooks();
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      print(result.body);
-
       for (var book in jsonDecode(utf8.decode(result.bodyBytes))) {
         yield Book.fromJson(book);
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        printException("getAllBooks", e);
       }
     }
   }
+  // Book Specific Endpoints.
 
+  /// API Endpoint for getting tags related to a book.
   Future<GenreTags?> getBookTags(int bookId) async {
     try {
       final url = UrlConstants.getBookTags(bookId);
 
       final result = await http.get(url, headers: await buildHeaders());
 
-      // This is super duper hacky, but it can't be helped.
-      var tagSet =
-          (jsonDecode(utf8.decode(result.bodyBytes)) as Iterable).first;
+      // This is super duper hacky, but it can't be helped at the moment.
+      var tagSet = jsonDecode(utf8.decode(result.bodyBytes)) as Iterable;
 
-      return GenreTags.fromJson(tagSet);
+      if (tagSet.isEmpty) {
+        return null;
+      } else {
+        var set = tagSet.first;
+
+        return GenreTags.fromJson(set);
+      }
     } catch (e) {
       if (kDebugMode) {
-        print("[ERROR] $e");
+        printException("getBookTags", e);
       }
       return null;
     }
   }
+  // Book Specific Endpoints.
 
+  // User and Profile Endpoints
+  /// Retrievs the UUID associated with a given displayName, for linking purposes.
+  Future<String?> getUUIDbyUsername(String displayName) async {
+    try {
+      final url = UrlConstants.getProfileName(displayName);
+
+      final result = await http.get(url, headers: await buildHeaders());
+
+      var uuid = jsonDecode(utf8.decode(result.bodyBytes));
+
+      return uuid;
+    } catch (e) {
+      if (kDebugMode) {
+        printException("getUUIDbyUsername", e);
+      }
+      return null;
+    }
+  }
+  // User and Profile Endpoints.
+
+  // Library Related Endpoints.
+  /// API Endpoint for getting the full set of library books.
   Stream<MapEntry<Library, Book>> getLibraryBooks() async* {
     try {
       final url = UrlConstants.getUserLibrary();
@@ -143,21 +175,20 @@ class ReadingApiProvider {
       final result = await http.get(url, headers: await buildHeaders());
 
       for (var map in jsonDecode(utf8.decode(result.bodyBytes))) {
-        print(map);
-
         LibraryBook decode = LibraryBook.fromJson(map);
 
         yield MapEntry<Library, Book>(
           Library(
             id: decode.id,
             status: decode.status,
+            reader: decode.reader,
           ),
           decode.book,
         );
       }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print("[ERROR] [getLibraryBooks]: $e");
       }
     }
   }
@@ -165,15 +196,14 @@ class ReadingApiProvider {
   /// API endpoint for adding a new entry to a user's library.
   Future<void> addBooktoLibrary(LibraryEntrySerializer serializer) async {
     try {
-      final url = UrlConstants.addLibraryBook();
+      final url = UrlConstants.libraryBooks();
 
-      // send off HTTP POST request
       await http.post(url,
           headers: await buildHeaders(),
           body: (jsonEncode(serializer.toJson())));
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        printException("addBooktoLibrary", e);
       }
     }
   }
@@ -189,16 +219,43 @@ class ReadingApiProvider {
       );
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        printException("removeBookFromLibrary", e);
       }
     }
   }
 
-  Future<void> changeLibraryBookStatus(
-      LibraryEntrySerializer serializer) async {
-    try {} catch (e) {
+  /// API endpoint for changing the status of a library Book.
+  Future<void> changeLibraryBookStatus(Library library) async {
+    try {
+      final url = UrlConstants.libraryBookEntry(library.id);
+
+      await http.patch(
+        url,
+        headers: await buildHeaders(),
+        body: jsonEncode(library.toJson()),
+      );
+    } catch (e) {
       if (kDebugMode) {
-        print("[ERROR] $e");
+        printException("changeLibraryBookStatus", e);
+      }
+    }
+  }
+  // Library Related Endpoints.
+
+  /// Gets the Chapters for a the book-reading UI.
+  Stream<Chapter> getChapters(int bookId) async* {
+    try {
+      final result = await http.get(UrlConstants.getChapters(bookId),
+          headers: await buildHeaders());
+
+      final undecodedChapterList = jsonDecode(utf8.decode(result.bodyBytes));
+
+      for (var undecodedChapter in undecodedChapterList) {
+        yield Chapter.fromJson(undecodedChapter);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        printException("getChapters", e);
       }
     }
   }
@@ -206,7 +263,6 @@ class ReadingApiProvider {
 
 class ReadingRepository {
   final ReadingApiProvider _api = ReadingApiProvider();
-  Map<Library, Book> libraryBookMap = {};
 
   /// Creates a new feedback item for chapter.
   Future<int?> createChapterFeedback({
@@ -224,39 +280,42 @@ class ReadingRepository {
 
   /// Get The Feedback for this chapter.
   Future<List<WriterFeedback>> getChapterFeedback(int chapterId) async {
-    List<WriterFeedback> feedback = [];
-
-    await for (WriterFeedback item in _api.getChapterFeedback(chapterId)) {
-      feedback.add(item);
-    }
-
-    return feedback;
+    final Stream<WriterFeedback> feedbackSet =
+        _api.getChapterFeedback(chapterId);
+    return feedbackSet.toList();
   }
 
   /// Get The Book Info for a certain book.
+  Future<Book?> getBook(int? bookId) async {
+    final Book? book = await _api.getBook(bookId);
+    return book;
+  }
+
+  Future<List<Book>> getBookByFilter(
+    String? search,
+    LanguageConstant? language,
+    CopyrightOption? copyright,
+    TargetAudience? audience,
+    SearchModeConstant searchMode,
+  ) async {
+    final List<Book> books = await _api
+        .getBookByFilter(search, language, copyright, audience, searchMode)
+        .toList();
+    return books;
+  }
+
+  /// Retrieves a list of all books.
   Future<List<Book>> getBooks() async {
     final Stream<Book> result = _api.getAllBooks();
     return result.toList();
   }
 
-  ///
-  Future<Book?> getBook(int? bookId) async {
-    if (kDebugMode) {
-      print("Getting Book : $bookId");
-    }
-    final Book? book = await _api.getBook(bookId);
-    return book;
-  }
-
+  /// Retrieves book tags associated with a book.
   Future<GenreTags?> getBookTags(int bookId) async {
-    if (kDebugMode) {
-      print("Fetching Tags for Book : $bookId");
-    }
     return await _api.getBookTags(bookId);
   }
 
-  // Library Endpoints
-  ///
+  /// Retrives a map of the signed in user's Library Entries and Library Books.
   Future<Map<Library, Book>> getLibraryBooks() async {
     Map<Library, Book> libraryBookMap = {};
     await for (MapEntry<Library, Book> entry in _api.getLibraryBooks()) {
@@ -265,16 +324,29 @@ class ReadingRepository {
     return libraryBookMap;
   }
 
+  /// Removes an entry from the user's library.
   Future<void> removeLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.removeBookFromLibrary(serialzier);
   }
 
+  /// Adds an entry to the user's library.
   Future<void> addLibraryBook(LibraryEntrySerializer serialzier) async {
     await _api.addBooktoLibrary(serialzier);
   }
 
-  Future<void> changeLibraryBookStatus(
-      LibraryEntrySerializer serializer) async {}
-
+  /// Changes the status of a Library Entry.
+  Future<void> changeLibraryBookStatus(Library library) async {
+    await _api.changeLibraryBookStatus(library);
+  }
   // Library Endpoints
+
+  /// Retrieves the UUID associated with a displayName.
+  Future<String?> getUUIDbyDisplayName(String displayName) async {
+    return await _api.getUUIDbyUsername(displayName);
+  }
+
+  Future<List<Chapter>> getChapters(int bookId) async {
+    final Stream<Chapter> response = _api.getChapters(bookId);
+    return response.toList();
+  }
 }

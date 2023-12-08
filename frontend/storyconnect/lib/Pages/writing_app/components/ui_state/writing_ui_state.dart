@@ -31,6 +31,8 @@ class WritingUIState with _$WritingUIState {
     List<Rect>? rectsToHighlight,
     required LoadingStruct loadingStruct,
     @Default(false) bool isSaving,
+    @Default(false) bool deletingBook,
+    @Default(false) bool hasBeenDeleted,
   }) = _WritingUIState;
 
   // initial state
@@ -44,6 +46,8 @@ class WritingUIState with _$WritingUIState {
         continuityCheckerShown: false,
         textScrollController: ScrollController(),
         loadingStruct: LoadingStruct.loading(true),
+        deletingBook: false,
+        hasBeenDeleted: false,
         isSaving: false);
   }
 }

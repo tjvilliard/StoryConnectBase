@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (
     Book,
+    Library,
     Chapter,
     Library,
     NarrativeElementType,
@@ -11,6 +12,7 @@ from .models import (
 
 
 admin.site.register(Book)
+# admin.site.register(Library)
 admin.site.register(Chapter)
 admin.site.register(Library)
 admin.site.register(NarrativeElementType)
