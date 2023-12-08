@@ -29,16 +29,18 @@ class AcceptFeedbackEvent extends FeedbackEvent {
 
 class RejectFeedbackEvent extends FeedbackEvent {
   final int feedbackId;
-  final int currentChapterId;
+  final int chapterId;
   RejectFeedbackEvent({
     required this.feedbackId,
-    required this.currentChapterId,
+    required this.chapterId,
   });
 }
 
 class DismissFeedbackEvent extends FeedbackEvent {
   final int feedbackId;
+  final int chapterId;
   const DismissFeedbackEvent({
     required this.feedbackId,
+    required this.chapterId,
   });
 }
