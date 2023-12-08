@@ -28,7 +28,7 @@ class ExpandableBioWidgetState extends State<ExpandableBioWidget> {
   @override
   void initState() {
     super.initState();
-    _layoutCheckTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _layoutCheckTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       _checkContentHeight();
     });
   }
