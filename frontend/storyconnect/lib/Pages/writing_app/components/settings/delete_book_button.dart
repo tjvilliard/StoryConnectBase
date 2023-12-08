@@ -46,7 +46,6 @@ class DeleteBookButton extends StatelessWidget {
         final value = await showConfirmationDialog(context);
         if (value) {
           Navigator.of(context).pop(); // pop the dialog
-          Beamer.of(context).beamToNamed(PageUrls.writerHome); // go to the home page
 
           context.read<WritingUIBloc>().add(const DeleteBookEvent());
         }
