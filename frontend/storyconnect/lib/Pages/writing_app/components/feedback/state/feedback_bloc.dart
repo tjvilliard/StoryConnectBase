@@ -22,21 +22,17 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     on<RejectFeedbackEvent>((event, emit) => rejectFeedback(event, emit));
     on<DismissFeedbackEvent>((event, emit) => dismissFeedback(event, emit));
 
-    on<ToggleGhostFeedbackEvent>(
-        (event, emit) => toggleGhostFeedback(event, emit));
+    on<ToggleGhostFeedbackEvent>((event, emit) => toggleGhostFeedback(event, emit));
   }
 
-  void loadChapterFeedback(
-      LoadChapterFeedback event, FeedbackEmitter emit) async {
+  void loadChapterFeedback(LoadChapterFeedback event, FeedbackEmitter emit) async {
     emit(state.copyWith(
       loadingStruct: LoadingStruct.message("Loading Feedback"),
     ));
 
-    final currentFeedbacks =
-        Map<int, List<WriterFeedback>>.from(state.feedbacks);
+    final currentFeedbacks = Map<int, List<WriterFeedback>>.from(state.feedbacks);
 
-    final List<WriterFeedback> newFeedbacks =
-        await _repo.getChapterFeedback(event.chapterId);
+    final List<WriterFeedback> newFeedbacks = await _repo.getChapterFeedback(event.chapterId);
 
     // remove all the comments for the newly fetched chapter (if they exist) from the oldComments storage
     currentFeedbacks.remove(event.chapterId);
@@ -64,8 +60,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
   // Modify the chapter, and delete the feedback from the list. Assert that it's a suggestion, and not a ghost feedback
   acceptFeedback(AcceptFeedbackEvent event, FeedbackEmitter emit) async {
-    final feedback = state.feedbacks[event.writingBloc.currentChapterId]!
-        .firstWhere((element) => element.id == event.feedbackId);
+    final feedback =
+        state.feedbacks[event.writingBloc.currentChapterId]!.firstWhere((element) => element.id == event.feedbackId);
 
     assert(feedback.isSuggestion == true);
     assert(feedback.isGhost == false);
@@ -73,8 +69,8 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     String chapterText = event.writingBloc.state.currentChapterText;
     final chapterNum = event.writingBloc.state.currentIndex;
 
-    chapterText = chapterText.replaceRange(feedback.selection.offset,
-        feedback.selection.offsetEnd, feedback.suggestion!);
+    chapterText =
+        chapterText.replaceRange(feedback.selection.offset, feedback.selection.offsetEnd, feedback.suggestion!);
 
     final feedbacksState = Map<int, List<WriterFeedback>>.from(state.feedbacks);
 
@@ -92,20 +88,18 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
 
     emit(state.copyWith(feedbacks: feedbacksState));
 
-    event.writingBloc
-        .add(UpdateChapterEvent(text: chapterText, chapterNum: chapterNum));
+    event.writingBloc.add(UpdateChapterEvent(text: chapterText, chapterNum: chapterNum));
   }
 
   rejectFeedback(RejectFeedbackEvent event, FeedbackEmitter emit) async {
-    final feedback = state.feedbacks[event.currentChapterId]!
-        .firstWhere((element) => element.id == event.feedbackId);
+    final feedback = state.feedbacks[event.chapterId]!.firstWhere((element) => element.id == event.feedbackId);
 
     assert(feedback.isSuggestion == true);
     // Ghost feedbacks are fine to be rejected, since there's no modification of chapter text
 
     final feedbacksState = Map<int, List<WriterFeedback>>.from(state.feedbacks);
 
-    final feedbacks = feedbacksState[event.currentChapterId]!;
+    final feedbacks = feedbacksState[event.chapterId]!;
 
     final bool success = await _repo.rejectFeedback(feedback.id);
 
@@ -118,17 +112,11 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
     emit(state.copyWith(feedbacks: feedbacksState));
   }
 
-  Future<void> dismissFeedback(
-      DismissFeedbackEvent event, FeedbackEmitter emit) async {
-    final feedback = state.feedbacks[event.feedbackId]!
-        .firstWhere((element) => element.id == event.feedbackId);
+  Future<void> dismissFeedback(DismissFeedbackEvent event, FeedbackEmitter emit) async {
+    final feedback = state.feedbacks[event.chapterId]!.firstWhere((element) => element.id == event.feedbackId);
 
     assert(feedback.isSuggestion == false);
     assert(feedback.isGhost == false);
-
-    final feedbacksState = Map<int, List<WriterFeedback>>.from(state.feedbacks);
-
-    final feedbacks = feedbacksState[event.feedbackId]!;
 
     final bool success = await _repo.dismissFeedback(feedback.id);
 
@@ -136,7 +124,12 @@ class FeedbackBloc extends Bloc<FeedbackEvent, FeedbackState> {
       return;
     }
 
-    feedbacks.remove(feedback);
+    final feedbacksState = Map<int, List<WriterFeedback>>.from(state.feedbacks);
+    final feedbacks = List<WriterFeedback>.from(feedbacksState[event.chapterId]!);
+
+    feedbacks.removeWhere((element) => element.id == event.feedbackId);
+    feedbacksState[event.chapterId] = feedbacks;
+
     emit(state.copyWith(feedbacks: feedbacksState));
   }
 }
