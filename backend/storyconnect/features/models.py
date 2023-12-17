@@ -37,4 +37,6 @@ class ChapterTagging(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
     last_chapter_len = models.IntegerField(default=0)
     genre = ArrayField(models.CharField(max_length=50), blank=True, null=False, default=list)
-        
+    
+    def __str__(self):
+        return f"{self.chapter.book.title}: {self.chapter.chapter_number}"
